@@ -27,7 +27,7 @@ const PRODUCTS = [
     useCase:
       "Used as the diluent for reconstituting research peptides and lyophilized powders.",
     priceCents: 1900,
-    imageUrl: "/images/products/bac-30.png",
+    imageUrl: "/images/products/bac-30.svg",
     inventory: 200,
   },
   {
@@ -39,7 +39,7 @@ const PRODUCTS = [
       "Three 30 mL vials of bacteriostatic water. Best value for weekly protocols and multiple peptides.",
     useCase: "Bulk diluent supply for longer protocols.",
     priceCents: 4900,
-    imageUrl: "/images/products/bac-30-3.png",
+    imageUrl: "/images/products/bac-30-3.svg",
     inventory: 120,
   },
   {
@@ -52,7 +52,7 @@ const PRODUCTS = [
     useCase:
       "Best all-around choice for peptide dosing when your dose falls between 10 and 60 units.",
     priceCents: 2900,
-    imageUrl: "/images/products/syr-ins-1.png",
+    imageUrl: "/images/products/syr-ins-1.svg",
     inventory: 300,
   },
   {
@@ -64,7 +64,7 @@ const PRODUCTS = [
       "Half-mL insulin syringes with fine 31-gauge needle for smaller doses.",
     useCase: "Ideal for doses under 50 units where finer resolution helps.",
     priceCents: 2900,
-    imageUrl: "/images/products/syr-ins-05.png",
+    imageUrl: "/images/products/syr-ins-05.svg",
     inventory: 240,
   },
   {
@@ -76,7 +76,7 @@ const PRODUCTS = [
       "0.3 mL insulin syringes with half-unit markings for the smallest, most accurate doses.",
     useCase: "Best for micro-dosing protocols under 30 units.",
     priceCents: 3200,
-    imageUrl: "/images/products/syr-ins-03.png",
+    imageUrl: "/images/products/syr-ins-03.svg",
     inventory: 180,
   },
   {
@@ -89,7 +89,7 @@ const PRODUCTS = [
     useCase:
       "Sanitize vial tops and injection sites before and after each dose.",
     priceCents: 1200,
-    imageUrl: "/images/products/alc-200.png",
+    imageUrl: "/images/products/alc-200.svg",
     inventory: 400,
   },
   {
@@ -101,7 +101,7 @@ const PRODUCTS = [
       "Everything you need to reconstitute your first peptide vial: 2× BAC water 30 mL, 1 box of 1 mL insulin syringes, 1 box of 200 alcohol prep pads.",
     useCase: "The easiest way to get started — one purchase, one delivery.",
     priceCents: 7900,
-    imageUrl: "/images/products/kit-start.png",
+    imageUrl: "/images/products/kit-start.svg",
     inventory: 100,
   },
 ];

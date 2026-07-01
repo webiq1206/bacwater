@@ -82,8 +82,12 @@ export default async function ShopPage() {
                   <Link key={p.id} href={`/shop/${p.slug}`} className="group">
                     <Card className="h-full hover:bg-muted/50 transition-colors">
                       <CardContent className="p-5">
-                        <div className="aspect-square bg-muted flex items-center justify-center text-5xl">
-                          {cat === "bac-water" ? "\u{1F4A7}" : cat === "syringes" ? "\u{1F489}" : cat === "alcohol-pads" ? "\u{1F9F4}" : "\u{1F4E6}"}
+                        <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
+                          {p.imageUrl ? (
+                            <img src={p.imageUrl} alt={p.name} className="h-full w-full object-contain" />
+                          ) : (
+                            <span className="text-5xl text-muted-foreground">&#x2022;</span>
+                          )}
                         </div>
                         <div className="mt-4 flex items-start justify-between gap-3">
                           <div className="min-w-0">

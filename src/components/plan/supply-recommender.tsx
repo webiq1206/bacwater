@@ -102,8 +102,12 @@ export function SupplyRecommender({ supplies }: Props) {
         <ul className="mt-6 divide-y divide-border">
           {(rows || supplies.map((s) => ({ ...s, productId: null, slug: null, priceCents: 0, imageUrl: null, removed: false } as Row))).map((row, i) => (
             <li key={row.sku} className="flex items-start gap-4 py-4">
-              <div className="h-14 w-14 rounded-lg bg-muted grid place-items-center text-xl shrink-0">
-                {row.sku.startsWith("BAC") ? "💧" : row.sku.startsWith("SYR") ? "💉" : row.sku.startsWith("ALC") ? "🧴" : "📦"}
+              <div className="h-14 w-14 rounded-lg bg-muted grid place-items-center shrink-0 overflow-hidden">
+                {row.imageUrl ? (
+                  <img src={row.imageUrl} alt={row.label} className="h-full w-full object-contain" />
+                ) : (
+                  <span className="text-xl text-muted-foreground">&#x2022;</span>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-medium">{row.name}</div>

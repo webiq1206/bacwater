@@ -58,8 +58,12 @@ export default async function PdpPage({ params }: Props) {
       <ProductJsonLd product={product} />
       <div className="grid gap-10 md:grid-cols-2">
         <div>
-          <div className="aspect-square rounded-lg bg-muted flex items-center justify-center text-8xl">
-            {product.category === "bac-water" ? "💧" : product.category === "syringes" ? "💉" : product.category === "alcohol-pads" ? "🧴" : "📦"}
+          <div className="aspect-square rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+            {product.imageUrl ? (
+              <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain" />
+            ) : (
+              <span className="text-8xl text-muted-foreground">&#x2022;</span>
+            )}
           </div>
         </div>
         <div>
@@ -132,8 +136,12 @@ export default async function PdpPage({ params }: Props) {
             <Link key={r.id} href={`/shop/${r.slug}`}>
               <Card className="h-full hover:bg-muted/50 transition-colors">
                 <CardContent className="p-5">
-                  <div className="aspect-square rounded-lg bg-muted flex items-center justify-center text-4xl">
-                    {r.category === "bac-water" ? "💧" : r.category === "syringes" ? "💉" : r.category === "alcohol-pads" ? "🧴" : "📦"}
+                  <div className="aspect-square rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+                    {r.imageUrl ? (
+                      <img src={r.imageUrl} alt={r.name} className="h-full w-full object-contain" />
+                    ) : (
+                      <span className="text-4xl text-muted-foreground">&#x2022;</span>
+                    )}
                   </div>
                   <div className="mt-3 flex items-start justify-between gap-3">
                     <div className="min-w-0">
