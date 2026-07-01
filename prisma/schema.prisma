@@ -1,0 +1,235 @@
+// BACWater.ai — data model
+// Uses SQLite in development, Postgres in production via DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Auth ----------
+
+model User {
+  id             String     @id @default(cuid())
+  email          String     @unique
+  emailVerified  DateTime?
+  name           String?
+  hashedPassword String?
+  image          String?
+  role           String     @default("user") // user | admin
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  plans          Plan[]
+  orders         Order[]
+  accounts       Account[]
+  sessions       Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------- Plans ----------
+
+model Plan {
+  id                        String    @id @default(cuid())
+  publicId                  String    @unique
+  userId                    String?
+  user                      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  peptideSlug               String?
+  peptideName               String?
+  vialStrengthMg            Float
+  doseMcg                   Float
+  bacWaterMl                Float
+  syringeType               String
+  dateMixed                 DateTime?
+
+  finalConcentrationMgPerMl Float
+  doseVolumeMl              Float
+  syringeUnits              Float
+  dosesPerVial              Int
+  expirationDate            DateTime?
+
+  notes                     String?
+  archived                  Boolean   @default(false)
+  data                      String    // full CalcResult snapshot as JSON
+
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([publicId])
+}
+
+// ---------- Ecommerce ----------
+
+model Product {
+  id             String       @id @default(cuid())
+  slug           String       @unique
+  sku            String       @unique
+  name           String
+  category       String       // bac-water | syringes | alcohol-pads | other
+  description    String
+  useCase        String?
+  priceCents     Int
+  currency       String       @default("USD")
+  imageUrl       String?
+  inventory      Int          @default(0)
+  active         Boolean      @default(true)
+  metadata       String?      // JSON
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  orderItems     OrderItem[]
+
+  @@index([category])
+  @@index([active])
+}
+
+model Order {
+  id                String         @id @default(cuid())
+  publicId          String         @unique
+  userId            String?
+  user              User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email             String
+  status            String         @default("pending") // pending | paid | needs_attention | shipped | cancelled | refunded
+  vendorStatus      String         @default("none")    // none | queued | submitted | confirmed
+  subtotalCents     Int
+  shippingCents     Int            @default(0)
+  taxCents          Int            @default(0)
+  totalCents        Int
+  currency          String         @default("USD")
+  stripeSessionId   String?
+  stripePaymentIntent String?
+  planId            String?
+
+  shippingName      String?
+  shippingAddress1  String?
+  shippingAddress2  String?
+  shippingCity      String?
+  shippingState     String?
+  shippingPostal    String?
+  shippingCountry   String?        @default("US")
+  shippingPhone     String?
+
+  internalNotes     String?
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  items             OrderItem[]
+  vendorSubmissions VendorSubmission[]
+
+  @@index([status])
+  @@index([vendorStatus])
+  @@index([email])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  productId    String
+  productName  String
+  sku          String
+  unitCents    Int
+  quantity     Int
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product      Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+}
+
+// ---------- Vendors ----------
+
+model Vendor {
+  id             String              @id @default(cuid())
+  name           String
+  contactEmail   String
+  phone          String?
+  productsSupplied String?
+  emailTemplate  String              // handlebars-lite
+  notes          String?
+  active         Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  submissions    VendorSubmission[]
+}
+
+model VendorSubmission {
+  id             String   @id @default(cuid())
+  orderId        String
+  vendorId       String
+  status         String   @default("draft") // draft | sent | confirmed | failed
+  subject        String
+  body           String
+  sentAt         DateTime?
+  sentByEmail    String?
+  confirmationRef String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  order          Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  vendor         Vendor @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([status])
+}
+
+// ---------- Content + Contact ----------
+
+model ContentBlock {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  kind      String   // guide | faq | page
+  title     String
+  body      String
+  published Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([handled])
+}

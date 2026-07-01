@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0b0e12;
+  --color-muted: #f5f6f7;
+  --color-muted-foreground: #5b6472;
+  --color-border: #e8eaee;
+  --color-input: #e8eaee;
+  --color-ring: #0b0e12;
+  --color-card: #ffffff;
+  --color-card-foreground: #0b0e12;
+  --color-primary: #0b0e12;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f0f2f4;
+  --color-secondary-foreground: #0b0e12;
+  --color-accent: #eef2ff;
+  --color-accent-foreground: #1e293b;
+  --color-brand: #0f766e;
+  --color-brand-foreground: #ffffff;
+  --color-brand-soft: #ecfdf5;
+  --color-destructive: #b91c1c;
+  --color-destructive-foreground: #ffffff;
+  --color-warning: #b45309;
+  --color-warning-foreground: #fffbeb;
+  --color-success: #047857;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --shadow-lift: 0 2px 4px rgba(15, 23, 42, 0.05), 0 16px 40px rgba(15, 23, 42, 0.08);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+::selection {
+  background-color: color-mix(in oklab, var(--color-brand) 20%, transparent);
+  color: var(--color-foreground);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
 }
