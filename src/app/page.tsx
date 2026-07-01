@@ -49,10 +49,10 @@ export default async function HomePage() {
         <div className="eyebrow">
           The trusted utility for peptide reconstitution
         </div>
-        <h1 className="mt-5 text-5xl sm:text-7xl font-serif font-medium tracking-tight leading-[1.02] text-balance">
-          The exact math
-          <br />
-          for <span className="italic">every</span> vial.
+        <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-serif font-medium tracking-tight leading-[1.1] text-balance">
+          The Complete BAC Water Calculator
+          <br className="hidden sm:block" />
+          {" "}&amp; Peptide Reconstitution Resource
         </h1>
         <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
           Answer a few short questions. We&apos;ll do the math, print your
