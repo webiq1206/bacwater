@@ -104,7 +104,7 @@ export function SupplyRecommender({ supplies }: Props) {
             <li key={row.sku} className="flex items-start gap-4 py-4">
               <div className="h-14 w-14 rounded-lg bg-muted grid place-items-center shrink-0 overflow-hidden">
                 {row.imageUrl ? (
-                  <img src={row.imageUrl} alt={row.label} className="h-full w-full object-contain" />
+                  <img src={row.imageUrl} alt={row.name} className="h-full w-full object-contain" />
                 ) : (
                   <span className="text-xl text-muted-foreground">&#x2022;</span>
                 )}
