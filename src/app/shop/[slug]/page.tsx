@@ -54,7 +54,7 @@ export default async function PdpPage({ params }: Props) {
   });
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-24">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <ProductJsonLd product={product} />
       <div className="grid gap-10 md:grid-cols-2">
         <div>

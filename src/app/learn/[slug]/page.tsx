@@ -56,7 +56,7 @@ export default async function GuidePage({ params }: Props) {
   });
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-8 pb-24">
+    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
       <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} updatedAt={guide.updatedAt} />
       <Link href="/learn" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> All guides

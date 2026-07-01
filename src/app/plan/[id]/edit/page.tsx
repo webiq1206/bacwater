@@ -11,7 +11,7 @@ export default async function PlanEditPage({ params }: Props) {
   const plan = await prisma.plan.findUnique({ where: { publicId: id } });
   if (!plan) return notFound();
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 pb-24">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
       <h1 className="text-2xl font-semibold tracking-tight">Edit plan</h1>
       <p className="text-sm text-muted-foreground mt-1">
         Editing creates a new saved plan and keeps the original.

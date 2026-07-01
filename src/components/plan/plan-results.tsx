@@ -18,7 +18,7 @@ export function PlanResults({ result }: Props) {
   return (
     <div className="space-y-6">
       <Card>
-        <CardContent className="p-6 sm:p-8">
+        <CardContent className="p-7 sm:p-10">
           <div className="flex flex-wrap items-baseline justify-between gap-4">
             <div>
               <Badge variant="brand">Plan summary</Badge>
@@ -73,7 +73,7 @@ export function PlanResults({ result }: Props) {
       </Card>
 
       <Card>
-        <CardContent className="p-6 sm:p-8">
+        <CardContent className="p-7 sm:p-10">
           <h4 className="font-semibold text-lg">In plain English</h4>
           <p className="mt-2 text-sm text-muted-foreground">
             You&apos;re dissolving {result.input.vialStrengthMg} mg of {result.input.peptideName || "peptide"} in {result.usedBacMl} mL of BAC water. That makes each mL contain <b>{result.finalConcentrationMgPerMl} mg</b> (or {result.finalConcentrationMcgPerMl} mcg) of peptide. To dose {result.input.doseMcg} mcg, you draw <b>{result.doseVolumeMl.toFixed(3)} mL</b> of the mixed solution — which is <b>{result.syringeReadout.displayLabel}</b>.
@@ -82,7 +82,7 @@ export function PlanResults({ result }: Props) {
       </Card>
 
       <Card>
-        <CardContent className="p-6 sm:p-8">
+        <CardContent className="p-7 sm:p-10">
           <h4 className="font-semibold text-lg">Step-by-step</h4>
           <ol className="mt-4 space-y-3">
             {result.instructions.map((s, i) => (
@@ -98,7 +98,7 @@ export function PlanResults({ result }: Props) {
       </Card>
 
       <Card>
-        <CardContent className="p-6 sm:p-8">
+        <CardContent className="p-7 sm:p-10">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <h4 className="font-semibold text-lg">Storage & expiration</h4>
@@ -122,7 +122,7 @@ export function PlanResults({ result }: Props) {
       <SupplyRecommender supplies={result.supplies} />
 
       <Card>
-        <CardContent className="p-6 sm:p-8">
+        <CardContent className="p-7 sm:p-10">
           <div className="flex items-center gap-2">
             <Info className="h-4 w-4 text-muted-foreground" />
             <h4 className="font-semibold">Assumptions used</h4>

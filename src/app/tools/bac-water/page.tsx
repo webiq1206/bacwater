@@ -11,7 +11,7 @@ export default function Page() {
   const [dose, setDose] = useState(250);
   const rec = recommendBacWaterMl(vial, dose);
   return (
-    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-10 pb-24">
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <h1 className="text-3xl font-semibold tracking-tight">BAC Water Calculator</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Get the recommended BAC water amount for clean syringe math.

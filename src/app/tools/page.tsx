@@ -19,7 +19,7 @@ const TOOLS = [
 
 export default function ToolsPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-12 pb-24">
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <h1 className="text-4xl font-semibold tracking-tight">Calculators &amp; tools</h1>
       <p className="mt-3 text-muted-foreground max-w-2xl">
         Small, focused calculators for when you don&apos;t want the full planner.

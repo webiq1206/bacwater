@@ -53,7 +53,7 @@ export default async function HomePage() {
     <div>
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.emerald.50),transparent_60%)]" />
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-8 text-center">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-20 sm:pt-28 pb-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 text-xs text-muted-foreground">
             <Sparkles className="h-3.5 w-3.5 text-brand" />
             The trusted utility for peptide reconstitution
@@ -95,7 +95,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-4 pb-12">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 sm:pt-10 pb-16 sm:pb-20">
         <div className="grid gap-4 md:grid-cols-3">
           {PATHS.map((p) => {
             const Icon = p.icon;
@@ -123,7 +123,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-12">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="rounded-3xl border border-border bg-card overflow-hidden">
           <div className="grid md:grid-cols-2 gap-8 p-8 sm:p-12">
             <div>
@@ -203,7 +203,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-12">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="text-3xl font-semibold tracking-tight">Premium supplies</h2>
@@ -245,7 +245,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-24">
         <div className="rounded-3xl border border-border p-8 sm:p-12 bg-gradient-to-br from-emerald-50/60 to-transparent">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 text-brand text-xs font-medium">

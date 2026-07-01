@@ -28,7 +28,7 @@ export default async function ShopPage() {
   }, {});
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-24">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <div className="max-w-3xl">
         <h1 className="text-4xl font-semibold tracking-tight">Shop supplies</h1>
         <p className="mt-3 text-muted-foreground">

@@ -19,7 +19,7 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
     : null;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-16 pb-24">
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-20 sm:pt-28 pb-24 sm:pb-32">
       <Card>
         <CardContent className="p-8 sm:p-12 text-center">
           <div className="mx-auto h-12 w-12 rounded-full bg-brand-soft grid place-items-center">

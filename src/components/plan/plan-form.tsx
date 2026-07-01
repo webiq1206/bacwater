@@ -52,7 +52,7 @@ export function PlanForm({ mode }: Props) {
   const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(true);
   const [customBacMl, setCustomBacMl] = useState<number>(2);
   const [dateMixed, setDateMixed] = useState<string>("");
-  const [notes, setNotes] = useState<string>("");
+  const [showDate, setShowDate] = useState<boolean>(false);
   const [saving, setSaving] = useState(false);
 
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
@@ -94,9 +94,9 @@ export function PlanForm({ mode }: Props) {
         bacWaterMl: useRecommendedBac ? recommendedBac : customBacMl,
         syringeType,
         dateMixed: dateMixed || null,
-        notes: notes || null,
+        notes: null,
       };
-      const res = await savePlanAction(payload, notes);
+      const res = await savePlanAction(payload, undefined);
       if (res.ok) {
         toast({ title: "Plan saved", description: "You can share the link or print the PDF.", variant: "success" });
         router.push(`/plan/${res.publicId}`);
@@ -112,7 +112,7 @@ export function PlanForm({ mode }: Props) {
     return (
       <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
         <Card>
-          <CardContent className="p-6 sm:p-8 space-y-5">
+          <CardContent className="p-7 sm:p-10 space-y-6">
             <div>
               <Label>Peptide</Label>
               <Select value={peptideSlug} onValueChange={setPeptideSlug}>
@@ -203,37 +203,48 @@ export function PlanForm({ mode }: Props) {
             </div>
 
             <div>
-              <Label>Date mixed (optional)</Label>
-              <Input
-                className="mt-2"
-                type="date"
-                value={dateMixed}
-                onChange={(e) => setDateMixed(e.target.value)}
-              />
-              <p className="mt-1 text-xs text-muted-foreground">
-                Adding a date lets us calculate the expiration for you.
-              </p>
+              {showDate ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <Label>Date mixed</Label>
+                    <button
+                      type="button"
+                      onClick={() => { setShowDate(false); setDateMixed(""); }}
+                      className="text-xs text-muted-foreground hover:text-foreground"
+                    >
+                      Skip
+                    </button>
+                  </div>
+                  <Input
+                    className="mt-2"
+                    type="date"
+                    value={dateMixed}
+                    onChange={(e) => setDateMixed(e.target.value)}
+                    autoFocus
+                  />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Adds an expiration date to your plan.
+                  </p>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowDate(true)}
+                  className="text-sm text-brand font-medium hover:underline"
+                >
+                  + Add date mixed (for expiration tracking)
+                </button>
+              )}
             </div>
 
-            <div>
-              <Label>Notes (optional)</Label>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={3}
-                className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm"
-                placeholder="Anything you want to remember about this plan."
-              />
-            </div>
-
-            <div className="pt-2 flex gap-3">
-              <Button onClick={handleSave} disabled={saving} variant="brand">
+            <div className="pt-2">
+              <Button onClick={handleSave} disabled={saving} variant="brand" size="lg" className="w-full sm:w-auto">
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 Save plan
               </Button>
-              <Button asChild variant="ghost">
-                <Link href="/plan/new">Switch to beginner</Link>
-              </Button>
+              <p className="mt-3 text-xs text-muted-foreground">
+                You&apos;ll get a permanent link, a PDF, printable labels, and a supply cart.
+              </p>
             </div>
           </CardContent>
         </Card>
