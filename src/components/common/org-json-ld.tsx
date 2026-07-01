@@ -8,7 +8,7 @@ export function OrgJsonLd() {
     logo: `${siteUrl}/favicon.ico`,
     sameAs: [] as string[],
     description:
-      "BACwater.ai is the trusted utility for peptide reconstitution: deterministic calculations, printable plans, and premium supplies.",
+      "BACwater.ai is the complete BAC water calculator and reconstitution guide: deterministic calculations, printable plans, and premium supplies.",
   };
   return (
     <script

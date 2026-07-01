@@ -47,12 +47,12 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-20 sm:pt-32 pb-16 sm:pb-20 text-center">
         <div className="eyebrow">
-          The trusted utility for peptide reconstitution
+          The complete guide to peptide reconstitution
         </div>
         <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-serif font-medium tracking-tight leading-[1.1] text-balance">
           The Complete BAC Water Calculator
           <br className="hidden sm:block" />
-          {" "}&amp; Reconstitution Resource
+          {" "}&amp; Reconstitution Guide
         </h1>
         <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
           Answer a few short questions. We&apos;ll do the math, print your

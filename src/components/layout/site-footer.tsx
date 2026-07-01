@@ -37,7 +37,7 @@ export function SiteFooter() {
               </span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              A calm, trusted utility for peptide reconstitution. Build a plan,
+              The complete guide to peptide reconstitution. Build a plan,
               get exact syringe units, download a PDF, and buy the supplies you
               need.
             </p>

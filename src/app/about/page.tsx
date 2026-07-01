@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export const metadata = {
   title: "About BACwater.ai",
   description:
-    "BACwater.ai is the most beginner-friendly utility for peptide reconstitution. Exact math, plain-English explanations, and premium supplies in one place.",
+    "BACwater.ai is the most beginner-friendly BAC water calculator and reconstitution guide. Exact math, plain-English explanations, and premium supplies in one place.",
 };
 
 export default function AboutPage() {

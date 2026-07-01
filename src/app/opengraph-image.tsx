@@ -55,7 +55,7 @@ export default function OGImage() {
             letterSpacing: "0.5px",
           }}
         >
-          The trusted utility for peptide reconstitution
+          The complete BAC water calculator &amp; reconstitution guide
         </div>
       </div>
     ),

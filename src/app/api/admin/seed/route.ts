@@ -176,7 +176,7 @@ const CONTENT = [
     slug: "faq-general",
     kind: "faq",
     title: "Frequently asked questions",
-    body: "**Do I need a prescription for BAC water?** In the US, BAC water is prescription-only when marketed for human use. We provide research-use products intended for laboratory research and educational purposes, not for personal administration.\n\n**Is BACwater.ai a medical service?** No. We provide a calculation utility and supplies. We do not diagnose, prescribe, or provide medical advice.\n\n**Can I save my plans?** Yes. Create a free account and every plan you build is stored with a permanent link.\n\n**Do you ship internationally?** Currently US only. International shipping is on the roadmap.",
+    body: "**Do I need a prescription for BAC water?** In the US, BAC water is prescription-only when marketed for human use. We provide research-use products intended for laboratory research and educational purposes, not for personal administration.\n\n**Is BACwater.ai a medical service?** No. We provide a calculator, reconstitution guide, and supplies. We do not diagnose, prescribe, or provide medical advice.\n\n**Can I save my plans?** Yes. Create a free account and every plan you build is stored with a permanent link.\n\n**Do you ship internationally?** Currently US only. International shipping is on the roadmap.",
   },
 ];
 

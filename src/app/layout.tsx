@@ -31,7 +31,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "BACwater.ai - The trusted utility for peptide reconstitution",
+    default: "BACwater.ai - The Complete BAC Water Calculator & Reconstitution Guide",
     template: "%s · BACwater.ai",
   },
   description:
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "BACwater.ai",
-    title: "BACwater.ai - The trusted utility for peptide reconstitution",
+    title: "BACwater.ai - The Complete BAC Water Calculator & Reconstitution Guide",
     description:
       "Build a plan, get exact syringe units, download a PDF, and buy the supplies you need. Simple, accurate, trustworthy.",
     url: siteUrl,
