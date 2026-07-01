@@ -67,7 +67,7 @@ export default async function FaqPage() {
         Quick answers to the most common questions about BAC water, peptide
         reconstitution, and shopping with us. Can&apos;t find what you&apos;re
         looking for?{" "}
-        <Link href="/contact" className="text-brand font-medium underline">
+        <Link href="/contact" className="text-foreground font-medium underline">
           Contact us
         </Link>
         .

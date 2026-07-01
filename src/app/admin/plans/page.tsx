@@ -36,9 +36,9 @@ export default async function AdminPlansPage() {
                   <td className="p-3">{p.dosesPerVial}</td>
                   <td className="p-3 text-xs text-muted-foreground">{formatDate(p.createdAt)}</td>
                   <td className="p-3">
-                    <Link href={`/plan/${p.publicId}`} className="text-brand hover:underline">Open</Link>
+                    <Link href={`/plan/${p.publicId}`} className="text-foreground hover:underline">Open</Link>
                     {" · "}
-                    <Link href={`/plan/${p.publicId}/pdf`} className="text-brand hover:underline">PDF</Link>
+                    <Link href={`/plan/${p.publicId}/pdf`} className="text-foreground hover:underline">PDF</Link>
                   </td>
                 </tr>
               ))}

@@ -58,7 +58,7 @@ export default async function PdpPage({ params }: Props) {
       <ProductJsonLd product={product} />
       <div className="grid gap-10 md:grid-cols-2">
         <div>
-          <div className="aspect-square rounded-3xl bg-muted flex items-center justify-center text-8xl">
+          <div className="aspect-square rounded-lg bg-muted flex items-center justify-center text-8xl">
             {product.category === "bac-water" ? "💧" : product.category === "syringes" ? "💉" : product.category === "alcohol-pads" ? "🧴" : "📦"}
           </div>
         </div>
@@ -75,16 +75,16 @@ export default async function PdpPage({ params }: Props) {
           <p className="mt-4 text-muted-foreground leading-relaxed">
             {product.description}
           </p>
-          <div className="mt-5 rounded-2xl border border-border bg-muted/50 p-4">
+          <div className="mt-5 rounded-lg border border-border bg-muted/50 p-4">
             <div className="flex items-start gap-2">
-              <Check className="h-4 w-4 text-brand mt-0.5" />
+              <Check className="h-4 w-4 text-foreground mt-0.5" />
               <div className="text-sm">
                 <span className="font-medium">Use it for:</span>{" "}
                 <span className="text-muted-foreground">{product.useCase}</span>
               </div>
             </div>
             <div className="mt-2 flex items-start gap-2">
-              <Truck className="h-4 w-4 text-brand mt-0.5" />
+              <Truck className="h-4 w-4 text-foreground mt-0.5" />
               <div className="text-sm text-muted-foreground">
                 Ships in 1–2 business days from a US-licensed vendor.
               </div>
@@ -130,9 +130,9 @@ export default async function PdpPage({ params }: Props) {
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {related.map((r) => (
             <Link key={r.id} href={`/shop/${r.slug}`}>
-              <Card className="h-full hover:shadow-[var(--shadow-lift)] transition-shadow">
+              <Card className="h-full hover:bg-muted/50 transition-colors">
                 <CardContent className="p-5">
-                  <div className="aspect-square rounded-2xl bg-muted flex items-center justify-center text-4xl">
+                  <div className="aspect-square rounded-lg bg-muted flex items-center justify-center text-4xl">
                     {r.category === "bac-water" ? "💧" : r.category === "syringes" ? "💉" : r.category === "alcohol-pads" ? "🧴" : "📦"}
                   </div>
                   <div className="mt-3 flex items-start justify-between gap-3">

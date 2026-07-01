@@ -19,7 +19,7 @@ export default async function VendorsPage() {
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         {vendors.map((v) => (
           <Link key={v.id} href={`/admin/vendors/${v.id}`}>
-            <Card className="hover:shadow-[var(--shadow-lift)] transition-shadow">
+            <Card className="hover:bg-muted/50 transition-colors">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-2">
                   <div>

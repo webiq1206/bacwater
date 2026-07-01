@@ -48,7 +48,7 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
   return (
     <Card>
       <CardContent className="p-5">
-        <div className="flex items-center gap-2 text-brand">
+        <div className="flex items-center gap-2 text-foreground">
           <Sparkles className="h-4 w-4" />
           <div className="text-sm font-medium">Ask about your plan</div>
         </div>
@@ -60,7 +60,7 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
             Open assistant
           </Button>
         ) : (
-          <div className="mt-3 rounded-2xl border border-border p-3">
+          <div className="mt-3 rounded-lg border border-border p-3">
             <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
               {messages.length === 0 ? (
                 <div className="text-xs text-muted-foreground">
@@ -83,9 +83,9 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
                   <div
                     key={i}
                     className={
-                      "text-sm rounded-2xl px-3 py-2 " +
+                      "text-sm rounded-lg px-3 py-2 " +
                       (m.role === "user"
-                        ? "bg-brand-soft text-emerald-900"
+                        ? "bg-muted text-foreground"
                         : "bg-muted")
                     }
                   >

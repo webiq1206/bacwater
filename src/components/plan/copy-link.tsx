@@ -18,7 +18,7 @@ export function CopyLinkClient({ publicId }: { publicId: string }) {
           toast({ title: "Could not copy" });
         }
       }}
-      className="text-sm text-brand font-medium hover:underline"
+      className="text-sm text-foreground font-medium hover:underline"
     >
       {copied ? "Copied" : "Copy link"}
     </button>

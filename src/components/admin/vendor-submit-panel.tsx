@@ -39,7 +39,7 @@ export function VendorSubmitPanel({ order, vendors, submissions }: Props) {
           <Badge variant="outline">{submissions.length} on file</Badge>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <select value={vendorId} onChange={(e) => setVendorId(e.target.value)} className="h-10 rounded-full border border-input bg-background px-3 text-sm">
+          <select value={vendorId} onChange={(e) => setVendorId(e.target.value)} className="h-10 rounded-lg border border-input bg-background px-3 text-sm">
             {vendors.map((v) => (
               <option key={v.id} value={v.id}>{v.name} ({v.contactEmail})</option>
             ))}
@@ -67,7 +67,7 @@ export function VendorSubmitPanel({ order, vendors, submissions }: Props) {
 
         <ul className="mt-4 space-y-4">
           {submissions.map((s) => (
-            <li key={s.id} className="rounded-2xl border border-border p-4">
+            <li key={s.id} className="rounded-lg border border-border p-4">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="text-sm font-medium">{s.vendor.name}</div>

@@ -22,8 +22,8 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
     <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-20 sm:pt-28 pb-24 sm:pb-32">
       <Card>
         <CardContent className="p-8 sm:p-12 text-center">
-          <div className="mx-auto h-12 w-12 rounded-full bg-brand-soft grid place-items-center">
-            <CheckCircle2 className="h-6 w-6 text-brand" />
+          <div className="mx-auto h-12 w-12 border border-border rounded-full grid place-items-center">
+            <CheckCircle2 className="h-6 w-6 text-foreground" />
           </div>
           <h1 className="mt-5 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
             Order confirmed
@@ -36,7 +36,7 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
             <div className="mt-6 text-sm">
               <div className="text-xs text-muted-foreground">Order</div>
               <div className="font-medium">#{found.publicId}</div>
-              <div className="mt-4 rounded-2xl bg-muted p-4 text-left">
+              <div className="mt-4 rounded-lg bg-muted p-4 text-left">
                 <ul className="divide-y divide-border">
                   {found.items.map((i) => (
                     <li key={i.id} className="py-2 flex justify-between text-sm">

@@ -63,7 +63,7 @@ export function ContentForm({ content }: { content?: Content }) {
         </div>
         <div>
           <Label>Kind</Label>
-          <select name="kind" defaultValue={content?.kind || "guide"} className="mt-2 w-full h-12 rounded-2xl border border-input bg-background px-4 text-base">
+          <select name="kind" defaultValue={content?.kind || "guide"} className="mt-2 w-full h-12 rounded-lg border border-input bg-background px-4 text-base">
             <option value="guide">guide</option>
             <option value="faq">faq</option>
             <option value="page">page</option>

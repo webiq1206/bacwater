@@ -107,7 +107,7 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
                 <dt className="text-muted-foreground">Dose</dt>
                 <dd className="text-right">{p.doseMcg} mcg</dd>
                 <dt className="text-muted-foreground">Syringe</dt>
-                <dd className="text-right font-medium text-brand">{p.syringeUnits} units</dd>
+                <dd className="text-right font-medium text-foreground">{p.syringeUnits} units</dd>
                 <dt className="text-muted-foreground">Doses/vial</dt>
                 <dd className="text-right">{p.dosesPerVial}</dd>
               </dl>

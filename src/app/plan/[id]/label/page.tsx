@@ -34,7 +34,7 @@ export default async function LabelPage({ params }: Props) {
         {labels.map((_, i) => (
           <div
             key={i}
-            className="rounded-2xl border border-dashed border-border p-4 print:border-solid print:break-inside-avoid"
+            className="rounded-lg border border-dashed border-border p-4 print:border-solid print:break-inside-avoid"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">

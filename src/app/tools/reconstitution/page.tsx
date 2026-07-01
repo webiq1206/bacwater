@@ -22,7 +22,7 @@ export default function Page() {
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
           Want a guided, step-by-step walkthrough instead?{" "}
-          <Link href="/plan/new" className="text-brand font-medium underline">
+          <Link href="/plan/new" className="text-foreground font-medium underline">
             Try the plan builder
           </Link>
           .

@@ -45,7 +45,7 @@ export function CartClient() {
           <ul className="divide-y divide-border">
             {items.map((i) => (
               <li key={i.productId} className="py-4 flex items-start gap-4">
-                <div className="h-14 w-14 rounded-xl bg-muted grid place-items-center text-2xl shrink-0">
+                <div className="h-14 w-14 rounded-lg bg-muted grid place-items-center text-2xl shrink-0">
                   {i.sku.startsWith("BAC") ? "💧" : i.sku.startsWith("SYR") ? "💉" : i.sku.startsWith("ALC") ? "🧴" : "📦"}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -103,7 +103,7 @@ export function CartClient() {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Shipping</span>
-            <span className="text-muted-foreground">{subtotal >= 5000 ? <span className="text-brand font-medium">Free</span> : "Calculated at checkout"}</span>
+            <span className="text-muted-foreground">{subtotal >= 5000 ? <span className="text-foreground font-medium">Free</span> : "Calculated at checkout"}</span>
           </div>
           {subtotal < 5000 ? (
             <p className="text-xs text-muted-foreground">

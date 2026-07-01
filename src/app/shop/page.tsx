@@ -51,11 +51,11 @@ export default async function ShopPage() {
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Premium supplies sourced from US-licensed vendors. Not sure what to
           buy? Use our{" "}
-          <Link href="/tools/supplies" className="text-brand font-medium underline">
+          <Link href="/tools/supplies" className="font-medium underline">
             supply calculator
           </Link>{" "}
           or{" "}
-          <Link href="/plan" className="text-brand font-medium underline">
+          <Link href="/plan" className="font-medium underline">
             build a plan
           </Link>{" "}
           and we&apos;ll pre-fill your cart with exactly what you need.
@@ -80,9 +80,9 @@ export default async function ShopPage() {
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((p) => (
                   <Link key={p.id} href={`/shop/${p.slug}`} className="group">
-                    <Card className="h-full transition-shadow hover:shadow-[var(--shadow-lift)]">
+                    <Card className="h-full hover:bg-muted/50 transition-colors">
                       <CardContent className="p-5">
-                        <div className="aspect-square rounded-2xl bg-muted flex items-center justify-center text-5xl">
+                        <div className="aspect-square bg-muted flex items-center justify-center text-5xl">
                           {cat === "bac-water" ? "\u{1F4A7}" : cat === "syringes" ? "\u{1F489}" : cat === "alcohol-pads" ? "\u{1F9F4}" : "\u{1F4E6}"}
                         </div>
                         <div className="mt-4 flex items-start justify-between gap-3">

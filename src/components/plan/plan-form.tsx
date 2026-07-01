@@ -71,9 +71,9 @@ function ChipButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "text-left rounded-xl border px-4 py-3 transition-colors",
+        "text-left rounded-lg border px-4 py-3 transition-colors",
         active
-          ? "border-brand bg-brand-soft/60 ring-1 ring-brand/50"
+          ? "border-foreground bg-muted ring-1 ring-foreground/20"
           : "border-border hover:border-foreground/25 hover:bg-muted/40"
       )}
     >
@@ -99,7 +99,7 @@ function StepBlock({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 sm:p-7">
+    <div className="border border-border bg-card p-6 sm:p-7">
       <StepEyebrow n={n} total={total} />
       <h3 className="mt-2 text-xl font-serif font-medium leading-tight">
         {title}
@@ -162,7 +162,7 @@ function ConversionHint({
       : `${inMg.toLocaleString(undefined, { maximumFractionDigits: 4 })} mg`;
   return (
     <div className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
-      <Info className="h-3.5 w-3.5 shrink-0 mt-0.5 text-brand" />
+      <Info className="h-3.5 w-3.5 shrink-0 mt-0.5 text-foreground" />
       <span>
         Same as <b className="text-foreground">{otherLabel}</b> — pick whichever
         your label uses. We&apos;ll do the conversion.
@@ -355,12 +355,12 @@ export function PlanForm({ mode }: Props) {
               <button
                 type="button"
                 onClick={() => setShowBlend(true)}
-                className="mt-4 text-sm text-brand font-medium hover:underline inline-flex items-center gap-1"
+                className="mt-4 text-sm text-foreground font-medium hover:underline inline-flex items-center gap-1"
               >
                 + Is this a blend? (e.g., Ipamorelin + CJC-1295)
               </button>
             ) : (
-              <div className="mt-4 rounded-xl border border-border bg-muted/40 p-4">
+              <div className="mt-4 rounded-lg border border-border bg-muted/40 p-4">
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-medium">
                     Second peptide in the same vial
@@ -623,7 +623,7 @@ export function PlanForm({ mode }: Props) {
                   setShowDate(true);
                   setDateMixed(new Date().toISOString().slice(0, 10));
                 }}
-                className="text-sm text-brand font-medium hover:underline"
+                className="text-sm text-foreground font-medium hover:underline"
               >
                 + Add today&apos;s date
               </button>
@@ -734,7 +734,7 @@ export function PlanForm({ mode }: Props) {
                 className={cn(
                   "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
                   !showCustomVial && vialStrengthMg === mg
-                    ? "bg-brand text-brand-foreground border-brand"
+                    ? "bg-foreground text-white border-foreground"
                     : "border-border hover:bg-muted"
                 )}
               >
@@ -747,7 +747,7 @@ export function PlanForm({ mode }: Props) {
               className={cn(
                 "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
                 showCustomVial
-                  ? "bg-brand text-brand-foreground border-brand"
+                  ? "bg-foreground text-white border-foreground"
                   : "border-border hover:bg-muted"
               )}
             >
@@ -795,9 +795,9 @@ export function PlanForm({ mode }: Props) {
                   setShowCustomDose(false);
                 }}
                 className={cn(
-                  "text-left rounded-xl border px-4 py-3 transition-colors",
+                  "text-left rounded-lg border px-4 py-3 transition-colors",
                   !showCustomDose && doseMcg === d.mcg
-                    ? "border-brand bg-brand-soft/60 ring-1 ring-brand/40"
+                    ? "border-foreground bg-muted ring-1 ring-foreground/20"
                     : "border-border hover:bg-muted"
                 )}
               >
@@ -811,9 +811,9 @@ export function PlanForm({ mode }: Props) {
               type="button"
               onClick={() => setShowCustomDose(true)}
               className={cn(
-                "text-left rounded-xl border px-4 py-3 transition-colors",
+                "text-left rounded-lg border px-4 py-3 transition-colors",
                 showCustomDose
-                  ? "border-brand bg-brand-soft/60 ring-1 ring-brand/40"
+                  ? "border-foreground bg-muted ring-1 ring-foreground/20"
                   : "border-border hover:bg-muted"
               )}
             >
@@ -856,9 +856,9 @@ export function PlanForm({ mode }: Props) {
                 type="button"
                 onClick={() => setSyringeType(s.id)}
                 className={cn(
-                  "text-left rounded-xl border p-4 transition-colors",
+                  "text-left rounded-lg border p-4 transition-colors",
                   syringeType === s.id
-                    ? "border-brand bg-brand-soft/60 ring-1 ring-brand/40"
+                    ? "border-foreground bg-muted ring-1 ring-foreground/20"
                     : "border-border hover:bg-muted"
                 )}
               >
@@ -884,9 +884,9 @@ export function PlanForm({ mode }: Props) {
               type="button"
               onClick={() => setUseRecommendedBac(true)}
               className={cn(
-                "text-left rounded-xl border p-4 transition-colors",
+                "text-left rounded-lg border p-4 transition-colors",
                 useRecommendedBac
-                  ? "border-brand bg-brand-soft/60 ring-1 ring-brand/40"
+                  ? "border-foreground bg-muted ring-1 ring-foreground/20"
                   : "border-border hover:bg-muted"
               )}
             >
@@ -901,9 +901,9 @@ export function PlanForm({ mode }: Props) {
               type="button"
               onClick={() => setUseRecommendedBac(false)}
               className={cn(
-                "text-left rounded-xl border p-4 transition-colors",
+                "text-left rounded-lg border p-4 transition-colors",
                 !useRecommendedBac
-                  ? "border-brand bg-brand-soft/60 ring-1 ring-brand/40"
+                  ? "border-foreground bg-muted ring-1 ring-foreground/20"
                   : "border-border hover:bg-muted"
               )}
             >
@@ -943,7 +943,7 @@ export function PlanForm({ mode }: Props) {
             onClick={() =>
               setDateMixed(new Date().toISOString().slice(0, 10))
             }
-            className="mt-3 text-sm text-brand hover:underline"
+            className="mt-3 text-sm text-foreground hover:underline"
           >
             Use today&apos;s date
           </button>
@@ -1034,7 +1034,7 @@ function StepBar({ step, total }: { step: number; total: number }) {
     <div className="mb-6">
       <div className="h-1.5 rounded-full bg-muted overflow-hidden">
         <div
-          className="h-full bg-brand transition-all"
+          className="h-full bg-foreground transition-all"
           style={{ width: `${pct}%` }}
         />
       </div>

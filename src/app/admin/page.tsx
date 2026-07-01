@@ -51,10 +51,10 @@ export default async function AdminDashboard() {
       <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
         {widgets.map((w) => (
           <Link key={w.label} href={w.href}>
-            <Card className="hover:shadow-[var(--shadow-lift)] transition-shadow">
+            <Card className="hover:bg-muted/50 transition-colors">
               <CardContent className="p-5 flex items-center gap-4">
-                <span className="inline-flex h-10 w-10 rounded-2xl bg-brand-soft items-center justify-center">
-                  <w.icon className="h-5 w-5 text-brand" />
+                <span className="inline-flex h-10 w-10 rounded-lg bg-muted items-center justify-center">
+                  <w.icon className="h-5 w-5 text-foreground" />
                 </span>
                 <div>
                   <div className="text-2xl font-semibold tabular-nums">{w.value}</div>
@@ -71,7 +71,7 @@ export default async function AdminDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">Recent orders</h3>
-              <Link href="/admin/orders" className="text-xs text-brand font-medium hover:underline">All orders</Link>
+              <Link href="/admin/orders" className="text-xs text-foreground font-medium hover:underline">All orders</Link>
             </div>
             <ul className="mt-3 divide-y divide-border">
               {recentSales.map((o) => (
@@ -103,7 +103,7 @@ export default async function AdminDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">Recent plans</h3>
-              <Link href="/admin/plans" className="text-xs text-brand font-medium hover:underline">All plans</Link>
+              <Link href="/admin/plans" className="text-xs text-foreground font-medium hover:underline">All plans</Link>
             </div>
             <ul className="mt-3 divide-y divide-border">
               {recentPlans.map((p) => (
@@ -131,7 +131,7 @@ export default async function AdminDashboard() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Low inventory alerts</h3>
-            <Link href="/admin/products" className="text-xs text-brand font-medium hover:underline">Manage products</Link>
+            <Link href="/admin/products" className="text-xs text-foreground font-medium hover:underline">Manage products</Link>
           </div>
           {lowInventory.length === 0 ? (
             <div className="mt-4 text-sm text-muted-foreground">Inventory looks healthy.</div>

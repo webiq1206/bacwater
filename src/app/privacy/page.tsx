@@ -19,7 +19,7 @@ export default function PrivacyPage() {
           sell your data. We do not run third-party ad trackers.
         </p>
         <h2>Contact</h2>
-        <p>Email <a href="mailto:privacy@bacwater.ai" className="text-brand">privacy@bacwater.ai</a> to exercise any privacy right (access, correction, deletion).</p>
+        <p>Email <a href="mailto:privacy@bacwater.ai" className="text-foreground">privacy@bacwater.ai</a> to exercise any privacy right (access, correction, deletion).</p>
       </div>
     </div>
   );

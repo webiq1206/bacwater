@@ -31,7 +31,7 @@ export function Toaster() {
         <div
           key={t.id}
           className={
-            "min-w-[280px] rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-lift)] " +
+            "min-w-[280px] rounded-lg border border-border bg-card p-4 shadow-sm " +
             (t.variant === "destructive"
               ? "text-destructive"
               : t.variant === "success"

@@ -155,7 +155,7 @@ export default function SupplyCalculatorPage() {
                   className={cn(
                     "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
                     vialMg === mg
-                      ? "bg-brand text-brand-foreground border-brand"
+                      ? "bg-foreground text-white border-foreground"
                       : "border-border hover:bg-muted"
                   )}
                 >
@@ -174,9 +174,9 @@ export default function SupplyCalculatorPage() {
                   type="button"
                   onClick={() => setFrequency(f.id)}
                   className={cn(
-                    "text-left rounded-xl border px-4 py-3 transition-colors",
+                    "text-left rounded-lg border px-4 py-3 transition-colors",
                     frequency === f.id
-                      ? "border-brand bg-brand-soft/60 ring-1 ring-brand/40"
+                      ? "border-foreground bg-muted ring-1 ring-foreground/20"
                       : "border-border hover:bg-muted"
                   )}
                 >
@@ -198,7 +198,7 @@ export default function SupplyCalculatorPage() {
                   className={cn(
                     "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
                     !showCustomDuration && durationWeeks === d.weeks
-                      ? "bg-brand text-brand-foreground border-brand"
+                      ? "bg-foreground text-white border-foreground"
                       : "border-border hover:bg-muted"
                   )}
                 >
@@ -211,7 +211,7 @@ export default function SupplyCalculatorPage() {
                 className={cn(
                   "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
                   showCustomDuration
-                    ? "bg-brand text-brand-foreground border-brand"
+                    ? "bg-foreground text-white border-foreground"
                     : "border-border hover:bg-muted"
                 )}
               >
@@ -294,7 +294,7 @@ export default function SupplyCalculatorPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-start gap-2">
-                <Info className="h-4 w-4 text-brand mt-0.5 shrink-0" />
+                <Info className="h-4 w-4 text-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   We rounded everything up to whole boxes so you won&apos;t run
                   out mid-cycle. Numbers assume {results.bacPerVial} mL of BAC
@@ -324,7 +324,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 sm:p-7">
+    <div className="rounded-lg border border-border bg-card p-6 sm:p-7">
       <div className="eyebrow">Step {n} · of {total}</div>
       <h3 className="mt-2 text-xl font-serif font-medium leading-tight">{title}</h3>
       {hint ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p> : null}
@@ -346,8 +346,8 @@ function SupplyRow({
 }) {
   return (
     <div className="flex items-start gap-4">
-      <div className="shrink-0 w-12 h-12 rounded-xl bg-brand-soft grid place-items-center">
-        <div className="font-semibold text-brand-ink text-lg tabular-nums">
+      <div className="shrink-0 w-12 h-12 rounded-lg bg-muted grid place-items-center">
+        <div className="font-semibold text-foreground text-lg tabular-nums">
           {qty}
         </div>
       </div>
@@ -356,7 +356,7 @@ function SupplyRow({
         <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{why}</div>
       </div>
       {buyable ? (
-        <Check className="h-4 w-4 text-brand shrink-0 mt-2" />
+        <Check className="h-4 w-4 text-foreground shrink-0 mt-2" />
       ) : null}
     </div>
   );

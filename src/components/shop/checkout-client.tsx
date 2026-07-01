@@ -137,7 +137,7 @@ export function CheckoutClient() {
           <ul className="divide-y divide-border">
             {items.map((i) => (
               <li key={i.productId} className="py-3 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-muted grid place-items-center text-lg shrink-0">
+                <div className="h-10 w-10 rounded-lg bg-muted grid place-items-center text-lg shrink-0">
                   {i.sku.startsWith("BAC") ? "💧" : i.sku.startsWith("SYR") ? "💉" : i.sku.startsWith("ALC") ? "🧴" : "📦"}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -157,7 +157,7 @@ export function CheckoutClient() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Shipping</span>
-              <span>{shipping === 0 ? <span className="text-brand font-medium">Free</span> : formatCurrency(shipping)}</span>
+              <span>{shipping === 0 ? <span className="text-foreground font-medium">Free</span> : formatCurrency(shipping)}</span>
             </div>
             {shipping > 0 ? (
               <p className="text-xs text-muted-foreground">Free shipping on orders over $50</p>

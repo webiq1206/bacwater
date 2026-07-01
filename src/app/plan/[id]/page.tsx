@@ -109,7 +109,7 @@ export default async function PublicPlanPage({ params }: Props) {
 
           <Card>
             <CardContent className="p-5">
-              <div className="flex items-center gap-2 text-brand">
+              <div className="flex items-center gap-2 text-foreground">
                 <Sparkles className="h-4 w-4" />
                 <div className="text-sm font-medium">Tip</div>
               </div>

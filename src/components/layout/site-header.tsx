@@ -27,7 +27,7 @@ export function SiteHeader() {
   if (isAdmin) return null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="/"
@@ -51,10 +51,10 @@ export function SiteHeader() {
                 key={n.href}
                 href={n.href}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+                  "px-3 py-1.5 text-sm transition-colors",
                   active
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    ? "text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {n.label}
@@ -66,13 +66,13 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Link
             href="/cart"
-            className="relative inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 h-10 text-sm font-medium hover:bg-muted transition-colors"
+            className="relative inline-flex items-center gap-2 border border-border bg-white px-3 h-10 text-sm font-medium hover:bg-muted transition-colors"
             aria-label="Cart"
           >
             <ShoppingBag className="h-4 w-4" />
             <span className="hidden sm:inline">Cart</span>
             {hydrated && count > 0 ? (
-              <span className="absolute -top-1 -right-1 rounded-full bg-brand text-brand-foreground text-[10px] font-bold h-5 min-w-5 px-1 grid place-items-center">
+              <span className="absolute -top-1 -right-1 rounded-full bg-foreground text-white text-[10px] font-bold h-5 min-w-5 px-1 grid place-items-center">
                 {count}
               </span>
             ) : null}
@@ -81,21 +81,21 @@ export function SiteHeader() {
             type="button"
             aria-label="Menu"
             onClick={() => setOpen((s) => !s)}
-            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-border hover:bg-muted"
+            className="md:hidden inline-flex h-10 w-10 items-center justify-center border border-border hover:bg-muted"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
       </div>
       {open ? (
-        <div className="md:hidden border-t border-border bg-background">
+        <div className="md:hidden border-t border-border bg-white">
           <nav className="mx-auto flex max-w-7xl flex-col p-3">
             {NAV.map((n) => (
               <Link
                 key={n.href}
                 href={n.href}
                 onClick={() => setOpen(false)}
-                className="rounded-2xl px-4 py-3 text-base font-medium text-foreground hover:bg-muted"
+                className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border last:border-b-0"
               >
                 {n.label}
               </Link>

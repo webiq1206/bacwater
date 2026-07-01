@@ -14,7 +14,7 @@ export function UserRoleSwitcher({ userId, role }: { userId: string; role: "user
       <button
         type="button"
         disabled={pending}
-        className="text-xs text-brand hover:underline"
+        className="text-xs text-foreground hover:underline"
         onClick={() => {
           const next = current === "admin" ? "user" : "admin";
           startTransition(async () => {

@@ -33,7 +33,7 @@ export default async function LearnPage() {
         {guides.map((g) => (
           <li key={g.id}>
             <Link href={`/learn/${g.slug}`} className="group">
-              <Card className="h-full hover:shadow-[var(--shadow-lift)] transition-shadow">
+              <Card className="h-full hover:bg-muted/50 transition-colors">
                 <CardContent className="p-6">
                   <h2 className="text-lg font-semibold tracking-tight group-hover:underline">
                     {g.title}
@@ -41,7 +41,7 @@ export default async function LearnPage() {
                   <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
                     {g.body.replace(/[*_#`]/g, "").slice(0, 180)}
                   </p>
-                  <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand group-hover:gap-2 transition-all">
+                  <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
                     Read <ArrowRight className="h-4 w-4" />
                   </div>
                 </CardContent>

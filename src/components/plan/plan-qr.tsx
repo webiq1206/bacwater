@@ -16,7 +16,7 @@ export function PlanQr({ publicId, size = 160 }: { publicId: string; size?: numb
     }
   }, [publicId, size]);
   return (
-    <div className="mt-2 rounded-2xl bg-muted p-3 grid place-items-center">
+    <div className="mt-2 rounded-lg bg-muted p-3 grid place-items-center">
       <canvas ref={canvasRef} />
     </div>
   );

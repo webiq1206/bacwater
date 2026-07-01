@@ -12,7 +12,7 @@ export function SyringeVisual({ fillPercent, readoutLabel, scale, maxLabel }: Pr
     : [0, 25, 50, 75, 100];
 
   return (
-    <div className="rounded-2xl border border-border bg-muted/40 p-5">
+    <div className="border border-border bg-muted/40 p-5">
       <div className="text-xs uppercase tracking-wide text-muted-foreground">
         Draw to this level
       </div>

@@ -27,7 +27,7 @@ export function PlanResults({ result }: Props) {
               </h3>
             </div>
             <div className="text-right">
-              <div className="text-3xl font-semibold text-brand tabular-nums">
+              <div className="text-3xl font-semibold text-foreground tabular-nums">
                 {syringeReadout.kind === "u100"
                   ? `${syringeReadout.valueRounded} u`
                   : `${syringeReadout.valueRounded} mL`}
@@ -63,7 +63,7 @@ export function PlanResults({ result }: Props) {
           {result.warnings.length > 0 ? (
             <div className="mt-6 space-y-2">
               {result.warnings.map((w, i) => (
-                <div key={i} className="flex items-start gap-2 rounded-2xl bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900">
+                <div key={i} className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900">
                   <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" /> {w}
                 </div>
               ))}
@@ -87,7 +87,7 @@ export function PlanResults({ result }: Props) {
           <ol className="mt-4 space-y-3">
             {result.instructions.map((s, i) => (
               <li key={i} className="flex gap-3 text-sm">
-                <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-brand-foreground text-[11px] font-semibold">
+                <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-foreground text-white text-[11px] font-semibold">
                   {i + 1}
                 </span>
                 <span className="pt-0.5">{s}</span>
@@ -110,7 +110,7 @@ export function PlanResults({ result }: Props) {
               <div className="text-xs text-muted-foreground">Shelf life</div>
               <div className="text-lg font-semibold">{result.expiration.days} days refrigerated</div>
               {result.expiration.date ? (
-                <div className="mt-1 text-sm text-brand">
+                <div className="mt-1 text-sm text-foreground">
                   Expires {formatDate(result.expiration.date)}
                 </div>
               ) : null}
@@ -130,7 +130,7 @@ export function PlanResults({ result }: Props) {
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             {result.assumptions.map((a, i) => (
               <li key={i} className="flex gap-2">
-                <Check className="h-4 w-4 mt-0.5 text-brand shrink-0" />
+                <Check className="h-4 w-4 mt-0.5 text-foreground shrink-0" />
                 <span>{a}</span>
               </li>
             ))}
@@ -143,7 +143,7 @@ export function PlanResults({ result }: Props) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-muted/70 p-4">
+    <div className="rounded-lg bg-muted/50 p-4">
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className="mt-1 text-lg font-semibold tabular-nums">{value}</div>
     </div>

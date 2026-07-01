@@ -67,7 +67,7 @@ export default async function GuidePage({ params }: Props) {
         {renderBody(guide.body)}
       </article>
 
-      <div className="mt-10 rounded-3xl border border-border bg-muted/50 p-6 flex flex-wrap items-center gap-3 justify-between">
+      <div className="mt-10 rounded-lg border border-border bg-muted/50 p-6 flex flex-wrap items-center gap-3 justify-between">
         <div>
           <div className="font-medium">Ready to build a plan?</div>
           <div className="text-sm text-muted-foreground">

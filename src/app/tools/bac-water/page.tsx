@@ -84,9 +84,9 @@ export default function BacWaterCalculatorPage() {
                   type="button"
                   onClick={() => { setVialInput(mg); setVialUnit("mg"); }}
                   className={cn(
-                    "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
+                    "border px-4 h-10 text-sm font-medium transition-colors",
                     vialUnit === "mg" && vialInput === mg
-                      ? "bg-brand text-brand-foreground border-brand"
+                      ? "bg-foreground text-white border-foreground"
                       : "border-border hover:bg-muted"
                   )}
                 >
@@ -140,7 +140,7 @@ export default function BacWaterCalculatorPage() {
             <CardContent className="p-7 sm:p-9">
               <div className="eyebrow">Your answer</div>
               <div className="mt-3 flex items-baseline gap-2">
-                <span className="text-5xl sm:text-6xl font-serif font-medium tracking-tight text-brand-ink tabular-nums">
+                <span className="text-5xl sm:text-6xl font-serif font-medium tracking-tight text-foreground tabular-nums">
                   {rec}
                 </span>
                 <span className="text-2xl text-muted-foreground font-serif">mL</span>
@@ -175,7 +175,7 @@ export default function BacWaterCalculatorPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-start gap-2.5">
-                <Lightbulb className="h-4 w-4 text-brand mt-0.5 shrink-0" />
+                <Lightbulb className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   <b>Why this number?</b> We aim for about 10 units per dose on
                   a U-100 insulin syringe. That makes it easy to draw accurately
@@ -189,7 +189,7 @@ export default function BacWaterCalculatorPage() {
           {/* Teaching sections */}
           <div className="mt-6 space-y-8">
             <TeachingSection
-              icon={<Droplets className="h-5 w-5 text-brand" />}
+              icon={<Droplets className="h-5 w-5 text-foreground" />}
               title="What is bacteriostatic water?"
             >
               <p>
@@ -205,7 +205,7 @@ export default function BacWaterCalculatorPage() {
             </TeachingSection>
 
             <TeachingSection
-              icon={<Beaker className="h-5 w-5 text-brand" />}
+              icon={<Beaker className="h-5 w-5 text-foreground" />}
               title="What does &ldquo;reconstitute&rdquo; mean?"
             >
               <p>
@@ -217,7 +217,7 @@ export default function BacWaterCalculatorPage() {
             </TeachingSection>
 
             <TeachingSection
-              icon={<HelpCircle className="h-5 w-5 text-brand" />}
+              icon={<HelpCircle className="h-5 w-5 text-foreground" />}
               title="Why does the amount of water matter?"
             >
               <p>
@@ -263,7 +263,7 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 sm:p-7">
+    <div className="border border-border bg-card p-6 sm:p-7">
       <div className="eyebrow">Step {n} &middot; of {total}</div>
       <h3 className="mt-2 text-xl font-serif font-medium leading-tight">{title}</h3>
       {hint ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p> : null}
@@ -283,14 +283,14 @@ function ResultRow({ label, value }: { label: string; value: string }) {
 
 function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: Unit) => void; options: [Unit, Unit] }) {
   return (
-    <div className="inline-flex rounded-full border border-border bg-muted p-0.5 shrink-0">
+    <div className="inline-flex border border-border bg-muted p-0.5 shrink-0">
       {options.map((opt) => (
         <button
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
           className={cn(
-            "rounded-full px-3 h-8 text-xs font-semibold transition-colors",
+            "px-3 h-8 text-xs font-semibold transition-colors",
             value === opt
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
@@ -305,8 +305,8 @@ function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: U
 
 function ConversionHint({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-2 flex items-center gap-1.5 text-xs text-brand-ink">
-      <Check className="h-3 w-3" />
+    <div className="mt-2 flex items-center gap-1.5 text-xs text-foreground">
+      <Check className="h-3 w-3 text-muted-foreground" />
       {children}
     </div>
   );
@@ -316,7 +316,7 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
   return (
     <div>
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-xl bg-brand-soft grid place-items-center shrink-0">{icon}</div>
+        <div className="h-10 w-10 border border-border grid place-items-center shrink-0">{icon}</div>
         <h3 className="text-lg font-serif font-medium">{title}</h3>
       </div>
       <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
@@ -329,11 +329,11 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
 function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full hover:shadow-[var(--shadow-lift)] transition-shadow">
+      <Card className="h-full hover:bg-muted/50 transition-colors">
         <CardContent className="p-6">
           <h3 className="font-semibold group-hover:underline">{title}</h3>
           <p className="mt-2 text-sm text-muted-foreground">{body}</p>
-          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand group-hover:gap-2 transition-all">
+          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
             Open <ArrowRight className="h-4 w-4" />
           </div>
         </CardContent>

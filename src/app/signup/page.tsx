@@ -19,7 +19,7 @@ export default function SignUpPage() {
       </Card>
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/signin" className="text-brand font-medium hover:underline">
+        <Link href="/signin" className="text-foreground font-medium hover:underline">
           Sign in
         </Link>
       </p>

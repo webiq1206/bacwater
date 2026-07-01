@@ -24,7 +24,7 @@ export default function PlanNewPage() {
         </div>
         <Link
           href="/plan"
-          className="text-sm text-brand font-medium hover:underline whitespace-nowrap inline-flex items-center gap-1 mt-1"
+          className="text-sm text-foreground font-medium hover:underline whitespace-nowrap inline-flex items-center gap-1 mt-1"
         >
           Show everything at once <ArrowRight className="h-3.5 w-3.5" />
         </Link>

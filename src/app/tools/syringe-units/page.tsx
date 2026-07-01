@@ -61,16 +61,16 @@ export default function SyringeUnitConverterPage() {
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl bg-brand-soft border border-brand-soft p-5 text-center">
-            <div className="text-lg font-medium text-brand-ink">
+          <div className="mt-6 bg-muted border border-border p-5 text-center">
+            <div className="text-lg font-medium text-foreground">
               {units} units = {ml} mL
             </div>
-            <p className="mt-1 text-xs text-brand-ink/70">
+            <p className="mt-1 text-xs text-foreground/70">
               On a U-100 insulin syringe, 100 units always equals 1 mL.
             </p>
           </div>
 
-          <div className="mt-6 rounded-xl bg-muted/60 border border-border p-4">
+          <div className="mt-6 bg-muted/60 border border-border p-4">
             <p className="text-sm font-medium">Quick reference</p>
             <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
               {[
@@ -101,7 +101,7 @@ export default function SyringeUnitConverterPage() {
       {/* Teaching sections */}
       <div className="mt-16 space-y-10">
         <TeachingSection
-          icon={<Syringe className="h-5 w-5 text-brand" />}
+          icon={<Syringe className="h-5 w-5 text-muted-foreground" />}
           title="What are syringe units?"
         >
           <p>
@@ -117,7 +117,7 @@ export default function SyringeUnitConverterPage() {
         </TeachingSection>
 
         <TeachingSection
-          icon={<Ruler className="h-5 w-5 text-brand" />}
+          icon={<Ruler className="h-5 w-5 text-muted-foreground" />}
           title="How do I read my syringe?"
         >
           <p>
@@ -136,7 +136,7 @@ export default function SyringeUnitConverterPage() {
         </TeachingSection>
 
         <TeachingSection
-          icon={<HelpCircle className="h-5 w-5 text-brand" />}
+          icon={<HelpCircle className="h-5 w-5 text-muted-foreground" />}
           title="Why not just use mL?"
         >
           <p>
@@ -168,7 +168,7 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
   return (
     <div>
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-xl bg-brand-soft grid place-items-center shrink-0">{icon}</div>
+        <div className="h-10 w-10 border border-border grid place-items-center shrink-0">{icon}</div>
         <h3 className="text-lg font-serif font-medium">{title}</h3>
       </div>
       <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
@@ -181,11 +181,11 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
 function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full hover:shadow-[var(--shadow-lift)] transition-shadow">
+      <Card className="h-full hover:bg-muted/50 transition-colors">
         <CardContent className="p-6">
           <h3 className="font-semibold group-hover:underline">{title}</h3>
           <p className="mt-2 text-sm text-muted-foreground">{body}</p>
-          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand group-hover:gap-2 transition-all">
+          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
             Open <ArrowRight className="h-4 w-4" />
           </div>
         </CardContent>

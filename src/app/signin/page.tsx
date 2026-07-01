@@ -22,7 +22,7 @@ export default function SignInPage() {
       </Card>
       <p className="mt-6 text-center text-sm text-muted-foreground">
         New here?{" "}
-        <Link href="/signup" className="text-brand font-medium hover:underline">
+        <Link href="/signup" className="text-foreground font-medium hover:underline">
           Create an account
         </Link>
       </p>

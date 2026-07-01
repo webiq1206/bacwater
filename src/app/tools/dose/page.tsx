@@ -69,8 +69,8 @@ export default function DoseCalculatorPage() {
               <ConversionHint>{concInput} mcg/mL = {concInput / 1000} mg/mL</ConversionHint>
             ) : null}
 
-            <div className="mt-4 rounded-xl bg-brand-soft/50 border border-brand-soft p-3">
-              <p className="text-xs text-brand-ink leading-relaxed">
+            <div className="mt-4 bg-muted border border-border p-3">
+              <p className="text-xs text-foreground leading-relaxed">
                 <b>Not sure?</b> Concentration = vial strength &divide; BAC water added.
                 Example: a 5 mg vial mixed with 2 mL of BAC water = 2.5 mg/mL.
                 Use our <Link href="/tools/bac-water" className="underline font-medium">BAC Water Calculator</Link> to find yours.
@@ -89,9 +89,9 @@ export default function DoseCalculatorPage() {
                 type="button"
                 onClick={() => setVolMode("units")}
                 className={cn(
-                  "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
+                  "border px-4 h-10 text-sm font-medium transition-colors",
                   volMode === "units"
-                    ? "bg-brand text-brand-foreground border-brand"
+                    ? "bg-foreground text-white border-foreground"
                     : "border-border hover:bg-muted"
                 )}
               >
@@ -101,9 +101,9 @@ export default function DoseCalculatorPage() {
                 type="button"
                 onClick={() => setVolMode("ml")}
                 className={cn(
-                  "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
+                  "border px-4 h-10 text-sm font-medium transition-colors",
                   volMode === "ml"
-                    ? "bg-brand text-brand-foreground border-brand"
+                    ? "bg-foreground text-white border-foreground"
                     : "border-border hover:bg-muted"
                 )}
               >
@@ -144,7 +144,7 @@ export default function DoseCalculatorPage() {
             <CardContent className="p-7 sm:p-9">
               <div className="eyebrow">Your dose</div>
               <div className="mt-3 flex items-baseline gap-2">
-                <span className="text-5xl sm:text-6xl font-serif font-medium tracking-tight text-brand-ink tabular-nums">
+                <span className="text-5xl sm:text-6xl font-serif font-medium tracking-tight text-foreground tabular-nums">
                   {result.doseMcg.toFixed(1)}
                 </span>
                 <span className="text-2xl text-muted-foreground font-serif">mcg</span>
@@ -183,7 +183,7 @@ export default function DoseCalculatorPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-start gap-2.5">
-                <Lightbulb className="h-4 w-4 text-brand mt-0.5 shrink-0" />
+                <Lightbulb className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   <b>The math:</b> dose = concentration &times; volume.
                   {" "}{concMgPerMl.toFixed(2)} mg/mL &times; {result.ml.toFixed(3)} mL
@@ -196,7 +196,7 @@ export default function DoseCalculatorPage() {
           {/* Teaching sections */}
           <div className="mt-6 space-y-8">
             <TeachingSection
-              icon={<FlaskConical className="h-5 w-5 text-brand" />}
+              icon={<FlaskConical className="h-5 w-5 text-foreground" />}
               title="What is concentration?"
             >
               <p>
@@ -212,7 +212,7 @@ export default function DoseCalculatorPage() {
             </TeachingSection>
 
             <TeachingSection
-              icon={<Ruler className="h-5 w-5 text-brand" />}
+              icon={<Ruler className="h-5 w-5 text-foreground" />}
               title="Units vs. mL — what's the difference?"
             >
               <p>
@@ -222,14 +222,14 @@ export default function DoseCalculatorPage() {
               </p>
               <p>
                 If your syringe shows units, just divide by 100 to get mL. Or use our{" "}
-                <Link href="/tools/syringe-units" className="text-brand underline font-medium">
+                <Link href="/tools/syringe-units" className="text-foreground underline font-medium">
                   Syringe Unit Converter
                 </Link>.
               </p>
             </TeachingSection>
 
             <TeachingSection
-              icon={<HelpCircle className="h-5 w-5 text-brand" />}
+              icon={<HelpCircle className="h-5 w-5 text-foreground" />}
               title="When would I use this calculator?"
             >
               <p>
@@ -273,7 +273,7 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 sm:p-7">
+    <div className="border border-border bg-card p-6 sm:p-7">
       <div className="eyebrow">Step {n} &middot; of {total}</div>
       <h3 className="mt-2 text-xl font-serif font-medium leading-tight">{title}</h3>
       {hint ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p> : null}
@@ -293,14 +293,14 @@ function ResultRow({ label, value }: { label: string; value: string }) {
 
 function UnitToggle({ value, onChange, labels, values }: { value: Unit; onChange: (u: Unit) => void; labels: [string, string]; values: [Unit, Unit] }) {
   return (
-    <div className="inline-flex rounded-full border border-border bg-muted p-0.5 shrink-0">
+    <div className="inline-flex border border-border bg-muted p-0.5 shrink-0">
       {values.map((v, i) => (
         <button
           key={v}
           type="button"
           onClick={() => onChange(v)}
           className={cn(
-            "rounded-full px-3 h-8 text-xs font-semibold transition-colors whitespace-nowrap",
+            "px-3 h-8 text-xs font-semibold transition-colors whitespace-nowrap",
             value === v
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
@@ -315,7 +315,7 @@ function UnitToggle({ value, onChange, labels, values }: { value: Unit; onChange
 
 function ConversionHint({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-2 flex items-center gap-1.5 text-xs text-brand-ink">
+    <div className="mt-2 flex items-center gap-1.5 text-xs text-foreground">
       <Check className="h-3 w-3" />
       {children}
     </div>
@@ -326,7 +326,7 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
   return (
     <div>
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-xl bg-brand-soft grid place-items-center shrink-0">{icon}</div>
+        <div className="h-10 w-10 border border-border grid place-items-center shrink-0">{icon}</div>
         <h3 className="text-lg font-serif font-medium">{title}</h3>
       </div>
       <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
@@ -339,11 +339,11 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
 function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full hover:shadow-[var(--shadow-lift)] transition-shadow">
+      <Card className="h-full hover:bg-muted/50 transition-colors">
         <CardContent className="p-6">
           <h3 className="font-semibold group-hover:underline">{title}</h3>
           <p className="mt-2 text-sm text-muted-foreground">{body}</p>
-          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand group-hover:gap-2 transition-all">
+          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground underline group-hover:gap-2 transition-all">
             Open <ArrowRight className="h-4 w-4" />
           </div>
         </CardContent>

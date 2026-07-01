@@ -24,7 +24,7 @@ export default function PlanPage() {
         </div>
         <Link
           href="/plan/new"
-          className="text-sm text-brand font-medium hover:underline whitespace-nowrap mt-2"
+          className="text-sm text-foreground font-medium hover:underline whitespace-nowrap mt-2"
         >
           First time? Try step-by-step &rarr;
         </Link>

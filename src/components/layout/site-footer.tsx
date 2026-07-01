@@ -24,7 +24,7 @@ const FOOTER = {
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border">
+    <footer className="mt-20 border-t border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-14">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="max-w-sm">
