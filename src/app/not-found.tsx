@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+export const metadata = {
+  title: "Page Not Found",
+  robots: { index: false, follow: true },
+};
+
 const LINKS = [
   { href: "/", label: "Homepage" },
   { href: "/plan", label: "Build My Plan" },

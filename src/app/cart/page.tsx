@@ -1,6 +1,6 @@
 import { CartClient } from "@/components/shop/cart-client";
 
-export const metadata = { title: "Your Cart" };
+export const metadata = { title: "Your Cart", robots: { index: false, follow: false } };
 
 export default function CartPage() {
   return (

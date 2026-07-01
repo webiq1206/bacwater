@@ -17,9 +17,10 @@ export async function generateMetadata({ params }: Props) {
   const p = await prisma.product.findUnique({ where: { slug } });
   return p
     ? {
-        title: p.name,
+        title: `${p.name} - Buy Online`,
         description: p.description,
         openGraph: { title: p.name, description: p.description },
+        alternates: { canonical: `/shop/${slug}` },
       }
     : { title: "Product not found" };
 }
@@ -57,6 +58,18 @@ export default async function PdpPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <ProductJsonLd product={product} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQS.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }) }}
+      />
       <Breadcrumbs items={[
         { label: "Home", href: "/" },
         { label: "Shop", href: "/shop" },
@@ -124,6 +137,27 @@ export default async function PdpPage({ params }: Props) {
                 </AccordionItem>
               ))}
             </Accordion>
+          </div>
+
+          <div className="mt-8">
+            <h2 className="text-lg font-semibold">Learn more</h2>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>
+                <Link href="/learn/what-is-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">
+                  What is BAC water?
+                </Link>
+              </li>
+              <li>
+                <Link href="/learn/how-peptide-reconstitution-works" className="text-muted-foreground hover:text-foreground underline transition-colors">
+                  How peptide reconstitution works
+                </Link>
+              </li>
+              <li>
+                <Link href="/learn/how-to-use-an-insulin-syringe" className="text-muted-foreground hover:text-foreground underline transition-colors">
+                  How to use an insulin syringe
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

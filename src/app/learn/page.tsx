@@ -6,9 +6,9 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
-  title: "Learning Center",
+  title: "Peptide Reconstitution Guides & BAC Water Education",
   description:
-    "Beginner-friendly guides on BAC water, peptide reconstitution, syringes, storage, and dosing.",
+    "Free beginner guides: what BAC water is, how to reconstitute peptides, reading syringes, and safe storage. Written for first-timers.",
 };
 
 export default async function LearnPage() {
@@ -20,13 +20,32 @@ export default async function LearnPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
-        name="Learning Center"
-        description="Beginner-friendly guides on BAC water, peptide reconstitution, syringes, storage, and dosing."
+        name="Peptide Reconstitution Guides & BAC Water Education"
+        description="Free beginner guides: what BAC water is, how to reconstitute peptides, reading syringes, and safe storage. Written for first-timers."
         url="/learn"
         breadcrumb={[
           { name: "Home", url: "/" },
           { name: "Learning Center", url: "/learn" },
         ]}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Peptide Reconstitution Guides & BAC Water Education",
+          description: "Free beginner guides: what BAC water is, how to reconstitute peptides, reading syringes, and safe storage.",
+          url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai"}/learn`,
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: guides.map((g, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai"}/learn/${g.slug}`,
+              name: g.title,
+            })),
+          },
+        }) }}
       />
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Learning Center", href: "/learn" }]} />
       <div className="max-w-3xl">

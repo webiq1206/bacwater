@@ -1,7 +1,11 @@
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
-export const metadata = { title: "Terms of service" };
+export const metadata = {
+  title: "Terms of Service",
+  description: "Terms of service for BACwater.ai. Research use, accuracy, orders, returns, and site usage terms.",
+};
 
 export default function TermsPage() {
   return (
@@ -52,6 +56,9 @@ export default function TermsPage() {
         </p>
         <h2>5. Changes</h2>
         <p>We may update these terms at any time. Continued use constitutes acceptance.</p>
+        <div className="mt-8 pt-6 border-t border-border">
+          <Link href="/" className="text-sm font-medium text-foreground hover:underline">&larr; Back to BACwater.ai</Link>
+        </div>
       </div>
     </div>
   );

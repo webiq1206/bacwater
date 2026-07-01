@@ -33,7 +33,7 @@ export function SiteFooter() {
                 BACwater
               </span>
               <span className="text-[10px] text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
-                &amp; Co.
+.ai
               </span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">

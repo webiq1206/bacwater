@@ -1,4 +1,4 @@
-export function ArticleJsonLd({ title, body, slug, updatedAt }: { title: string; body: string; slug: string; updatedAt: Date }) {
+export function ArticleJsonLd({ title, body, slug, createdAt, updatedAt }: { title: string; body: string; slug: string; createdAt: Date; updatedAt: Date }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
   const jsonLd = {
     "@context": "https://schema.org",
@@ -6,7 +6,13 @@ export function ArticleJsonLd({ title, body, slug, updatedAt }: { title: string;
     headline: title,
     articleBody: body,
     url: `${siteUrl}/learn/${slug}`,
+    datePublished: createdAt.toISOString(),
     dateModified: updatedAt.toISOString(),
+    author: {
+      "@type": "Organization",
+      name: "BACwater.ai",
+      url: siteUrl,
+    },
     publisher: {
       "@type": "Organization",
       name: "BACwater.ai",

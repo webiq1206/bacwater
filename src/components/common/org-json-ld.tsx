@@ -6,7 +6,6 @@ export function OrgJsonLd() {
     name: "BACwater.ai",
     url: siteUrl,
     logo: `${siteUrl}/icon.svg`,
-    sameAs: [] as string[],
     description:
       "BACwater.ai is the complete BAC water calculator and reconstitution guide: deterministic calculations, printable plans, and premium supplies.",
     contactPoint: {

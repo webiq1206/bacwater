@@ -9,7 +9,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
-  title: "Shop Peptide Reconstitution Supplies",
+  title: "Buy BAC Water, Syringes & Supplies",
   description:
     "Premium bacteriostatic water, insulin syringes, and alcohol prep pads. Everything you need to reconstitute peptides safely. Free shipping available.",
 };
@@ -46,13 +46,27 @@ export default async function ShopPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
-        name="Shop Peptide Reconstitution Supplies"
+        name="Buy BAC Water, Syringes & Supplies"
         description="Premium bacteriostatic water, insulin syringes, and alcohol prep pads. Everything you need to reconstitute peptides safely. Free shipping available."
         url="/shop"
         breadcrumb={[
           { name: "Home", url: "/" },
           { name: "Shop", url: "/shop" },
         ]}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Peptide Reconstitution Supplies",
+          itemListElement: products.map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai"}/shop/${p.slug}`,
+            name: p.name,
+          })),
+        }) }}
       />
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Shop", href: "/shop" }]} />
       <div className="max-w-3xl">

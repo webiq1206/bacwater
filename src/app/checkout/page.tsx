@@ -1,6 +1,6 @@
 import { CheckoutClient } from "@/components/shop/checkout-client";
 
-export const metadata = { title: "Checkout" };
+export const metadata = { title: "Checkout", robots: { index: false, follow: false } };
 
 export default function CheckoutPage() {
   return (

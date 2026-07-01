@@ -73,6 +73,17 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <OrgJsonLd />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "BACwater.ai",
+            url: siteUrl,
+            description: "The complete BAC water calculator and reconstitution guide.",
+            publisher: { "@type": "Organization", name: "BACwater.ai" },
+          }) }}
+        />
         <CartHydrator />
         <SiteHeader />
         <main className="flex-1">{children}</main>

@@ -1,3 +1,5 @@
-import Page from "@/app/tools/syringe-units/page";
-export const metadata = { title: "mL ↔ units converter" };
-export default Page;
+import { redirect } from "next/navigation";
+
+export default function MlToUnitsPage() {
+  redirect("/tools/syringe-units");
+}

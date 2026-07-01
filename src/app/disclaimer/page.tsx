@@ -1,14 +1,18 @@
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
-export const metadata = { title: "Disclaimer" };
+export const metadata = {
+  title: "Disclaimer",
+  description: "BACwater.ai is an educational and research tool. Products are for laboratory research only. Not medical advice.",
+};
 
 export default function DisclaimerPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Disclaimer"
-        description="Disclaimer for BACwater.ai."
+        description="BACwater.ai is an educational and research tool. Products are for laboratory research only. Not medical advice."
         url="/disclaimer"
         breadcrumb={[
           { name: "Home", url: "/" },
@@ -41,6 +45,9 @@ export default function DisclaimerPage() {
           By using this site, you accept full responsibility for your use of
           the information and products offered.
         </p>
+        <div className="mt-8 pt-6 border-t border-border">
+          <Link href="/" className="text-sm font-medium text-foreground hover:underline">&larr; Back to BACwater.ai</Link>
+        </div>
       </div>
     </div>
   );

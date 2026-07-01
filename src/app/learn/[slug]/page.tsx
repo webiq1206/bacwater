@@ -16,7 +16,8 @@ export async function generateMetadata({ params }: Props) {
     ? {
         title: g.title,
         description: g.body.replace(/[*_#`]/g, "").slice(0, 155),
-        openGraph: { title: g.title, description: g.body.slice(0, 155) },
+        openGraph: { title: g.title, description: g.body.replace(/[*_#`]/g, "").slice(0, 155) },
+        alternates: { canonical: `/learn/${slug}` },
       }
     : { title: "Guide not found" };
 }
@@ -29,11 +30,16 @@ export async function generateStaticParams() {
   return guides.map((g) => ({ slug: g.slug }));
 }
 
-// tiny markdown-lite renderer for bold + paragraphs
 function renderBody(body: string) {
-  const paragraphs = body.split(/\n\n+/);
-  return paragraphs.map((p, i) => {
-    const html = p
+  const blocks = body.split(/\n\n+/);
+  return blocks.map((block, i) => {
+    if (block.startsWith("### ")) {
+      return <h3 key={i} className="mt-8 text-lg font-semibold tracking-tight">{block.slice(4)}</h3>;
+    }
+    if (block.startsWith("## ")) {
+      return <h2 key={i} className="mt-10 text-xl font-semibold tracking-tight">{block.slice(3)}</h2>;
+    }
+    const html = block
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
       .replace(/\*([^*]+)\*/g, "<em>$1</em>");
     return (
@@ -58,7 +64,7 @@ export default async function GuidePage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
-      <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} updatedAt={guide.updatedAt} />
+      <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} createdAt={guide.createdAt} updatedAt={guide.updatedAt} />
       <Breadcrumbs items={[
         { label: "Home", href: "/" },
         { label: "Learning Center", href: "/learn" },

@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { ContactForm } from "@/components/common/contact-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
-  title: "Contact BACwater.ai",
+  title: "Contact Us",
   description: "Have a question about an order, a plan, or our products? Reach the BACwater.ai team.",
 };
 
@@ -29,6 +30,14 @@ export default function ContactPage() {
         Questions about an order, a plan, a product, or wholesale pricing?
         Send us a note and we&apos;ll get back to you within one business day.
       </p>
+      <div className="mt-6 border border-border p-4">
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          For quick answers, check our{" "}
+          <Link href="/faq" className="font-medium text-foreground underline">FAQ</Link>{" "}
+          or browse the{" "}
+          <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
+        </p>
+      </div>
       <Card className="mt-8">
         <CardContent className="p-8">
           <ContactForm />

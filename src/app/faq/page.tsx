@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
-  title: "Frequently Asked Questions",
+  title: "BAC Water & Peptide Reconstitution FAQ",
   description:
     "Answers to the most common questions about BAC water, peptide reconstitution, dosing, storage, and shopping with BACwater.ai.",
 };
@@ -49,11 +49,18 @@ export default async function FaqPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: CORE.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
+    mainEntity: [
+      ...CORE.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+      ...dbFaqs.map((f) => ({
+        "@type": "Question",
+        name: f.title,
+        acceptedAnswer: { "@type": "Answer", text: f.body },
+      })),
+    ],
   };
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
@@ -89,7 +96,18 @@ export default async function FaqPage() {
           {CORE.map((f, i) => (
             <AccordionItem key={i} value={`c-${i}`}>
               <AccordionTrigger>{f.q}</AccordionTrigger>
-              <AccordionContent>{f.a}</AccordionContent>
+              <AccordionContent>
+                {f.a}
+                {i === 1 && (
+                  <span> Use our <Link href="/tools/bac-water" className="font-medium underline">BAC water calculator</Link> for an exact answer based on your vial.</span>
+                )}
+                {i === 2 && (
+                  <span> See our <Link href="/tools/syringe-units" className="font-medium underline">syringe unit converter</Link> for conversion help.</span>
+                )}
+                {i === 3 && (
+                  <span> Our <Link href="/plan" className="font-medium underline">plan builder</Link> tracks shelf life for each peptide automatically.</span>
+                )}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
