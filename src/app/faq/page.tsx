@@ -58,7 +58,7 @@ export default async function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <h1 className="text-4xl font-semibold tracking-tight">FAQ</h1>
+      <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">FAQ</h1>
       <p className="mt-3 text-muted-foreground">
         The most-asked questions about BAC water and peptide reconstitution.
       </p>

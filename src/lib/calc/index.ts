@@ -93,6 +93,16 @@ export interface CalcInput {
   bacWaterMl?: number;
   syringeType: SyringeType;
   dateMixed?: string | Date | null;
+  /**
+   * Optional second peptide in the SAME vial (a blend). Common example:
+   * Ipamorelin + CJC-1295 (no DAC). Because both peptides sit in the
+   * same solution, every draw delivers both peptides in proportion.
+   */
+  secondary?: {
+    peptideSlug?: string;
+    peptideName?: string;
+    vialStrengthMg: number;
+  } | null;
 }
 
 export interface SupplyRecommendation {
@@ -103,7 +113,7 @@ export interface SupplyRecommendation {
 }
 
 export interface CalcResult {
-  input: Required<Omit<CalcInput, "dateMixed" | "peptideSlug" | "peptideName" | "bacWaterMl">> & {
+  input: Required<Omit<CalcInput, "dateMixed" | "peptideSlug" | "peptideName" | "bacWaterMl" | "secondary">> & {
     peptideSlug: string | null;
     peptideName: string | null;
     bacWaterMl: number;
@@ -134,6 +144,16 @@ export interface CalcResult {
   errors: string[];
   summary: string;
   instructions: string[];
+  /**
+   * For blends: the "companion" dose — the amount of the second peptide
+   * delivered alongside every draw of the primary dose.
+   */
+  secondary?: {
+    peptideName: string;
+    vialStrengthMg: number;
+    concentrationMgPerMl: number;
+    companionDoseMcg: number;
+  };
 }
 
 const MG_PER_MCG = 0.001;
@@ -351,13 +371,56 @@ export function calculate(input: CalcInput): CalcResult {
     syringe,
   });
 
+  // --- Secondary peptide (blend) support ---
+  let secondaryOutput: CalcResult["secondary"];
+  let secondaryName: string | null = null;
+  if (input.secondary && isFiniteNumber(input.secondary.vialStrengthMg) && input.secondary.vialStrengthMg > 0) {
+    const secondaryRef = input.secondary.peptideSlug
+      ? findPeptide(input.secondary.peptideSlug)
+      : null;
+    const secondaryVialMg = Math.max(0.0001, input.secondary.vialStrengthMg);
+    const secondaryConcentration = secondaryVialMg / usedBacMl;
+    const companionDoseMcg = doseVolumeMl * secondaryConcentration * 1000;
+    secondaryName =
+      input.secondary.peptideName || secondaryRef?.name || "Secondary peptide";
+    secondaryOutput = {
+      peptideName: secondaryName,
+      vialStrengthMg: secondaryVialMg,
+      concentrationMgPerMl: round(secondaryConcentration, 4),
+      companionDoseMcg: round(companionDoseMcg, 1),
+    };
+
+    // Blend: expiration is limited by the shorter-lived peptide.
+    const secondaryDays = secondaryRef?.refrigeratedShelfDays ?? days;
+    if (secondaryDays < days) {
+      // Recompute expiration date using the shorter shelf life.
+      if (input.dateMixed) {
+        const d2 = new Date(input.dateMixed);
+        if (!Number.isNaN(d2.getTime())) {
+          d2.setDate(d2.getDate() + secondaryDays);
+          expDate = d2.toISOString();
+        }
+      }
+    }
+    assumptions.push(
+      `Blend detected: every draw delivers both peptides in proportion. Companion ${secondaryName} dose = ${round(companionDoseMcg, 0)} mcg per injection.`
+    );
+  }
+
+  const displayName = secondaryName
+    ? `${peptideName || "peptide"} + ${secondaryName}`
+    : peptideName || "peptide";
+
   const summary =
-    `Mix ${vialStrengthMg} mg of ${peptideName || "peptide"} with ${round(usedBacMl, 2)} mL of BAC water. ` +
+    `Mix ${vialStrengthMg} mg of ${displayName} with ${round(usedBacMl, 2)} mL of BAC water. ` +
     `Each ${doseMcg} mcg dose is ${round(doseVolumeMl, 3)} mL — ` +
     (syringe.scale === "u100"
       ? `${round(syringeUnits, 1)} units on your ${syringe.label}.`
       : `${round(doseVolumeMl, 2)} mL on your ${syringe.label}.`) +
-    ` You'll get about ${dosesPerVial} dose${dosesPerVial === 1 ? "" : "s"} per vial.`;
+    ` You'll get about ${dosesPerVial} dose${dosesPerVial === 1 ? "" : "s"} per vial.` +
+    (secondaryOutput
+      ? ` Each draw also delivers ${round(secondaryOutput.companionDoseMcg, 0)} mcg of ${secondaryOutput.peptideName}.`
+      : "");
 
   return {
     input: {
@@ -390,6 +453,7 @@ export function calculate(input: CalcInput): CalcResult {
     errors,
     summary,
     instructions,
+    secondary: secondaryOutput,
   };
 }
 

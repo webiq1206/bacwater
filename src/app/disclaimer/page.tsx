@@ -3,7 +3,7 @@ export const metadata = { title: "Disclaimer" };
 export default function DisclaimerPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <h1 className="text-4xl font-semibold tracking-tight">Disclaimer</h1>
+      <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">Disclaimer</h1>
       <div className="mt-6 prose prose-neutral max-w-none text-foreground/90 space-y-4">
         <p>
           BACWater.ai is an educational and research tool. Content on this site

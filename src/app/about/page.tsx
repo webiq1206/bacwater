@@ -10,7 +10,7 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <h1 className="text-4xl font-semibold tracking-tight">About BACWater.ai</h1>
+      <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">About BACWater.ai</h1>
       <div className="mt-6 space-y-5 text-lg text-foreground/90 leading-relaxed">
         <p>
           BACWater.ai is a small, focused utility platform. We built it because

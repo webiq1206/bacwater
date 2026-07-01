@@ -66,7 +66,7 @@ export default async function PdpPage({ params }: Props) {
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
             {product.category}
           </div>
-          <h1 className="mt-1 text-3xl sm:text-4xl font-semibold tracking-tight">
+          <h1 className="mt-1 text-3xl sm:text-4xl sm:text-5xl font-serif font-medium tracking-tight">
             {product.name}
           </h1>
           <div className="mt-4 text-2xl font-semibold tabular-nums">

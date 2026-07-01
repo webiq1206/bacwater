@@ -28,18 +28,18 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-14">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="max-w-sm">
-            <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-              <span
-                aria-hidden
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand text-brand-foreground text-[11px] font-bold"
-              >
-                BW
+            <Link href="/" className="flex items-baseline gap-2">
+              <span className="font-serif text-2xl font-medium tracking-tight leading-none">
+                BACWater
               </span>
-              <span>BACWater.ai</span>
+              <span className="text-[10px] text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
+                &amp; Co.
+              </span>
             </Link>
-            <p className="mt-3 text-sm text-muted-foreground">
-              The trusted utility for peptide reconstitution. Build a plan, get
-              exact syringe units, download a PDF, and buy the supplies you need.
+            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+              A calm, trusted utility for peptide reconstitution. Build a plan,
+              get exact syringe units, download a PDF, and buy the supplies you
+              need.
             </p>
           </div>
           {Object.entries(FOOTER).map(([title, links]) => (

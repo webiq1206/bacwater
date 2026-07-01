@@ -52,21 +52,18 @@ export default async function HomePage() {
   return (
     <div>
       <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.emerald.50),transparent_60%)]" />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-20 sm:pt-28 pb-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 text-xs text-muted-foreground">
-            <Sparkles className="h-3.5 w-3.5 text-brand" />
+          <div className="eyebrow">
             The trusted utility for peptide reconstitution
           </div>
-          <h1 className="mt-6 text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05] text-balance">
-            Reconstitute peptides
+          <h1 className="mt-5 text-5xl sm:text-7xl font-serif font-medium tracking-tight leading-[1.02] text-balance">
+            Reconstitute peptides,
             <br />
-            <span className="text-brand">accurately, calmly, in minutes.</span>
+            <span className="italic text-brand-ink">calmly</span>.
           </h1>
-          <p className="mt-6 mx-auto max-w-2xl text-base sm:text-lg text-muted-foreground">
-            Build a personalized plan with exact BAC water amounts, syringe
-            units, and step-by-step instructions. Or skip straight to premium
-            supplies. No pressure. No jargon.
+          <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
+            Answer a few short questions. We&apos;ll do the math, print your
+            labels, and ship the exact supplies you need. Made for first-timers.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="xl" variant="brand">
@@ -128,7 +125,7 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-2 gap-8 p-8 sm:p-12">
             <div>
               <Badge variant="brand">How it works</Badge>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight">
+              <h2 className="mt-4 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
                 A calmer way to reconstitute.
               </h2>
               <ul className="mt-6 space-y-4 text-sm">
@@ -206,7 +203,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-semibold tracking-tight">Premium supplies</h2>
+            <h2 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight">Premium supplies</h2>
             <p className="text-sm text-muted-foreground mt-1">
               BAC water, insulin syringes, and alcohol prep pads — the essentials.
             </p>
@@ -251,7 +248,7 @@ export default async function HomePage() {
             <div className="inline-flex items-center gap-2 text-brand text-xs font-medium">
               <Lock className="h-3.5 w-3.5" /> Deterministic. Never guessed.
             </div>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
               Every calculation is transparent.
             </h2>
             <p className="mt-3 text-muted-foreground">

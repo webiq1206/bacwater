@@ -25,7 +25,7 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
           <div className="mx-auto h-12 w-12 rounded-full bg-brand-soft grid place-items-center">
             <CheckCircle2 className="h-6 w-6 text-brand" />
           </div>
-          <h1 className="mt-5 text-3xl font-semibold tracking-tight">
+          <h1 className="mt-5 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
             Order confirmed
           </h1>
           <p className="mt-2 text-muted-foreground">

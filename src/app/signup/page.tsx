@@ -7,7 +7,7 @@ export const metadata = { title: "Create your account", robots: { index: false, 
 export default function SignUpPage() {
   return (
     <div className="mx-auto max-w-md px-4 sm:px-6 pt-20 sm:pt-28 pb-24 sm:pb-32">
-      <h1 className="text-3xl font-semibold tracking-tight text-center">Create your account</h1>
+      <h1 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight text-center">Create your account</h1>
       <p className="mt-2 text-center text-sm text-muted-foreground">
         Save your plans, get PDFs, and track your orders.
       </p>

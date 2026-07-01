@@ -36,7 +36,7 @@ export default async function PlansPage() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">My Plans</h1>
+          <h1 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight">My Plans</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Your saved reconstitution plans, ready to open, print, or reorder.
           </p>

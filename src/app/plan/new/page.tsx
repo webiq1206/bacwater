@@ -13,7 +13,7 @@ export default function PlanNewPage() {
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <div className="mb-10 sm:mb-14 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight">
             One question at a time.
           </h1>
           <p className="mt-2 text-muted-foreground">

@@ -31,15 +31,14 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-semibold tracking-tight"
+          className="flex items-baseline gap-2"
         >
-          <span
-            aria-hidden
-            className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand text-brand-foreground text-[11px] font-bold"
-          >
-            BW
+          <span className="font-serif text-2xl font-medium tracking-tight leading-none">
+            BACWater
           </span>
-          <span>BACWater.ai</span>
+          <span className="text-xs text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
+            &amp; Co.
+          </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">

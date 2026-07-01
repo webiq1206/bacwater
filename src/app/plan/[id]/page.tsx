@@ -41,7 +41,7 @@ export default async function PublicPlanPage({ params }: Props) {
           <div className="text-xs uppercase tracking-wide text-muted-foreground">
             Plan · {plan.publicId}
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight mt-1">
+          <h1 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight mt-1">
             {plan.peptideName || "Reconstitution plan"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">

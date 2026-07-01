@@ -11,7 +11,7 @@ export default function Page() {
   const dose = conc * ml;
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <h1 className="text-3xl font-semibold tracking-tight">Dose Calculator</h1>
+      <h1 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight">Dose Calculator</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Given a concentration and a volume, what dose are you drawing?
       </p>

@@ -21,7 +21,7 @@ export default async function LearnPage() {
         <div className="inline-flex items-center gap-2 text-brand text-xs font-medium">
           <BookOpen className="h-3.5 w-3.5" /> Learning Center
         </div>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight">
+        <h1 className="mt-3 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
           Everything you need to reconstitute with confidence.
         </h1>
         <p className="mt-3 text-muted-foreground">
