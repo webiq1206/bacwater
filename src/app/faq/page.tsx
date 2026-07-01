@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
@@ -58,9 +59,18 @@ export default async function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">FAQ</h1>
-      <p className="mt-3 text-muted-foreground">
-        The most-asked questions about BAC water and peptide reconstitution.
+      <div className="eyebrow">Help</div>
+      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
+        Frequently asked questions
+      </h1>
+      <p className="mt-3 text-muted-foreground leading-relaxed">
+        Quick answers to the most common questions about BAC water, peptide
+        reconstitution, and shopping with us. Can&apos;t find what you&apos;re
+        looking for?{" "}
+        <Link href="/contact" className="text-brand font-medium underline">
+          Contact us
+        </Link>
+        .
       </p>
       <div className="mt-8">
         <Accordion type="single" collapsible>

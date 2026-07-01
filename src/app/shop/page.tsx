@@ -2,19 +2,33 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
 export const metadata = {
-  title: "Shop supplies",
+  title: "Shop Peptide Reconstitution Supplies",
   description:
-    "Premium bacteriostatic water, insulin syringes, and alcohol prep pads. Shop directly — no planner required.",
+    "Premium bacteriostatic water, insulin syringes, and alcohol prep pads. Everything you need to reconstitute peptides safely. Free shipping available.",
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  "bac-water": "BAC Water",
-  syringes: "Syringes",
-  "alcohol-pads": "Alcohol Prep Pads",
-  other: "Kits & other",
+const CATEGORY_INFO: Record<string, { label: string; hint: string }> = {
+  "bac-water": {
+    label: "Bacteriostatic Water",
+    hint: "The sterile liquid you mix with your peptide powder. Contains 0.9% benzyl alcohol to keep bacteria from growing.",
+  },
+  syringes: {
+    label: "Insulin Syringes",
+    hint: "Used to draw your dose from the reconstituted vial. Marked in units (100 units = 1 mL) for precise, easy dosing.",
+  },
+  "alcohol-pads": {
+    label: "Alcohol Prep Pads",
+    hint: "Wipe the vial top before drawing and the injection site before injecting. Two pads per injection is standard.",
+  },
+  other: {
+    label: "Kits & Bundles",
+    hint: "Everything you need in one package — great if you're starting from scratch.",
+  },
 };
 
 export default async function ShopPage() {
@@ -30,59 +44,75 @@ export default async function ShopPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <div className="max-w-3xl">
-        <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">Shop supplies</h1>
-        <p className="mt-3 text-muted-foreground">
-          The essentials — sourced from US-licensed vendors, priced fairly.
-          Shop directly, or start a plan and we&apos;ll pre-fill your cart.
+        <div className="eyebrow">Shop</div>
+        <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
+          Everything you need to get started
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+          Premium supplies sourced from US-licensed vendors. Not sure what to
+          buy? Use our{" "}
+          <Link href="/tools/supplies" className="text-brand font-medium underline">
+            supply calculator
+          </Link>{" "}
+          or{" "}
+          <Link href="/plan" className="text-brand font-medium underline">
+            build a plan
+          </Link>{" "}
+          and we&apos;ll pre-fill your cart with exactly what you need.
         </p>
       </div>
 
       <div className="mt-10 space-y-14">
-        {Object.entries(byCategory).map(([cat, items]) => (
-          <section key={cat}>
-            <div className="flex items-end justify-between">
-              <h2 className="text-2xl font-semibold tracking-tight">
-                {CATEGORY_LABELS[cat] || cat}
-              </h2>
-              <div className="text-xs text-muted-foreground">
-                {items.length} product{items.length === 1 ? "" : "s"}
+        {Object.entries(byCategory).map(([cat, items]) => {
+          const info = CATEGORY_INFO[cat] ?? { label: cat, hint: "" };
+          return (
+            <section key={cat}>
+              <div>
+                <h2 className="text-2xl font-serif font-medium tracking-tight">
+                  {info.label}
+                </h2>
+                {info.hint ? (
+                  <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
+                    {info.hint}
+                  </p>
+                ) : null}
               </div>
-            </div>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map((p) => (
-                <Link key={p.id} href={`/shop/${p.slug}`} className="group">
-                  <Card className="h-full transition-shadow hover:shadow-[var(--shadow-lift)]">
-                    <CardContent className="p-5">
-                      <div className="aspect-square rounded-2xl bg-muted flex items-center justify-center text-5xl">
-                        {cat === "bac-water" ? "💧" : cat === "syringes" ? "💉" : cat === "alcohol-pads" ? "🧴" : "📦"}
-                      </div>
-                      <div className="mt-4 flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="font-medium leading-tight line-clamp-2">
-                            {p.name}
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((p) => (
+                  <Link key={p.id} href={`/shop/${p.slug}`} className="group">
+                    <Card className="h-full transition-shadow hover:shadow-[var(--shadow-lift)]">
+                      <CardContent className="p-5">
+                        <div className="aspect-square rounded-2xl bg-muted flex items-center justify-center text-5xl">
+                          {cat === "bac-water" ? "\u{1F4A7}" : cat === "syringes" ? "\u{1F489}" : cat === "alcohol-pads" ? "\u{1F9F4}" : "\u{1F4E6}"}
+                        </div>
+                        <div className="mt-4 flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="font-medium leading-tight line-clamp-2">
+                              {p.name}
+                            </div>
+                            <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                              {p.useCase}
+                            </div>
                           </div>
-                          <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                            {p.useCase}
+                          <div className="text-right shrink-0">
+                            <div className="font-semibold">
+                              {formatCurrency(p.priceCents)}
+                            </div>
+                            {p.inventory <= 0 ? (
+                              <Badge variant="warning" className="mt-1">Sold out</Badge>
+                            ) : p.inventory < 20 ? (
+                              <Badge variant="outline" className="mt-1">Low stock</Badge>
+                            ) : null}
                           </div>
                         </div>
-                        <div className="text-right shrink-0">
-                          <div className="font-semibold">
-                            {formatCurrency(p.priceCents)}
-                          </div>
-                          {p.inventory <= 0 ? (
-                            <Badge variant="warning" className="mt-1">Sold out</Badge>
-                          ) : p.inventory < 20 ? (
-                            <Badge variant="outline" className="mt-1">Low stock</Badge>
-                          ) : null}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ))}
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
     </div>
   );

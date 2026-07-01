@@ -85,7 +85,8 @@ export function CheckoutClient() {
             <h2 className="text-lg font-semibold">Contact</h2>
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required autoComplete="email" />
+              <Input id="email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" />
+              <p className="mt-1 text-xs text-muted-foreground">We&apos;ll send your order confirmation and tracking here.</p>
             </div>
           </CardContent>
         </Card>
@@ -156,8 +157,11 @@ export function CheckoutClient() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Shipping</span>
-              <span>{shipping === 0 ? "Free" : formatCurrency(shipping)}</span>
+              <span>{shipping === 0 ? <span className="text-brand font-medium">Free</span> : formatCurrency(shipping)}</span>
             </div>
+            {shipping > 0 ? (
+              <p className="text-xs text-muted-foreground">Free shipping on orders over $50</p>
+            ) : null}
             <div className="flex justify-between">
               <span className="text-muted-foreground">Tax (est.)</span>
               <span>{formatCurrency(tax)}</span>

@@ -3,7 +3,8 @@ export const metadata = { title: "Terms of service" };
 export default function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">Terms of service</h1>
+      <div className="eyebrow">Legal</div>
+      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">Terms of service</h1>
       <div className="mt-6 prose prose-neutral max-w-none text-foreground/90 space-y-4">
         <p>
           Welcome to BACWater.ai. By using this website you agree to these terms.
@@ -25,11 +26,11 @@ export default function TermsPage() {
         </p>
         <h2>3. Accuracy</h2>
         <p>
-          We take calculation accuracy seriously. Our math library is
-          deterministic and verified with unit tests. However, you are the
-          final check: verify every input against the label on your vial and
-          your syringe. We are not liable for errors resulting from mislabeled
-          products or inputs.
+          We take calculation accuracy seriously. Our math library uses
+          transparent, verified formulas backed by automated tests. However,
+          you are the final check: verify every input against the label on
+          your vial and your syringe. We are not liable for errors resulting
+          from mislabeled products or inputs.
         </p>
         <h2>4. Orders and returns</h2>
         <p>

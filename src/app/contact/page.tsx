@@ -3,15 +3,19 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = {
   title: "Contact BACWater.ai",
-  description: "Reach the BACWater.ai team about orders, calculations, or partnerships.",
+  description: "Have a question about an order, a plan, or our products? Reach the BACWater.ai team.",
 };
 
 export default function ContactPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">Contact us</h1>
-      <p className="mt-3 text-muted-foreground">
-        Questions about an order, a plan, or wholesale? Send us a note.
+      <div className="eyebrow">Contact</div>
+      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
+        Get in touch
+      </h1>
+      <p className="mt-3 text-muted-foreground leading-relaxed">
+        Questions about an order, a plan, a product, or wholesale pricing?
+        Send us a note and we&apos;ll get back to you within one business day.
       </p>
       <Card className="mt-8">
         <CardContent className="p-8">

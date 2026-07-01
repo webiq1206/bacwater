@@ -1,46 +1,114 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Beaker, Calculator, Droplets, FlaskConical, Ruler, Scale, ShoppingCart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Calculators & tools",
+  title: "Free Peptide Calculators & Tools",
   description:
-    "Standalone calculators for BAC water, reconstitution, dose, syringe units, and unit conversion.",
+    "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly — no jargon.",
 };
 
 const TOOLS = [
-  { href: "/tools/reconstitution", title: "Reconstitution Calculator", body: "Full calculator with vial strength, dose, and BAC water." },
-  { href: "/tools/bac-water", title: "BAC Water Calculator", body: "Just get the recommended BAC water amount for a given vial and dose." },
-  { href: "/tools/dose", title: "Dose Calculator", body: "Solve for dose given concentration and desired volume." },
-  { href: "/tools/syringe-units", title: "Syringe Unit Converter", body: "Convert mL ↔ U-100 units." },
-  { href: "/tools/mg-to-mcg", title: "mg ↔ mcg Converter", body: "Convert milligrams to micrograms and back." },
-  { href: "/tools/supplies", title: "Supply Calculator", body: "Figure out how many vials, syringes, and pads you need per cycle." },
+  {
+    href: "/tools/reconstitution",
+    icon: Beaker,
+    title: "Reconstitution Calculator",
+    body: "The full calculator. Enter your peptide, vial size, dose, and syringe — get BAC water amount, syringe units, doses per vial, and step-by-step instructions.",
+    tag: "Most popular",
+  },
+  {
+    href: "/tools/bac-water",
+    icon: Droplets,
+    title: "BAC Water Calculator",
+    body: "Just need to know how much BAC water to add? Enter your vial size and dose — we'll give you the right amount for easy syringe math.",
+    tag: null,
+  },
+  {
+    href: "/tools/dose",
+    icon: FlaskConical,
+    title: "Dose Calculator",
+    body: "Already mixed your vial? Enter your concentration and how much you're drawing to find out your exact dose in mg and mcg.",
+    tag: null,
+  },
+  {
+    href: "/tools/supplies",
+    icon: ShoppingCart,
+    title: "Supply Calculator",
+    body: "Planning a cycle? Tell us what you're running, how often, and for how long. We'll build your full shopping list with quantities and reasons.",
+    tag: null,
+  },
+  {
+    href: "/tools/syringe-units",
+    icon: Ruler,
+    title: "Syringe Unit Converter",
+    body: "Convert between milliliters (mL) and insulin syringe units. Simple two-way converter with a quick-reference table.",
+    tag: null,
+  },
+  {
+    href: "/tools/mg-to-mcg",
+    icon: Scale,
+    title: "mg ↔ mcg Converter",
+    body: "Convert between milligrams and micrograms. Vial labels use mg, doses use mcg — this makes switching between them easy.",
+    tag: null,
+  },
 ];
 
 export default function ToolsPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-tight">Calculators &amp; tools</h1>
-      <p className="mt-3 text-muted-foreground max-w-2xl">
-        Small, focused calculators for when you don&apos;t want the full planner.
-        Everything below uses the same deterministic math library.
-      </p>
+      <div className="max-w-3xl">
+        <div className="eyebrow">Free tools</div>
+        <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
+          Calculators &amp; converters
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+          Quick, focused tools for when you need a single answer. Everything
+          below is free, runs instantly in your browser, and explains the math
+          in plain English. No account needed.
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-xl bg-brand-soft/50 border border-brand-soft p-4 max-w-3xl">
+        <p className="text-sm text-brand-ink leading-relaxed">
+          <b>New to peptides?</b> Start with the{" "}
+          <Link href="/plan" className="underline font-medium">Plan Builder</Link> instead — it walks
+          you through everything step by step and gives you a complete,
+          printable reconstitution plan.
+        </p>
+      </div>
+
       <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {TOOLS.map((t) => (
-          <Link key={t.href} href={t.href} className="group">
-            <Card className="h-full hover:shadow-[var(--shadow-lift)] transition-shadow">
-              <CardContent className="p-6">
-                <h2 className="text-lg font-semibold group-hover:underline">
-                  {t.title}
-                </h2>
-                <p className="mt-2 text-sm text-muted-foreground">{t.body}</p>
-                <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand group-hover:gap-2 transition-all">
-                  Open <ArrowRight className="h-4 w-4" />
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+        {TOOLS.map((t) => {
+          const Icon = t.icon;
+          return (
+            <Link key={t.href} href={t.href} className="group">
+              <Card className="h-full hover:shadow-[var(--shadow-lift)] transition-shadow">
+                <CardContent className="p-6 flex flex-col h-full">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="h-10 w-10 rounded-xl bg-brand-soft grid place-items-center shrink-0">
+                      <Icon className="h-5 w-5 text-brand" />
+                    </div>
+                    {t.tag ? (
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-brand bg-brand-soft rounded-full px-2 py-0.5">
+                        {t.tag}
+                      </span>
+                    ) : null}
+                  </div>
+                  <h2 className="mt-4 text-lg font-semibold group-hover:underline">
+                    {t.title}
+                  </h2>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">
+                    {t.body}
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand group-hover:gap-2 transition-all">
+                    Open <ArrowRight className="h-4 w-4" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

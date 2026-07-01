@@ -36,9 +36,10 @@ export default async function PlansPage() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight">My Plans</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Your saved reconstitution plans, ready to open, print, or reorder.
+          <div className="eyebrow">Dashboard</div>
+          <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight">My Plans</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your saved reconstitution plans — open, print, or reorder anytime.
           </p>
         </div>
         <Button asChild variant="brand">
@@ -142,8 +143,9 @@ function EmptyState() {
     <Card className="mt-4">
       <CardContent className="p-12 text-center">
         <div className="text-lg font-semibold">No plans yet</div>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Build your first plan to save it here.
+        <p className="mt-1 text-sm text-muted-foreground max-w-sm mx-auto">
+          Build your first reconstitution plan — we&apos;ll calculate the BAC
+          water, syringe units, and doses per vial for you.
         </p>
         <div className="mt-6">
           <Button asChild variant="brand" size="lg">

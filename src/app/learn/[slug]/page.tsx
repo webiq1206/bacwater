@@ -61,7 +61,8 @@ export default async function GuidePage({ params }: Props) {
       <Link href="/learn" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> All guides
       </Link>
-      <h1 className="mt-4 text-4xl sm:text-5xl font-serif font-medium tracking-tight">{guide.title}</h1>
+      <div className="eyebrow mt-6">Guide</div>
+      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">{guide.title}</h1>
       <article className="mt-4 prose prose-neutral max-w-none">
         {renderBody(guide.body)}
       </article>

@@ -103,8 +103,13 @@ export function CartClient() {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Shipping</span>
-            <span className="text-muted-foreground">Calculated at checkout</span>
+            <span className="text-muted-foreground">{subtotal >= 5000 ? <span className="text-brand font-medium">Free</span> : "Calculated at checkout"}</span>
           </div>
+          {subtotal < 5000 ? (
+            <p className="text-xs text-muted-foreground">
+              Add {formatCurrency(5000 - subtotal)} more for free shipping
+            </p>
+          ) : null}
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Tax</span>
             <span className="text-muted-foreground">Calculated at checkout</span>

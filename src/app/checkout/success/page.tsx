@@ -29,7 +29,8 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
             Order confirmed
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Thank you! We&apos;ll email you when your order ships.
+            Thank you! We&apos;ll email you a confirmation and tracking number
+            when your order ships.
           </p>
           {found ? (
             <div className="mt-6 text-sm">
@@ -51,8 +52,11 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
               </div>
             </div>
           ) : null}
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
             <Button asChild variant="brand">
+              <Link href="/plan">Build a mixing plan</Link>
+            </Button>
+            <Button asChild variant="outline">
               <Link href="/">Back to home</Link>
             </Button>
           </div>

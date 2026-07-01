@@ -77,16 +77,16 @@ export default async function HomePage() {
           </div>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-brand" /> Deterministic math
+              <Check className="h-3.5 w-3.5 text-brand" /> Exact, verified math
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Check className="h-3.5 w-3.5 text-brand" /> Printable labels
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-brand" /> AI plan assistant
+              <Check className="h-3.5 w-3.5 text-brand" /> Built for beginners
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-brand" /> Guest checkout
+              <Check className="h-3.5 w-3.5 text-brand" /> No account needed
             </span>
           </div>
         </div>
@@ -246,15 +246,15 @@ export default async function HomePage() {
         <div className="rounded-3xl border border-border p-8 sm:p-12 bg-gradient-to-br from-emerald-50/60 to-transparent">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 text-brand text-xs font-medium">
-              <Lock className="h-3.5 w-3.5" /> Deterministic. Never guessed.
+              <Lock className="h-3.5 w-3.5" /> Accurate. Transparent. Verified.
             </div>
             <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
-              Every calculation is transparent.
+              You can trust the math.
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Our math library shows the assumptions it used, flags unusual
-              inputs, and never asks an AI to do arithmetic. The AI assistant is
-              there to explain — never to calculate.
+              Every calculation shows exactly how the answer was reached, warns
+              you about anything unusual, and never guesses. The AI assistant
+              explains results in plain English — it never does the math itself.
             </p>
             <div className="mt-6 flex gap-3">
               <Button asChild variant="brand">
