@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata: Metadata = {
@@ -29,6 +30,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </section>
       </div>
       {children}
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 pb-24">
+        <section className="mt-14 border-t border-border pt-8 max-w-3xl">
+          <h2 className="text-lg font-semibold tracking-tight">Related guides</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li><Link href="/learn/what-is-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">What is BAC water?</Link></li>
+            <li><Link href="/learn/bac-water-vs-sterile-water" className="text-muted-foreground hover:text-foreground underline transition-colors">BAC water vs. sterile water</Link></li>
+            <li><Link href="/learn/how-long-bac-water-lasts" className="text-muted-foreground hover:text-foreground underline transition-colors">How long BAC water lasts</Link></li>
+            <li><Link href="/learn/too-much-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">What happens if you add too much BAC water</Link></li>
+          </ul>
+        </section>
+      </div>
     </>
   );
 }

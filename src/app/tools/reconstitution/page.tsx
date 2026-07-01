@@ -48,6 +48,15 @@ export default function Page() {
       <div className="mt-10">
         <PlanForm mode="advanced" />
       </div>
+      <section className="mt-14 border-t border-border pt-8 max-w-3xl">
+        <h2 className="text-lg font-semibold tracking-tight">Related guides</h2>
+        <ul className="mt-3 space-y-2 text-sm">
+          <li><Link href="/learn/how-peptide-reconstitution-works" className="text-muted-foreground hover:text-foreground underline transition-colors">How peptide reconstitution works</Link></li>
+          <li><Link href="/learn/common-mistakes-to-avoid" className="text-muted-foreground hover:text-foreground underline transition-colors">Common reconstitution mistakes to avoid</Link></li>
+          <li><Link href="/learn/peptide-reconstitution-chart" className="text-muted-foreground hover:text-foreground underline transition-colors">Peptide reconstitution quick-reference chart</Link></li>
+          <li><Link href="/learn/how-to-store-reconstituted-peptides" className="text-muted-foreground hover:text-foreground underline transition-colors">How to store reconstituted peptides</Link></li>
+        </ul>
+      </section>
     </div>
   );
 }

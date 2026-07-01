@@ -37,7 +37,7 @@ export function SiteHeader() {
             BACwater
           </span>
           <span className="text-xs text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
-            &amp; Co.
+            .ai
           </span>
         </Link>
 

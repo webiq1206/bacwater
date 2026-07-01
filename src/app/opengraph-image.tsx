@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "BACwater & Co.";
+export const alt = "BACwater.ai";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -44,7 +44,7 @@ export default function OGImage() {
               lineHeight: 1,
             }}
           >
-            &amp; Co.
+            .ai
           </span>
         </div>
         <div
