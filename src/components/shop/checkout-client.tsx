@@ -157,7 +157,7 @@ export function CheckoutClient() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Shipping</span>
-              <span>{shipping === 0 ? <span className="text-foreground font-medium">Free</span> : formatCurrency(shipping)}</span>
+              <span>{shipping === 0 ? <span className="text-success font-medium">Free</span> : formatCurrency(shipping)}</span>
             </div>
             {shipping > 0 ? (
               <p className="text-xs text-muted-foreground">Free shipping on orders over $50</p>

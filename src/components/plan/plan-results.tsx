@@ -27,7 +27,7 @@ export function PlanResults({ result }: Props) {
               </h3>
             </div>
             <div className="text-right">
-              <div className="text-3xl font-semibold text-foreground tabular-nums">
+              <div className="text-3xl font-semibold text-success tabular-nums">
                 {syringeReadout.kind === "u100"
                   ? `${syringeReadout.valueRounded} u`
                   : `${syringeReadout.valueRounded} mL`}
@@ -130,7 +130,7 @@ export function PlanResults({ result }: Props) {
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             {result.assumptions.map((a, i) => (
               <li key={i} className="flex gap-2">
-                <Check className="h-4 w-4 mt-0.5 text-foreground shrink-0" />
+                <Check className="h-4 w-4 mt-0.5 text-success shrink-0" />
                 <span>{a}</span>
               </li>
             ))}

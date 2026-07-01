@@ -22,8 +22,8 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
     <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-20 sm:pt-28 pb-24 sm:pb-32">
       <Card>
         <CardContent className="p-8 sm:p-12 text-center">
-          <div className="mx-auto h-12 w-12 border border-border rounded-full grid place-items-center">
-            <CheckCircle2 className="h-6 w-6 text-foreground" />
+          <div className="mx-auto h-12 w-12 border border-success/30 bg-success/5 rounded-full grid place-items-center">
+            <CheckCircle2 className="h-6 w-6 text-success" />
           </div>
           <h1 className="mt-5 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
             Order confirmed

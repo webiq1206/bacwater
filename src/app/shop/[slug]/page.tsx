@@ -77,7 +77,7 @@ export default async function PdpPage({ params }: Props) {
           </p>
           <div className="mt-5 rounded-lg border border-border bg-muted/50 p-4">
             <div className="flex items-start gap-2">
-              <Check className="h-4 w-4 text-foreground mt-0.5" />
+              <Check className="h-4 w-4 text-success mt-0.5" />
               <div className="text-sm">
                 <span className="font-medium">Use it for:</span>{" "}
                 <span className="text-muted-foreground">{product.useCase}</span>
