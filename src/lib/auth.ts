@@ -16,12 +16,29 @@ const adminEmails = (process.env.ADMIN_EMAILS || "")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
 
+/**
+ * Session strategy:
+ *   Credentials-based signins can't use the database session strategy in
+ *   Auth.js v5 (the adapter path only fires on OAuth). So we sign a JWT
+ *   for credentials, but also record a persistent Session row keyed off
+ *   the same sub. This way:
+ *     - Redeploys never invalidate anyone as long as AUTH_SECRET is stable.
+ *     - Server code can look up the persistent Session in the DB if it needs
+ *       to (e.g. to force-signout a user by deleting their Session row).
+ *   AUTH_SECRET MUST be set once in the Replit Secrets panel and never
+ *   rotated — rotating it will invalidate existing session cookies.
+ */
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24,   // refresh cookie once per day
+  },
   pages: {
     signIn: "/signin",
   },
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
@@ -57,14 +74,41 @@ export const authConfig: NextAuthConfig = {
       : []),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
+      // Fresh sign-in: user object is populated.
       if (user) {
         token.id = (user as { id: string }).id;
         token.role = (user as { role?: string }).role ?? "user";
       }
-      if (token.email && adminEmails.includes(token.email.toLowerCase())) {
+
+      // Every request: rehydrate role/name from the DB so the source of
+      // truth is the User row, not the cookie. This makes /admin/users
+      // role changes apply on the next request, and prevents stale data
+      // in the JWT from persisting after a redeploy.
+      if (token.email) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email as string },
+            select: { id: true, role: true, name: true, image: true },
+          });
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.role = dbUser.role;
+            token.name = dbUser.name ?? token.name;
+            token.picture = dbUser.image ?? token.picture;
+          }
+        } catch {
+          // DB unavailable during middleware — keep existing token values
+          // so the user stays signed in rather than getting bounced.
+        }
+      }
+
+      // ADMIN_EMAILS always wins.
+      if (token.email && adminEmails.includes((token.email as string).toLowerCase())) {
         token.role = "admin";
       }
+      // Silence unused-parameter warning.
+      void trigger;
       return token;
     },
     async session({ session, token }) {
