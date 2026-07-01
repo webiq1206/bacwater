@@ -10,7 +10,7 @@ Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Prisma, NextAut
 - **Ecommerce** — shop, cart, guest checkout, Stripe redirect, order tracking.
 - **Learning Center** — MDX-lite guides pulled from the database, editable in admin.
 - **Standalone tools** — BAC water, reconstitution, dose, syringe unit, mg↔mcg, and supply calculators.
-- **AI assistant** — Claude-powered drawer that explains a plan; **never** performs math.
+- **AI assistant** — Claude-powered drawer that explains a plan; **never** performs math. Default model is Haiku (cheap, fast) — swap `ANTHROPIC_MODEL` for Sonnet or Opus if you want more depth.
 - **Admin panel** — dashboard, orders (with vendor email workflow via Resend), products, vendors, users, content, contact.
 - **SEO/GEO/AEO** — metadata, sitemap, robots, Organization + Product + Article + FAQ JSON-LD.
 
