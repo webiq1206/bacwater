@@ -8,8 +8,7 @@ export default function CheckoutPage() {
       <div className="eyebrow">Checkout</div>
       <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight">Almost there</h1>
       <p className="mt-2 text-muted-foreground leading-relaxed">
-        No account needed — just fill in your shipping info and we&apos;ll take
-        care of the rest. Free shipping on orders over $50.
+        Fill in your shipping info and we&apos;ll take care of the rest. Free shipping on orders over $50.
       </p>
       <CheckoutClient />
     </div>

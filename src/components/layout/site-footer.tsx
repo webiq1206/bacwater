@@ -30,7 +30,7 @@ export function SiteFooter() {
           <div className="max-w-sm">
             <Link href="/" className="flex items-baseline gap-2">
               <span className="font-serif text-2xl font-medium tracking-tight leading-none">
-                BACWater
+                BACwater
               </span>
               <span className="text-[10px] text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
                 &amp; Co.
@@ -62,10 +62,10 @@ export function SiteFooter() {
         </div>
         <div className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
-            © {new Date().getFullYear()} BACWater.ai. All rights reserved.
+            © {new Date().getFullYear()} BACwater.ai. All rights reserved.
           </div>
           <div className="max-w-2xl md:text-right">
-            BACWater.ai provides calculation tools and research supplies. We do
+            BACwater.ai provides calculation tools and research supplies. We do
             not diagnose, prescribe, or provide medical advice. Always consult a
             qualified professional.
           </div>

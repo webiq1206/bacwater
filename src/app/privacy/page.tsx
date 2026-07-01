@@ -7,7 +7,7 @@ export default function PrivacyPage() {
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">Privacy</h1>
       <div className="mt-6 prose prose-neutral max-w-none text-foreground/90 space-y-4">
         <p>
-          BACWater.ai collects only the information needed to run our service:
+          BACwater.ai collects only the information needed to run our service:
           your email and any information you enter into the plan builder or
           checkout.
         </p>

@@ -2,7 +2,7 @@
  * Curated reference of common research peptides.
  *
  * All values are typical research references, NOT medical dosing.
- * BACWater.ai does not provide medical advice. Users should verify
+ * BACwater.ai does not provide medical advice. Users should verify
  * every value against the label on their vial.
  */
 
@@ -44,7 +44,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [200, 500],
     suggestedDoseMcg: 250,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate at 36–46°F (2–8°C). Protect from light.",
+    storageNote: "Refrigerate at 36-46°F (2-8°C). Protect from light.",
   },
   {
     slug: "tb-500",
@@ -55,7 +55,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [1000, 5000],
     suggestedDoseMcg: 2500,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate at 36–46°F (2–8°C). Larger doses typical.",
+    storageNote: "Refrigerate at 36-46°F (2-8°C). Larger doses typical.",
   },
   {
     slug: "ipamorelin",
@@ -76,7 +76,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 300],
     suggestedDoseMcg: 100,
     refrigeratedShelfDays: 21,
-    storageNote: "Less stable — use within ~3 weeks after mixing.",
+    storageNote: "Less stable. Use within ~3 weeks after mixing.",
   },
   {
     slug: "cjc-1295-with-dac",
@@ -130,7 +130,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 2500,
     refrigeratedShelfDays: 42,
     storageNote:
-      "Refrigerate at 36–46°F. Do not freeze reconstituted solution.",
+      "Refrigerate at 36-46°F. Do not freeze reconstituted solution.",
     note: "Research chemical dose ranges vary. Verify vial strength before mixing.",
   },
   {

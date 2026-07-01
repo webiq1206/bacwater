@@ -39,7 +39,7 @@ export default async function PlansPage() {
           <div className="eyebrow">Dashboard</div>
           <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight">My Plans</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Your saved reconstitution plans — open, print, or reorder anytime.
+            Your saved reconstitution plans. Open, print, or reorder anytime.
           </p>
         </div>
         <Button asChild variant="brand">
@@ -144,7 +144,7 @@ function EmptyState() {
       <CardContent className="p-12 text-center">
         <div className="text-lg font-semibold">No plans yet</div>
         <p className="mt-1 text-sm text-muted-foreground max-w-sm mx-auto">
-          Build your first reconstitution plan — we&apos;ll calculate the BAC
+          Build your first reconstitution plan. We&apos;ll calculate the BAC
           water, syringe units, and doses per vial for you.
         </p>
         <div className="mt-6">

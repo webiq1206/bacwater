@@ -7,11 +7,11 @@ export default function TermsPage() {
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">Terms of service</h1>
       <div className="mt-6 prose prose-neutral max-w-none text-foreground/90 space-y-4">
         <p>
-          Welcome to BACWater.ai. By using this website you agree to these terms.
+          Welcome to BACwater.ai. By using this website you agree to these terms.
         </p>
         <h2>1. Research use only</h2>
         <p>
-          Products sold through BACWater.ai are intended for laboratory research
+          Products sold through BACwater.ai are intended for laboratory research
           and educational purposes only. They are not intended for human or
           veterinary diagnostic or therapeutic use. You are responsible for
           complying with all local, state, and federal regulations that apply
@@ -34,7 +34,7 @@ export default function TermsPage() {
         </p>
         <h2>4. Orders and returns</h2>
         <p>
-          Orders ship within 1–2 business days. Sealed items are returnable
+          Orders ship within 1-2 business days. Sealed items are returnable
           within 30 days. Opened items are not returnable for safety reasons.
         </p>
         <h2>5. Changes</h2>

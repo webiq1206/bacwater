@@ -30,7 +30,7 @@ export default function MgMcgConverterPage() {
           <div className="grid gap-6 sm:grid-cols-2 items-end">
             <div>
               <label className="text-sm font-medium">Milligrams (mg)</label>
-              <p className="text-xs text-muted-foreground mt-0.5">The larger unit — vial sizes are usually in mg</p>
+              <p className="text-xs text-muted-foreground mt-0.5">The larger unit. Vial sizes are usually in mg</p>
               <Input
                 type="number"
                 inputMode="decimal"
@@ -46,7 +46,7 @@ export default function MgMcgConverterPage() {
             </div>
             <div>
               <label className="text-sm font-medium">Micrograms (mcg)</label>
-              <p className="text-xs text-muted-foreground mt-0.5">The smaller unit — doses are usually in mcg</p>
+              <p className="text-xs text-muted-foreground mt-0.5">The smaller unit. Doses are usually in mcg</p>
               <Input
                 type="number"
                 inputMode="decimal"
@@ -106,11 +106,11 @@ export default function MgMcgConverterPage() {
           title="What's the difference between mg and mcg?"
         >
           <p>
-            Both measure weight, just at different scales — like feet vs. inches.
+            Both measure weight, just at different scales, like feet vs. inches.
           </p>
           <ul className="list-disc pl-4 space-y-1">
-            <li><b>mg (milligram)</b> — one thousandth of a gram. Vial sizes are usually listed in mg (e.g., &ldquo;5 mg vial&rdquo;).</li>
-            <li><b>mcg (microgram)</b> — one millionth of a gram, or one thousandth of a milligram. Individual doses are usually listed in mcg (e.g., &ldquo;250 mcg per injection&rdquo;).</li>
+            <li><b>mg (milligram)</b>: one thousandth of a gram. Vial sizes are usually listed in mg (e.g., &ldquo;5 mg vial&rdquo;).</li>
+            <li><b>mcg (microgram)</b>: one millionth of a gram, or one thousandth of a milligram. Individual doses are usually listed in mcg (e.g., &ldquo;250 mcg per injection&rdquo;).</li>
           </ul>
           <p>
             <b>The rule is simple:</b> 1 mg = 1,000 mcg. To go from mg to mcg,
@@ -133,7 +133,7 @@ export default function MgMcgConverterPage() {
             &ldquo;0.25 mg&rdquo;).
           </p>
           <p>
-            This is why it can feel confusing — but once you know the conversion
+            This is why it can feel confusing, but once you know the conversion
             (multiply or divide by 1,000), it becomes second nature.
           </p>
         </TeachingSection>
@@ -153,7 +153,7 @@ export default function MgMcgConverterPage() {
           </p>
           <p>
             Our <Link href="/plan" className="text-foreground underline font-medium">plan builder</Link> does
-            all of this math for you automatically — including the syringe units
+            all of this math for you automatically, including the syringe units
             and BAC water amount.
           </p>
         </TeachingSection>

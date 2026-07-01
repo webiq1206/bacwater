@@ -164,7 +164,7 @@ function ConversionHint({
     <div className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
       <Info className="h-3.5 w-3.5 shrink-0 mt-0.5 text-foreground" />
       <span>
-        Same as <b className="text-foreground">{otherLabel}</b> — pick whichever
+        Same as <b className="text-foreground">{otherLabel}</b>. Pick whichever
         your label uses. We&apos;ll do the conversion.
       </span>
     </div>
@@ -222,16 +222,18 @@ export function PlanForm({ mode }: Props) {
   const dosePresets = useMemo(() => {
     const [lo, hi] = peptide.typicalDoseMcgRange;
     const common = peptide.suggestedDoseMcg;
+    const fmtLabel = (mcg: number) =>
+      mcg >= 1000 ? `${mcg} mcg (${mcg / 1000} mg)` : `${mcg} mcg (${(mcg / 1000).toFixed(mcg % 100 === 0 ? 1 : 2)} mg)`;
     const list: { mcg: number; label: string; hint: string }[] = [];
     if (lo && lo !== common)
-      list.push({ mcg: lo, label: `${lo} mcg`, hint: "Light — good starting point" });
+      list.push({ mcg: lo, label: fmtLabel(lo), hint: "Light, good starting point" });
     list.push({
       mcg: common,
-      label: `${common} mcg`,
-      hint: "Common — most people start here",
+      label: fmtLabel(common),
+      hint: "Common, most people start here",
     });
     if (hi && hi !== common)
-      list.push({ mcg: hi, label: `${hi} mcg`, hint: "High end of typical range" });
+      list.push({ mcg: hi, label: fmtLabel(hi), hint: "High end of typical range" });
     return list;
   }, [peptide]);
 
@@ -312,11 +314,11 @@ export function PlanForm({ mode }: Props) {
     }
   }
 
-  // ---------- ADVANCED — beginner-friendly single-page guided flow ----------
+  // ---------- ADVANCED: beginner-friendly single-page guided flow ----------
   if (mode === "advanced") {
     return (
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
-        {/* Guided form — sticky on desktop */}
+        {/* Guided form: sticky on desktop */}
         <div className="lg:sticky lg:top-24 space-y-4">
           {/* 1. Peptide */}
           <StepBlock
@@ -376,7 +378,7 @@ export function PlanForm({ mode }: Props) {
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                   A blend has two peptides mixed in one vial. Every draw
-                  delivers both at once — we&apos;ll show you how much of each.
+                  delivers both at once. We&apos;ll show you how much of each.
                 </p>
                 <div className="mt-3">
                   <Select value={secondarySlug} onValueChange={setSecondarySlug}>
@@ -490,7 +492,7 @@ export function PlanForm({ mode }: Props) {
             n={3}
             total={6}
             title="How much do you want per injection?"
-            hint={`Typical range: ${peptide.typicalDoseMcgRange[0]}–${peptide.typicalDoseMcgRange[1]} mcg.`}
+            hint={`Typical range: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg).`}
           >
             <div className="grid gap-2">
               {dosePresets.map((d) => (
@@ -582,7 +584,7 @@ export function PlanForm({ mode }: Props) {
                 onClick={() => setUseRecommendedBac(true)}
                 hint="Chosen to give clean, round numbers on your syringe."
               >
-                {recommendedBac} mL — recommended
+                {recommendedBac} mL (recommended)
               </ChipButton>
               <ChipButton
                 active={!useRecommendedBac}
@@ -614,7 +616,7 @@ export function PlanForm({ mode }: Props) {
             n={6}
             total={6}
             title="When did you (or will you) mix it?"
-            hint="Optional — lets us calculate when the vial expires."
+            hint="Optional. Lets us calculate when the vial expires."
           >
             {!showDate ? (
               <button
@@ -679,7 +681,7 @@ export function PlanForm({ mode }: Props) {
     );
   }
 
-  // ---------- BEGINNER — one question at a time ----------
+  // ---------- BEGINNER: one question at a time ----------
   return (
     <div className="mx-auto max-w-2xl">
       <StepBar step={step} total={STEPS.length} />
@@ -780,7 +782,7 @@ export function PlanForm({ mode }: Props) {
       {step === 2 && (
         <StepPanel
           title="How much do you want per injection?"
-          hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0]}–${peptide.typicalDoseMcgRange[1]} mcg. Not sure? Pick "Common".`}
+          hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg). Not sure? Pick "Common".`}
           onNext={() => setStep(3)}
           onBack={() => setStep(1)}
         >
@@ -875,7 +877,7 @@ export function PlanForm({ mode }: Props) {
       {step === 4 && (
         <StepPanel
           title="How much BAC water to add?"
-          hint={`We recommend ${recommendedBac} mL — it gives you clean numbers when drawing.`}
+          hint={`We recommend ${recommendedBac} mL. It gives you clean numbers when drawing.`}
           onNext={() => setStep(5)}
           onBack={() => setStep(3)}
         >

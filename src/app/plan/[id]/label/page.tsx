@@ -11,8 +11,8 @@ export default async function LabelPage({ params }: Props) {
   const { id } = await params;
   const plan = await prisma.plan.findUnique({ where: { publicId: id } });
   if (!plan) return notFound();
-  const dateStr = plan.dateMixed ? formatDate(plan.dateMixed) : "—";
-  const expStr = plan.expirationDate ? formatDate(plan.expirationDate) : "—";
+  const dateStr = plan.dateMixed ? formatDate(plan.dateMixed) : "-";
+  const expStr = plan.expirationDate ? formatDate(plan.expirationDate) : "-";
   // 8 labels per page (2 columns × 4 rows)
   const labels = Array.from({ length: 8 });
 
@@ -38,7 +38,7 @@ export default async function LabelPage({ params }: Props) {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">BACWater.ai</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">BACwater.ai</div>
                 <div className="text-base font-semibold leading-tight">{plan.peptideName || "Peptide"}</div>
                 <div className="text-xs text-muted-foreground mt-0.5">{plan.vialStrengthMg} mg vial · {plan.bacWaterMl} mL BAC</div>
               </div>

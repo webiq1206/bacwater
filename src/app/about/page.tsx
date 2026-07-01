@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "About BACWater.ai",
+  title: "About BACwater.ai",
   description:
-    "BACWater.ai is the most beginner-friendly utility for peptide reconstitution — exact math, plain-English explanations, and premium supplies in one place.",
+    "BACwater.ai is the most beginner-friendly utility for peptide reconstitution. Exact math, plain-English explanations, and premium supplies in one place.",
 };
 
 export default function AboutPage() {
@@ -16,8 +16,8 @@ export default function AboutPage() {
       </h1>
       <div className="mt-6 space-y-5 text-lg text-foreground/90 leading-relaxed">
         <p>
-          We built BACWater.ai because every other reconstitution calculator felt
-          like homework — cluttered with ads, filled with jargon, or locked
+          We built BACwater.ai because every other reconstitution calculator felt
+          like homework: cluttered with ads, filled with jargon, or locked
           behind signup walls.
         </p>
         <p>
@@ -27,8 +27,8 @@ export default function AboutPage() {
           people who are doing this for the very first time.
         </p>
         <p>
-          We also sell the supplies you need — BAC water, syringes, alcohol prep
-          pads — because when your plan says you need three of something, we&apos;d
+          We also sell the supplies you need: BAC water, syringes, and alcohol prep
+          pads. When your plan says you need three of something, we&apos;d
           rather help you get them in one click than send you somewhere else.
         </p>
         <p>

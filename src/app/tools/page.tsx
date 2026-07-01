@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export const metadata = {
   title: "Free Peptide Calculators & Tools",
   description:
-    "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly — no jargon.",
+    "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly, no jargon.",
 };
 
 const TOOLS = [
@@ -13,14 +13,14 @@ const TOOLS = [
     href: "/tools/reconstitution",
     icon: Beaker,
     title: "Reconstitution Calculator",
-    body: "The full calculator. Enter your peptide, vial size, dose, and syringe — get BAC water amount, syringe units, doses per vial, and step-by-step instructions.",
+    body: "The full calculator. Enter your peptide, vial size, dose, and syringe to get BAC water amount, syringe units, doses per vial, and step-by-step instructions.",
     tag: "Most popular",
   },
   {
     href: "/tools/bac-water",
     icon: Droplets,
     title: "BAC Water Calculator",
-    body: "Just need to know how much BAC water to add? Enter your vial size and dose — we'll give you the right amount for easy syringe math.",
+    body: "Just need to know how much BAC water to add? Enter your vial size and dose. We'll give you the right amount for easy syringe math.",
     tag: null,
   },
   {
@@ -48,7 +48,7 @@ const TOOLS = [
     href: "/tools/mg-to-mcg",
     icon: Scale,
     title: "mg ↔ mcg Converter",
-    body: "Convert between milligrams and micrograms. Vial labels use mg, doses use mcg — this makes switching between them easy.",
+    body: "Convert between milligrams and micrograms. Vial labels use mg, doses use mcg. This makes switching between them easy.",
     tag: null,
   },
 ];
@@ -64,14 +64,14 @@ export default function ToolsPage() {
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Quick, focused tools for when you need a single answer. Everything
           below is free, runs instantly in your browser, and explains the math
-          in plain English. No account needed.
+          in plain English. For research and educational use.
         </p>
       </div>
 
       <div className="mt-4 border border-border p-4 max-w-3xl">
         <p className="text-sm text-muted-foreground leading-relaxed">
           <b className="text-foreground">New to peptides?</b> Start with the{" "}
-          <Link href="/plan" className="underline font-medium text-foreground">Plan Builder</Link> instead — it walks
+          <Link href="/plan" className="underline font-medium text-foreground">Plan Builder</Link> instead. It walks
           you through everything step by step and gives you a complete,
           printable reconstitution plan.
         </p>

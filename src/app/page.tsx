@@ -18,7 +18,7 @@ const PATHS = [
     href: "/plan",
     icon: Wand2,
     title: "Build My Plan",
-    body: "Answer a few short questions and get an exact, personalized reconstitution plan — with instructions, syringe units, PDF, and printable label.",
+    body: "Answer a few short questions and get an exact, personalized reconstitution plan with instructions, syringe units, PDF, and printable label.",
     cta: "Start my plan",
   },
   {
@@ -32,7 +32,7 @@ const PATHS = [
     href: "/learn",
     icon: BookOpen,
     title: "Learn",
-    body: "Beginner-friendly guides on BAC water, reconstitution, syringes, and storage — written by people who use them every day.",
+    body: "Beginner-friendly guides on BAC water, reconstitution, syringes, and storage. Written by people who use them every day.",
     cta: "Read the guides",
   },
 ];
@@ -50,9 +50,9 @@ export default async function HomePage() {
           The trusted utility for peptide reconstitution
         </div>
         <h1 className="mt-5 text-5xl sm:text-7xl font-serif font-medium tracking-tight leading-[1.02] text-balance">
-          Reconstitute peptides,
+          The exact math
           <br />
-          <span className="italic">calmly</span>.
+          for <span className="italic">every</span> vial.
         </h1>
         <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
           Answer a few short questions. We&apos;ll do the math, print your
@@ -79,7 +79,7 @@ export default async function HomePage() {
             <Check className="h-3.5 w-3.5" /> Built for beginners
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5" /> No account needed
+            <Check className="h-3.5 w-3.5" /> For research use
           </span>
         </div>
       </section>
@@ -246,7 +246,7 @@ export default async function HomePage() {
           <p className="mt-4 text-muted-foreground leading-relaxed">
             Every calculation shows exactly how the answer was reached, warns
             you about anything unusual, and never guesses. The AI assistant
-            explains results in plain English — it never does the math itself.
+            explains results in plain English. It never does the math itself.
           </p>
           <div className="mt-8 flex gap-3">
             <Button asChild variant="brand">

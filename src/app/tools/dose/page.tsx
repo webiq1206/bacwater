@@ -47,7 +47,7 @@ export default function DoseCalculatorPage() {
             n={1}
             total={2}
             title="What's the concentration?"
-            hint="After mixing, your vial has a certain concentration — for example, 2.5 mg/mL means each milliliter of liquid contains 2.5 mg of peptide. Your plan or label should show this."
+            hint="After mixing, your vial has a certain concentration. For example, 2.5 mg/mL means each milliliter of liquid contains 2.5 mg of peptide. Your plan or label should show this."
           >
             <div className="flex items-center gap-2">
               <Input
@@ -82,7 +82,7 @@ export default function DoseCalculatorPage() {
             n={2}
             total={2}
             title="How much are you drawing?"
-            hint="Enter the amount of liquid you're pulling into your syringe — in either mL or syringe units."
+            hint="Enter the amount of liquid you're pulling into your syringe, in either mL or syringe units."
           >
             <div className="flex flex-wrap gap-2 mb-3">
               <button
@@ -213,7 +213,7 @@ export default function DoseCalculatorPage() {
 
             <TeachingSection
               icon={<Ruler className="h-5 w-5 text-foreground" />}
-              title="Units vs. mL — what's the difference?"
+              title="Units vs. mL: what's the difference?"
             >
               <p>
                 Insulin syringes are marked in &ldquo;units&rdquo; instead of mL. The

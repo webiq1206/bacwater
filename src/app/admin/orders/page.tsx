@@ -97,7 +97,7 @@ export default async function OrdersListPage({ searchParams }: Props) {
                       </Link>
                     </td>
                     <td className="p-3">
-                      <div>{o.shippingName || "—"}</div>
+                      <div>{o.shippingName || "-"}</div>
                       <div className="text-xs text-muted-foreground">{o.email}</div>
                     </td>
                     <td className="p-3">{o.items.length}</td>

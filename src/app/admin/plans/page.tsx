@@ -29,7 +29,7 @@ export default async function AdminPlansPage() {
             <tbody>
               {plans.map((p) => (
                 <tr key={p.id} className="border-t border-border">
-                  <td className="p-3 font-medium">{p.peptideName || "—"}</td>
+                  <td className="p-3 font-medium">{p.peptideName || "-"}</td>
                   <td className="p-3">{p.user?.email || <span className="text-muted-foreground">guest</span>}</td>
                   <td className="p-3">{p.vialStrengthMg} mg</td>
                   <td className="p-3">{p.doseMcg} mcg</td>

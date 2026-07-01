@@ -129,7 +129,7 @@ export async function draftVendorSubmission(orderPublicId: string, vendorId: str
     customer_email: order.email,
     placed_at: order.createdAt.toISOString(),
   });
-  const subject = `Order ${order.publicId} — BACWater.ai`;
+  const subject = `Order ${order.publicId} - BACwater.ai`;
 
   await prisma.order.update({
     where: { id: order.id },

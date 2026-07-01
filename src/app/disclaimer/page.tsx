@@ -7,14 +7,14 @@ export default function DisclaimerPage() {
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">Disclaimer</h1>
       <div className="mt-6 prose prose-neutral max-w-none text-foreground/90 space-y-4">
         <p>
-          BACWater.ai is an educational and research tool. Content on this site
+          BACwater.ai is an educational and research tool. Content on this site
           does not constitute medical, veterinary, or professional advice, and
           nothing here should be interpreted as diagnosing, treating, curing,
           or preventing any condition.
         </p>
         <p>
-          Products offered through BACWater.ai — including bacteriostatic
-          water, syringes, and alcohol prep pads — are sold for laboratory
+          Products offered through BACwater.ai, including bacteriostatic
+          water, syringes, and alcohol prep pads, are sold for laboratory
           research and educational use only.
         </p>
         <p>

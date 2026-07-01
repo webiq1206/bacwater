@@ -2,8 +2,8 @@ import { ContactForm } from "@/components/common/contact-form";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = {
-  title: "Contact BACWater.ai",
-  description: "Have a question about an order, a plan, or our products? Reach the BACWater.ai team.",
+  title: "Contact BACwater.ai",
+  description: "Have a question about an order, a plan, or our products? Reach the BACwater.ai team.",
 };
 
 export default function ContactPage() {

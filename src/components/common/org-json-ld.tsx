@@ -3,12 +3,12 @@ export function OrgJsonLd() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "BACWater.ai",
+    name: "BACwater.ai",
     url: siteUrl,
     logo: `${siteUrl}/favicon.ico`,
     sameAs: [] as string[],
     description:
-      "BACWater.ai is the trusted utility for peptide reconstitution — deterministic calculations, printable plans, and premium supplies.",
+      "BACwater.ai is the trusted utility for peptide reconstitution: deterministic calculations, printable plans, and premium supplies.",
   };
   return (
     <script

@@ -23,7 +23,7 @@ export default async function LearnPage() {
           Everything you need to reconstitute with confidence.
         </h1>
         <p className="mt-3 text-muted-foreground">
-          Short, honest guides written for beginners — how BAC water works, how
+          Short, honest guides written for beginners: how BAC water works, how
           to read a vial, what syringe units mean, and how to store your mixed
           peptide safely.
         </p>

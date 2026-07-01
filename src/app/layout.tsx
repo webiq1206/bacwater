@@ -31,8 +31,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "BACWater.ai — The trusted utility for peptide reconstitution",
-    template: "%s · BACWater.ai",
+    default: "BACwater.ai - The trusted utility for peptide reconstitution",
+    template: "%s · BACwater.ai",
   },
   description:
     "Build a personalized peptide reconstitution plan in minutes. Get exact BAC water amounts, syringe units, storage guidance, printable labels, and the supplies you need.",
@@ -44,24 +44,23 @@ export const metadata: Metadata = {
     "insulin syringe units",
     "peptide dosing",
   ],
-  applicationName: "BACWater.ai",
-  authors: [{ name: "BACWater.ai" }],
+  applicationName: "BACwater.ai",
+  authors: [{ name: "BACwater.ai" }],
   openGraph: {
     type: "website",
-    siteName: "BACWater.ai",
-    title: "BACWater.ai — The trusted utility for peptide reconstitution",
+    siteName: "BACwater.ai",
+    title: "BACwater.ai - The trusted utility for peptide reconstitution",
     description:
       "Build a plan, get exact syringe units, download a PDF, and buy the supplies you need. Simple, accurate, trustworthy.",
     url: siteUrl,
   },
   twitter: {
     card: "summary_large_image",
-    title: "BACWater.ai",
+    title: "BACwater.ai",
     description:
       "Personalized peptide reconstitution plans and premium supplies.",
   },
   robots: { index: true, follow: true },
-  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({

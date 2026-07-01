@@ -9,7 +9,7 @@ export function ArticleJsonLd({ title, body, slug, updatedAt }: { title: string;
     dateModified: updatedAt.toISOString(),
     publisher: {
       "@type": "Organization",
-      name: "BACWater.ai",
+      name: "BACwater.ai",
       url: siteUrl,
     },
   };

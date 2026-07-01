@@ -30,7 +30,7 @@ export default async function AdminUsersPage() {
                 {users.map((u) => (
                   <tr key={u.id} className="border-t border-border">
                     <td className="p-3 font-medium">{u.email}</td>
-                    <td className="p-3">{u.name || "—"}</td>
+                    <td className="p-3">{u.name || "-"}</td>
                     <td className="p-3"><UserRoleSwitcher userId={u.id} role={u.role as "user" | "admin"} /></td>
                     <td className="p-3">{u._count.plans}</td>
                     <td className="p-3">{u._count.orders}</td>

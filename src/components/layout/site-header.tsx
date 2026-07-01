@@ -34,7 +34,7 @@ export function SiteHeader() {
           className="flex items-baseline gap-2"
         >
           <span className="font-serif text-2xl font-medium tracking-tight leading-none">
-            BACWater
+            BACwater
           </span>
           <span className="text-xs text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
             &amp; Co.

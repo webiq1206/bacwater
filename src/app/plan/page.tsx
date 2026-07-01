@@ -18,7 +18,7 @@ export default function PlanPage() {
           </h1>
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
             Fill in what&apos;s on your vial label. We&apos;ll calculate
-            everything — BAC water, syringe units, doses per vial, expiration,
+            everything: BAC water, syringe units, doses per vial, expiration,
             and supplies. Save it, download a PDF, or print a vial label.
           </p>
         </div>

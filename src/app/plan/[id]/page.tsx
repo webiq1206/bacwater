@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props) {
   const plan = await prisma.plan.findUnique({ where: { publicId: id } });
   return {
     title: plan
-      ? `${plan.peptideName ?? "Reconstitution plan"} — ${plan.publicId}`
+      ? `${plan.peptideName ?? "Reconstitution plan"} - ${plan.publicId}`
       : "Plan not found",
     robots: { index: false, follow: false },
   };

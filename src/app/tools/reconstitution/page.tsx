@@ -4,7 +4,7 @@ import { PlanForm } from "@/components/plan/plan-form";
 export const metadata = {
   title: "Free Peptide Reconstitution Calculator",
   description:
-    "Free peptide reconstitution calculator. Enter your vial size, dose, and syringe — get exact BAC water amount, syringe units, and doses per vial. No account needed.",
+    "Free peptide reconstitution calculator. Enter your vial size, dose, and syringe to get exact BAC water amount, syringe units, and doses per vial. For research use.",
 };
 
 export default function Page() {

@@ -53,7 +53,7 @@ export default function BacWaterCalculatorPage() {
       </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
-        {/* Inputs — sticky on desktop */}
+        {/* Inputs: sticky on desktop */}
         <div className="lg:sticky lg:top-24 space-y-4">
           <StepCard n={1} total={3} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
@@ -75,7 +75,7 @@ export default function BacWaterCalculatorPage() {
             n={2}
             total={3}
             title="What size is your vial?"
-            hint="This is the number printed on the vial label — it tells you how much peptide powder is inside."
+            hint="This is the number printed on the vial label. It tells you how much peptide powder is inside."
           >
             <div className="flex flex-wrap gap-2">
               {peptide.commonVialStrengthsMg.map((mg) => (
@@ -115,7 +115,7 @@ export default function BacWaterCalculatorPage() {
             n={3}
             total={3}
             title="How much per dose?"
-            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0]}–${peptide.typicalDoseMcgRange[1]} mcg. We pre-filled a common starting dose.`}
+            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg). We pre-filled a common starting dose.`}
           >
             <div className="flex items-center gap-2">
               <Input
@@ -222,7 +222,7 @@ export default function BacWaterCalculatorPage() {
             >
               <p>
                 The amount of water you add determines the <b>concentration</b> of
-                the solution — how much peptide is in each drop of liquid. More water
+                the solution, how much peptide is in each drop of liquid. More water
                 means a weaker solution (you draw more liquid per dose). Less water
                 means a stronger solution (you draw less per dose).
               </p>

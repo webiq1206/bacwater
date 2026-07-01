@@ -9,7 +9,7 @@
     <rect x="366" y="155" width="68" height="24" rx="4" fill="#52525b"/>
     <rect x="362" y="148" width="76" height="12" rx="3" fill="#e4e4e7"/>
     <rect x="355" y="290" width="90" height="110" fill="#ffffff" stroke="#111111" stroke-width="0.5"/>
-    <text x="400" y="315" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#111111" font-weight="600">BACWater</text>
+    <text x="400" y="315" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#111111" font-weight="600">BACwater</text>
     <text x="400" y="327" text-anchor="middle" font-family="Georgia, serif" font-size="8" fill="#111111" font-style="italic">&amp; Co.</text>
     <line x1="370" y1="335" x2="430" y2="335" stroke="#111111" stroke-width="0.4"/>
     <text x="400" y="370" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#111111">30 mL</text>
@@ -23,7 +23,7 @@
     <rect x="366" y="155" width="68" height="24" rx="4" fill="#52525b"/>
     <rect x="362" y="148" width="76" height="12" rx="3" fill="#e4e4e7"/>
     <rect x="355" y="290" width="90" height="110" fill="#ffffff" stroke="#111111" stroke-width="0.5"/>
-    <text x="400" y="315" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#111111" font-weight="600">BACWater</text>
+    <text x="400" y="315" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#111111" font-weight="600">BACwater</text>
     <text x="400" y="327" text-anchor="middle" font-family="Georgia, serif" font-size="8" fill="#111111" font-style="italic">&amp; Co.</text>
     <line x1="370" y1="335" x2="430" y2="335" stroke="#111111" stroke-width="0.4"/>
     <text x="400" y="370" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#111111">30 mL</text>
@@ -38,7 +38,7 @@
     <rect x="362" y="138" width="76" height="12" rx="3" fill="#e4e4e7"/>
     <circle cx="400" cy="142" r="6" fill="none" stroke="#a1a1aa" stroke-width="1"/>
     <rect x="355" y="270" width="90" height="140" fill="#ffffff" stroke="#111111" stroke-width="0.75"/>
-    <text x="400" y="298" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#111111" font-weight="600" letter-spacing="0.5">BACWater</text>
+    <text x="400" y="298" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#111111" font-weight="600" letter-spacing="0.5">BACwater</text>
     <text x="400" y="312" text-anchor="middle" font-family="Georgia, serif" font-size="9" fill="#111111" font-style="italic">&amp; Co.</text>
     <line x1="370" y1="322" x2="430" y2="322" stroke="#111111" stroke-width="0.5"/>
     <text x="400" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="6.5" fill="#71717a" letter-spacing="2.5">BACTERIOSTATIC</text>

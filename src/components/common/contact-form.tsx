@@ -15,7 +15,7 @@ export function ContactForm() {
   if (sent) {
     return (
       <div className="text-center py-8">
-        <div className="text-xl font-semibold">Thanks — message received.</div>
+        <div className="text-xl font-semibold">Thanks, message received.</div>
         <p className="mt-2 text-sm text-muted-foreground">We&apos;ll get back to you shortly.</p>
       </div>
     );

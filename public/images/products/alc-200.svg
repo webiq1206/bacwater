@@ -12,7 +12,7 @@
   <rect x="270" y="255" width="260" height="190" fill="#ffffff" stroke="#111111" stroke-width="0.75"/>
 
   <!-- Brand -->
-  <text x="400" y="288" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#111111" font-weight="600" letter-spacing="1">BACWater &amp; Co.</text>
+  <text x="400" y="288" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#111111" font-weight="600" letter-spacing="1">BACwater &amp; Co.</text>
   <line x1="310" y1="300" x2="490" y2="300" stroke="#111111" stroke-width="0.5"/>
 
   <!-- Product name -->

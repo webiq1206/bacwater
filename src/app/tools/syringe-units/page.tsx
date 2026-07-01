@@ -111,7 +111,7 @@ export default function SyringeUnitConverterPage() {
           </p>
           <p>
             On a <b>U-100 syringe</b> (the most common type), the conversion is
-            simple: <b>100 units = 1 mL</b>. So each unit is 0.01 mL — a tiny
+            simple: <b>100 units = 1 mL</b>. So each unit is 0.01 mL, a tiny
             amount of liquid.
           </p>
         </TeachingSection>
@@ -122,12 +122,12 @@ export default function SyringeUnitConverterPage() {
         >
           <p>
             Look at the markings on the barrel of your syringe. Most insulin
-            syringes have numbers printed along the side — those are units.
+            syringes have numbers printed along the side. Those are units.
           </p>
           <ul className="list-disc pl-4 space-y-1">
-            <li><b>0.3 mL syringe</b> — goes up to 30 units, each tiny line = 0.5 units</li>
-            <li><b>0.5 mL syringe</b> — goes up to 50 units, each line = 1 unit</li>
-            <li><b>1 mL syringe</b> — goes up to 100 units, each line = 1 unit</li>
+            <li><b>0.3 mL syringe</b>: goes up to 30 units, each tiny line = 0.5 units</li>
+            <li><b>0.5 mL syringe</b>: goes up to 50 units, each line = 1 unit</li>
+            <li><b>1 mL syringe</b>: goes up to 100 units, each line = 1 unit</li>
           </ul>
           <p>
             When a plan says &ldquo;draw 10 units,&rdquo; pull the plunger back until
@@ -140,13 +140,13 @@ export default function SyringeUnitConverterPage() {
           title="Why not just use mL?"
         >
           <p>
-            Syringe units exist because insulin doses are very small — often just
+            Syringe units exist because insulin doses are very small, often just
             a few hundredths of a milliliter. Saying &ldquo;10 units&rdquo; is
             easier and less error-prone than saying &ldquo;0.1 mL.&rdquo;
           </p>
           <p>
             For peptide reconstitution, working in units makes dosing simpler.
-            That&apos;s why our plan builder gives you your dose in units —
+            That&apos;s why our plan builder gives you your dose in units.
             just draw to that line on your syringe.
           </p>
         </TeachingSection>

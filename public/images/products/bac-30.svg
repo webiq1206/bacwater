@@ -19,7 +19,7 @@
   <!-- Product label -->
   <rect x="355" y="270" width="90" height="140" fill="#ffffff" stroke="#111111" stroke-width="0.75"/>
   <!-- Brand name -->
-  <text x="400" y="298" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="11" fill="#111111" font-weight="600" letter-spacing="0.5">BACWater</text>
+  <text x="400" y="298" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="11" fill="#111111" font-weight="600" letter-spacing="0.5">BACwater</text>
   <text x="400" y="312" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="9" fill="#111111" font-style="italic">&amp; Co.</text>
   <!-- Divider -->
   <line x1="370" y1="322" x2="430" y2="322" stroke="#111111" stroke-width="0.5"/>

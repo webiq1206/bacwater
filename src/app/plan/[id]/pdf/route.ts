@@ -65,7 +65,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
         React.createElement(
           View,
           null,
-          React.createElement(Text, { style: styles.brand }, "BACWater.ai"),
+          React.createElement(Text, { style: styles.brand }, "BACwater.ai"),
           React.createElement(Text, { style: styles.h1 }, result.input.peptideName || "Reconstitution plan"),
           React.createElement(Text, { style: styles.muted }, `Plan ${plan.publicId} · Saved ${formatDate(plan.createdAt)}`)
         ),
@@ -87,7 +87,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
           detail("Dose volume", `${result.doseVolumeMl.toFixed(3)} mL`),
           detail("Syringe reading", result.syringeReadout.displayLabel),
           detail("Doses per vial", `${result.dosesPerVial}`),
-          detail("Date mixed", result.input.dateMixed ? formatDate(result.input.dateMixed) : "—"),
+          detail("Date mixed", result.input.dateMixed ? formatDate(result.input.dateMixed) : "-"),
           detail("Expiration", result.expiration.date ? formatDate(result.expiration.date) : `${result.expiration.days} days after mixing`)
         )
       ),
@@ -123,7 +123,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
             View,
             { style: styles.li, key: s.sku },
             React.createElement(Text, { style: styles.liNum }, `${s.quantity}×`),
-            React.createElement(Text, { style: styles.liText }, `${s.name} — ${s.reason}`)
+            React.createElement(Text, { style: styles.liText }, `${s.name}: ${s.reason}`)
           )
         )
       ),
@@ -140,7 +140,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
       React.createElement(
         Text,
         { style: styles.footer, fixed: true },
-        "BACWater.ai · This is not medical advice. Verify inputs against the label of your vial."
+        "BACwater.ai · This is not medical advice. Verify inputs against the label of your vial."
       )
     )
   );

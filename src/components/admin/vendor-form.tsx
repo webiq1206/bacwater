@@ -34,7 +34,7 @@ Customer email: {customer_email}
 Order placed: {placed_at}
 
 Reply when shipped with tracking. Thanks,
-BACWater.ai`;
+BACwater.ai`;
 
 export function VendorForm({ vendor }: { vendor?: Vendor }) {
   const router = useRouter();

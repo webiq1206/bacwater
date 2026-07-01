@@ -128,7 +128,7 @@ export function CartClient() {
             </Link>
           </Button>
           <div className="text-[11px] text-muted-foreground text-center">
-            Guest checkout available. No account required.
+            Secure checkout. Free shipping on orders over $50.
           </div>
         </CardContent>
       </Card>

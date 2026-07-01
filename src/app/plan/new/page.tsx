@@ -5,7 +5,7 @@ import { PlanForm } from "@/components/plan/plan-form";
 export const metadata = {
   title: "Step-by-Step Reconstitution Planner",
   description:
-    "Guided peptide reconstitution planner — one question at a time. Perfect for beginners. We'll do all the math.",
+    "Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math.",
 };
 
 export default function PlanNewPage() {
@@ -18,7 +18,7 @@ export default function PlanNewPage() {
             We&apos;ll walk you through it.
           </h1>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            One question at a time — perfect for your first reconstitution.
+            One question at a time, perfect for your first reconstitution.
             We&apos;ll handle all the math and explain every step along the way.
           </p>
         </div>

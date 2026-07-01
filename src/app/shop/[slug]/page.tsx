@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "How is this shipped?",
-    a: "Orders ship from our US-licensed vendors within 1–2 business days. Tracked shipping is included.",
+    a: "Orders ship from our US-licensed vendors within 1-2 business days. Tracked shipping is included.",
   },
   {
     q: "What's your return policy?",
@@ -90,7 +90,7 @@ export default async function PdpPage({ params }: Props) {
             <div className="mt-2 flex items-start gap-2">
               <Truck className="h-4 w-4 text-foreground mt-0.5" />
               <div className="text-sm text-muted-foreground">
-                Ships in 1–2 business days from a US-licensed vendor.
+                Ships in 1-2 business days from a US-licensed vendor.
               </div>
             </div>
           </div>

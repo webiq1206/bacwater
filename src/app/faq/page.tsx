@@ -5,7 +5,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 export const metadata = {
   title: "Frequently Asked Questions",
   description:
-    "Answers to the most common questions about BAC water, peptide reconstitution, dosing, storage, and shopping with BACWater.ai.",
+    "Answers to the most common questions about BAC water, peptide reconstitution, dosing, storage, and shopping with BACwater.ai.",
 };
 
 const CORE = [
@@ -23,19 +23,19 @@ const CORE = [
   },
   {
     q: "How long is reconstituted peptide good for?",
-    a: "Most reconstituted peptides remain stable for about 28–30 days refrigerated. Some are more stable, some less. Our planner uses each peptide's typical shelf life and lets you override it.",
+    a: "Most reconstituted peptides remain stable for about 28-30 days refrigerated. Some are more stable, some less. Our planner uses each peptide's typical shelf life and lets you override it.",
   },
   {
     q: "Do I need a prescription?",
     a: "In the US, bacteriostatic water is prescription-only when labeled for human use. Our products are sold for laboratory research and educational purposes. We do not provide medical advice.",
   },
   {
-    q: "Is BACWater.ai a medical service?",
+    q: "Is BACwater.ai a medical service?",
     a: "No. We provide calculation tools and research supplies. We do not diagnose, prescribe, or provide medical advice. Consult a qualified professional for any medical guidance.",
   },
   {
-    q: "Can I use the site without creating an account?",
-    a: "Yes. You can use the planner, the calculators, and guest checkout without signing up. Creating an account just gives you a place to save and revisit your plans.",
+    q: "Do I need an account?",
+    a: "Yes. A free account is required to use the planner, save plans, and check out. Creating one takes just a few seconds.",
   },
 ];
 

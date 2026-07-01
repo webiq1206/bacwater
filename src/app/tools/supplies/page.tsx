@@ -15,9 +15,9 @@ type Frequency = "daily" | "twice-daily" | "every-other-day" | "weekly";
 type Unit = "mg" | "mcg";
 
 const FREQUENCIES: { id: Frequency; label: string; perWeek: number; hint: string }[] = [
-  { id: "daily", label: "Once a day", perWeek: 7, hint: "Most common — e.g., every morning." },
+  { id: "daily", label: "Once a day", perWeek: 7, hint: "Most common, e.g., every morning." },
   { id: "twice-daily", label: "Twice a day", perWeek: 14, hint: "Morning + evening." },
-  { id: "every-other-day", label: "Every other day", perWeek: 3.5, hint: "3–4 times a week." },
+  { id: "every-other-day", label: "Every other day", perWeek: 3.5, hint: "3-4 times a week." },
   { id: "weekly", label: "Once a week", perWeek: 1, hint: "Some protocols use weekly dosing." },
 ];
 
@@ -36,7 +36,7 @@ export default function SupplyCalculatorPage() {
   const [doseUnit, setDoseUnit] = useState<Unit>("mcg");
   const doseMcg = doseUnit === "mcg" ? doseInput : doseInput * 1000;
 
-  // Vial size — user picks from common options
+  // Vial size: user picks from common options
   const [vialMg, setVialMg] = useState<number>(peptide.commonVialStrengthsMg[0]);
 
   const [frequency, setFrequency] = useState<Frequency>("daily");
@@ -60,7 +60,7 @@ export default function SupplyCalculatorPage() {
     const dosesPerVial = Math.max(1, Math.floor(vialMg / doseMg));
     const peptideVialsNeeded = Math.ceil(totalDoses / dosesPerVial);
 
-    // BAC water per peptide vial — recommended amount
+    // BAC water per peptide vial: recommended amount
     const bacPerVial = recommendBacWaterMl(vialMg, doseMcg);
     const totalBacMl = bacPerVial * peptideVialsNeeded;
     // Round up to whole 30 mL BAC vials
@@ -99,7 +99,7 @@ export default function SupplyCalculatorPage() {
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Tell us what you&apos;re running and we&apos;ll figure out exactly how
           many peptide vials, BAC water bottles, syringes, and alcohol pads
-          you&apos;ll need — with a one-click cart.
+          you&apos;ll need, with a one-click cart.
         </p>
       </div>
 
@@ -124,7 +124,7 @@ export default function SupplyCalculatorPage() {
             n={2}
             total={5}
             title="How much per injection?"
-            hint={`Typical range: ${peptide.typicalDoseMcgRange[0]}–${peptide.typicalDoseMcgRange[1]} mcg. We pre-filled the common starting dose.`}
+            hint={`Typical range: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg). We pre-filled the common starting dose.`}
           >
             <div className="flex items-center gap-2">
               <Input
@@ -253,25 +253,25 @@ export default function SupplyCalculatorPage() {
               <div className="space-y-4">
                 <SupplyRow
                   qty={results.peptideVialsNeeded}
-                  label={`${peptide.name} — ${vialMg} mg vial${results.peptideVialsNeeded === 1 ? "" : "s"}`}
-                  why={`Each vial gives you about ${results.dosesPerVial} doses at ${doseMcg} mcg. Rounded up so you don't run out.`}
+                  label={`${peptide.name}, ${vialMg} mg vial${results.peptideVialsNeeded === 1 ? "" : "s"}`}
+                  why={`Each vial gives you about ${results.dosesPerVial} doses at ${doseMcg} mcg (${doseMcg / 1000} mg). Rounded up so you don't run out.`}
                 />
                 <SupplyRow
                   qty={results.bacVialsNeeded}
-                  label={`Bacteriostatic Water — 30 mL bottle${results.bacVialsNeeded === 1 ? "" : "s"}`}
+                  label={`Bacteriostatic Water, 30 mL bottle${results.bacVialsNeeded === 1 ? "" : "s"}`}
                   why={`You'll use ~${Math.round(results.totalBacMl * 10) / 10} mL total to reconstitute your ${results.peptideVialsNeeded} peptide vial${results.peptideVialsNeeded === 1 ? "" : "s"}.`}
                   buyable="BAC-30ML"
                 />
                 <SupplyRow
                   qty={results.syringeBoxes}
-                  label={`Insulin Syringes — box of 100${results.syringeBoxes === 1 ? "" : ""} (${results.syringesNeeded} injections)`}
+                  label={`Insulin Syringes, box of 100${results.syringeBoxes === 1 ? "" : ""} (${results.syringesNeeded} injections)`}
                   why="One fresh syringe per injection. Never reuse."
                   buyable="SYR-INS-10"
                 />
                 <SupplyRow
                   qty={results.padBoxes}
-                  label={`Alcohol Prep Pads — box of 200${results.padBoxes === 1 ? "" : ""} (${results.padsNeeded} pads)`}
-                  why="Two pads per injection — one to wipe the vial top, one for the injection site."
+                  label={`Alcohol Prep Pads, box of 200${results.padBoxes === 1 ? "" : ""} (${results.padsNeeded} pads)`}
+                  why="Two pads per injection: one to wipe the vial top, one for the injection site."
                   buyable="ALC-200"
                 />
               </div>
@@ -298,7 +298,7 @@ export default function SupplyCalculatorPage() {
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   We rounded everything up to whole boxes so you won&apos;t run
                   out mid-cycle. Numbers assume {results.bacPerVial} mL of BAC
-                  water per peptide vial — the amount that gives clean syringe
+                  water per peptide vial, the amount that gives clean syringe
                   numbers at your chosen dose.
                 </p>
               </div>

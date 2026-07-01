@@ -40,7 +40,7 @@ export function PlanResults({ result }: Props) {
             {result.summary}
           </p>
 
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
             <Stat label="Vial strength" value={`${result.input.vialStrengthMg} mg`} />
             <Stat label="BAC water" value={`${result.usedBacMl} mL`} />
             <Stat label="Concentration" value={`${result.finalConcentrationMgPerMl} mg/mL`} />
@@ -76,7 +76,7 @@ export function PlanResults({ result }: Props) {
         <CardContent className="p-7 sm:p-10">
           <h4 className="font-semibold text-lg">In plain English</h4>
           <p className="mt-2 text-sm text-muted-foreground">
-            You&apos;re dissolving {result.input.vialStrengthMg} mg of {result.input.peptideName || "peptide"} in {result.usedBacMl} mL of BAC water. That makes each mL contain <b>{result.finalConcentrationMgPerMl} mg</b> (or {result.finalConcentrationMcgPerMl} mcg) of peptide. To dose {result.input.doseMcg} mcg, you draw <b>{result.doseVolumeMl.toFixed(3)} mL</b> of the mixed solution — which is <b>{result.syringeReadout.displayLabel}</b>.
+            You&apos;re dissolving {result.input.vialStrengthMg} mg of {result.input.peptideName || "peptide"} in {result.usedBacMl} mL of BAC water. That makes each mL contain <b>{result.finalConcentrationMgPerMl} mg</b> (or {result.finalConcentrationMcgPerMl} mcg) of peptide. To dose {result.input.doseMcg} mcg, you draw <b>{result.doseVolumeMl.toFixed(3)} mL</b> of the mixed solution, which is <b>{result.syringeReadout.displayLabel}</b>.
           </p>
         </CardContent>
       </Card>
@@ -143,9 +143,9 @@ export function PlanResults({ result }: Props) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-muted/50 p-4">
+    <div className="rounded-lg bg-muted/50 px-4 py-5">
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className="mt-1 text-lg font-semibold tabular-nums">{value}</div>
+      <div className="mt-1.5 text-lg font-semibold tabular-nums">{value}</div>
     </div>
   );
 }

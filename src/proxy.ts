@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 /**
  * Admin gate. Uses the auth() wrapper (rather than getToken) so it works
  * consistently regardless of whether AUTH_SECRET rotates the raw JWT
- * encoding — Auth.js handles cookie/JWT decode internally.
+ * encoding. Auth.js handles cookie/JWT decode internally.
  */
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;

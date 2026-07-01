@@ -20,7 +20,7 @@ export function SignUpForm() {
     const res = await signupAction(form);
     setPending(false);
     if (res.ok) {
-      toast({ title: "Welcome to BACWater.ai", variant: "success" });
+      toast({ title: "Welcome to BACwater.ai", variant: "success" });
       router.push("/plans");
       router.refresh();
     } else {

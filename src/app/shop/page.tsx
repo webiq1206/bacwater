@@ -27,7 +27,7 @@ const CATEGORY_INFO: Record<string, { label: string; hint: string }> = {
   },
   other: {
     label: "Kits & Bundles",
-    hint: "Everything you need in one package — great if you're starting from scratch.",
+    hint: "Everything you need in one package. Great if you're starting from scratch.",
   },
 };
 

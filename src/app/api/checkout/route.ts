@@ -133,11 +133,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, url: stripeSession.url, publicId });
     } catch (e) {
       console.error(e);
-      // fall through — treat as offline test order
+      // fall through - treat as offline test order
     }
   }
 
-  // Offline test mode — mark as paid immediately so admin flow is testable.
+  // Offline test mode - mark as paid immediately so admin flow is testable.
   await prisma.order.update({
     where: { id: order.id },
     data: { status: "paid" },

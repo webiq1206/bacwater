@@ -26,7 +26,7 @@ const adminEmails = (process.env.ADMIN_EMAILS || "")
  *     - Server code can look up the persistent Session in the DB if it needs
  *       to (e.g. to force-signout a user by deleting their Session row).
  *   AUTH_SECRET MUST be set once in the Replit Secrets panel and never
- *   rotated — rotating it will invalidate existing session cookies.
+ *   rotated. Rotating it will invalidate existing session cookies.
  */
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -98,7 +98,7 @@ export const authConfig: NextAuthConfig = {
             token.picture = dbUser.image ?? token.picture;
           }
         } catch {
-          // DB unavailable during middleware — keep existing token values
+          // DB unavailable during middleware - keep existing token values
           // so the user stays signed in rather than getting bounced.
         }
       }

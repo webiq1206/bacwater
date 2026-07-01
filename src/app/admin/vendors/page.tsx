@@ -29,7 +29,7 @@ export default async function VendorsPage() {
                   <Badge variant={v.active ? "success" : "outline"}>{v.active ? "active" : "inactive"}</Badge>
                 </div>
                 <div className="mt-3 text-xs text-muted-foreground">
-                  Supplies: {v.productsSupplied || "—"}
+                  Supplies: {v.productsSupplied || "-"}
                 </div>
               </CardContent>
             </Card>

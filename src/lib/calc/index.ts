@@ -145,7 +145,7 @@ export interface CalcResult {
   summary: string;
   instructions: string[];
   /**
-   * For blends: the "companion" dose — the amount of the second peptide
+   * For blends: the "companion" dose, the amount of the second peptide
    * delivered alongside every draw of the primary dose.
    */
   secondary?: {
@@ -165,7 +165,7 @@ function isFiniteNumber(n: unknown): n is number {
 /**
  * Recommend a BAC water volume that yields comfortable dosing
  * (target ~10 units on a U-100 syringe), rounded to the nearest
- * clean 0.5 mL, clamped to 1–3 mL.
+ * clean 0.5 mL, clamped to 1-3 mL.
  */
 export function recommendBacWaterMl(vialStrengthMg: number, doseMcg: number): number {
   if (!isFiniteNumber(vialStrengthMg) || !isFiniteNumber(doseMcg) || doseMcg <= 0)
@@ -186,7 +186,7 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
   const bacVials = Math.ceil(totalBacNeededMl / 30);
   supplies.push({
     sku: "BAC-30ML",
-    name: "Bacteriostatic Water — 30 mL vial",
+    name: "Bacteriostatic Water, 30 mL vial",
     quantity: bacVials,
     reason: "Diluent used to reconstitute the peptide.",
   });
@@ -195,11 +195,11 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
   const injectionSyringes = Math.max(1, Math.ceil(dosesPerVial));
   const syringeName =
     syringe.id === "insulin-0.3ml"
-      ? "Insulin syringes — 0.3 mL / 30 units (100 pack)"
+      ? "Insulin syringes, 0.3 mL / 30 units (100 pack)"
       : syringe.id === "insulin-0.5ml"
-        ? "Insulin syringes — 0.5 mL / 50 units (100 pack)"
+        ? "Insulin syringes, 0.5 mL / 50 units (100 pack)"
         : syringe.id === "insulin-1ml"
-          ? "Insulin syringes — 1 mL / 100 units (100 pack)"
+          ? "Insulin syringes, 1 mL / 100 units (100 pack)"
           : "Syringes with mL scale (100 pack)";
   supplies.push({
     sku:
@@ -242,7 +242,7 @@ function buildInstructions(input: {
     "Wash your hands and lay out your supplies on a clean surface.",
     `Wipe the top of the BAC water vial with an alcohol prep pad. Let it dry.`,
     `Using a syringe, draw ${round(input.bacMl, 2)} mL of BAC water.`,
-    "Wipe the top of the peptide vial. Slowly inject the BAC water along the inside wall of the vial — do not aim directly at the peptide powder.",
+    "Wipe the top of the peptide vial. Slowly inject the BAC water along the inside wall of the vial. Do not aim directly at the peptide powder.",
     "Gently swirl (do not shake) until the powder is fully dissolved. The solution should look clear.",
     "Label the vial with the peptide name, date mixed, and expiration.",
     "Refrigerate the reconstituted vial immediately.",
@@ -283,7 +283,7 @@ export function calculate(input: CalcInput): CalcResult {
     const [lo, hi] = peptideRef.typicalDoseMcgRange;
     if (doseMcg < lo * 0.25 || doseMcg > hi * 4)
       warnings.push(
-        `Doses of ${peptideRef.name} typically fall between ${lo} mcg and ${hi} mcg — please confirm.`
+        `Doses of ${peptideRef.name} typically fall between ${lo} mcg and ${hi} mcg. Please confirm.`
       );
   }
 
@@ -347,7 +347,7 @@ export function calculate(input: CalcInput): CalcResult {
   );
   if (!peptideRef) {
     assumptions.push(
-      "No specific peptide reference selected. Storage defaults to 28 days refrigerated — check your peptide's actual stability."
+      "No specific peptide reference selected. Storage defaults to 28 days refrigerated. Check your peptide's actual stability."
     );
   }
   if (!isFiniteNumber(input.bacWaterMl)) {
@@ -413,7 +413,7 @@ export function calculate(input: CalcInput): CalcResult {
 
   const summary =
     `Mix ${vialStrengthMg} mg of ${displayName} with ${round(usedBacMl, 2)} mL of BAC water. ` +
-    `Each ${doseMcg} mcg dose is ${round(doseVolumeMl, 3)} mL — ` +
+    `Each ${doseMcg} mcg dose is ${round(doseVolumeMl, 3)} mL, ` +
     (syringe.scale === "u100"
       ? `${round(syringeUnits, 1)} units on your ${syringe.label}.`
       : `${round(doseVolumeMl, 2)} mL on your ${syringe.label}.`) +
@@ -445,7 +445,7 @@ export function calculate(input: CalcInput): CalcResult {
     expiration: {
       days,
       date: expDate,
-      note: peptideRef?.storageNote ?? "Refrigerate at 36–46°F (2–8°C).",
+      note: peptideRef?.storageNote ?? "Refrigerate at 36-46°F (2-8°C).",
     },
     supplies,
     assumptions,
