@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ArticleJsonLd } from "@/components/common/article-json-ld";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
 
 interface Props { params: Promise<{ slug: string }>; }
 
@@ -58,10 +59,12 @@ export default async function GuidePage({ params }: Props) {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
       <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} updatedAt={guide.updatedAt} />
-      <Link href="/learn" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> All guides
-      </Link>
-      <div className="eyebrow mt-6">Guide</div>
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Learning Center", href: "/learn" },
+        { label: guide.title, href: `/learn/${guide.slug}` },
+      ]} />
+      <div className="eyebrow">Guide</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">{guide.title}</h1>
       <article className="mt-4 prose prose-neutral max-w-none">
         {renderBody(guide.body)}

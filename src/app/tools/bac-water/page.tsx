@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
 import { cn } from "@/lib/utils";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
 
 type Unit = "mg" | "mcg";
 
@@ -40,6 +41,11 @@ export default function BacWaterCalculatorPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Tools", href: "/tools" },
+        { label: "BAC Water Calculator", href: "/tools/bac-water" },
+      ]} />
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { PlanForm } from "@/components/plan/plan-form";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
   title: "Free Peptide Reconstitution Calculator",
@@ -10,6 +12,21 @@ export const metadata = {
 export default function Page() {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <WebPageJsonLd
+        name="Free Peptide Reconstitution Calculator"
+        description="Free peptide reconstitution calculator. Enter your vial size, dose, and syringe to get exact BAC water amount, syringe units, and doses per vial. For research use."
+        url="/tools/reconstitution"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "Tools", url: "/tools" },
+          { name: "Reconstitution Calculator", url: "/tools/reconstitution" },
+        ]}
+      />
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Tools", href: "/tools" },
+        { label: "Reconstitution Calculator", href: "/tools/reconstitution" },
+      ]} />
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">

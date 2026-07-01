@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
 
 type Unit = "mg" | "mcg";
 
@@ -29,6 +30,11 @@ export default function DoseCalculatorPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Tools", href: "/tools" },
+        { label: "Dose Calculator", href: "/tools/dose" },
+      ]} />
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">

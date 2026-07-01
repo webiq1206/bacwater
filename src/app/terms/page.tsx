@@ -1,8 +1,21 @@
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+
 export const metadata = { title: "Terms of service" };
 
 export default function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <WebPageJsonLd
+        name="Terms of Service"
+        description="Terms of service for BACwater.ai."
+        url="/terms"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "Terms of Service", url: "/terms" },
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Terms of Service", href: "/terms" }]} />
       <div className="eyebrow">Legal</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">Terms of service</h1>
       <div className="mt-6 prose prose-neutral max-w-none text-foreground/90 space-y-4">

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
   title: "Learning Center",
@@ -17,6 +19,16 @@ export default async function LearnPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <WebPageJsonLd
+        name="Learning Center"
+        description="Beginner-friendly guides on BAC water, peptide reconstitution, syringes, storage, and dosing."
+        url="/learn"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "Learning Center", url: "/learn" },
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Learning Center", href: "/learn" }]} />
       <div className="max-w-3xl">
         <div className="eyebrow">Learning Center</div>
         <h1 className="mt-3 text-4xl sm:text-5xl font-serif font-medium tracking-tight">

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Beaker, Calculator, Droplets, FlaskConical, Ruler, Scale, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
   title: "Free Peptide Calculators & Tools",
@@ -56,6 +58,16 @@ const TOOLS = [
 export default function ToolsPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <WebPageJsonLd
+        name="Free Peptide Calculators & Tools"
+        description="Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly, no jargon."
+        url="/tools"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "Tools", url: "/tools" },
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools", href: "/tools" }]} />
       <div className="max-w-3xl">
         <div className="eyebrow">Free tools</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">

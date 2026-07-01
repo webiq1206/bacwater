@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
   title: "About BACwater.ai",
@@ -10,6 +12,16 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <WebPageJsonLd
+        name="About BACwater.ai"
+        description="BACwater.ai is the most beginner-friendly BAC water calculator and reconstitution guide. Exact math, plain-English explanations, and premium supplies in one place."
+        url="/about"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "About", url: "/about" },
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About", href: "/about" }]} />
       <div className="eyebrow">About</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
         A calmer way to reconstitute

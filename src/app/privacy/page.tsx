@@ -1,8 +1,21 @@
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+
 export const metadata = { title: "Privacy" };
 
 export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <WebPageJsonLd
+        name="Privacy Policy"
+        description="Privacy policy for BACwater.ai."
+        url="/privacy"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "Privacy Policy", url: "/privacy" },
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Privacy Policy", href: "/privacy" }]} />
       <div className="eyebrow">Legal</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">Privacy</h1>
       <div className="mt-6 prose prose-neutral max-w-none text-foreground/90 space-y-4">

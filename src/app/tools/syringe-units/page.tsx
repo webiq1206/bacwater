@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { mlToU100, u100ToMl } from "@/lib/calc/converters";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
 
 export default function SyringeUnitConverterPage() {
   const [ml, setMl] = useState(0.1);
@@ -14,6 +15,11 @@ export default function SyringeUnitConverterPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Tools", href: "/tools" },
+        { label: "Syringe Unit Converter", href: "/tools/syringe-units" },
+      ]} />
       <div className="eyebrow">Converter</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
         Syringe units &harr; mL

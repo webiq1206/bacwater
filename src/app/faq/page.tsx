@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
   title: "Frequently Asked Questions",
@@ -59,6 +61,16 @@ export default async function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <WebPageJsonLd
+        name="Frequently Asked Questions"
+        description="Answers to the most common questions about BAC water, peptide reconstitution, dosing, storage, and shopping with BACwater.ai."
+        url="/faq"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "FAQ", url: "/faq" },
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "FAQ", href: "/faq" }]} />
       <div className="eyebrow">Help</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
         Frequently asked questions

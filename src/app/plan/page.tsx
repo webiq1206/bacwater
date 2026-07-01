@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { PlanForm } from "@/components/plan/plan-form";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
   title: "Build My Plan",
@@ -10,6 +12,16 @@ export const metadata = {
 export default function PlanPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <WebPageJsonLd
+        name="Build My Plan"
+        description="Enter your peptide, vial strength, dose, and syringe. Get an exact reconstitution plan with plain-English explanations and a printable PDF."
+        url="/plan"
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "Build My Plan", url: "/plan" },
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Build My Plan", href: "/plan" }]} />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-2xl">
           <div className="eyebrow">Plan builder</div>

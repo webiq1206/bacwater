@@ -8,6 +8,7 @@ import { formatCurrency } from "@/lib/utils";
 import { AddToCartControl } from "@/components/shop/add-to-cart-control";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { ProductJsonLd } from "@/components/common/product-json-ld";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
 
 interface Props { params: Promise<{ slug: string }>; }
 
@@ -56,6 +57,11 @@ export default async function PdpPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <ProductJsonLd product={product} />
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Shop", href: "/shop" },
+        { label: product.name, href: `/shop/${product.slug}` },
+      ]} />
       <div className="grid gap-10 md:grid-cols-2">
         <div>
           <div className="aspect-square rounded-lg bg-muted flex items-center justify-center overflow-hidden">

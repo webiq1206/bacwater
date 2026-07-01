@@ -1,0 +1,20 @@
+# BACwater.ai
+
+> The complete BAC water calculator and reconstitution guide. Build personalized peptide reconstitution plans with exact math, printable labels, and premium supplies.
+
+## Key Pages
+
+- [Homepage](https://bacwater.ai/): The complete BAC water calculator and reconstitution guide
+- [Build My Plan](https://bacwater.ai/plan): Step-by-step peptide reconstitution planner with PDF export
+- [Shop Supplies](https://bacwater.ai/shop): BAC water, syringes, and alcohol prep pads
+- [Learning Center](https://bacwater.ai/learn): Beginner guides on BAC water and reconstitution
+- [BAC Water Calculator](https://bacwater.ai/tools/bac-water): Calculate exactly how much BAC water to add
+- [Dose Calculator](https://bacwater.ai/tools/dose): Convert concentration and volume to dose
+- [Supply Calculator](https://bacwater.ai/tools/supplies): Calculate supplies needed for a full cycle
+- [Syringe Unit Converter](https://bacwater.ai/tools/syringe-units): Convert between mL and insulin syringe units
+- [FAQ](https://bacwater.ai/faq): Frequently asked questions about BAC water and reconstitution
+- [About](https://bacwater.ai/about): About BACwater.ai
+
+## About
+
+BACwater.ai is the complete BAC water calculator and reconstitution guide. Every calculation shows exactly how the answer was reached. The site provides deterministic math (never AI-generated calculations), printable vial labels with QR codes, PDF plan exports, and premium supplies (BAC water, insulin syringes, alcohol prep pads). Built for beginners doing peptide reconstitution for the first time. For research use only.

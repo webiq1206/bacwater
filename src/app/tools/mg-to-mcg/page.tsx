@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { mgToMcg, mcgToMg } from "@/lib/calc/converters";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
 
 export default function MgMcgConverterPage() {
   const [mg, setMg] = useState(1);
@@ -14,6 +15,11 @@ export default function MgMcgConverterPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Tools", href: "/tools" },
+        { label: "mg to mcg Converter", href: "/tools/mg-to-mcg" },
+      ]} />
       <div className="eyebrow">Converter</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
         mg &harr; mcg
