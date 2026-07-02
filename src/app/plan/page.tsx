@@ -41,7 +41,7 @@ export default function PlanPage() {
           question at a time.
         </p>
       </div>
-      <PlanForm mode="advanced" />
+      <PlanForm mode="beginner" />
     </div>
   );
 }

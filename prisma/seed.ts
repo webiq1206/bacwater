@@ -32,12 +32,12 @@ const PRODUCTS = [
   {
     slug: "insulin-syringes-1ml-100",
     sku: "SYR-INS-10",
-    name: "Insulin Syringes, 1 mL / 100 units, 31G x 5/16in (100 pack)",
+    name: "1 mL Insulin Syringes (100 pack)",
     category: "syringes",
     description:
-      "Sterile, single-use U-100 insulin syringes with a 31-gauge needle. Clear markings at every unit, latex-free.",
+      "Sterile, single-use U-100 insulin syringes. 31-gauge x 5/16\" needle, clear markings at every unit, latex-free.",
     useCase:
-      "Best all-around choice for peptide dosing when your dose falls between 10 and 60 units.",
+      "Most popular — best all-around choice when your dose is between 10 and 60 units.",
     priceCents: 2900,
     imageUrl: "/images/products/syr-ins-1.svg",
     inventory: 300,
@@ -45,11 +45,11 @@ const PRODUCTS = [
   {
     slug: "insulin-syringes-0-5ml-100",
     sku: "SYR-INS-05",
-    name: "Insulin Syringes, 0.5 mL / 50 units, 31G x 5/16in (100 pack)",
+    name: "0.5 mL Insulin Syringes (100 pack)",
     category: "syringes",
     description:
-      "Half-mL insulin syringes with fine 31-gauge needle for smaller doses.",
-    useCase: "Ideal for doses under 50 units where finer resolution helps.",
+      "Half-mL U-100 insulin syringes. 31-gauge x 5/16\" needle, easier-to-read markings for smaller doses.",
+    useCase: "Easier to read — ideal when your dose is under 50 units.",
     priceCents: 2900,
     imageUrl: "/images/products/syr-ins-05.svg",
     inventory: 240,
@@ -57,11 +57,11 @@ const PRODUCTS = [
   {
     slug: "insulin-syringes-0-3ml-100",
     sku: "SYR-INS-03",
-    name: "Insulin Syringes, 0.3 mL / 30 units, 31G x 5/16in (100 pack)",
+    name: "0.3 mL Insulin Syringes (100 pack)",
     category: "syringes",
     description:
-      "0.3 mL insulin syringes with half-unit markings for the smallest, most accurate doses.",
-    useCase: "Best for micro-dosing protocols under 30 units.",
+      "Micro-dose U-100 insulin syringes. 31-gauge x 5/16\" needle, half-unit markings for the smallest, most accurate doses.",
+    useCase: "Most precise — best when your dose is under 30 units.",
     priceCents: 3200,
     imageUrl: "/images/products/syr-ins-03.svg",
     inventory: 180,

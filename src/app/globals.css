@@ -31,6 +31,9 @@
   --color-warning-foreground: #fffbeb;
   --color-success: #16a34a;
 
+  --color-accent-guide: #2d6a4f;
+  --color-accent-guide-soft: #f0f7f2;
+
   --color-surface: #fafaf9;
   --color-surface-raised: #f5f5f4;
 
@@ -90,8 +93,9 @@ body {
 
 /* Callout panel — warm surface for "In Plain English" and important info */
 .callout-panel {
-  background: var(--color-surface);
-  border: 2px solid var(--color-foreground);
+  background: var(--color-accent-guide-soft);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent-guide);
   padding: 1.5rem;
 }
 @media (min-width: 640px) {
@@ -113,6 +117,7 @@ body {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
+  color: var(--color-accent-guide);
 }
 @media (min-width: 640px) {
   .result-hero {
@@ -128,15 +133,16 @@ body {
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 9999px;
-  border: 2px solid var(--color-foreground);
+  border: 2px solid var(--color-accent-guide);
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
+  color: var(--color-accent-guide);
 }
 .step-number--filled {
-  background: var(--color-foreground);
+  background: var(--color-accent-guide);
   color: var(--color-background);
-  border-color: var(--color-foreground);
+  border-color: var(--color-accent-guide);
 }
 
 /* Selection chip — stronger active state */
@@ -152,8 +158,8 @@ body {
 }
 .chip--active {
   border-width: 2px;
-  border-color: var(--color-foreground);
-  background: var(--color-surface);
+  border-color: var(--color-accent-guide);
+  background: var(--color-accent-guide-soft);
   padding: 0.8125rem 0.9375rem; /* compensate for 2px border */
 }
 
@@ -164,6 +170,32 @@ body {
   background: #fffbeb;
   font-size: 0.875rem;
   color: #92400e;
+}
+
+/* Accent check — green checkmark for verified/positive items */
+.accent-check {
+  color: var(--color-accent-guide);
+}
+
+/* Badge for product recommendations */
+.badge-match {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent-guide);
+  background: var(--color-accent-guide-soft);
+  border: 1px solid color-mix(in srgb, var(--color-accent-guide) 25%, transparent);
+  padding: 0.25rem 0.5rem;
+}
+
+/* Section with accent left border */
+.accent-left {
+  border-left: 3px solid var(--color-accent-guide);
+  padding-left: 1rem;
 }
 
 @media print {

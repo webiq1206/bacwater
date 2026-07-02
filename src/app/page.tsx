@@ -70,16 +70,16 @@ export default async function HomePage() {
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5" /> Exact, verified math
+            <Check className="h-3.5 w-3.5 accent-check" /> Exact, verified math
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5" /> Printable labels
+            <Check className="h-3.5 w-3.5 accent-check" /> Printable labels
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5" /> Built for beginners
+            <Check className="h-3.5 w-3.5 accent-check" /> Built for beginners
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5" /> For research use
+            <Check className="h-3.5 w-3.5 accent-check" /> For research use
           </span>
         </div>
       </section>
@@ -93,7 +93,7 @@ export default async function HomePage() {
             const Icon = p.icon;
             return (
               <Link key={p.href} href={p.href} className="group py-8 md:py-0 md:px-8 first:pt-0 md:first:pl-0 last:pb-0 md:last:pr-0">
-                <Icon className="h-5 w-5 text-muted-foreground" />
+                <Icon className="h-5 w-5 accent-check" />
                 <h3 className="mt-4 text-lg font-serif font-medium tracking-tight">
                   {p.title}
                 </h3>
@@ -143,7 +143,7 @@ export default async function HomePage() {
                 },
               ].map((s) => (
                 <li key={s.t} className="flex items-start gap-4">
-                  <s.icon className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                  <s.icon className="h-5 w-5 accent-check mt-0.5 shrink-0" />
                   <div>
                     <div className="font-medium">{s.t}</div>
                     <div className="text-sm text-muted-foreground mt-0.5">{s.b}</div>
@@ -192,7 +192,7 @@ export default async function HomePage() {
             </dl>
             <div className="rule my-5" />
             <p className="text-sm text-muted-foreground">
-              Draw <b className="text-foreground">10 units</b> on a 1 mL insulin syringe.
+              Draw <b style={{ color: "var(--color-accent-guide)" }}>10 units</b> on a 1 mL insulin syringe.
             </p>
           </div>
         </div>

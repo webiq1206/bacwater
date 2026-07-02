@@ -123,8 +123,8 @@ export function SupplyRecommender({ supplies }: Props) {
       {/* Header */}
       <div className="p-6 sm:p-8 bg-surface border-b border-border">
         <div className="flex items-center gap-3 mb-3">
-          <Package className="h-5 w-5" />
-          <div className="eyebrow">Next step</div>
+          <Package className="h-5 w-5 accent-check" />
+          <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Next step</div>
         </div>
         <h4 className="text-xl sm:text-2xl font-serif font-medium tracking-tight">
           Everything you&apos;ll need

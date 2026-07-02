@@ -227,15 +227,11 @@ function ModeToggle({
 export function PlanForm({ mode: initialMode }: Props) {
   const router = useRouter();
 
-  // Mobile detection — default to beginner on small screens
   const [mode, setMode] = useState<Mode>(initialMode);
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
-    if (initialMode === "advanced" && window.innerWidth < 768) {
-      setMode("beginner");
-    }
-  }, [initialMode]);
+  }, []);
 
   const [step, setStep] = useState<number>(0);
   const stepContainerRef = useRef<HTMLDivElement>(null);

@@ -69,7 +69,7 @@ export default async function LearnPage() {
               <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
                 {g.body.replace(/[*_#`]/g, "").slice(0, 180)}
               </p>
-              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
+              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all" style={{ color: "var(--color-accent-guide)" }}>
                 Read <ArrowRight className="h-4 w-4" />
               </div>
             </Link>

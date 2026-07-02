@@ -103,37 +103,43 @@ export default async function ShopPage() {
                 ) : null}
               </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((p) => (
-                  <Link key={p.id} href={`/shop/${p.slug}`} className="group block border border-border hover:bg-surface transition-colors p-5">
-                    <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
-                      {p.imageUrl ? (
-                        <img src={p.imageUrl} alt={p.name} className="h-full w-full object-contain" />
-                      ) : (
-                        <span className="text-5xl text-muted-foreground">&#x2022;</span>
+                {items.map((p) => {
+                  const isMostPopular = p.slug === "insulin-syringes-1ml-100" || p.slug === "bac-water-30ml";
+                  return (
+                    <Link key={p.id} href={`/shop/${p.slug}`} className="group block border border-border hover:bg-surface transition-colors p-5 relative">
+                      {isMostPopular && (
+                        <span className="badge-match absolute top-3 right-3">Most popular</span>
                       )}
-                    </div>
-                    <div className="mt-4 flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="font-medium leading-tight line-clamp-2 group-hover:underline">
-                          {p.name}
+                      <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
+                        {p.imageUrl ? (
+                          <img src={p.imageUrl} alt={p.name} className="h-full w-full object-contain" />
+                        ) : (
+                          <span className="text-5xl text-muted-foreground">&#x2022;</span>
+                        )}
+                      </div>
+                      <div className="mt-4 flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="font-medium leading-tight line-clamp-2 group-hover:underline">
+                            {p.name}
+                          </div>
+                          <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                            {p.useCase}
+                          </div>
                         </div>
-                        <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                          {p.useCase}
+                        <div className="text-right shrink-0">
+                          <div className="font-semibold">
+                            {formatCurrency(p.priceCents)}
+                          </div>
+                          {p.inventory <= 0 ? (
+                            <Badge variant="warning" className="mt-1">Sold out</Badge>
+                          ) : p.inventory < 20 ? (
+                            <Badge variant="outline" className="mt-1">Low stock</Badge>
+                          ) : null}
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
-                        <div className="font-semibold">
-                          {formatCurrency(p.priceCents)}
-                        </div>
-                        {p.inventory <= 0 ? (
-                          <Badge variant="warning" className="mt-1">Sold out</Badge>
-                        ) : p.inventory < 20 ? (
-                          <Badge variant="outline" className="mt-1">Low stock</Badge>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             </section>
           );

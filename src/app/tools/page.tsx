@@ -80,10 +80,10 @@ export default function ToolsPage() {
         </p>
       </div>
 
-      <div className="mt-4 border border-border p-4 max-w-3xl">
+      <div className="mt-4 callout-panel max-w-3xl">
         <p className="text-sm text-muted-foreground leading-relaxed">
           <b className="text-foreground">New to peptides?</b> Start with the{" "}
-          <Link href="/plan" className="underline font-medium text-foreground">Plan Builder</Link> instead. It walks
+          <Link href="/plan" className="underline font-medium" style={{ color: "var(--color-accent-guide)" }}>Plan Builder</Link> instead. It walks
           you through everything step by step and gives you a complete,
           printable reconstitution plan.
         </p>
@@ -95,9 +95,9 @@ export default function ToolsPage() {
           return (
             <Link key={t.href} href={t.href} className="group p-6 hover:bg-surface transition-colors flex flex-col">
               <div className="flex items-start justify-between gap-2">
-                <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
+                <Icon className="h-5 w-5 accent-check shrink-0" />
                 {t.tag ? (
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground border border-border px-2 py-0.5">
+                  <span className="badge-match">
                     {t.tag}
                   </span>
                 ) : null}
@@ -108,7 +108,7 @@ export default function ToolsPage() {
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">
                 {t.body}
               </p>
-              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
+              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all" style={{ color: "var(--color-accent-guide)" }}>
                 Open <ArrowRight className="h-4 w-4" />
               </div>
             </Link>

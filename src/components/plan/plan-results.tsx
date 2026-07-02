@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Check, Info, MessageCircle } from "lucide-react";
+import { AlertTriangle, Check, CheckCircle2, Info, MessageCircle } from "lucide-react";
 import type { CalcResult } from "@/lib/calc";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { ShelfLifeTimeline } from "@/components/plan/shelf-life-timeline";
@@ -84,7 +84,7 @@ export function PlanResults({ result }: Props) {
       {/* In Plain English — most prominent section */}
       <div className="callout-panel">
         <div className="flex items-center gap-2.5 mb-4">
-          <MessageCircle className="h-5 w-5" />
+          <MessageCircle className="h-5 w-5 accent-check" />
           <h4 className="text-lg font-serif font-medium tracking-tight">
             In plain English
           </h4>
@@ -210,7 +210,7 @@ export function PlanResults({ result }: Props) {
         <ul className="space-y-2 text-sm text-muted-foreground">
           {result.assumptions.map((a, i) => (
             <li key={i} className="flex gap-2.5">
-              <Check className="h-4 w-4 mt-0.5 text-foreground/40 shrink-0" />
+              <Check className="h-4 w-4 mt-0.5 accent-check shrink-0" />
               <span>{a}</span>
             </li>
           ))}
