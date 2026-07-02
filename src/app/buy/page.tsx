@@ -10,6 +10,9 @@ import { ProductJsonLd } from "@/components/common/product-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
+import { Infographic } from "@/components/common/infographic";
+import { ImageJsonLd } from "@/components/common/image-json-ld";
+import { shippingSvg, shippingAlt } from "@/lib/infographics/static";
 import {
   Accordion,
   AccordionItem,
@@ -87,6 +90,12 @@ export default async function BuyPage() {
         />
       )}
       <FaqJsonLd items={FAQS} />
+      <ImageJsonLd
+        url="/buy/shipping-infographic.svg"
+        caption={shippingAlt()}
+        width={720}
+        height={190}
+      />
 
       <Breadcrumbs
         items={[
@@ -126,6 +135,14 @@ export default async function BuyPage() {
           icon={<Lock className="h-5 w-5" />}
           title="Secure checkout"
           body="Encrypted payment through a trusted processor."
+        />
+      </div>
+
+      {/* Shipping timeline infographic */}
+      <div className="mt-8">
+        <Infographic
+          svg={shippingSvg()}
+          caption="From order to your door: packed in 1 to 2 business days, delivered in 2 to 5."
         />
       </div>
 

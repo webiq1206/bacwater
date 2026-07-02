@@ -14,6 +14,14 @@ import {
 import { PeptideCalc } from "@/components/peptides/peptide-calc";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
+import {
+  peptideChartSvg,
+  peptideChartAlt,
+  peptideChartDims,
+  hasChart,
+} from "@/lib/infographics/peptide-chart";
+import { Infographic } from "@/components/common/infographic";
+import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
 import { HowToJsonLd } from "@/components/common/howto-json-ld";
@@ -25,8 +33,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-
-const LAST_REVIEWED = "July 2026";
+import { LAST_REVIEWED } from "@/lib/content-meta";
 
 const CATEGORY_LABEL: Record<string, string> = {
   healing: "Healing & recovery",
@@ -60,11 +67,27 @@ export async function generateMetadata({
   const description = isCustom
     ? "Reconstitute any peptide with exact bac water math. Enter your vial strength and dose to get the water amount, concentration, syringe units, and doses per vial."
     : `How much bac water for ${short}? Exact amounts for ${strengths} mg vials, syringe units for a typical dose, storage, and about ${p.refrigeratedShelfDays}-day shelf life.`;
+  const chart = hasChart(p) ? peptideChartDims(p) : null;
   return {
     title,
     description,
     alternates: { canonical: `/peptides/${p.slug}` },
-    openGraph: { title: `${title} · BACwater.ai`, description },
+    openGraph: {
+      title: `${title} · BACwater.ai`,
+      description,
+      ...(chart
+        ? {
+            images: [
+              {
+                url: `/peptides/${p.slug}/chart.svg`,
+                width: chart.width,
+                height: chart.height,
+                alt: `${short} bac water dosage chart`,
+              },
+            ],
+          }
+        : {}),
+    },
   };
 }
 
@@ -87,6 +110,9 @@ export default async function PeptidePage({
   const related = PEPTIDES.filter(
     (x) => x.category === p.category && x.slug !== p.slug && x.slug !== "custom"
   ).slice(0, 4);
+
+  const chartSvg = hasChart(p) ? peptideChartSvg(p) : null;
+  const chartDims = hasChart(p) ? peptideChartDims(p) : null;
 
   const catalog = await getCatalog();
   const relatedReading = relatedContent(catalog, {
@@ -125,6 +151,14 @@ export default async function PeptidePage({
         />
       )}
       <FaqJsonLd items={faqs} />
+      {chartDims && (
+        <ImageJsonLd
+          url={`/peptides/${p.slug}/chart.svg`}
+          caption={peptideChartAlt(p)}
+          width={chartDims.width}
+          height={chartDims.height}
+        />
+      )}
 
       <Breadcrumbs
         items={[
@@ -220,6 +254,14 @@ export default async function PeptidePage({
             Units assume a U-100 insulin syringe (100 units = 1 mL). Always
             confirm the strength printed on your own vial.
           </p>
+          {chartSvg && (
+            <div className="mt-6">
+              <Infographic
+                svg={chartSvg}
+                caption={`${short}: syringe units to draw per dose at each vial strength. Longer bar means more units. Verify your own vial.`}
+              />
+            </div>
+          )}
         </section>
       )}
 

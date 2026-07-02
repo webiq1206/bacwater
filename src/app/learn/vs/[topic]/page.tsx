@@ -3,6 +3,13 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { COMPARISONS, findComparison } from "@/lib/comparisons/content";
+import {
+  comparisonSvg,
+  comparisonAlt,
+  comparisonDims,
+} from "@/lib/infographics/comparison";
+import { Infographic } from "@/components/common/infographic";
+import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -13,8 +20,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-
-const LAST_REVIEWED = "July 2026";
+import { LAST_REVIEWED } from "@/lib/content-meta";
 
 export function generateStaticParams() {
   return COMPARISONS.map((c) => ({ topic: c.slug }));
@@ -28,11 +34,23 @@ export async function generateMetadata({
   const { topic } = await params;
   const c = findComparison(topic);
   if (!c) return {};
+  const dims = comparisonDims(c);
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: { canonical: `/learn/vs/${c.slug}` },
-    openGraph: { title: `${c.metaTitle} · BACwater.ai`, description: c.metaDescription },
+    openGraph: {
+      title: `${c.metaTitle} · BACwater.ai`,
+      description: c.metaDescription,
+      images: [
+        {
+          url: `/learn/vs/${c.slug}/infographic.svg`,
+          width: dims.width,
+          height: dims.height,
+          alt: `${c.title} infographic`,
+        },
+      ],
+    },
   };
 }
 
@@ -46,6 +64,7 @@ export default async function ComparisonPage({
   if (!c) notFound();
 
   const others = COMPARISONS.filter((x) => x.slug !== c.slug);
+  const dims = comparisonDims(c);
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
@@ -60,6 +79,12 @@ export default async function ComparisonPage({
         ]}
       />
       <FaqJsonLd items={c.faqs} />
+      <ImageJsonLd
+        url={`/learn/vs/${c.slug}/infographic.svg`}
+        caption={comparisonAlt(c)}
+        width={dims.width}
+        height={dims.height}
+      />
 
       <Breadcrumbs
         items={[
@@ -104,6 +129,14 @@ export default async function ComparisonPage({
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Comparison infographic */}
+      <div className="mt-6">
+        <Infographic
+          svg={comparisonSvg(c)}
+          caption={`${c.title}: the key differences at a glance.`}
+        />
       </div>
 
       {/* Body sections */}

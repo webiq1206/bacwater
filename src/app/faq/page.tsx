@@ -6,6 +6,9 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
+import { Infographic } from "@/components/common/infographic";
+import { ImageJsonLd } from "@/components/common/image-json-ld";
+import { storageSvg, storageAlt } from "@/lib/infographics/static";
 
 export const metadata = {
   title: "BAC Water & Peptide Reconstitution FAQ",
@@ -80,6 +83,12 @@ export default async function FaqPage() {
           { name: "FAQ", url: "/faq" },
         ]}
       />
+      <ImageJsonLd
+        url="/learn/storage-infographic.svg"
+        caption={storageAlt()}
+        width={720}
+        height={210}
+      />
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "FAQ", href: "/faq" }]} />
       <div className="eyebrow">Help</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
@@ -105,6 +114,13 @@ export default async function FaqPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="mt-8">
+        <Infographic
+          svg={storageSvg()}
+          caption="Storage and shelf life at a glance: refrigerate, use within about 28 days, keep it dark, and never freeze."
+        />
       </div>
 
       {/* Contextual panel: appears only after the user has shown interest in a
