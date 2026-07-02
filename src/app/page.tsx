@@ -160,7 +160,7 @@ export default async function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="border border-border p-6 sm:p-8">
+          <div className="border border-border p-6 sm:p-8" style={{ background: "var(--color-accent-guide-soft)" }}>
             <div className="eyebrow">Example plan</div>
             <div className="mt-2 text-xl font-serif font-medium">BPC-157</div>
             <div className="rule my-5" />
@@ -179,7 +179,7 @@ export default async function HomePage() {
               </div>
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Dose</dt>
-                <dd>250 mcg</dd>
+                <dd>0.25 mg (250 mcg)</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Syringe units</dt>

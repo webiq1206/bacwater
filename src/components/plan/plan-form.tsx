@@ -299,10 +299,11 @@ export function PlanForm({ mode: initialMode }: Props) {
   const dosePresets = useMemo(() => {
     const [lo, hi] = peptide.typicalDoseMcgRange;
     const common = peptide.suggestedDoseMcg;
-    const fmtLabel = (mcg: number) =>
-      mcg >= 1000
-        ? `${mcg.toLocaleString()} mcg (${mcg / 1000} mg)`
-        : `${mcg.toLocaleString()} mcg (${(mcg / 1000).toFixed(mcg % 100 === 0 ? 1 : 2)} mg)`;
+    const fmtLabel = (mcg: number) => {
+      const mg = mcg / 1000;
+      const mgStr = mg >= 1 ? `${mg} mg` : `${mg.toFixed(mg % 0.1 === 0 ? 1 : 2)} mg`;
+      return `${mgStr} (${mcg.toLocaleString()} mcg)`;
+    };
     const list: { mcg: number; label: string; hint: string }[] = [];
     if (lo && lo !== common)
       list.push({
@@ -413,7 +414,7 @@ export function PlanForm({ mode: initialMode }: Props) {
     { label: "Vial", value: `${vialStrengthMg} mg` },
     {
       label: "Dose",
-      value: `${doseMcg.toLocaleString()} mcg (${(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg)`,
+      value: `${(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg (${doseMcg.toLocaleString()} mcg)`,
     },
     { label: "Syringe", value: syringe.label },
     {
@@ -577,7 +578,7 @@ export function PlanForm({ mode: initialMode }: Props) {
                 ))}
                 <ChipButton
                   active={showCustomVial}
-                  onClick={() => setShowCustomVial(true)}
+                  onClick={() => { setShowCustomVial(true); setVialInput(0); }}
                 >
                   Other size...
                 </ChipButton>
@@ -592,7 +593,7 @@ export function PlanForm({ mode: initialMode }: Props) {
                       type="number"
                       inputMode="decimal"
                       step="0.1"
-                      value={vialInput}
+                      value={vialInput || ""}
                       onChange={(e) =>
                         setVialInput(parseFloat(e.target.value) || 0)
                       }
@@ -616,7 +617,7 @@ export function PlanForm({ mode: initialMode }: Props) {
               n={3}
               total={6}
               title="How much per injection?"
-              hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg (${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg).`}
+              hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
             >
               <div className="grid gap-2">
                 {dosePresets.map((d) => (
@@ -650,7 +651,7 @@ export function PlanForm({ mode: initialMode }: Props) {
                       type="number"
                       inputMode="numeric"
                       step="10"
-                      value={doseInput}
+                      value={doseInput || ""}
                       onChange={(e) =>
                         setDoseInput(parseFloat(e.target.value) || 0)
                       }
@@ -661,7 +662,7 @@ export function PlanForm({ mode: initialMode }: Props) {
                     <UnitToggle
                       value={doseUnit}
                       onChange={setDoseUnit}
-                      options={["mcg", "mg"]}
+                      options={["mg", "mcg"]}
                     />
                   </div>
                   <ConversionHint value={doseInput} unit={doseUnit} />
@@ -858,7 +859,7 @@ export function PlanForm({ mode: initialMode }: Props) {
           ) : (
             <div className="mt-4 bg-surface px-4 py-3 text-sm text-muted-foreground">
               <strong className="text-foreground">{peptide.name}</strong>
-              {" — "}typical dose: {peptide.typicalDoseMcgRange[0].toLocaleString()}–{peptide.typicalDoseMcgRange[1].toLocaleString()} mcg.
+              {" — "}typical dose: {peptide.typicalDoseMcgRange[0] / 1000}–{peptide.typicalDoseMcgRange[1] / 1000} mg ({peptide.typicalDoseMcgRange[0].toLocaleString()}–{peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).
               Common vial sizes: {peptide.commonVialStrengthsMg.join(", ")} mg.
             </div>
           )}
@@ -898,7 +899,7 @@ export function PlanForm({ mode: initialMode }: Props) {
             ))}
             <button
               type="button"
-              onClick={() => setShowCustomVial(true)}
+              onClick={() => { setShowCustomVial(true); setVialInput(0); }}
               className={cn("chip", showCustomVial && "chip--active")}
             >
               <span className="font-medium">Other size</span>
@@ -913,7 +914,7 @@ export function PlanForm({ mode: initialMode }: Props) {
                 <Input
                   type="number"
                   step="0.1"
-                  value={vialInput}
+                  value={vialInput || ""}
                   onChange={(e) =>
                     setVialInput(parseFloat(e.target.value) || 0)
                   }
@@ -934,7 +935,7 @@ export function PlanForm({ mode: initialMode }: Props) {
       {step === 2 && (
         <StepPanel
           title="How much per injection?"
-          hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg (${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg). Not sure? Pick the most common dose.`}
+          hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). Not sure? Pick the most common dose.`}
           onNext={() => goToStep(3)}
           onBack={() => goToStep(1)}
           stepNum={3}
@@ -979,7 +980,7 @@ export function PlanForm({ mode: initialMode }: Props) {
                 <UnitToggle
                   value={doseUnit}
                   onChange={setDoseUnit}
-                  options={["mcg", "mg"]}
+                  options={["mg", "mcg"]}
                 />
               </div>
               <ConversionHint value={doseInput} unit={doseUnit} />

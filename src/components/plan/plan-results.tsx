@@ -40,11 +40,9 @@ export function PlanResults({ result }: Props) {
             </div>
           </div>
           <div className="text-sm text-muted-foreground">
+            = {(result.input.doseMcg / 1000).toFixed(result.input.doseMcg % 1000 === 0 ? 0 : 2)} mg
+            ({result.input.doseMcg.toLocaleString()} mcg)
             = {result.doseVolumeMl.toFixed(3)} mL
-            = {result.input.doseMcg.toLocaleString()} mcg
-            {result.input.doseMcg >= 1000 && (
-              <> = {(result.input.doseMcg / 1000).toFixed(result.input.doseMcg % 1000 === 0 ? 0 : 2)} mg</>
-            )}
           </div>
         </div>
 
@@ -115,9 +113,9 @@ export function PlanResults({ result }: Props) {
           <p>
             To get your{" "}
             <strong>
-              {result.input.doseMcg.toLocaleString()} mcg
+              {(result.input.doseMcg / 1000).toFixed(result.input.doseMcg % 1000 === 0 ? 0 : 2)} mg
             </strong>{" "}
-            dose, draw{" "}
+            ({result.input.doseMcg.toLocaleString()} mcg) dose, draw{" "}
             <strong>{result.syringeReadout.displayLabel}</strong>.
             That&apos;s{" "}
             <strong>{result.doseVolumeMl.toFixed(3)} mL</strong> of
@@ -132,9 +130,9 @@ export function PlanResults({ result }: Props) {
             <p>
               Because this is a blend, each draw also delivers{" "}
               <strong>
-                {result.secondary.companionDoseMcg.toLocaleString()} mcg
+                {(result.secondary.companionDoseMcg / 1000).toFixed(result.secondary.companionDoseMcg % 1000 === 0 ? 0 : 2)} mg
               </strong>{" "}
-              of {result.secondary.peptideName}.
+              ({result.secondary.companionDoseMcg.toLocaleString()} mcg) of {result.secondary.peptideName}.
             </p>
           )}
         </div>
