@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 
 type Unit = "mg" | "mcg";
 
@@ -191,6 +192,8 @@ export default function BacWaterCalculatorPage() {
                 <Link href="/shop">Shop supplies</Link>
               </Button>
             </div>
+
+            <ResearchDisclaimer className="mt-6" />
           </div>
 
           {/* Why this number */}

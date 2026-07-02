@@ -314,6 +314,13 @@ export function calculate(input: CalcInput): CalcResult {
       `The calculated dose (${round(doseVolumeMl, 2)} mL) exceeds the capacity of the selected ${syringe.label}. Consider a larger syringe or less BAC water.`
     );
 
+  // Guardrail: a draw this small is very hard to measure accurately on a
+  // standard insulin syringe. Flag it instead of silently returning a number.
+  if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < 2)
+    warnings.push(
+      `This dose works out to only ${round(syringeUnits, 1)} units, which is very hard to draw accurately. Use less BAC water so the dose lands at a larger, easier-to-read mark, or switch to a 0.3 mL syringe.`
+    );
+
   const syringeReadout = {
     kind: syringe.scale,
     valueRounded:

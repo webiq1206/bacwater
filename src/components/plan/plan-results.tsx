@@ -6,6 +6,7 @@ import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { ShelfLifeTimeline } from "@/components/plan/shelf-life-timeline";
 import { formatDate } from "@/lib/utils";
 import { SupplyRecommender } from "@/components/plan/supply-recommender";
+import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 
 interface Props {
   result: CalcResult;
@@ -77,6 +78,8 @@ export function PlanResults({ result }: Props) {
             ))}
           </div>
         )}
+
+        <ResearchDisclaimer className="mt-6" />
       </div>
 
       {/* In Plain English - most prominent section */}

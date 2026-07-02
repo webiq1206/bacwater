@@ -16,6 +16,8 @@ const FOOTER = {
   Company: [
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
+    { href: "/editorial-policy", label: "Editorial & Sourcing Policy" },
+    { href: "/shipping-returns", label: "Shipping & Returns" },
     { href: "/terms", label: "Terms" },
     { href: "/privacy", label: "Privacy" },
     { href: "/disclaimer", label: "Disclaimer" },
@@ -65,9 +67,16 @@ export function SiteFooter() {
             © {new Date().getFullYear()} BACwater.ai. All rights reserved.
           </div>
           <div className="max-w-2xl md:text-right">
-            BACwater.ai provides calculation tools and research supplies. We do
-            not diagnose, prescribe, or provide medical advice. Always consult a
-            qualified professional.
+            The content and products on this site are provided for research and
+            informational purposes only. Nothing here is intended to diagnose,
+            treat, cure, or prevent any disease, and nothing here constitutes
+            medical advice or creates a doctor-patient relationship. Consult a
+            licensed healthcare provider before making any decisions related to
+            your health.{" "}
+            <Link href="/disclaimer" className="underline hover:text-foreground">
+              Full disclaimer
+            </Link>
+            .
           </div>
         </div>
       </div>

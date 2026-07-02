@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 
 type Unit = "mg" | "mcg";
 
@@ -177,6 +178,8 @@ export default function DoseCalculatorPage() {
                   <Link href="/shop">Shop supplies</Link>
                 </Button>
               </div>
+
+              <ResearchDisclaimer className="mt-6" />
           </div>
 
           <div className="callout-panel">
