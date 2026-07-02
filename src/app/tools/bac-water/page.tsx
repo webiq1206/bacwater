@@ -10,6 +10,8 @@ import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
+import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
+import { setInterestPeptide } from "@/lib/learn/interest";
 
 type Unit = "mg" | "mcg";
 
@@ -28,6 +30,7 @@ export default function BacWaterCalculatorPage() {
   function handlePeptideChange(slug: string) {
     const p = PEPTIDES.find((x) => x.slug === slug) ?? PEPTIDES[0];
     setPeptideSlug(slug);
+    if (slug !== "custom") setInterestPeptide(slug);
     setVialInput(p.commonVialStrengthsMg[0]);
     setVialUnit("mg");
     setDoseInput(p.suggestedDoseMcg / 1000);
@@ -211,6 +214,14 @@ export default function BacWaterCalculatorPage() {
               </div>
             </div>
           </div>
+
+          {/* Contextual related reading for the selected peptide */}
+          <RelatedReadingDynamic
+            peptide={peptideSlug === "custom" ? undefined : peptideSlug}
+            topics={["storage", "safety", "reconstitution-method"]}
+            title={`Related reading for ${peptide.name}`}
+            limit={4}
+          />
 
           {/* Teaching sections */}
           <div className="mt-6 space-y-8">

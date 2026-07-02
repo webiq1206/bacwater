@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 
 export const metadata = {
   title: "BAC Water & Peptide Reconstitution FAQ",
@@ -104,6 +105,18 @@ export default async function FaqPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Contextual panel: appears only after the user has shown interest in a
+          specific peptide. The full generic FAQ set stays below, unchanged. */}
+      <div className="mt-6">
+        <RelatedReadingDynamic
+          useInterest
+          hideWhenNoSignal
+          topics={["storage", "dosage", "reconstitution-method"]}
+          title="Based on the peptide you were looking at"
+          limit={4}
+        />
       </div>
 
       <div className="mt-6">

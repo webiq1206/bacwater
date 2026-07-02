@@ -8,6 +8,8 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { ProductJsonLd } from "@/components/common/product-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
+import { getCatalog, relatedContent } from "@/lib/learn/catalog";
+import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import {
   Accordion,
   AccordionItem,
@@ -50,6 +52,14 @@ export default async function BuyPage() {
     .catch(() => [] as Awaited<ReturnType<typeof prisma.product.findMany>>);
 
   const featured = products[0];
+
+  const catalog = await getCatalog();
+  const relatedReading = relatedContent(catalog, {
+    topics: ["where-to-buy", "injection-supplies"],
+    types: ["buying-guide", "comparison", "guide"],
+    excludeUrl: "/buy",
+    limit: 4,
+  });
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
@@ -204,6 +214,16 @@ export default async function BuyPage() {
           ))}
         </Accordion>
       </section>
+
+      {/* Related reading (tag-driven) */}
+      {relatedReading.length > 0 && (
+        <div className="mt-14">
+          <RelatedReadingPanel
+            title="Before you buy"
+            items={relatedReading}
+          />
+        </div>
+      )}
 
       {/* Cross links */}
       <section className="mt-14 border border-border bg-card p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">

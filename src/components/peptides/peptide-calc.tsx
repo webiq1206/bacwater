@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Beaker } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -8,18 +8,27 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { recommendBacWaterMl } from "@/lib/calc";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
+import { setInterestPeptide } from "@/lib/learn/interest";
 
 interface Props {
   peptideName: string;
+  peptideSlug?: string;
   commonVialStrengthsMg: number[];
   suggestedDoseMcg: number;
 }
 
 export function PeptideCalc({
   peptideName,
+  peptideSlug,
   commonVialStrengthsMg,
   suggestedDoseMcg,
 }: Props) {
+  // Opening a peptide page is an interest signal that personalizes contextual
+  // panels elsewhere on the site (e.g. the FAQ hub).
+  useEffect(() => {
+    if (peptideSlug && peptideSlug !== "custom") setInterestPeptide(peptideSlug);
+  }, [peptideSlug]);
+
   const [vialMg, setVialMg] = useState<number>(commonVialStrengthsMg[0]);
   const [customVial, setCustomVial] = useState(false);
   const [doseMcg, setDoseMcg] = useState<number>(suggestedDoseMcg);

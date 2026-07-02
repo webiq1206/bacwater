@@ -12,6 +12,8 @@ import {
   shortName,
 } from "@/lib/peptides/page-data";
 import { PeptideCalc } from "@/components/peptides/peptide-calc";
+import { getCatalog, relatedContent } from "@/lib/learn/catalog";
+import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
 import { HowToJsonLd } from "@/components/common/howto-json-ld";
@@ -86,6 +88,15 @@ export default async function PeptidePage({
     (x) => x.category === p.category && x.slug !== p.slug && x.slug !== "custom"
   ).slice(0, 4);
 
+  const catalog = await getCatalog();
+  const relatedReading = relatedContent(catalog, {
+    peptide: isCustom ? undefined : p.slug,
+    topics: ["storage", "dosage", "safety"],
+    types: ["faq", "comparison", "safety", "guide"],
+    excludeUrl: `/peptides/${p.slug}`,
+    limit: 5,
+  });
+
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
       <WebPageJsonLd
@@ -142,6 +153,7 @@ export default async function PeptidePage({
       <div className="mt-8">
         <PeptideCalc
           peptideName={short}
+          peptideSlug={p.slug}
           commonVialStrengthsMg={p.commonVialStrengthsMg}
           suggestedDoseMcg={p.suggestedDoseMcg}
         />
@@ -274,6 +286,16 @@ export default async function PeptidePage({
           ))}
         </Accordion>
       </section>
+
+      {/* Related reading (tag-driven) */}
+      {relatedReading.length > 0 && (
+        <div className="mt-14">
+          <RelatedReadingPanel
+            title={`Keep reading about ${short}`}
+            items={relatedReading}
+          />
+        </div>
+      )}
 
       {/* Related peptides */}
       {related.length > 0 && (
