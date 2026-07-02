@@ -3,6 +3,17 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: false },
   serverExternalPackages: ["@prisma/client", "bcryptjs", "@react-pdf/renderer", "qrcode"],
+  async redirects() {
+    return [
+      {
+        // Consolidated into the dedicated comparison page to avoid duplicate
+        // content across two near-identical URLs.
+        source: "/learn/bac-water-vs-sterile-water",
+        destination: "/learn/vs/sterile-water",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

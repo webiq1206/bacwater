@@ -4,6 +4,7 @@ const FOOTER = {
   Product: [
     { href: "/plan", label: "Build My Plan" },
     { href: "/peptides", label: "Peptide Guides" },
+    { href: "/buy", label: "Buy Bac Water" },
     { href: "/shop", label: "Shop Supplies" },
     { href: "/tools", label: "Calculators" },
     { href: "/plans", label: "My Plans" },

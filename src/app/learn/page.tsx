@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { COMPARISONS } from "@/lib/comparisons/content";
 
 export const metadata = {
   title: "Peptide Reconstitution Guides & BAC Water Education",
@@ -70,6 +71,8 @@ export default async function LearnPage() {
               read <strong className="text-foreground">&ldquo;How Reconstitution Works.&rdquo;</strong> After
               that, you&apos;ll have everything you need
               to <Link href="/plan" className="text-foreground font-medium underline">build your first plan</Link>.
+              Looking for a specific peptide? Browse our{" "}
+              <Link href="/peptides" className="text-foreground font-medium underline">per-peptide bac water guides</Link>.
             </p>
           </div>
         </div>
@@ -92,6 +95,30 @@ export default async function LearnPage() {
           </li>
         ))}
       </ul>
+
+      {/* Comparison cluster */}
+      <section className="mt-14">
+        <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
+          Bac water vs. everything else
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-2xl">
+          Wondering how bacteriostatic water compares to sterile water, saline,
+          or the other liquids people ask about? Each guide opens with a direct
+          verdict and a side-by-side table.
+        </p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {COMPARISONS.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/learn/vs/${c.slug}`}
+              className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+            >
+              <span className="font-medium">{c.title}</span>
+              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <div className="mt-10 border border-border bg-surface p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>

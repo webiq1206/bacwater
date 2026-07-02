@@ -80,6 +80,7 @@ export const STATIC_PAGES: SitemapUrl[] = [
   { path: "/plan/new", changeFrequency: "weekly", priority: 0.9 },
   { path: "/plan/advanced", changeFrequency: "weekly", priority: 0.8 },
   { path: "/shop", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/buy", changeFrequency: "weekly", priority: 0.9 },
   { path: "/peptides", changeFrequency: "weekly", priority: 0.9 },
   { path: "/learn", changeFrequency: "weekly", priority: 0.8 },
   { path: "/faq", changeFrequency: "weekly", priority: 0.7 },
