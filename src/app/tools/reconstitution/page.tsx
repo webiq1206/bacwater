@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PlanForm } from "@/components/plan/plan-form";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { SoftwareAppJsonLd } from "@/components/common/software-app-json-ld";
 
 export const metadata = {
   alternates: { canonical: "/tools/reconstitution" },
@@ -22,6 +23,11 @@ export default function Page() {
           { name: "Tools", url: "/tools" },
           { name: "Reconstitution Calculator", url: "/tools/reconstitution" },
         ]}
+      />
+      <SoftwareAppJsonLd
+        name="Peptide Reconstitution Calculator"
+        description="Free peptide reconstitution calculator: enter your vial size, dose, and syringe to get the exact BAC water amount, syringe units, and doses per vial."
+        url="/tools/reconstitution"
       />
       <Breadcrumbs items={[
         { label: "Home", href: "/" },

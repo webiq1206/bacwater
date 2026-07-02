@@ -129,7 +129,7 @@ export default function SupplyCalculatorPage() {
             n={2}
             total={5}
             title="How much per injection?"
-            hint={`Typical range: ${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the common starting dose.`}
+            hint={`Typical range: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the common starting dose.`}
           >
             <div className="flex items-center gap-2">
               <Input

@@ -7,6 +7,7 @@ import { formatCurrency } from "@/lib/utils";
 import { AddToCartControl } from "@/components/shop/add-to-cart-control";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { ProductJsonLd } from "@/components/common/product-json-ld";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 
 interface Props { params: Promise<{ slug: string }>; }
@@ -57,6 +58,16 @@ export default async function PdpPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <ProductJsonLd product={product} />
+      <WebPageJsonLd
+        name={`${product.name} - Buy Online`}
+        description={product.description}
+        url={`/shop/${product.slug}`}
+        breadcrumb={[
+          { name: "Home", url: "/" },
+          { name: "Shop", url: "/shop" },
+          { name: product.name, url: `/shop/${product.slug}` },
+        ]}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -78,7 +89,7 @@ export default async function PdpPage({ params }: Props) {
         <div>
           <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
             {product.imageUrl ? (
-              <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain" />
+              <img src={product.imageUrl} alt={product.name} width={600} height={600} fetchPriority="high" className="h-full w-full object-contain" />
             ) : (
               <span className="text-8xl text-muted-foreground">&#x2022;</span>
             )}
@@ -175,7 +186,7 @@ export default async function PdpPage({ params }: Props) {
             <Link key={r.id} href={`/shop/${r.slug}`} className="group block border border-border hover:bg-surface transition-colors p-5">
               <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
                 {r.imageUrl ? (
-                  <img src={r.imageUrl} alt={r.name} className="h-full w-full object-contain" />
+                  <img src={r.imageUrl} alt={r.name} width={300} height={300} loading="lazy" className="h-full w-full object-contain" />
                 ) : (
                   <span className="text-4xl text-muted-foreground">&#x2022;</span>
                 )}

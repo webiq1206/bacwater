@@ -7,6 +7,9 @@ import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
+import { References } from "@/components/common/references";
+import { ReviewedBy } from "@/components/common/reviewed-by";
+import { guideReferences } from "@/lib/content/references";
 
 interface Props { params: Promise<{ slug: string }>; }
 
@@ -58,6 +61,8 @@ export default async function GuidePage({ params }: Props) {
   const guide = await prisma.contentBlock.findUnique({ where: { slug } });
   if (!guide) return notFound();
 
+  const refs = guideReferences(slug);
+
   // Tag-driven related content: surface the most relevant peptides, guides,
   // comparisons, and FAQs for this article, not just the newest guides.
   const catalog = await getCatalog();
@@ -71,7 +76,7 @@ export default async function GuidePage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
-      <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} createdAt={guide.createdAt} updatedAt={guide.updatedAt} />
+      <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} createdAt={guide.createdAt} updatedAt={guide.updatedAt} citations={refs} />
       <Breadcrumbs items={[
         { label: "Home", href: "/" },
         { label: "Learning Center", href: "/learn" },
@@ -79,9 +84,12 @@ export default async function GuidePage({ params }: Props) {
       ]} />
       <div className="eyebrow">Guide</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">{guide.title}</h1>
+      <ReviewedBy className="mt-3" />
       <article className="mt-4 prose prose-neutral max-w-none">
         {renderBody(guide.body)}
       </article>
+
+      <References references={refs} />
 
       <div className="mt-10 border border-border bg-surface p-6 flex flex-wrap items-center gap-3 justify-between">
         <div>

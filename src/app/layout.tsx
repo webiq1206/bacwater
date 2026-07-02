@@ -81,10 +81,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
+            "@id": `${siteUrl}/#website`,
             name: "BACwater.ai",
             url: siteUrl,
             description: "The complete BAC water calculator and reconstitution guide.",
-            publisher: { "@type": "Organization", name: "BACwater.ai" },
+            publisher: { "@id": `${siteUrl}/#organization` },
           }) }}
         />
         {process.env.NODE_ENV === "production" && (

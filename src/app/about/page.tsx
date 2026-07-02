@@ -80,7 +80,7 @@ export default function AboutPage() {
           We sell the supplies you need: <Link href="/shop" className="font-medium underline">BAC water, syringes, and alcohol prep pads</Link>.
           When your plan says you need three of something, we would rather help you
           get them in one click than send you somewhere else. Everything ships from
-          US-licensed vendors within 1–2 business days.
+          US-licensed vendors within 1 to 2 business days.
         </p>
       </div>
 

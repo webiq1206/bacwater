@@ -51,6 +51,14 @@ export function GET() {
 - [Supply calculator](${u("/tools/supplies")}): Supplies needed for a full peptide cycle
 - [Syringe unit converter](${u("/tools/syringe-units")}): Convert between mL and U-100 insulin syringe units (100 units = 1 mL)
 - [mg to mcg converter](${u("/tools/mg-to-mcg")}): Convert milligrams to micrograms (1 mg = 1,000 mcg)
+- [Reverse BAC water calculator](${u("/tools/reverse-bac")}): Choose the dose and the exact syringe units you want to draw, and get the precise BAC water amount to add
+- [Free printable vial labels](${u("/tools/vial-labels")}): Printable peptide vial labels with a QR code showing strength, concentration, dose, mix date, and discard date
+
+## Guides and reference
+
+- [Where to buy bacteriostatic water (2026)](${u("/learn/where-to-buy-bacteriostatic-water")}): Buyer's guide covering what to check before you buy, red flags, and where people buy bac water
+- [BAC water and peptide shelf life](${u("/learn/bac-water-shelf-life")}): How long reconstituted peptides and opened bac water last, refrigeration guidance, and when to discard a vial
+- [Peptide reconstitution glossary](${u("/learn/glossary")}): Plain-English definitions of BAC water, benzyl alcohol, reconstitution, lyophilization, U-100, and subcutaneous
 
 ## Peptide reconstitution guides
 

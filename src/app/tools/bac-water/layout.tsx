@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { ToolExtras } from "@/components/tools/tool-extras";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/tools/bac-water" },
@@ -41,6 +42,39 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <li><Link href="/learn/too-much-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">What happens if you add too much BAC water</Link></li>
           </ul>
         </section>
+        <ToolExtras
+          app={{
+            name: "BAC Water Calculator",
+            description:
+              "Find how much bacteriostatic water to add to a peptide vial for clean, easy-to-measure doses on an insulin syringe.",
+            url: "/tools/bac-water",
+          }}
+          quickRef={{
+            head: ["Vial strength", "Bac water to add", "Example dose", "Units"],
+            rows: [
+              ["2 mg", "1 mL", "100 mcg", "5 units"],
+              ["5 mg", "2 mL", "250 mcg", "10 units"],
+              ["10 mg", "2 mL", "500 mcg", "10 units"],
+              ["15 mg", "3 mL", "500 mcg", "10 units"],
+            ],
+            caption:
+              "Starting points that put a typical dose at a clean syringe mark. Use the calculator above for your exact vial and dose.",
+          }}
+          faqs={[
+            {
+              q: "How much bac water for a 5 mg vial?",
+              a: "A common starting point is 2 mL of bacteriostatic water for a 5 mg vial. That gives 2.5 mg/mL, so a 250 mcg dose is 10 units on a U-100 syringe. Adjust the water to move the dose to an easier mark.",
+            },
+            {
+              q: "Can you add too much bac water?",
+              a: "Adding more is not a safety problem, but it makes each dose a larger volume to draw. Too little makes the dose a very small, hard-to-measure volume. Aim for a dose that lands near a round number of units.",
+            },
+            {
+              q: "Does adding more bac water change the dose?",
+              a: "No. More bac water lowers the concentration, so you draw a larger volume for the same amount of peptide. The dose stays the same; only the volume you draw changes.",
+            },
+          ]}
+        />
       </div>
     </>
   );

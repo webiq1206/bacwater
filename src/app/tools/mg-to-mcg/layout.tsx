@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { ToolExtras } from "@/components/tools/tool-extras";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/tools/mg-to-mcg" },
@@ -40,6 +41,40 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <li><Link href="/learn/peptide-reconstitution-chart" className="text-muted-foreground hover:text-foreground underline transition-colors">Peptide reconstitution quick-reference chart</Link></li>
           </ul>
         </section>
+        <ToolExtras
+          app={{
+            name: "mg to mcg Converter",
+            description:
+              "Convert between milligrams and micrograms for peptide dosing, with a quick-reference table.",
+            url: "/tools/mg-to-mcg",
+          }}
+          quickRef={{
+            head: ["Milligrams (mg)", "Micrograms (mcg)"],
+            rows: [
+              ["0.25 mg", "250 mcg"],
+              ["0.5 mg", "500 mcg"],
+              ["1 mg", "1,000 mcg"],
+              ["2.5 mg", "2,500 mcg"],
+              ["5 mg", "5,000 mcg"],
+              ["10 mg", "10,000 mcg"],
+            ],
+            caption: "1 mg equals 1,000 mcg. Multiply mg by 1,000 to get mcg.",
+          }}
+          faqs={[
+            {
+              q: "How many mcg are in a mg?",
+              a: "There are 1,000 micrograms (mcg) in 1 milligram (mg). To convert mg to mcg, multiply by 1,000; to convert mcg to mg, divide by 1,000.",
+            },
+            {
+              q: "How many mcg is 0.25 mg?",
+              a: "0.25 mg is 250 mcg. Multiply 0.25 by 1,000 to convert milligrams to micrograms.",
+            },
+            {
+              q: "Why do vials use mg but doses use mcg?",
+              a: "Vials are labeled by total content in milligrams (for example 5 mg), while individual doses are small enough that micrograms (for example 250 mcg) state them more precisely.",
+            },
+          ]}
+        />
       </div>
     </>
   );

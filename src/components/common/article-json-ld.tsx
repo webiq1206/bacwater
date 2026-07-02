@@ -1,31 +1,44 @@
-export function ArticleJsonLd({ title, body, slug, createdAt, updatedAt }: { title: string; body: string; slug: string; createdAt: Date; updatedAt: Date }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
+import { SITE_URL, orgRef, citationLd } from "@/lib/seo/schema";
+import { LAST_REVIEWED_ISO } from "@/lib/content-meta";
+import type { Reference } from "@/lib/content/references";
+
+export function ArticleJsonLd({
+  title,
+  body,
+  slug,
+  createdAt,
+  updatedAt,
+  citations,
+}: {
+  title: string;
+  body: string;
+  slug: string;
+  createdAt: Date;
+  updatedAt: Date;
+  citations?: Reference[];
+}) {
   const plainBody = body
     .replace(/[*_`#>|]/g, "")
     .replace(/\s+/g, " ")
     .trim();
-  const url = `${siteUrl}/learn/${slug}`;
-  const jsonLd = {
+  const url = `${SITE_URL}/learn/${slug}`;
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
     articleBody: plainBody,
-    image: `${siteUrl}/opengraph-image`,
+    image: `${SITE_URL}/opengraph-image`,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,
     datePublished: createdAt.toISOString(),
     dateModified: updatedAt.toISOString(),
-    author: {
-      "@type": "Organization",
-      name: "BACwater.ai",
-      url: siteUrl,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "BACwater.ai",
-      url: siteUrl,
-    },
+    author: orgRef,
+    publisher: orgRef,
+    reviewedBy: orgRef,
+    lastReviewed: LAST_REVIEWED_ISO,
   };
+  const citation = citationLd(citations);
+  if (citation) jsonLd.citation = citation;
   return (
     <script
       type="application/ld+json"

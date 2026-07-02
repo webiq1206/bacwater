@@ -129,7 +129,7 @@ export default function BacWaterCalculatorPage() {
             n={3}
             total={3}
             title="How much per dose?"
-            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
+            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
           >
             <div className="flex items-center gap-2">
               <Input

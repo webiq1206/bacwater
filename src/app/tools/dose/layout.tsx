@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { ToolExtras } from "@/components/tools/tool-extras";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/tools/dose" },
@@ -40,6 +41,40 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <li><Link href="/learn/how-to-read-an-insulin-syringe" className="text-muted-foreground hover:text-foreground underline transition-colors">How to read an insulin syringe</Link></li>
           </ul>
         </section>
+        <ToolExtras
+          app={{
+            name: "Dose Calculator",
+            description:
+              "Calculate your exact dose in mcg, mg, and insulin syringe units from your vial concentration and draw volume.",
+            url: "/tools/dose",
+          }}
+          quickRef={{
+            head: ["Concentration", "Draw (units)", "Volume", "Dose"],
+            rows: [
+              ["1 mg/mL", "10 units", "0.1 mL", "100 mcg"],
+              ["2.5 mg/mL", "10 units", "0.1 mL", "250 mcg"],
+              ["2.5 mg/mL", "20 units", "0.2 mL", "500 mcg"],
+              ["5 mg/mL", "10 units", "0.1 mL", "500 mcg"],
+              ["5 mg/mL", "20 units", "0.2 mL", "1,000 mcg"],
+            ],
+            caption:
+              "On a U-100 syringe, 10 units equals 0.1 mL. Dose (mcg) = concentration (mg/mL) x volume (mL) x 1,000.",
+          }}
+          faqs={[
+            {
+              q: "How do I calculate my dose from concentration?",
+              a: "Multiply the concentration (mg/mL) by the volume you draw (mL), then multiply by 1,000 to get micrograms. For example, 2.5 mg/mL drawn at 0.1 mL is 250 mcg.",
+            },
+            {
+              q: "How many units should I draw for a 250 mcg dose?",
+              a: "It depends on concentration. At 2.5 mg/mL, 250 mcg is 0.1 mL, which is 10 units on a U-100 syringe. Use the calculator to match your own concentration.",
+            },
+            {
+              q: "Is my dose in mg or mcg?",
+              a: "Peptide doses are usually stated in micrograms (mcg). 1 mg equals 1,000 mcg, so a 0.25 mg dose is 250 mcg.",
+            },
+          ]}
+        />
       </div>
     </>
   );

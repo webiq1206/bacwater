@@ -7,12 +7,17 @@ const FOOTER = {
     { href: "/buy", label: "Buy Bac Water" },
     { href: "/shop", label: "Shop Supplies" },
     { href: "/tools", label: "Calculators" },
+    { href: "/tools/reverse-bac", label: "Reverse Calculator" },
+    { href: "/tools/vial-labels", label: "Vial Labels" },
     { href: "/plans", label: "My Plans" },
   ],
   Learn: [
     { href: "/learn", label: "Learning Center" },
     { href: "/learn/what-is-bac-water", label: "What is BAC Water?" },
     { href: "/learn/how-peptide-reconstitution-works", label: "How reconstitution works" },
+    { href: "/learn/bac-water-shelf-life", label: "Shelf life & storage" },
+    { href: "/learn/glossary", label: "Glossary" },
+    { href: "/learn/where-to-buy-bacteriostatic-water", label: "Where to buy bac water" },
     { href: "/faq", label: "FAQ" },
   ],
   Company: [

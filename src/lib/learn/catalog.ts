@@ -173,7 +173,7 @@ function excerptFrom(body: string): string {
     .slice(0, 160);
 }
 
-/** A couple of commercial pages that belong in the catalog for surfacing. */
+/** Static (non-DB) pages that belong in the catalog for surfacing. */
 const STATIC_ENTRIES: LearnEntry[] = [
   {
     id: "page-buy",
@@ -184,6 +184,50 @@ const STATIC_ENTRIES: LearnEntry[] = [
     contentType: "buying-guide",
     peptideTags: [],
     topicTags: ["where-to-buy", "injection-supplies"],
+    source: "page",
+  },
+  {
+    id: "page-where-to-buy",
+    url: "/learn/where-to-buy-bacteriostatic-water",
+    title: "Where to buy bacteriostatic water (2026 buyer's guide)",
+    excerpt:
+      "What to check before you buy bac water: sealed, sterile, preservative stated, US shipping, and clear returns.",
+    contentType: "buying-guide",
+    peptideTags: [],
+    topicTags: ["where-to-buy"],
+    source: "page",
+  },
+  {
+    id: "page-shelf-life",
+    url: "/learn/bac-water-shelf-life",
+    title: "BAC water and peptide shelf life",
+    excerpt:
+      "How long reconstituted peptides and opened bac water last, why refrigeration and clean technique both matter, and when to discard a vial.",
+    contentType: "safety",
+    peptideTags: [],
+    topicTags: ["storage", "safety"],
+    source: "page",
+  },
+  {
+    id: "page-glossary",
+    url: "/learn/glossary",
+    title: "Peptide reconstitution glossary",
+    excerpt:
+      "Plain-English definitions of BAC water, benzyl alcohol, reconstitution, lyophilization, U-100, and more.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["ingredients", "reconstitution-method"],
+    source: "page",
+  },
+  {
+    id: "page-vial-labels",
+    url: "/tools/vial-labels",
+    title: "Free printable peptide vial labels",
+    excerpt:
+      "Generate printable vial labels with a QR code showing strength, concentration, dose, mix date, and discard date.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["injection-supplies", "reconstitution-method"],
     source: "page",
   },
 ];

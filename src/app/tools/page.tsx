@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, Beaker, Calculator, Droplets, FlaskConical, Ruler, Scale, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Beaker, Droplets, FlaskConical, Repeat, Ruler, Scale, ShoppingCart, Tag } from "lucide-react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { SITE_URL } from "@/lib/seo/schema";
 
 export const metadata = {
   alternates: { canonical: "/tools" },
@@ -50,8 +50,22 @@ const TOOLS = [
   {
     href: "/tools/mg-to-mcg",
     icon: Scale,
-    title: "mg ↔ mcg Converter",
+    title: "mg to mcg Converter",
     body: "Convert between milligrams and micrograms. Vial labels use mg, doses use mcg. This makes switching between them easy.",
+    tag: null,
+  },
+  {
+    href: "/tools/reverse-bac",
+    icon: Repeat,
+    title: "Reverse BAC Water Calculator",
+    body: "Want your dose to read at exact units? Pick the dose and the units you want to draw, and get the precise bac water to add.",
+    tag: "New",
+  },
+  {
+    href: "/tools/vial-labels",
+    icon: Tag,
+    title: "Free Printable Vial Labels",
+    body: "Generate printable peptide vial labels with a QR code, showing strength, concentration, dose, mix date, and discard date.",
     tag: null,
   },
 ];
@@ -67,6 +81,22 @@ export default function ToolsPage() {
           { name: "Home", url: "/" },
           { name: "Tools", url: "/tools" },
         ]}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: "Peptide reconstitution calculators",
+            itemListElement: TOOLS.map((t, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: t.title,
+              url: `${SITE_URL}${t.href}`,
+            })),
+          }),
+        }}
       />
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools", href: "/tools" }]} />
       <div className="max-w-3xl">
@@ -88,6 +118,12 @@ export default function ToolsPage() {
           you through everything step by step and gives you a complete,
           printable reconstitution plan.
         </p>
+      </div>
+
+      <div className="mt-6 max-w-3xl flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+        <span><strong className="text-foreground">100 units</strong> = 1 mL (U-100)</span>
+        <span><strong className="text-foreground">1 mg</strong> = 1,000 mcg</span>
+        <span><strong className="text-foreground">5 mg + 2 mL</strong> = 2.5 mg/mL</span>
       </div>
 
       <div className="mt-10 grid gap-0 md:grid-cols-2 lg:grid-cols-3 border border-border divide-x divide-y divide-border">

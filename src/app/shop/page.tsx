@@ -128,7 +128,7 @@ export default async function ShopPage() {
                       )}
                       <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
                         {p.imageUrl ? (
-                          <img src={p.imageUrl} alt={p.name} className="h-full w-full object-contain" />
+                          <img src={p.imageUrl} alt={p.name} width={400} height={400} loading="lazy" className="h-full w-full object-contain" />
                         ) : (
                           <span className="text-5xl text-muted-foreground">&#x2022;</span>
                         )}

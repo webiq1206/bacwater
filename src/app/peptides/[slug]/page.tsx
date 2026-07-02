@@ -33,7 +33,9 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { LAST_REVIEWED } from "@/lib/content-meta";
+import { References } from "@/components/common/references";
+import { ReviewedBy } from "@/components/common/reviewed-by";
+import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
 
 const CATEGORY_LABEL: Record<string, string> = {
   healing: "Healing & recovery",
@@ -134,6 +136,8 @@ export default async function PeptidePage({
           { name: "Peptides", url: "/peptides" },
           { name: short, url: `/peptides/${p.slug}` },
         ]}
+        citations={CORE_BACWATER_REFERENCES}
+        reviewed
       />
       {!isCustom && (
         <HowToJsonLd
@@ -176,12 +180,22 @@ export default async function PeptidePage({
         <p className="mt-3 text-sm text-muted-foreground">{content.aka}</p>
       )}
 
+      {/* Labeled TL;DR: a tight, extractable one-liner for AI Overviews. */}
+      {!isCustom && rows.length > 0 && (
+        <div className="mt-5 border-l-2 border-foreground/30 bg-surface px-4 py-3">
+          <p className="text-base leading-relaxed text-foreground/90">
+            <strong>Short answer:</strong> add {rows[0].bacMl} mL of bac water to
+            a {rows[0].vialMg} mg {short} vial. A {rows[0].doseLabel} dose then
+            measures about {rows[0].units} units on a 1 mL (U-100) insulin
+            syringe.
+          </p>
+        </div>
+      )}
+
       {/* Direct answer */}
       <p className="mt-5 text-lg leading-relaxed text-foreground/90">{lead}</p>
 
-      <div className="mt-2 text-xs text-muted-foreground">
-        Last reviewed {LAST_REVIEWED}
-      </div>
+      <ReviewedBy className="mt-2" />
 
       {/* Embedded calculator */}
       <div className="mt-8">
@@ -360,6 +374,8 @@ export default async function PeptidePage({
         </section>
       )}
 
+      <References references={CORE_BACWATER_REFERENCES} />
+
       {/* Keep learning / internal links */}
       <section className="mt-14 border border-border bg-surface p-6 sm:p-8">
         <div className="flex items-start gap-3">
@@ -397,6 +413,12 @@ export default async function PeptidePage({
               </Link>
               .
             </p>
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              <Link href="/buy" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Buy bac water</Link>
+              <Link href="/faq" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
+              <Link href="/learn/vs/sterile-water" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Bac water vs sterile water</Link>
+              <Link href="/learn/bac-water-shelf-life" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Shelf life and storage</Link>
+            </div>
             <div className="mt-4 flex flex-wrap gap-3">
               <Button asChild variant="brand">
                 <Link href="/plan">

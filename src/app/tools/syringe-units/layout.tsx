@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { ToolExtras } from "@/components/tools/tool-extras";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/tools/syringe-units" },
@@ -40,6 +41,41 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <li><Link href="/learn/insulin-syringe-sizes" className="text-muted-foreground hover:text-foreground underline transition-colors">Insulin syringe sizes explained</Link></li>
           </ul>
         </section>
+        <ToolExtras
+          app={{
+            name: "Syringe Unit Converter",
+            description:
+              "Two-way converter between milliliters and U-100 insulin syringe units, with a quick-reference table.",
+            url: "/tools/syringe-units",
+          }}
+          quickRef={{
+            head: ["Units (U-100)", "Milliliters"],
+            rows: [
+              ["1 unit", "0.01 mL"],
+              ["5 units", "0.05 mL"],
+              ["10 units", "0.1 mL"],
+              ["20 units", "0.2 mL"],
+              ["25 units", "0.25 mL"],
+              ["50 units", "0.5 mL"],
+              ["100 units", "1 mL"],
+            ],
+            caption: "On a U-100 insulin syringe, 100 units equals 1 mL.",
+          }}
+          faqs={[
+            {
+              q: "How many units is 0.1 mL?",
+              a: "On a U-100 insulin syringe, 0.1 mL is 10 units. Each 0.01 mL equals 1 unit, so multiply the milliliters by 100 to get units.",
+            },
+            {
+              q: "Is a unit the same as a milliliter?",
+              a: "No. A milliliter is a volume; a unit is a mark on a U-100 insulin syringe. There are 100 units in 1 mL, so 1 unit is 0.01 mL.",
+            },
+            {
+              q: "What is a U-100 syringe?",
+              a: "A U-100 syringe is graduated so that 100 units equal 1 mL. The fine unit markings make small peptide doses easy to measure without decimal math.",
+            },
+          ]}
+        />
       </div>
     </>
   );

@@ -20,7 +20,9 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { LAST_REVIEWED } from "@/lib/content-meta";
+import { References } from "@/components/common/references";
+import { ReviewedBy } from "@/components/common/reviewed-by";
+import { topicReferences } from "@/lib/content/references";
 
 export function generateStaticParams() {
   return COMPARISONS.map((c) => ({ topic: c.slug }));
@@ -65,6 +67,7 @@ export default async function ComparisonPage({
 
   const others = COMPARISONS.filter((x) => x.slug !== c.slug);
   const dims = comparisonDims(c);
+  const refs = topicReferences(c.slug);
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
@@ -77,6 +80,8 @@ export default async function ComparisonPage({
           { name: "Learning Center", url: "/learn" },
           { name: c.title, url: `/learn/vs/${c.slug}` },
         ]}
+        citations={refs}
+        reviewed
       />
       <FaqJsonLd items={c.faqs} />
       <ImageJsonLd
@@ -103,9 +108,7 @@ export default async function ComparisonPage({
       <p className="mt-5 text-lg leading-relaxed text-foreground/90">
         {c.verdict}
       </p>
-      <div className="mt-2 text-xs text-muted-foreground">
-        Last reviewed {LAST_REVIEWED}
-      </div>
+      <ReviewedBy className="mt-2" />
 
       {/* Comparison table */}
       <div className="mt-8 overflow-x-auto border border-border">
@@ -184,6 +187,39 @@ export default async function ComparisonPage({
           ))}
         </div>
       </section>
+
+      {/* Reconstitute a specific peptide (into the peptide hub) */}
+      <section className="mt-12">
+        <h2 className="text-xl font-serif font-medium tracking-tight">
+          Reconstitute a specific peptide
+        </h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {[
+            { slug: "bpc-157", label: "BPC-157" },
+            { slug: "tb-500", label: "TB-500" },
+            { slug: "semaglutide", label: "Semaglutide" },
+            { slug: "tirzepatide", label: "Tirzepatide" },
+            { slug: "ipamorelin", label: "Ipamorelin" },
+            { slug: "ghk-cu", label: "GHK-Cu" },
+          ].map((pep) => (
+            <Link
+              key={pep.slug}
+              href={`/peptides/${pep.slug}`}
+              className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+            >
+              <span className="font-medium">{pep.label}</span>
+              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          ))}
+        </div>
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <Link href="/peptides" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">All peptides</Link>
+          <Link href="/faq" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
+          <Link href="/learn/bac-water-shelf-life" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Shelf life and storage</Link>
+        </div>
+      </section>
+
+      <References references={refs} />
 
       {/* CTA */}
       <section className="mt-12 border border-border bg-surface p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
