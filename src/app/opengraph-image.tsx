@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { loadGoogleFont } from "@/lib/og-font";
 
 export const runtime = "edge";
 
@@ -6,33 +7,6 @@ export const alt =
   "BACwater.ai: the complete BAC water calculator and reconstitution guide";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-/**
- * Load a Google font as TrueType data for satori. Requesting a text subset
- * (and using the default fetch user-agent) makes Google Fonts return a
- * truetype/opentype src, which is what next/og can embed.
- */
-async function loadGoogleFont(
-  family: string,
-  weight: number,
-  text: string
-): Promise<ArrayBuffer | null> {
-  try {
-    const url = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(
-      text
-    )}`;
-    const css = await (await fetch(url)).text();
-    const src = css.match(
-      /src: url\((.+?)\) format\('(?:opentype|truetype)'\)/
-    );
-    if (!src) return null;
-    const res = await fetch(src[1]);
-    if (!res.ok) return null;
-    return await res.arrayBuffer();
-  } catch {
-    return null;
-  }
-}
 
 const TAGLINE = "The complete BAC water calculator & reconstitution guide";
 
