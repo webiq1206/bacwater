@@ -11,39 +11,67 @@ import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { storageSvg, storageAlt } from "@/lib/infographics/static";
 
 export const metadata = {
-  title: "BAC Water & Peptide Reconstitution FAQ",
+  title: "BAC Water FAQ: Storage, Dosing, Prescription & Uses",
   description:
-    "Answers to the most common questions about BAC water, peptide reconstitution, dosing, storage, and shopping with BACwater.ai.",
+    "Direct answers on BAC water: what it is, how much to add, whether it needs refrigerating, how long it lasts, ingredients and pH, prescription status, and safety.",
+  alternates: { canonical: "/faq" },
 };
 
-const CORE = [
+const CORE: {
+  q: string;
+  a: string;
+  cta?: { href: string; text: string; tail: string };
+}[] = [
   {
-    q: "What is BAC water?",
-    a: "Bacteriostatic water is sterile water containing 0.9% benzyl alcohol as a preservative. The preservative prevents bacterial growth, which is why the same vial can be safely used across multiple doses over several weeks.",
+    q: "What is BAC water (bacteriostatic water)?",
+    a: "Bacteriostatic water (BAC water) is sterile water that contains 0.9% benzyl alcohol as a preservative. BAC stands for bacteriostatic, meaning the benzyl alcohol suppresses bacterial growth. That preservative is why the same vial can be used safely across multiple doses over several weeks.",
   },
   {
-    q: "How much BAC water should I add to my vial?",
-    a: "Enough to make your dose land at a clean, easy-to-read number on your syringe. Our planner suggests an amount that yields ~10 units on a U-100 insulin syringe. You can always override it.",
+    q: "What is BAC water used for?",
+    a: "BAC water is used to reconstitute (mix) lyophilized research peptides and other powders into a solution. Because it is preserved, it is the standard diluent for multi-dose peptide vials that you draw from more than once, unlike single-use sterile water.",
   },
   {
-    q: "What syringe should I use?",
-    a: "For most peptides, a 1 mL insulin syringe (U-100) is a good default. Smaller doses under 30 units are easier to draw accurately on a 0.3 mL insulin syringe with half-unit markings.",
+    q: "What is BAC water made of, and what is its pH?",
+    a: "BAC water is sterile water for injection with 0.9% benzyl alcohol added as a bacteriostatic preservative. Its pH typically falls in a mildly acidic to neutral range (about 4.5 to 7). The benzyl alcohol is the only meaningful difference between BAC water and plain sterile water.",
   },
   {
-    q: "How long is reconstituted peptide good for?",
-    a: "Most reconstituted peptides remain stable for about 28-30 days refrigerated. Some are more stable, some less. Our planner uses each peptide's typical shelf life and lets you override it.",
+    q: "How much BAC water should I add to reconstitute a peptide?",
+    a: "Add enough BAC water so your dose lands at a clean, easy-to-read number on your insulin syringe. For a 5 mg peptide vial, 2 mL of BAC water is a common starting point, which makes a 250 mcg dose about 10 units.",
+    cta: {
+      href: "/tools/bac-water",
+      text: "BAC water calculator",
+      tail: " gives the exact amount for your vial strength and dose.",
+    },
   },
   {
-    q: "Do I need a prescription?",
-    a: "In the US, bacteriostatic water is prescription-only when labeled for human use. Our products are sold for laboratory research and educational purposes. We do not provide medical advice.",
+    q: "What size insulin syringe should I use for peptides?",
+    a: "For most peptides, a 1 mL (U-100) insulin syringe is the best default. If your dose is consistently under 30 units, a 0.3 mL insulin syringe with half-unit markings is easier to read accurately. A 0.5 mL syringe is a good middle ground.",
+    cta: {
+      href: "/tools/syringe-units",
+      text: "syringe unit converter",
+      tail: " helps you convert between mL and syringe units.",
+    },
+  },
+  {
+    q: "Does BAC water need to be refrigerated, and how long does it last?",
+    a: "Refrigerate BAC water after the first puncture. An opened 30 mL vial is generally good for about 28 days in the fridge, while unopened BAC water is stable at room temperature until its printed expiration date. Reconstituted peptides also belong in the fridge and are usually stable for about 28 to 30 days.",
+    cta: {
+      href: "/plan",
+      text: "plan builder",
+      tail: " tracks the shelf life and expiration date for your peptide automatically.",
+    },
+  },
+  {
+    q: "Do I need a prescription to buy BAC water?",
+    a: "In the US, bacteriostatic water is prescription-only when it is labeled for human use. The BAC water sold here is for laboratory research and educational purposes, so it is not sold over the counter for human use, and we do not provide medical advice.",
+  },
+  {
+    q: "Is BAC water safe?",
+    a: "Used correctly, BAC water is a standard, well-established diluent. The main precautions are to swab the stopper before each draw, refrigerate after opening, and discard the vial if it turns cloudy or develops particles. Benzyl alcohol sensitivity is uncommon but possible, so check the ingredients if you have known allergies.",
   },
   {
     q: "Is BACwater.ai a medical service?",
-    a: "No. We provide calculation tools and research supplies. We do not diagnose, prescribe, or provide medical advice. Consult a qualified professional for any medical guidance.",
-  },
-  {
-    q: "Do I need an account?",
-    a: "Yes. A free account is required to use the planner, save plans, and check out. Creating one takes just a few seconds.",
+    a: "No. BACwater.ai provides a BAC water calculator, reconstitution guides, and research supplies. We do not diagnose, prescribe, or provide medical advice. Consult a licensed healthcare provider for any medical guidance.",
   },
 ];
 
@@ -107,10 +135,11 @@ export default async function FaqPage() {
         <div className="flex items-start gap-3">
           <Lightbulb className="h-5 w-5 accent-check mt-0.5 shrink-0" />
           <div>
-            <div className="font-medium text-foreground">Most people ask about dose and BAC water first</div>
+            <div className="font-medium text-foreground">New to BAC water? Start at the top</div>
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-              If you&apos;re brand new, the top two questions below will answer 90% of what you need.
-              For everything else, our <Link href="/plan" className="text-foreground font-medium underline">Plan Builder</Link> does the math automatically.
+              The questions below cover what BAC water is, how much to add, storage
+              and refrigeration, and whether you need a prescription. For exact
+              numbers, our <Link href="/plan" className="text-foreground font-medium underline">Plan Builder</Link> does the math automatically.
             </p>
           </div>
         </div>
@@ -142,14 +171,14 @@ export default async function FaqPage() {
               <AccordionTrigger>{f.q}</AccordionTrigger>
               <AccordionContent>
                 {f.a}
-                {i === 1 && (
-                  <span> Use our <Link href="/tools/bac-water" className="font-medium underline">BAC water calculator</Link> for an exact answer based on your vial.</span>
-                )}
-                {i === 2 && (
-                  <span> See our <Link href="/tools/syringe-units" className="font-medium underline">syringe unit converter</Link> for conversion help.</span>
-                )}
-                {i === 3 && (
-                  <span> Our <Link href="/plan" className="font-medium underline">plan builder</Link> tracks shelf life for each peptide automatically.</span>
+                {f.cta && (
+                  <span>
+                    {" "}Our{" "}
+                    <Link href={f.cta.href} className="font-medium underline">
+                      {f.cta.text}
+                    </Link>
+                    {f.cta.tail}
+                  </span>
                 )}
               </AccordionContent>
             </AccordionItem>
