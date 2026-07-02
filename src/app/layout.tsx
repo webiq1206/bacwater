@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -27,6 +28,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
+const GA_ID = "G-CWEKGP6NKB";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -84,6 +86,20 @@ export default function RootLayout({
             publisher: { "@type": "Organization", name: "BACwater.ai" },
           }) }}
         />
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-gtag" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+            </Script>
+          </>
+        )}
         <CartHydrator />
         <SiteHeader />
         <main className="flex-1">{children}</main>
