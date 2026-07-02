@@ -1,4 +1,4 @@
-# Completed Updates — SEO Audit Implementation
+# Completed Updates - SEO Audit Implementation
 
 _July 2026. Changes implemented directly in the codebase during this audit pass, with before/after. All shipped on the next deploy; verified locally in the dev preview._
 
@@ -15,7 +15,7 @@ _July 2026. Changes implemented directly in the codebase during this audit pass,
 - **File:** `src/app/layout.tsx`.
 
 ### 3. Duplicate `BreadcrumbList` schema removed
-- **Before:** Two `BreadcrumbList` graphs per content page — one inside `WebPage.breadcrumb` (from `WebPageJsonLd`) and one standalone (from the visible `Breadcrumbs` component).
+- **Before:** Two `BreadcrumbList` graphs per content page - one inside `WebPage.breadcrumb` (from `WebPageJsonLd`) and one standalone (from the visible `Breadcrumbs` component).
 - **After:** `WebPageJsonLd` no longer emits a `BreadcrumbList`; the visible `Breadcrumbs` component is the single source. Verified: 1 `BreadcrumbList` per page.
 - **File:** `src/components/common/webpage-json-ld.tsx`.
 

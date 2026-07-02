@@ -1,4 +1,4 @@
-# Implementation Roadmap — bacwater.ai
+# Implementation Roadmap - bacwater.ai
 
 _Updated July 2026. Prioritized SEO/GEO/AEO/UX/CWV work. Items marked ✅ DONE were implemented in this audit pass (see completed-updates.md). Remaining items are ordered by impact vs. effort. Sources: full-site-audit.md, competitor-gap-analysis.md, and the technical + accessibility audit._
 
@@ -14,23 +14,23 @@ Effort: **S** <1d · **M** 1-3d · **L** 1-2wk · **XL** ongoing.
 - ✅ Article schema: `image` + `mainEntityOfPage`; markdown stripped from `articleBody`.
 - ✅ A11y: aria-labels on custom inputs + global `:focus-visible` fallback.
 
-## Tier 1 — High impact, do next
+## Tier 1 - High impact, do next
 
 1. **Scientific-citations layer** on core Learn pages (0.9% benzyl alcohol, ~28-day multi-dose window, swirl-not-shake aggregation, reconstitution kinetics). Add a "References" block with PubMed/DOI links + `citation` schema. **Rationale:** peptidefox's 12 citations set the YMYL E-E-A-T bar; this neutralizes it. **Effort: M.** _Source: competitor-gap, ai-search-readiness._
 2. **Credentialed-review + last-updated signal.** Resolve the tension between the content spec's company-level, no-bylines stance and the fact that freemedicaljournals ("Dr. Watson") and riteaid ("Health Team," LegitScript, dates) win YMYL trust with named reviewers. Options: keep company-level but add a named, credentialed reviewer + "Reviewed by" + visible "Last reviewed" on money pages; or add a medical-advisory-board entity. **Effort: S-M (decision-gated).** _Source: ai-search-readiness, geo plan._
-3. **Answer/definition/TL;DR blocks** on the pillar (`/`), the tool pages, and each comparison — a 40-60 word direct answer + a bolded definition + a stats block. Peptide + comparison pages already have this; extend to `/` and `/tools/*`. **Rationale:** AI Overviews + featured snippets. **Effort: S-M.** _Source: aeo plan, geo plan._
+3. **Answer/definition/TL;DR blocks** on the pillar (`/`), the tool pages, and each comparison - a 40-60 word direct answer + a bolded definition + a stats block. Peptide + comparison pages already have this; extend to `/` and `/tools/*`. **Rationale:** AI Overviews + featured snippets. **Effort: S-M.** _Source: aeo plan, geo plan._
 4. **Product images → `next/image`** (or explicit `width`/`height` + `priority` on the PDP hero). Removes CLS risk on commercial pages. **Effort: S-M.** _Source: page-speed plan._
 5. **Hub-and-spoke internal linking** across the 24 peptide pages + to the comparison and shelf-life clusters; server-render more of the contextual related-reading (some is client-only); consider surfacing `/buy` beyond the footer. **Effort: S-M.** _Source: internal-linking plan._
 
-## Tier 2 — Strong impact / differentiators
+## Tier 2 - Strong impact / differentiators
 
 6. **Per-peptide + per-vial-size landing pages** for top long-tail queries (e.g. "5mg BPC-157," "30mg/60mg tirzepatide"), pre-filling the Plan Builder, each with unique framing. **Rationale:** matches freemedicaljournals/worldpeptideassociation long-tail wins. **Effort: L.** _Source: content-gap, programmatic analysis._
-7. **Reverse-BAC calculator** ("I want dose X at Y units — how much water?") as a distinct tool page. **Effort: M.** _Source: content-gap, competitor-gap._
+7. **Reverse-BAC calculator** ("I want dose X at Y units - how much water?") as a distinct tool page. **Effort: M.** _Source: content-gap, competitor-gap._
 8. **Market the printable QR vial-labels asset** as a standalone linkable page ("Free Printable Peptide Vial Labels") for backlinks + brand search. This is the site's unique moat. **Effort: S-M.** _Source: competitor-gap._
 9. **"Where to buy bacteriostatic water (2026)" + "how to choose a supplier"** content that funnels to the shop; add freshness "2026" framing to money-page titles/H1s. **Effort: M.** _Source: content-gap._
 10. **Dedicated calculator hub page** optimized for head terms ("bac water calculator," "peptide reconstitution calculator") with the tool above the fold. **Effort: M.** _Source: competitor-gap._
 
-## Tier 3 — Compounding / durable
+## Tier 3 - Compounding / durable
 
 11. **Draggable/animated syringe visualization** with capacity warnings (match praxpeptides/helloregimen). **Effort: M-L.**
 12. **Peptide glossary / entity pages** (benzyl alcohol, lyophilization, U-100, subcutaneous) for topical-authority breadth + internal linking. **Effort: L.** _Source: topical-authority, content-gap._

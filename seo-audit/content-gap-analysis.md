@@ -1,168 +1,93 @@
-# BACwater.ai -- Content Gap Analysis
+# BACwater.ai Content Gap Analysis
 
-**Date:** 2026-07-01
+**Date:** 2026-07-02 (refresh)
 
-Missing content opportunities for topical authority in BAC water / peptide reconstitution.
+Missing content for topical authority in the BAC water / peptide reconstitution space, benchmarked against the two competitors that rank in AI answers and organic search via granular landing pages (free medical-journal aggregators and peptide-association sites).
 
----
-
-## Current Content Inventory
-
-### Existing Learn Articles (DB-driven, exact slugs from footer)
-- `what-is-bac-water` -- What is BAC Water?
-- `how-peptide-reconstitution-works` -- How Peptide Reconstitution Works
-- (Additional guides exist in DB but specific slugs unknown without querying)
-
-### Existing Tool Pages (7 total)
-- Reconstitution Calculator
-- BAC Water Calculator
-- Dose Calculator
-- Syringe Unit Converter
-- mg/mcg Converter
-- Supply Calculator
-- mL to Units (alias)
-
-### Existing Static Pages
-- FAQ (7 core Q&A pairs + DB-sourced)
-- About (~120 words, very thin)
-- Contact (form only)
+Full refresh. Since the first draft, the site has shipped the 24-page peptide cluster, the 7-page comparison cluster, the keyword-optimized FAQ hub, `/buy`, the editorial policy, and infographics. Most of the old "Tier 1" gaps are now filled. This refresh identifies what genuinely remains.
 
 ---
 
-## Content Gaps by Topic Cluster
+## Current content inventory (built)
 
-### Cluster 1: BAC Water Fundamentals (HIGHEST PRIORITY)
+- **Peptide cluster:** 24 `/peptides/[slug]` pages, each with unique data (real vial strengths, computed dosage tables, per-peptide editorial "what/uses/caveat", peptide-specific FAQ, unique SVG chart), plus a "custom" catch-all.
+- **Comparison cluster:** 7 `/learn/vs/[topic]` pages (sterile-water, saline, sodium-chloride, distilled-water, benzyl-alcohol, acetic-acid, reconstitution-solution), each verdict + table + FAQ.
+- **FAQ hub:** 9 core Q&A + DB FAQs, FAQPage schema, storage infographic.
+- **Learn DB content:** guides seeded (what-is-bac-water, how-reconstitution-works, how-to-read-a-vial, insulin-syringe usage, syringe units, storage, how-long-bac-water-lasts, common mistakes, per-peptide guides for bpc-157/tirzepatide/semaglutide, too-much-bac-water, reconstitution chart) plus a set of FAQ blocks (see `DB_TAGS` in `src/lib/learn/catalog.ts`).
+- **Commercial:** `/buy` (buy bac water online, near-me, over-the-counter), `/shop` + PDPs.
+- **Tools:** 6 calculators + plan builder.
 
-| Topic | Search Intent | Current Coverage | Gap |
-|-------|--------------|------------------|-----|
-| What is bacteriostatic water | Informational | Partial (FAQ answer + learn article) | Article exists but may be thin; needs expansion with citations |
-| BAC water vs sterile water | Informational | **NONE** | HIGH GAP -- extremely common search query |
-| BAC water shelf life / expiration | Informational | **NONE** | HIGH GAP -- users frequently search this |
-| How to store BAC water | Informational | **NONE** | Partial mention in FAQ but no dedicated guide |
-| BAC water ingredients (benzyl alcohol) | Informational | Brief mention in FAQ | Needs dedicated content |
-| Can BAC water go bad? | Informational | **NONE** | FAQ candidate or short guide |
-| BAC water vs sodium chloride | Informational | **NONE** | Comparative content gap |
-
-### Cluster 2: Peptide Reconstitution Process
-
-| Topic | Search Intent | Current Coverage | Gap |
-|-------|--------------|------------------|-----|
-| How to reconstitute peptides (general) | Informational | Learn article exists | May need expansion; should be pillar content |
-| How to reconstitute BPC-157 | Informational | **NONE** | HIGH GAP -- very high search volume |
-| How to reconstitute tirzepatide | Informational | **NONE** | HIGH GAP -- trending search term |
-| How to reconstitute semaglutide | Informational | **NONE** | HIGH GAP -- trending search term |
-| How to reconstitute TB-500 | Informational | **NONE** | Moderate volume |
-| How to reconstitute GHK-Cu | Informational | **NONE** | Moderate volume |
-| Peptide reconstitution chart / table | Informational | **NONE** | Users want quick-reference visual |
-| What happens if you add too much BAC water | Informational | **NONE** | Common beginner concern |
-| How long does reconstituted peptide last | Informational | FAQ answer only | Needs dedicated guide with per-peptide data |
-
-### Cluster 3: Syringes and Dosing
-
-| Topic | Search Intent | Current Coverage | Gap |
-|-------|--------------|------------------|-----|
-| How to read an insulin syringe | Informational | Tool page (syringe units) | Needs dedicated guide with images |
-| Insulin syringe sizes explained | Informational | Partial (tool page) | Needs guide: 0.3mL, 0.5mL, 1mL differences |
-| How many units in 0.1 mL | Informational | Covered by converter tool | Good -- tool page serves this |
-| What gauge needle for peptides | Informational | **NONE** | Common practical question |
-| Subcutaneous vs intramuscular injection | Informational | **NONE** | Out of scope (medical) -- note in disclaimer |
-| Insulin syringe vs tuberculin syringe | Informational | **NONE** | Informational gap |
-
-### Cluster 4: Storage and Safety
-
-| Topic | Search Intent | Current Coverage | Gap |
-|-------|--------------|------------------|-----|
-| How to store reconstituted peptides | Informational | **NONE** | HIGH GAP -- critical safety topic |
-| Peptide storage temperature | Informational | **NONE** | HIGH GAP |
-| Signs of contaminated peptide | Informational | **NONE** | Safety content gap |
-| Proper injection site cleaning | Informational | **NONE** | Partially medical but safety-relevant |
-| Multi-dose vial hygiene | Informational | **NONE** | Critical for BAC water users |
-
-### Cluster 5: Buying Decisions (Commercial Intent)
-
-| Topic | Search Intent | Current Coverage | Gap |
-|-------|--------------|------------------|-----|
-| Best bacteriostatic water brands | Commercial | **NONE** | Could be blog/guide content |
-| Where to buy BAC water | Commercial | Shop page exists | Content is transactional but no buying guide |
-| BAC water price comparison | Commercial | **NONE** | Competitive content opportunity |
-| Peptide reconstitution kit | Commercial | Shop may have bundles | Needs dedicated landing or guide |
-| How many BAC water vials do I need | Informational/Commercial | Supply calculator covers this | Good -- but could be reinforced with guide |
+The old high-priority gaps (bac water vs sterile water, how to store reconstituted peptides, shelf life, BPC-157 guide, reconstitution chart) are now covered. Good progress.
 
 ---
 
-## Content Depth Issues on Existing Pages
+## Genuine remaining gaps (prioritized)
 
-### About Page (`/about`)
-- **Current:** ~120 words, 4 paragraphs, no subheadings
-- **Gap:** No team information, no methodology explanation, no trust signals (certifications, lab standards, vendor relationships)
-- **Recommendation:** Expand to 400-600 words with sections: Our Approach, Our Math, Our Suppliers, Research Use Disclaimer
+### Tier 1 high impact
 
-### Privacy Page (`/privacy`)
-- **Current:** ~60 words
-- **Gap:** No CCPA/GDPR rights section, no data retention policy, no third-party processors (Stripe, Resend, Prisma/DB hosting), no analytics disclosure, no international data transfer notice
-- **Recommendation:** Expand to industry-standard privacy policy (800-1500 words)
+1. **Per-peptide + per-vial-size landing pages** (the competitor moat)
+   Free-medical-journal and peptide-association sites rank by having a distinct URL per (peptide × vial size), e.g. "5 mg BPC-157 reconstitution" and "10 mg BPC-157 reconstitution" as separate pages. BACwater currently has one page per peptide covering all its strengths in a table.
+   - **Phase 2 opportunity:** expand the highest-volume peptides into per-vial-size pages or anchored sections that can rank independently (`/peptides/bpc-157/5mg`, `/peptides/tirzepatide/30mg`, etc.). The dosage engine already computes per-strength rows, so the data exists; this is a routing + unique-intro-copy exercise, not a data problem. See the programmatic-seo analysis for the uniqueness bar these must clear (each needs unique intro prose, not just a filtered table).
+   - Start with the 6 to 8 pages that already show query demand: bpc-157 (5/10 mg), tirzepatide (10/30/60 mg), semaglutide (2/5 mg), tb-500 (5/10 mg).
 
-### FAQ Page (`/faq`)
-- **Current:** 7 hardcoded Q&A pairs
-- **Gap:** Many common questions not addressed:
-  - "How long does shipping take?"
-  - "Can I use sterile water instead of BAC water?"
-  - "What's the difference between a 0.3mL and 1mL syringe?"
-  - "How do I calculate my dose?"
-  - "Can I reuse a syringe?"
-  - "What does 10 units on a syringe look like?"
-- **Recommendation:** Add 10-15 more FAQ pairs, cross-link to tools and guides
+2. **Reverse-BAC calculator** ("I want dose X at Y units, how much water?")
+   The current bac-water calculator solves forward (vial + dose to water). A reverse tool ("I want a 250 mcg dose to read as exactly 20 units, how much bac water?") is a distinct high-intent query and a strong featured-snippet/tool target. Distinct from the existing tools; give it its own `/tools/[slug]` and add it to the tools mesh, sitemap, and llms.txt.
 
----
+3. **"Where to buy bacteriostatic water (2026)" commercial-investigation content**
+   `/buy` handles transactional intent well, but there is no commercial-investigation piece for "best place to buy bac water", "legit bac water vendors", "is [vendor] legit". This is where competitors capture high-intent comparison traffic. Create a buyers'-guide style page (framed honestly, research-use) covering what to look for (sealed, sterile, US shipping, benzyl-alcohol %, batch/lot info) and route it into the buy funnel. Pairs with the "best/legit vendor" gap below.
 
-## Recommended New Content (Prioritized)
+4. **Shelf-life / refrigeration deep-dive with the real controversy**
+   The FAQ and storage content assert "refrigerate; ~28 days", but there is a genuine, citable nuance: refrigeration may reduce benzyl alcohol's bacteriostatic efficacy (cold can lower preservative activity), which is the opposite of the naive "colder is always better" assumption. A dedicated deep-dive that explains the tradeoff (and cites it) would be the definitive page on the topic and a strong AI-citation magnet, because it resolves a question most sources get wrong. Cross-link from `/learn/vs/benzyl-alcohol`, the FAQ, and every peptide storage block.
 
-### Tier 1 -- High Impact (create first)
+### Tier 2 medium impact
 
-1. **"BAC Water vs Sterile Water: What's the Difference?"** (`/learn/bac-water-vs-sterile-water`)
-   - Why: Extremely common search query. No coverage. Establishes topical authority.
-   - Format: 600-800 word guide with comparison table
+5. **Peptide glossary / entity pages**
+   Standalone definitional pages for the entities the site already references: **benzyl alcohol**, **lyophilization**, **U-100**, **subcutaneous**, **reconstitution**, **bacteriostatic**. These serve "what is [term]" queries, build entity coverage that AI engines map to the site, and become internal-link anchors. A `/learn/glossary` index plus per-term anchors (or per-term pages for the highest-volume terms like benzyl alcohol and lyophilization).
 
-2. **"How to Reconstitute BPC-157: Complete Guide"** (`/learn/how-to-reconstitute-bpc-157`)
-   - Why: BPC-157 is the most popular peptide. Peptide-specific reconstitution guides capture high-intent traffic.
-   - Format: 800-1000 word guide linking to plan builder with BPC-157 defaults
+6. **Remaining "bac water vs X" topics**
+   The 7 comparisons cover the major diluents. Remaining candidates worth checking for demand: "bac water vs preservative-free water", "bac water vs SWFI (sterile water for injection)" (may overlap sterile-water; consolidate if so), and "bac water vs bacteriostatic saline". Only add if they are distinct queries, not near-duplicates of existing pages (avoid the doorway risk called out in the doorway analysis).
 
-3. **"How to Store Reconstituted Peptides Safely"** (`/learn/how-to-store-reconstituted-peptides`)
-   - Why: Critical safety topic. High search volume. No coverage.
-   - Format: 600-800 words, temperature guide, shelf life table per peptide
+7. **Dedicated calculator hub page for head terms**
+   `/tools` is a functional index. A head-term-optimized hub ("Peptide reconstitution calculators") with a definition block, a table of what each tool does, and quick-reference facts would target the "[topic] calculator" head terms better than the current utilitarian index. This is also the natural home for the reverse-BAC calculator and improves the tool cluster's internal-link authority.
 
-4. **"BAC Water Shelf Life: How Long Does It Last?"** (`/learn/bac-water-shelf-life`)
-   - Why: Very common question. Currently only mentioned in passing.
-   - Format: 400-600 words, opened vs unopened, storage conditions
+### Tier 3 supporting
 
-5. **Peptide Reconstitution Quick-Reference Chart** (`/tools/chart` or `/learn/peptide-reconstitution-chart`)
-   - Why: Visual searchers and "chart" queries. Currently only calculator-based tools.
-   - Format: Interactive/static table showing common peptides with BAC water amounts and syringe units
-
-### Tier 2 -- Medium Impact
-
-6. **"How to Read an Insulin Syringe (With Pictures)"** (`/learn/how-to-read-an-insulin-syringe`)
-7. **"How to Reconstitute Tirzepatide"** (`/learn/how-to-reconstitute-tirzepatide`)
-8. **"How to Reconstitute Semaglutide"** (`/learn/how-to-reconstitute-semaglutide`)
-9. **"What Happens if You Add Too Much BAC Water?"** (`/learn/too-much-bac-water`)
-10. **"Insulin Syringe Sizes: 0.3mL vs 0.5mL vs 1mL"** (`/learn/insulin-syringe-sizes`)
-
-### Tier 3 -- Supporting Content
-
-11. **"Multi-Dose Vial Hygiene: Best Practices"** (`/learn/multi-dose-vial-hygiene`)
-12. **"How to Reconstitute TB-500"** (`/learn/how-to-reconstitute-tb-500`)
-13. **"What Gauge Needle Should I Use?"** (`/learn/needle-gauge-guide`)
-14. **"Peptide Reconstitution Glossary"** (`/learn/glossary`)
-15. **Expanded About page** (not a new page -- expand existing)
+8. **"Best / legit bac water vendor" commercial-investigation** (pairs with Tier 1 #3) split out if the buyers' guide gets long.
+9. **Per-peptide storage nuance sections** where a peptide has a real handling quirk already captured in `caveat` (BPC-157 light sensitivity, CJC no-DAC instability, GHK-Cu blue tint, HCG IU-vs-mg). These are unique facts; surface them as their own anchored mini-sections so they can rank for "does [peptide] need to be refrigerated / why is my [peptide] blue".
+10. **Expanded About page** (still thin) add Our Approach, Our Math, Our Sourcing, Research-Use sections to strengthen the entity/E-E-A-T signal referenced in the GEO plan.
 
 ---
 
-## Content Format Recommendations
+## Content-depth issues on existing pages
 
-All new learn articles should include:
-1. **Direct-answer block** at the top (1-2 sentence answer in bold, extractable by AI)
-2. **H2/H3 heading hierarchy** (currently missing from article renderer)
-3. **Cross-links** to relevant tools and other articles
-4. **CTA banner** linking to plan builder (already exists in template)
-5. **Schema**: Article JSON-LD with proper author, datePublished, image
-6. **FAQ section** at bottom with 2-3 related questions (for FAQ rich results)
+- **Homepage:** no definition block, no key-facts block (covered in GEO + AEO plans). Highest-authority page under-serving informational intent.
+- **About:** still short; expand for E-E-A-T and the "for whom" entity signal.
+- **Privacy:** verify it now covers processors (Stripe, Resend, DB host), CCPA/GDPR rights, retention, analytics disclosure (GA4 + Clarity are live). If not, expand to standard length; this is a trust signal AI and users both read.
+- **Comparison pages:** solid, but each would benefit from a References block (see GEO Gap 1), especially `/learn/vs/benzyl-alcohol` given the refrigeration controversy.
+
+---
+
+## New-content format standard (apply to all additions)
+
+1. Server-rendered **direct-answer block** (40 to 60 words) at the top.
+2. Proper **H2/H3 hierarchy** (the DB article renderer must parse headings; verify per the AEO renderer note).
+3. **Quick-reference table** where the answer is numeric.
+4. **FAQ section** (2 to 3 Q&A) with FAQPage JSON-LD.
+5. **References/Sources** block with real outbound links (USP, FDA/DailyMed, benzyl-alcohol safety) per the GEO plan.
+6. Tag the entry in the catalog (`DB_TAGS`) so the related-content engine surfaces it automatically.
+7. Cross-link into the peptide, comparison, and buy clusters per the linking matrix.
+8. No em dashes; use "to" for numeric ranges.
+
+---
+
+## Priority summary
+
+| Priority | Gap | Type | Why |
+|----------|-----|------|-----|
+| 1 | Per-peptide × per-vial-size pages (phase 2) | Programmatic | Competitor moat; data already computed |
+| 2 | Reverse-BAC calculator | Tool | Distinct high-intent query; snippet + tool target |
+| 3 | "Where to buy bac water (2026)" buyers' guide | Commercial | Captures commercial-investigation traffic |
+| 4 | Shelf-life / refrigeration deep-dive (with controversy + citations) | Guide | Definitive, AI-citation magnet |
+| 5 | Glossary / entity pages (benzyl alcohol, lyophilization, U-100, subcutaneous) | Informational | Entity coverage + link anchors |
+| 6 | Remaining "vs X" topics (only if distinct) | Comparison | Fill residual comparison demand |
+| 7 | Calculator hub page for head terms | Hub | Head-term capture + tool authority |

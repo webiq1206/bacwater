@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <section className="max-w-3xl mb-10 border border-border p-5 sm:p-6">
           <p className="text-base leading-relaxed text-foreground/90">
             <strong>The amount of BAC water to add depends on your vial strength and your target dose.</strong>{" "}
-            Most users add 1–2 mL of bacteriostatic water to create a concentration where each dose equals 5–10 units on a standard U-100 insulin syringe. For example, adding 2 mL to a 5 mg BPC-157 vial creates a 2.5 mg/mL concentration, making a 250 mcg dose exactly 10 units. Use the calculator below for your exact numbers.
+            Most users add 1 to 2 mL of bacteriostatic water to create a concentration where each dose equals 5 to 10 units on a standard U-100 insulin syringe. For example, adding 2 mL to a 5 mg BPC-157 vial creates a 2.5 mg/mL concentration, making a 250 mcg dose exactly 10 units. Use the calculator below for your exact numbers.
           </p>
         </section>
       </div>
@@ -36,7 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <h2 className="text-lg font-semibold tracking-tight">Related guides</h2>
           <ul className="mt-3 space-y-2 text-sm">
             <li><Link href="/learn/what-is-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">What is BAC water?</Link></li>
-            <li><Link href="/learn/bac-water-vs-sterile-water" className="text-muted-foreground hover:text-foreground underline transition-colors">BAC water vs. sterile water</Link></li>
+            <li><Link href="/learn/vs/sterile-water" className="text-muted-foreground hover:text-foreground underline transition-colors">BAC water vs. sterile water</Link></li>
             <li><Link href="/learn/how-long-bac-water-lasts" className="text-muted-foreground hover:text-foreground underline transition-colors">How long BAC water lasts</Link></li>
             <li><Link href="/learn/too-much-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">What happens if you add too much BAC water</Link></li>
           </ul>
