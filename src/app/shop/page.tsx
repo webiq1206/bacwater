@@ -2,7 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lightbulb } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -85,6 +85,21 @@ export default async function ShopPage() {
           </Link>{" "}
           and we&apos;ll pre-fill your cart with exactly what you need.
         </p>
+      </div>
+
+      <div className="mt-8 callout-panel">
+        <div className="flex items-start gap-3">
+          <Lightbulb className="h-5 w-5 accent-check mt-0.5 shrink-0" />
+          <div>
+            <div className="font-medium text-foreground">Not sure how much to order?</div>
+            <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+              Build a <Link href="/plan" className="text-foreground font-medium underline">mixing plan</Link> first
+              — it tells you exactly what supplies you need and pre-fills your cart.
+              Or use the <Link href="/tools/supplies" className="text-foreground font-medium underline">supply calculator</Link> to
+              figure out quantities for a full cycle.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="mt-10 space-y-14">

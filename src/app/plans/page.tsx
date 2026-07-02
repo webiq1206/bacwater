@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Download, ExternalLink, FileText, Plus } from "lucide-react";
+import { ArrowRight, BookOpen, Download, ExternalLink, FileText, Lightbulb, Plus, ShoppingBag } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
@@ -103,7 +103,7 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
                 <dt className="text-muted-foreground">Vial</dt>
                 <dd className="text-right">{p.vialStrengthMg} mg</dd>
                 <dt className="text-muted-foreground">Dose</dt>
-                <dd className="text-right">{p.doseMcg} mcg</dd>
+                <dd className="text-right">{p.doseMcg >= 1000 ? `${p.doseMcg / 1000} mg` : `${p.doseMcg} mcg`}</dd>
                 <dt className="text-muted-foreground">Syringe</dt>
                 <dd className="text-right font-medium text-foreground">{p.syringeUnits} units</dd>
                 <dt className="text-muted-foreground">Doses/vial</dt>
@@ -137,16 +137,41 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
 
 function EmptyState() {
   return (
-    <div className="mt-4 border border-border p-12 text-center">
-      <div className="text-lg font-semibold">No plans yet</div>
-      <p className="mt-1 text-sm text-muted-foreground max-w-sm mx-auto">
-        Build your first reconstitution plan. We&apos;ll calculate the BAC
-        water, syringe units, and doses per vial for you.
-      </p>
-      <div className="mt-6">
-        <Button asChild variant="brand" size="lg">
-          <Link href="/plan">Build my first plan</Link>
-        </Button>
+    <div className="mt-4 border border-border p-8 sm:p-12">
+      <div className="max-w-md mx-auto text-center">
+        <div className="text-xl font-serif font-medium tracking-tight">You&apos;re just 3 questions away from your first plan</div>
+        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+          Pick your peptide, vial strength, and dose. We&apos;ll calculate
+          everything else — BAC water, syringe units, step-by-step instructions,
+          and a printable vial label.
+        </p>
+        <div className="mt-6">
+          <Button asChild variant="brand" size="lg">
+            <Link href="/plan">
+              Build my first plan <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+      <div className="mt-8 pt-6 border-t border-border grid sm:grid-cols-3 gap-4 text-center">
+        <div className="text-sm">
+          <div className="font-medium text-foreground">New to peptides?</div>
+          <p className="mt-1 text-muted-foreground text-xs">
+            <Link href="/learn" className="underline">Read the beginner guides</Link> first — they take about 5 minutes.
+          </p>
+        </div>
+        <div className="text-sm">
+          <div className="font-medium text-foreground">Know what you need?</div>
+          <p className="mt-1 text-muted-foreground text-xs">
+            <Link href="/shop" className="underline">Shop supplies</Link> directly if you already have a plan in mind.
+          </p>
+        </div>
+        <div className="text-sm">
+          <div className="font-medium text-foreground">Just need the math?</div>
+          <p className="mt-1 text-muted-foreground text-xs">
+            Use our <Link href="/tools" className="underline">standalone calculators</Link> for quick one-off answers.
+          </p>
+        </div>
       </div>
     </div>
   );

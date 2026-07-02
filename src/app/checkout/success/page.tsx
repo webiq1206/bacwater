@@ -50,9 +50,28 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
             </div>
           </div>
         ) : null}
-        <div className="mt-8 flex flex-wrap gap-3 justify-center">
+        <div className="mt-8 bg-surface border border-border p-5 text-left">
+          <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-3">
+            While you wait for your supplies
+          </div>
+          <ul className="space-y-2.5 text-sm">
+            <li className="flex gap-2.5">
+              <span className="step-number step-number--filled h-5 w-5 text-[9px] mt-0.5">1</span>
+              <span className="text-muted-foreground">
+                <Link href="/plan" className="text-foreground font-medium underline">Build your mixing plan</Link> — answer 3 questions and get step-by-step instructions for when your supplies arrive.
+              </span>
+            </li>
+            <li className="flex gap-2.5">
+              <span className="step-number step-number--filled h-5 w-5 text-[9px] mt-0.5">2</span>
+              <span className="text-muted-foreground">
+                <Link href="/learn" className="text-foreground font-medium underline">Read the guides</Link> — learn how reconstitution works, common mistakes to avoid, and storage tips.
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div className="mt-6 flex flex-wrap gap-3 justify-center">
           <Button asChild variant="brand">
-            <Link href="/plan">Build a mixing plan</Link>
+            <Link href="/plan">Build my mixing plan</Link>
           </Button>
           <Button asChild variant="outline">
             <Link href="/">Back to home</Link>

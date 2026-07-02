@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lightbulb } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
@@ -59,7 +60,22 @@ export default async function LearnPage() {
         </p>
       </div>
 
-      <ul className="mt-10 grid gap-4 md:grid-cols-2">
+      <div className="mt-8 callout-panel">
+        <div className="flex items-start gap-3">
+          <Lightbulb className="h-5 w-5 accent-check mt-0.5 shrink-0" />
+          <div>
+            <div className="font-medium text-foreground">Not sure where to start?</div>
+            <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+              If this is your first time, start with <strong className="text-foreground">&ldquo;What is BAC Water?&rdquo;</strong> then
+              read <strong className="text-foreground">&ldquo;How Reconstitution Works.&rdquo;</strong> After
+              that, you&apos;ll have everything you need
+              to <Link href="/plan" className="text-foreground font-medium underline">build your first plan</Link>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <ul className="mt-8 grid gap-4 md:grid-cols-2">
         {guides.map((g) => (
           <li key={g.id}>
             <Link href={`/learn/${g.slug}`} className="group block border border-border hover:bg-surface transition-colors p-6 h-full">
@@ -76,6 +92,20 @@ export default async function LearnPage() {
           </li>
         ))}
       </ul>
+
+      <div className="mt-10 border border-border bg-surface p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+        <div>
+          <div className="font-medium text-foreground">Done reading?</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Put what you learned into practice — the Plan Builder does the math for you.
+          </p>
+        </div>
+        <Button asChild variant="brand" className="shrink-0">
+          <Link href="/plan">
+            Build my plan <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }

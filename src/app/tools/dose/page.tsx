@@ -145,12 +145,12 @@ export default function DoseCalculatorPage() {
               <div className="eyebrow">Your dose</div>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="result-hero tabular-nums">
-                  {result.doseMcg.toFixed(1)}
+                  {result.doseMg.toFixed(result.doseMg >= 1 ? 1 : 3)}
                 </span>
-                <span className="text-2xl text-muted-foreground font-serif">mcg</span>
+                <span className="text-2xl text-muted-foreground font-serif">mg</span>
               </div>
               <div className="mt-1 text-sm text-muted-foreground">
-                = {result.doseMg.toFixed(3)} mg
+                = {result.doseMcg.toFixed(1)} mcg
               </div>
 
               <div className="rule my-6" />

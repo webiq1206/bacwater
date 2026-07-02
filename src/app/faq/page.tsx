@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { ArrowRight, Lightbulb } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { Button } from "@/components/ui/button";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -91,7 +93,20 @@ export default async function FaqPage() {
         </Link>
         .
       </p>
-      <div className="mt-8">
+      <div className="mt-8 callout-panel">
+        <div className="flex items-start gap-3">
+          <Lightbulb className="h-5 w-5 accent-check mt-0.5 shrink-0" />
+          <div>
+            <div className="font-medium text-foreground">Most people ask about dose and BAC water first</div>
+            <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+              If you&apos;re brand new, the top two questions below will answer 90% of what you need.
+              For everything else, our <Link href="/plan" className="text-foreground font-medium underline">Plan Builder</Link> does the math automatically.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6">
         <Accordion type="single" collapsible>
           {CORE.map((f, i) => (
             <AccordionItem key={i} value={`c-${i}`}>
@@ -126,6 +141,24 @@ export default async function FaqPage() {
             </Accordion>
           </div>
         ) : null}
+      </div>
+
+      <div className="mt-10 border border-border bg-surface p-6 sm:p-8">
+        <div className="font-medium text-foreground">Still not sure?</div>
+        <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+          The Plan Builder walks you through everything step by step — just pick your peptide,
+          vial, and dose, and we handle the rest. No math required.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Button asChild variant="brand">
+            <Link href="/plan">
+              Build my plan <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/learn">Read the guides</Link>
+          </Button>
+        </div>
       </div>
     </div>
   );

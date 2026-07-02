@@ -17,17 +17,18 @@ export function CartClient() {
 
   if (items.length === 0) {
     return (
-      <div className="mt-6 border border-border p-12 text-center">
+      <div className="mt-6 border border-border p-8 sm:p-12 text-center">
         <div className="mx-auto h-12 w-12 bg-muted grid place-items-center">
           <ShoppingBag className="h-5 w-5" />
         </div>
-        <div className="mt-4 text-lg font-semibold">Your cart is empty</div>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Add supplies from the shop or from a plan&apos;s recommendations.
+        <div className="mt-4 text-lg font-serif font-medium tracking-tight">Your cart is empty</div>
+        <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+          The easiest way to fill it: <Link href="/plan" className="text-foreground font-medium underline">build a plan</Link> and
+          we&apos;ll recommend exactly what you need with a one-click &ldquo;Add all to cart.&rdquo;
         </p>
-        <div className="mt-6 flex justify-center gap-3">
-          <Button asChild variant="brand"><Link href="/shop">Shop supplies</Link></Button>
-          <Button asChild variant="ghost"><Link href="/plan">Build a plan</Link></Button>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Button asChild variant="brand"><Link href="/plan">Build a plan first <ArrowRight className="h-4 w-4" /></Link></Button>
+          <Button asChild variant="outline"><Link href="/shop">Browse the shop</Link></Button>
         </div>
       </div>
     );

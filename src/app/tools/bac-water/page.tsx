@@ -20,8 +20,8 @@ export default function BacWaterCalculatorPage() {
   const [vialUnit, setVialUnit] = useState<Unit>("mg");
   const vialMg = vialUnit === "mg" ? vialInput : vialInput / 1000;
 
-  const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg);
-  const [doseUnit, setDoseUnit] = useState<Unit>("mcg");
+  const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg / 1000);
+  const [doseUnit, setDoseUnit] = useState<Unit>("mg");
   const doseMcg = doseUnit === "mcg" ? doseInput : doseInput * 1000;
 
   function handlePeptideChange(slug: string) {
@@ -29,8 +29,8 @@ export default function BacWaterCalculatorPage() {
     setPeptideSlug(slug);
     setVialInput(p.commonVialStrengthsMg[0]);
     setVialUnit("mg");
-    setDoseInput(p.suggestedDoseMcg);
-    setDoseUnit("mcg");
+    setDoseInput(p.suggestedDoseMcg / 1000);
+    setDoseUnit("mg");
   }
 
   const rec = useMemo(() => recommendBacWaterMl(vialMg, doseMcg), [vialMg, doseMcg]);
@@ -125,23 +125,23 @@ export default function BacWaterCalculatorPage() {
             n={3}
             total={3}
             title="How much per dose?"
-            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg (${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg).`}
+            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
           >
             <div className="flex items-center gap-2">
               <Input
                 type="number"
                 inputMode="decimal"
-                step="10"
+                step="0.01"
                 value={doseInput}
                 onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
               />
-              <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mcg", "mg"]} />
+              <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mg", "mcg"]} />
             </div>
-            {doseUnit === "mg" && doseInput > 0 ? (
+            {doseUnit === "mcg" && doseInput > 0 ? (
               <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
                 <Check className="h-3 w-3 inline mr-1" />
-                {doseInput} mg = {(doseInput * 1000).toLocaleString()} mcg
+                {doseInput.toLocaleString()} mcg = {(doseInput / 1000)} mg
               </div>
             ) : null}
           </StepCard>

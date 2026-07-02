@@ -31,9 +31,9 @@ export default function SupplyCalculatorPage() {
   const [peptideSlug, setPeptideSlug] = useState("bpc-157");
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
 
-  // Dose (default to peptide's suggested)
-  const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg);
-  const [doseUnit, setDoseUnit] = useState<Unit>("mcg");
+  // Dose (default to peptide's suggested, shown in mg)
+  const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg / 1000);
+  const [doseUnit, setDoseUnit] = useState<Unit>("mg");
   const doseMcg = doseUnit === "mcg" ? doseInput : doseInput * 1000;
 
   // Vial size: user picks from common options
@@ -47,8 +47,8 @@ export default function SupplyCalculatorPage() {
   function handlePeptideChange(slug: string) {
     const p = PEPTIDES.find((x) => x.slug === slug) ?? PEPTIDES[0];
     setPeptideSlug(slug);
-    setDoseInput(p.suggestedDoseMcg);
-    setDoseUnit("mcg");
+    setDoseInput(p.suggestedDoseMcg / 1000);
+    setDoseUnit("mg");
     setVialMg(p.commonVialStrengthsMg[0]);
   }
 
@@ -129,18 +129,18 @@ export default function SupplyCalculatorPage() {
             n={2}
             total={5}
             title="How much per injection?"
-            hint={`Typical range: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg). We pre-filled the common starting dose.`}
+            hint={`Typical range: ${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the common starting dose.`}
           >
             <div className="flex items-center gap-2">
               <Input
                 type="number"
-                inputMode="numeric"
-                step="10"
+                inputMode="decimal"
+                step="0.01"
                 value={doseInput}
                 onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
               />
-              <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mcg", "mg"]} />
+              <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mg", "mcg"]} />
             </div>
           </Section>
 
@@ -255,7 +255,7 @@ export default function SupplyCalculatorPage() {
                 <SupplyRow
                   qty={results.peptideVialsNeeded}
                   label={`${peptide.name}, ${vialMg} mg vial${results.peptideVialsNeeded === 1 ? "" : "s"}`}
-                  why={`Each vial gives you about ${results.dosesPerVial} doses at ${doseMcg} mcg (${doseMcg / 1000} mg). Rounded up so you don't run out.`}
+                  why={`Each vial gives you about ${results.dosesPerVial} doses at ${doseMcg / 1000} mg (${doseMcg.toLocaleString()} mcg). Rounded up so you don't run out.`}
                 />
                 <SupplyRow
                   qty={results.bacVialsNeeded}

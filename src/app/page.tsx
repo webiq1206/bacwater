@@ -82,6 +82,11 @@ export default async function HomePage() {
             <Check className="h-3.5 w-3.5 accent-check" /> For research use
           </span>
         </div>
+        <div className="mt-10 mx-auto max-w-md bg-surface border border-border p-4 text-sm text-muted-foreground text-center">
+          <strong className="text-foreground">Not sure where to start?</strong>{" "}
+          The Plan Builder walks you through everything step by step — just
+          answer 3 quick questions and we&apos;ll handle the rest.
+        </div>
       </section>
 
       <div className="rule mx-auto max-w-5xl" />

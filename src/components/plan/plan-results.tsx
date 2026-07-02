@@ -214,6 +214,43 @@ export function PlanResults({ result }: Props) {
           ))}
         </ul>
       </div>
+
+      {/* What to do next */}
+      <div className="callout-panel">
+        <h4 className="text-lg font-serif font-medium tracking-tight mb-4">
+          What to do next
+        </h4>
+        <ol className="space-y-3 text-sm">
+          <li className="flex gap-3">
+            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">1</span>
+            <span className="leading-relaxed">
+              <strong className="text-foreground">Save your plan</strong>
+              <span className="text-muted-foreground"> — get a permanent link, downloadable PDF, and printable vial labels.</span>
+            </span>
+          </li>
+          <li className="flex gap-3">
+            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">2</span>
+            <span className="leading-relaxed">
+              <strong className="text-foreground">Gather your supplies</strong>
+              <span className="text-muted-foreground"> — the supply list above tells you exactly what to order.</span>
+            </span>
+          </li>
+          <li className="flex gap-3">
+            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">3</span>
+            <span className="leading-relaxed">
+              <strong className="text-foreground">Follow the instructions</strong>
+              <span className="text-muted-foreground"> — the step-by-step guide above walks you through mixing.</span>
+            </span>
+          </li>
+          <li className="flex gap-3">
+            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">4</span>
+            <span className="leading-relaxed">
+              <strong className="text-foreground">Draw to the mark</strong>
+              <span className="text-muted-foreground"> — the syringe diagram shows exactly where to draw.</span>
+            </span>
+          </li>
+        </ol>
+      </div>
     </div>
   );
 }

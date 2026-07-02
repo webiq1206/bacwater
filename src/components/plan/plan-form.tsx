@@ -8,6 +8,7 @@ import {
   Check,
   ChevronRight,
   Info,
+  Lightbulb,
   Loader2,
   Save,
   X,
@@ -47,9 +48,6 @@ const STEPS = [
   "peptide",
   "vial",
   "dose",
-  "syringe",
-  "bac",
-  "date",
   "review",
 ] as const;
 
@@ -231,6 +229,7 @@ export function PlanForm({ mode: initialMode }: Props) {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
+    setDateMixed(new Date().toISOString().slice(0, 10));
   }, []);
 
   const [step, setStep] = useState<number>(0);
@@ -281,6 +280,9 @@ export function PlanForm({ mode: initialMode }: Props) {
   const [secondaryVialUnit, setSecondaryVialUnit] = useState<Unit>("mg");
 
   const [saving, setSaving] = useState(false);
+  const [editingSyringe, setEditingSyringe] = useState(false);
+  const [editingBac, setEditingBac] = useState(false);
+  const [editingDate, setEditingDate] = useState(false);
 
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
   const secondaryPeptide =
@@ -828,6 +830,12 @@ export function PlanForm({ mode: initialMode }: Props) {
       </div>
 
       <StepBar step={step} total={STEPS.length} />
+      <WizardContext
+        step={step}
+        peptideName={primaryName}
+        vialMg={vialStrengthMg}
+        doseMcg={doseMcg}
+      />
 
       {step === 0 && (
         <StepPanel
@@ -990,109 +998,6 @@ export function PlanForm({ mode: initialMode }: Props) {
       )}
 
       {step === 3 && (
-        <StepPanel
-          title="Which syringe are you using?"
-          hint="Not sure? A 1 mL insulin syringe works for almost every dose. It's the most common choice."
-          onNext={() => goToStep(4)}
-          onBack={() => goToStep(2)}
-          stepNum={4}
-        >
-          <div className="grid gap-2">
-            {SYRINGES.map((s) => (
-              <ChipButton
-                key={s.id}
-                active={syringeType === s.id}
-                onClick={() => setSyringeType(s.id)}
-                hint={s.description}
-              >
-                {s.label}
-              </ChipButton>
-            ))}
-          </div>
-          <div className="mt-4 bg-surface px-4 py-3 text-xs text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">What are syringe units?</strong>{" "}
-            Insulin syringes use &ldquo;units&rdquo; instead of mL. On a U-100 syringe,
-            100 units = 1 mL. So 10 units = 0.1 mL. We&apos;ll convert
-            everything for you.
-          </div>
-        </StepPanel>
-      )}
-
-      {step === 4 && (
-        <StepPanel
-          title="How much BAC water to add?"
-          hint={`We recommend ${recommendedBac} mL. This gives you clean, easy-to-read syringe numbers — no squinting at tiny markings.`}
-          onNext={() => goToStep(5)}
-          onBack={() => goToStep(3)}
-          stepNum={5}
-        >
-          <div className="grid gap-2">
-            <ChipButton
-              active={useRecommendedBac}
-              onClick={() => setUseRecommendedBac(true)}
-              hint="Chosen to give clean, round syringe numbers. Best for most people."
-            >
-              Recommended: {recommendedBac} mL
-            </ChipButton>
-            <ChipButton
-              active={!useRecommendedBac}
-              onClick={() => setUseRecommendedBac(false)}
-              hint="Advanced — only change this if you have a specific reason."
-            >
-              I want to pick my own amount
-            </ChipButton>
-          </div>
-          {!useRecommendedBac && (
-            <div className="mt-4">
-              <Label className="text-xs text-muted-foreground">
-                BAC water amount
-              </Label>
-              <div className="mt-1 flex items-center gap-2">
-                <Input
-                  type="number"
-                  step="0.1"
-                  value={customBacMl}
-                  onChange={(e) =>
-                    setCustomBacMl(parseFloat(e.target.value) || 0)
-                  }
-                />
-                <span className="text-sm text-muted-foreground font-medium">
-                  mL
-                </span>
-              </div>
-            </div>
-          )}
-        </StepPanel>
-      )}
-
-      {step === 5 && (
-        <StepPanel
-          title="When did you mix it?"
-          hint="Optional — lets us calculate when the vial expires so you know when to discard it. You can skip this."
-          onNext={() => goToStep(6)}
-          onBack={() => goToStep(4)}
-          stepNum={6}
-        >
-          <div className="space-y-3">
-            <Input
-              type="date"
-              value={dateMixed}
-              onChange={(e) => setDateMixed(e.target.value)}
-            />
-            <button
-              type="button"
-              onClick={() =>
-                setDateMixed(new Date().toISOString().slice(0, 10))
-              }
-              className="text-sm text-foreground font-medium hover:underline"
-            >
-              Use today&apos;s date
-            </button>
-          </div>
-        </StepPanel>
-      )}
-
-      {step === 6 && (
         <div className="space-y-8">
           {/* Review header */}
           <div className="text-center">
@@ -1127,6 +1032,100 @@ export function PlanForm({ mode: initialMode }: Props) {
             >
               Change something <ChevronRight className="h-3.5 w-3.5" />
             </button>
+          </div>
+
+          {/* Smart defaults — auto-inferred settings */}
+          <div className="callout-panel">
+            <div className="flex items-center gap-2.5 mb-3">
+              <Lightbulb className="h-5 w-5" style={{ color: "var(--color-accent-guide)" }} />
+              <h4 className="text-sm font-semibold">We handled these for you</h4>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+              Based on your inputs, we automatically set these values. Most people
+              don&apos;t need to change anything here.
+            </p>
+            <div className="space-y-3">
+              <SmartDefault
+                label="Syringe"
+                value={syringe.label}
+                reason="Works for virtually every peptide dose. Most common choice."
+                editing={editingSyringe}
+                onToggle={() => setEditingSyringe(!editingSyringe)}
+              >
+                <div className="grid gap-2">
+                  {SYRINGES.map((s) => (
+                    <ChipButton
+                      key={s.id}
+                      active={syringeType === s.id}
+                      onClick={() => { setSyringeType(s.id); setEditingSyringe(false); }}
+                      hint={s.description}
+                    >
+                      {s.label}
+                    </ChipButton>
+                  ))}
+                </div>
+              </SmartDefault>
+              <SmartDefault
+                label="BAC water"
+                value={useRecommendedBac ? `${recommendedBac} mL (recommended)` : `${customBacMl} mL (custom)`}
+                reason="Chosen to give clean, easy-to-read syringe numbers."
+                editing={editingBac}
+                onToggle={() => setEditingBac(!editingBac)}
+              >
+                <div className="grid gap-2">
+                  <ChipButton
+                    active={useRecommendedBac}
+                    onClick={() => { setUseRecommendedBac(true); setEditingBac(false); }}
+                    hint="Gives you clean, round syringe numbers."
+                  >
+                    {recommendedBac} mL (recommended)
+                  </ChipButton>
+                  <ChipButton
+                    active={!useRecommendedBac}
+                    onClick={() => setUseRecommendedBac(false)}
+                    hint="Pick your own amount."
+                  >
+                    Custom amount
+                  </ChipButton>
+                  {!useRecommendedBac && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={customBacMl}
+                        onChange={(e) => setCustomBacMl(parseFloat(e.target.value) || 0)}
+                        className="flex-1"
+                      />
+                      <span className="text-sm text-muted-foreground font-medium">mL</span>
+                    </div>
+                  )}
+                </div>
+              </SmartDefault>
+              <SmartDefault
+                label="Date mixed"
+                value={dateMixed ? new Date(dateMixed + "T12:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "Not set"}
+                reason="Used to calculate when your vial expires."
+                editing={editingDate}
+                onToggle={() => setEditingDate(!editingDate)}
+              >
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="date"
+                    value={dateMixed}
+                    onChange={(e) => setDateMixed(e.target.value)}
+                    className="flex-1"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => { setDateMixed(new Date().toISOString().slice(0, 10)); setEditingDate(false); }}
+                    className="text-xs font-medium hover:underline whitespace-nowrap"
+                    style={{ color: "var(--color-accent-guide)" }}
+                  >
+                    Use today
+                  </button>
+                </div>
+              </SmartDefault>
+            </div>
           </div>
 
           <PlanResults result={result} />
@@ -1234,6 +1233,80 @@ function StepBar({ step, total }: { step: number; total: number }) {
           <span className="font-medium text-foreground">Review</span>
         )}
       </div>
+    </div>
+  );
+}
+
+function SmartDefault({
+  label,
+  value,
+  reason,
+  editing,
+  onToggle,
+  children,
+}: {
+  label: string;
+  value: string;
+  reason: string;
+  editing: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border border-border bg-card p-3 sm:p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-xs text-muted-foreground">{label}</div>
+          <div className="text-sm font-medium mt-0.5">{value}</div>
+        </div>
+        <button
+          type="button"
+          onClick={onToggle}
+          className="text-xs font-medium hover:underline shrink-0"
+          style={{ color: "var(--color-accent-guide)" }}
+        >
+          {editing ? "Done" : "Change"}
+        </button>
+      </div>
+      {!editing && (
+        <div className="text-xs text-muted-foreground mt-1">{reason}</div>
+      )}
+      {editing && <div className="mt-3">{children}</div>}
+    </div>
+  );
+}
+
+function WizardContext({
+  step,
+  peptideName,
+  vialMg,
+  doseMcg,
+}: {
+  step: number;
+  peptideName: string;
+  vialMg: number;
+  doseMcg: number;
+}) {
+  const items: { label: string; value: string }[] = [];
+  if (step >= 1) items.push({ label: "Peptide", value: peptideName });
+  if (step >= 2) items.push({ label: "Vial", value: `${vialMg} mg` });
+  if (step >= 3)
+    items.push({
+      label: "Dose",
+      value: `${(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg`,
+    });
+  if (items.length === 0) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm mb-6 px-1">
+      {items.map((item, i) => (
+        <span key={item.label} className="inline-flex items-center gap-1.5">
+          {i > 0 && (
+            <ChevronRight className="h-3 w-3 text-muted-foreground" />
+          )}
+          <span className="text-muted-foreground">{item.label}:</span>
+          <span className="font-medium">{item.value}</span>
+        </span>
+      ))}
     </div>
   );
 }
