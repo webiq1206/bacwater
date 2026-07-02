@@ -250,7 +250,7 @@ export function SyringeVisual({
           {marks.map((m) => {
             const pct = m / (scale === "u100" ? 100 : 100);
             const x = barrelInnerX + pct * barrelInnerW;
-            const isMajor = scale === "u100" ? m % 20 === 0 : true;
+            const isMajor = scale === "u100" ? m % 10 === 0 : true;
             const tickTop = barrelY + barrelH + 3;
             const tickLen = isMajor ? 10 : 6;
 

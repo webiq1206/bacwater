@@ -445,7 +445,7 @@ export function calculate(input: CalcInput): CalcResult {
     expiration: {
       days,
       date: expDate,
-      note: peptideRef?.storageNote ?? "Refrigerate at 36-46°F (2-8°C).",
+      note: peptideRef?.storageNote ?? "Keep in the fridge.",
     },
     supplies,
     assumptions,

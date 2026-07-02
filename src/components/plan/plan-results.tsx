@@ -141,10 +141,10 @@ export function PlanResults({ result }: Props) {
       {/* Step-by-step instructions */}
       <div className="border border-border bg-card p-6 sm:p-8">
         <div className="section-prominent mb-0 border-t-0">
-          <h4 className="text-lg font-serif font-medium tracking-tight">
+          <h4 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
             Step-by-step instructions
           </h4>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm text-muted-foreground">
             Follow these steps in order. Take your time — there&apos;s no rush.
           </p>
         </div>
@@ -164,7 +164,7 @@ export function PlanResults({ result }: Props) {
       <div className="border border-border bg-card p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
           <div>
-            <h4 className="text-lg font-serif font-medium tracking-tight">
+            <h4 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
               Storage &amp; shelf life
             </h4>
             <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-lg">

@@ -44,7 +44,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [200, 500],
     suggestedDoseMcg: 250,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate at 36-46°F (2-8°C). Protect from light.",
+    storageNote: "Keep in the fridge. Protect from light.",
   },
   {
     slug: "tb-500",
@@ -55,7 +55,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [1000, 5000],
     suggestedDoseMcg: 2500,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate at 36-46°F (2-8°C). Larger doses typical.",
+    storageNote: "Keep in the fridge. Larger doses typical.",
   },
   {
     slug: "ipamorelin",
@@ -65,7 +65,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 300],
     suggestedDoseMcg: 200,
     refrigeratedShelfDays: 28,
-    storageNote: "Refrigerate. Consider splitting into smaller batches.",
+    storageNote: "Keep in the fridge. Consider splitting into smaller batches.",
   },
   {
     slug: "cjc-1295-no-dac",
@@ -76,7 +76,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 300],
     suggestedDoseMcg: 100,
     refrigeratedShelfDays: 21,
-    storageNote: "Less stable. Use within ~3 weeks after mixing.",
+    storageNote: "Keep in the fridge. Less stable — use within ~3 weeks.",
   },
   {
     slug: "cjc-1295-with-dac",
@@ -87,7 +87,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [500, 2000],
     suggestedDoseMcg: 1000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate. Longer half-life than non-DAC.",
+    storageNote: "Keep in the fridge. Longer half-life than non-DAC.",
   },
   {
     slug: "sermorelin",
@@ -97,7 +97,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 500],
     suggestedDoseMcg: 200,
     refrigeratedShelfDays: 21,
-    storageNote: "Refrigerate immediately. Use within ~3 weeks.",
+    storageNote: "Put in the fridge right away. Use within ~3 weeks.",
   },
   {
     slug: "hexarelin",
@@ -107,7 +107,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 300],
     suggestedDoseMcg: 200,
     refrigeratedShelfDays: 28,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "semaglutide",
@@ -118,7 +118,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 250,
     refrigeratedShelfDays: 56,
     storageNote:
-      "Refrigerate. Typical protocols start very low and titrate upward.",
+      "Keep in the fridge. Typical protocols start very low and titrate upward.",
     note: "Research chemical dose ranges vary widely. Confirm the exact strength printed on your vial.",
   },
   {
@@ -130,7 +130,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 2500,
     refrigeratedShelfDays: 42,
     storageNote:
-      "Refrigerate at 36-46°F. Do not freeze reconstituted solution.",
+      "Keep in the fridge. Never freeze the mixed solution.",
     note: "Research chemical dose ranges vary. Verify vial strength before mixing.",
   },
   {
@@ -141,7 +141,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [500, 12000],
     suggestedDoseMcg: 2000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate. Emerging research compound.",
+    storageNote: "Keep in the fridge. Emerging research compound.",
   },
   {
     slug: "cagrilintide",
@@ -151,7 +151,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [300, 2400],
     suggestedDoseMcg: 300,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "mots-c",
@@ -161,7 +161,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [5000, 10000],
     suggestedDoseMcg: 5000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "epithalon",
@@ -171,7 +171,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [5000, 10000],
     suggestedDoseMcg: 5000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "ghk-cu",
@@ -181,7 +181,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [1000, 3000],
     suggestedDoseMcg: 2000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate. Blue tint is normal.",
+    storageNote: "Keep in the fridge. Blue tint is normal.",
   },
   {
     slug: "melanotan-2",
@@ -192,7 +192,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [250, 1000],
     suggestedDoseMcg: 500,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate. Start with a very low test dose.",
+    storageNote: "Keep in the fridge. Start with a very low test dose.",
   },
   {
     slug: "ss-31",
@@ -202,7 +202,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [1000, 5000],
     suggestedDoseMcg: 3000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "selank",
@@ -212,7 +212,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [250, 900],
     suggestedDoseMcg: 300,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "semax",
@@ -222,7 +222,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [200, 900],
     suggestedDoseMcg: 300,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "aod-9604",
@@ -232,7 +232,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [250, 600],
     suggestedDoseMcg: 300,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "kisspeptin-10",
@@ -242,7 +242,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 500],
     suggestedDoseMcg: 200,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "pt-141",
@@ -252,7 +252,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [500, 2000],
     suggestedDoseMcg: 1000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
   },
   {
     slug: "hcg",
@@ -262,7 +262,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 5000],
     suggestedDoseMcg: 500,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate.",
+    storageNote: "Keep in the fridge.",
     note: "HCG strength is often stated in IU. Confirm vial units before proceeding.",
   },
   {
@@ -273,7 +273,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [500, 2000],
     suggestedDoseMcg: 1000,
     refrigeratedShelfDays: 30,
-    storageNote: "Refrigerate. Blends: reference the label for exact ratios.",
+    storageNote: "Keep in the fridge. Blends: reference the label for exact ratios.",
     note: "Blends contain multiple peptides. Verify each component strength.",
   },
   {
@@ -285,7 +285,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 250,
     refrigeratedShelfDays: 28,
     storageNote:
-      "Refrigerate. Refer to the label on your vial for storage guidance.",
+      "Keep in the fridge. Refer to the label on your vial for storage guidance.",
     note: "For peptides not in our reference list, verify every input against the label.",
   },
 ];

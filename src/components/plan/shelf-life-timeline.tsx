@@ -209,32 +209,32 @@ export function ShelfLifeTimeline({ peptideName, shelfDays, dateMixed }: Props) 
       {/* Tips */}
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="bg-surface p-3">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
-            Temperature
-          </div>
-          <div className="text-sm mt-1">36–46°F (2–8°C)</div>
+          <div className="text-sm font-medium">Keep it cold</div>
           <div className="text-xs text-muted-foreground mt-0.5">
-            Refrigerate immediately
+            Put the vial in the fridge as soon as you mix it
           </div>
         </div>
         <div className="bg-surface p-3">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
-            Light
-          </div>
-          <div className="text-sm mt-1">Protect from light</div>
+          <div className="text-sm font-medium">Keep it dark</div>
           <div className="text-xs text-muted-foreground mt-0.5">
-            Keep in box or wrap in foil
+            Leave it in the box or wrap the vial in foil
           </div>
         </div>
         <div className="bg-surface p-3">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
-            Never freeze
-          </div>
-          <div className="text-sm mt-1">No freeze-thaw cycles</div>
+          <div className="text-sm font-medium">Never freeze</div>
           <div className="text-xs text-muted-foreground mt-0.5">
-            Destroys peptide structure
+            Freezing and thawing destroys the peptide
           </div>
         </div>
+      </div>
+
+      {/* Why shelf life matters */}
+      <div className="mt-5 bg-surface border border-border p-4 text-sm text-muted-foreground leading-relaxed">
+        <strong className="text-foreground">Why does this expire?</strong>{" "}
+        Once you add BAC water, the peptide starts slowly breaking down. The benzyl alcohol
+        preservative prevents bacteria, but it can&apos;t stop chemical degradation. After
+        the shelf life, potency drops and the solution may no longer be reliable. When in
+        doubt, mix a fresh vial.
       </div>
     </div>
   );
