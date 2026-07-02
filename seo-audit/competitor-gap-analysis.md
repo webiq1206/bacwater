@@ -53,17 +53,17 @@ Watchlist: helloregimen.com (app + reverse-BAC calc), peptidecalcs.com, dlpeptid
 
 ## 5. Prioritized opportunities
 
-Effort: **S** <1d · **M** 1–3d · **L** 1–2wk · **XL** ongoing.
+Effort: **S** <1d · **M** 1 to 3d · **L** 1 to 2wk · **XL** ongoing.
 
 **Tier 1 (do first)**
 1. **Scientific-citations layer** on core Learn pages (0.9% benzyl alcohol, 28-day multi-dose window, swirl-don't-shake aggregation, reconstitution kinetics). Neutralizes peptidefox's edge. **M.**
-2. **Named + credentialed reviewer + "medically/scientifically reviewed" + visible last-updated** on guides. Note: current strategy is deliberately company-level (no individual bylines) per the content spec - resolve this tension explicitly (see ai-search-readiness-analysis.md). **S–M.**
+2. **Named + credentialed reviewer + "medically/scientifically reviewed" + visible last-updated** on guides. Note: current strategy is deliberately company-level (no individual bylines) per the content spec - resolve this tension explicitly (see ai-search-readiness-analysis.md). **S to M.**
 3. **Per-peptide + per-vial-size landing pages** for top-volume queries (5mg/10mg BPC-157, 10mg/20mg/30mg/60mg tirzepatide, retatrutide), pre-filling the Plan Builder. **L.**
-4. **Amplify the printable QR vial-labels asset** as a standalone linkable page ("Free Printable Peptide Vial Labels") for backlinks + brand search. **S–M.**
+4. **Amplify the printable QR vial-labels asset** as a standalone linkable page ("Free Printable Peptide Vial Labels") for backlinks + brand search. **S to M.**
 5. **Reverse-BAC calculator** ("I want dose X at Y units - how much water?"). Distinct, searchable, few offer it. **M.**
 
 **Tier 2**
-6. Draggable/animated syringe visualization with capacity warnings (match prax/regimen). **M–L.**
+6. Draggable/animated syringe visualization with capacity warnings (match prax/regimen). **M to L.**
 7. "Where to buy bacteriostatic water (2026)" + "how to choose a supplier" content that funnels to the shop. **M.**
 8. Dedicated calculator hub page optimized for head terms ("bac water calculator," "peptide reconstitution calculator") with the tool above the fold. **M.**
 9. Freshness "Updated [Month 2026]" framing on money pages/H1s. **S.**

@@ -56,5 +56,46 @@ _July 2026. Changes implemented directly in the codebase during this audit pass,
 - Redirects: `/plan/advanced` → `/plan`, `/tools/ml-to-units` → `/tools/syringe-units`.
 - `tsc --noEmit` passes; zero em dashes.
 
-## Deferred to the roadmap (not implemented this pass)
-Higher-effort or content/product items are documented in `implementation-roadmap.md`: scientific citations + credentialed-review signal, per-peptide/per-vial-size landing pages, reverse-BAC calculator, draggable syringe visualization, product images → `next/image`, "where to buy 2026" content, and marketing the printable-labels asset. These were intentionally left for review because they are larger builds or involve editorial/product decisions (e.g. the no-individual-bylines E-E-A-T stance).
+## Phase 2: full roadmap implementation
+
+The Tier 1 to Tier 3 roadmap items were then built out. All of the following ship on the next deploy; verified locally (production build succeeds, `tsc` clean, all new routes return 200 in the dev preview, zero em or en dashes).
+
+### Trust and citations (E-E-A-T)
+- **Scientific citations layer.** New `src/lib/content/references.ts` holds a curated set of verified primary sources (FDA labeling via DailyMed, NIH PubChem for benzyl alcohol, CDC injection-safety multi-dose vial guidance). Every URL was checked against the authority before inclusion. A new `References` component renders a visible "References" block, and `citation` JSON-LD is emitted on peptide pages, comparison pages, guide articles, the homepage, and the per-vial-size pages.
+- **Reviewed-by + last-reviewed signal.** New `ReviewedBy` component states a described, team-level review process ("Reviewed and maintained by the BACwater.ai editorial team against cited sources, last reviewed [date]") with a link to the editorial policy. Schema now emits `reviewedBy` + `lastReviewed` + `dateModified` on content pages. No individual bylines and no fabricated credentials, per the E-E-A-T decision in `ai-search-readiness-analysis.md`.
+- **Connected `@id` graph.** New `src/lib/seo/schema.ts` defines one Organization node (`#organization`) referenced by `WebSite.publisher`, Article `author`/`publisher`, and WebPage `reviewedBy`, so engines resolve one confident publisher entity.
+
+### AEO answer blocks
+- **Homepage** now has a definition answer block ("What is bacteriostatic water?") plus a head-facts quick-reference table (bac water, 5 mg vial, shelf life, units to mL, mg to mcg), and a WebPage schema node.
+- **Tool pages** gained a shared `ToolExtras` block (`src/components/tools/tool-extras.tsx`): a quick-reference numeric table, a Related-questions FAQ with FAQPage schema (answers in server HTML via native `details`), and contextual links into the peptide / FAQ / buy clusters. Applied to bac-water, dose, syringe-units, mg-to-mcg, supplies, and reverse-bac.
+- **Peptide pages** gained a labeled "Short answer" TL;DR one-liner under the H1.
+
+### New tools and pages
+- **Reverse-BAC calculator** at `/tools/reverse-bac`: pick the dose and the exact syringe units you want to draw, get the precise bac water to add. Uses the animated `SyringeVisual` with capacity warnings.
+- **Per-peptide + per-vial-size landing pages** at `/peptides/[slug]/[size]` for a curated, demand-driven set (bpc-157, tb-500, tirzepatide, semaglutide, ipamorelin, retatrutide across their real strengths; 18 pages). `dynamicParams = false` keeps the set controlled; each has unique computed numbers, intro prose, HowTo + FAQ + citation schema, and self-canonical. Enumerated in the peptides sitemap.
+- **Shelf-life / refrigeration deep-dive** at `/learn/bac-water-shelf-life`, including the refrigeration-vs-preservative nuance framed conservatively, a per-peptide shelf-life table, and citations.
+- **Where to buy (2026 buyer's guide)** at `/learn/where-to-buy-bacteriostatic-water`, a commercial-investigation page funneling to `/buy` and `/shop`.
+- **Peptide glossary** at `/learn/glossary` with a `DefinedTermSet` graph and 10 anchored terms.
+- **Free printable vial labels** landing page at `/tools/vial-labels` marketing the Plan Builder's QR-coded label output.
+
+### Schema
+- **SoftwareApplication** schema on all calculators (the 6 tools + the reverse-BAC tool + the reconstitution page).
+- **ItemList** on `/tools`; **WebPage** added to the homepage and the shop PDP.
+- `Organization.sameAs` and WebSite `SearchAction` intentionally omitted (no social profiles to cite and no on-site search yet); documented in `schema-map.md`.
+
+### Internal linking (hub-and-spoke)
+- Homepage now links to popular peptides, common comparisons, `/buy`, and `/faq`.
+- Comparison pages gained a "Reconstitute a specific peptide" grid into the peptide hub.
+- Peptide pages gained explicit `/buy`, `/faq`, comparison, and shelf-life links.
+- Tool pages link to `/peptides`, `/faq`, and `/buy` via `ToolExtras`.
+
+### Core Web Vitals
+- Product images (local SVGs in `aspect-square` containers) now carry explicit `width`/`height` and `fetchPriority="high"` on the PDP hero (LCP) with lazy-loading elsewhere. `next/image` was intentionally not used: it does not optimize SVGs and would require `dangerouslyAllowSVG`, and the container already reserves layout space so CLS is a non-issue.
+
+### Registration
+New routes were wired into `STATIC_PAGES`, the segmented sitemaps, the learn catalog (so related-reading surfaces them), the footer, and the dynamic `llms.txt`.
+
+## Deferred / follow-up
+- Prefilling the Plan Builder from a peptide/size query param (the per-vial-size pages already show all numbers; deep-link prefill is a client-form enhancement left for later to avoid a risky `useSearchParams` refactor).
+- A real named, credentialed reviewer remains a business decision (would raise the YMYL trust ceiling further); the organization-level signal is in place.
+- `next/image` migration if product art moves to raster formats.
