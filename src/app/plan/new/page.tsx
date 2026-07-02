@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/plan/new" },
   title: "Step-by-Step Reconstitution Planner",
   description:
     "Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math.",

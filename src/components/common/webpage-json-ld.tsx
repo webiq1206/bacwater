@@ -26,17 +26,11 @@ export function WebPageJsonLd({ name, description, url, breadcrumb }: WebPageJso
     },
   };
 
-  if (breadcrumb && breadcrumb.length > 0) {
-    jsonLd.breadcrumb = {
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumb.map((item, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: item.name,
-        item: item.url.startsWith("http") ? item.url : `${siteUrl}${item.url}`,
-      })),
-    };
-  }
+  // Breadcrumb schema is intentionally NOT emitted here. The visible
+  // <Breadcrumbs> component renders the single BreadcrumbList for the page, so
+  // emitting a second one from WebPage would duplicate the graph. The
+  // `breadcrumb` prop is retained for call-site compatibility.
+  void breadcrumb;
 
   return (
     <script

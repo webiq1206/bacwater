@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/shop" },
   title: "Buy BAC Water, Syringes & Supplies",
   description:
     "Premium bacteriostatic water, insulin syringes, and alcohol prep pads. Everything you need to reconstitute peptides safely. Free shipping available.",

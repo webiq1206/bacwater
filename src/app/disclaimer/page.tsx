@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/disclaimer" },
   title: "Disclaimer",
   description: "BACwater.ai is an educational and research tool. Products are for laboratory research only. Not medical advice.",
 };

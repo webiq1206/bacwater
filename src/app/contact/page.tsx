@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/contact" },
   title: "Contact Us",
   description: "Have a question about an order, a plan, or our products? Reach the BACwater.ai team.",
 };

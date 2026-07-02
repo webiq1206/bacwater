@@ -13,6 +13,10 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
 
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
 const PATHS = [
   {
     href: "/plan",

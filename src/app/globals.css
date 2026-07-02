@@ -199,6 +199,13 @@ body {
   padding-left: 1rem;
 }
 
+/* Global keyboard-focus fallback for inline interactive elements that don't
+   carry a component-level focus-visible ring. */
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
 @media print {
   @page {
     margin: 0.4in;

@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/terms" },
   title: "Terms of Service",
   description: "Terms of service for BACwater.ai. Research use, accuracy, orders, returns, and site usage terms.",
 };

@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/privacy" },
   title: "Privacy Policy",
   description: "How BACwater.ai collects, uses, and protects your data. Payments processed by Stripe. No ad trackers.",
 };

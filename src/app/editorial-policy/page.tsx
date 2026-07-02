@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/editorial-policy" },
   title: "Editorial & Sourcing Policy",
   description:
     "How BACwater.ai researches, fact-checks, and maintains its reconstitution guides and calculators. Company-level accountability, verified formulas, quarterly review.",

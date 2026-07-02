@@ -3,6 +3,7 @@ import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tools/bac-water" },
   title: "BAC Water Calculator - How Much to Add",
   description:
     "Enter your peptide and vial size to find out exactly how much bacteriostatic water to add for clean, easy-to-measure doses on a standard insulin syringe.",

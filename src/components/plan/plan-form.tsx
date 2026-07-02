@@ -528,6 +528,7 @@ export function PlanForm({ mode: initialMode }: Props) {
                     {secondarySlug === "custom" ? (
                       <Input
                         className="mt-2"
+                        aria-label="Name of the second peptide"
                         placeholder="Name of the second peptide"
                         value={customSecondaryName}
                         onChange={(e) => setCustomSecondaryName(e.target.value)}
@@ -876,6 +877,7 @@ export function PlanForm({ mode: initialMode }: Props) {
           {peptideSlug === "custom" ? (
             <Input
               className="mt-3"
+              aria-label="Custom peptide name"
               placeholder="Type your peptide's name"
               value={customPeptideName}
               onChange={(e) => setCustomPeptideName(e.target.value)}

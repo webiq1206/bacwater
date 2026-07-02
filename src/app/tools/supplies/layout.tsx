@@ -3,6 +3,7 @@ import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tools/supplies" },
   title: "Supply Calculator - What You Need for a Cycle",
   description:
     "Enter your peptide, dose, and cycle length to get a complete shopping list with exact quantities of BAC water, syringes, and alcohol prep pads.",

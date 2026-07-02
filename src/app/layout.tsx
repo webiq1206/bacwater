@@ -34,7 +34,7 @@ const CLARITY_ID = "xgb3ipxhf6";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "BACwater.ai - The Complete BAC Water Calculator & Reconstitution Guide",
+    default: "BAC Water Calculator & Reconstitution | BACwater.ai",
     template: "%s · BACwater.ai",
   },
   description:
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "BACwater.ai",
-    title: "BACwater.ai - The Complete BAC Water Calculator & Reconstitution Guide",
+    title: "BAC Water Calculator & Reconstitution | BACwater.ai",
     description:
       "Build a plan, get exact syringe units, download a PDF, and buy the supplies you need. Simple, accurate, trustworthy.",
     url: siteUrl,

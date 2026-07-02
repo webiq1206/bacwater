@@ -3,6 +3,7 @@ import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tools/syringe-units" },
   title: "Syringe Unit Converter - mL to Units",
   description:
     "Convert between milliliters and insulin syringe units instantly. Two-way converter with a quick-reference table for U-100 insulin syringes.",

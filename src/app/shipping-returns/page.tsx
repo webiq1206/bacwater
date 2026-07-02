@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
+  alternates: { canonical: "/shipping-returns" },
   title: "Shipping & Returns",
   description:
     "How BACwater.ai ships orders, expected delivery times, order tracking, and our returns policy for research supplies.",
