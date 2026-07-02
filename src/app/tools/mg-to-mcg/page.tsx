@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, HelpCircle, Lightbulb, Scale } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { mgToMcg, mcgToMg } from "@/lib/calc/converters";
@@ -31,8 +30,7 @@ export default function MgMcgConverterPage() {
       </p>
 
       {/* Converter card */}
-      <Card className="mt-10">
-        <CardContent className="p-7 sm:p-9">
+      <div className="border border-border bg-card p-6 sm:p-8 mt-10">
           <div className="grid gap-6 sm:grid-cols-2 items-end">
             <div>
               <label className="text-sm font-medium">Milligrams (mg)</label>
@@ -68,16 +66,12 @@ export default function MgMcgConverterPage() {
             </div>
           </div>
 
-          <div className="mt-6 bg-muted border border-border p-5 text-center">
-            <div className="text-lg font-medium text-foreground">
-              {mg} mg = {mcg.toLocaleString()} mcg
-            </div>
-            <p className="mt-1 text-xs text-foreground/70">
-              1 milligram always equals 1,000 micrograms.
-            </p>
+          <div className="mt-6 callout-panel text-center">
+            <div className="text-xl font-semibold">{mg} mg = {mcg.toLocaleString()} mcg</div>
+            <p className="mt-1 text-sm text-muted-foreground">1 milligram always equals 1,000 micrograms.</p>
           </div>
 
-          <div className="mt-6 bg-muted/60 border border-border p-4">
+          <div className="mt-6 bg-surface border border-border p-4">
             <p className="text-sm font-medium">Quick reference</p>
             <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
               {[
@@ -102,8 +96,7 @@ export default function MgMcgConverterPage() {
               <Link href="/tools/dose">Dose calculator</Link>
             </Button>
           </div>
-        </CardContent>
-      </Card>
+      </div>
 
       {/* Teaching sections */}
       <div className="mt-16 space-y-10">
@@ -181,7 +174,7 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
   return (
     <div>
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 border border-border grid place-items-center shrink-0">{icon}</div>
+        <div className="h-10 w-10 border-2 border-foreground/20 grid place-items-center shrink-0">{icon}</div>
         <h3 className="text-lg font-serif font-medium">{title}</h3>
       </div>
       <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
@@ -193,16 +186,12 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
 
 function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
   return (
-    <Link href={href} className="group">
-      <Card className="h-full hover:bg-muted/50 transition-colors">
-        <CardContent className="p-6">
-          <h3 className="font-semibold group-hover:underline">{title}</h3>
-          <p className="mt-2 text-sm text-muted-foreground">{body}</p>
-          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
-            Open <ArrowRight className="h-4 w-4" />
-          </div>
-        </CardContent>
-      </Card>
+    <Link href={href} className="group block border border-border hover:bg-surface transition-colors p-5">
+      <h3 className="font-semibold group-hover:underline">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+      <div className="mt-3 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
+        Open <ArrowRight className="h-4 w-4" />
+      </div>
     </Link>
   );
 }

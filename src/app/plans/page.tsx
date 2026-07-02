@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { Download, ExternalLink, FileText, Plus } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
@@ -80,8 +79,7 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
     <ul className="mt-4 grid gap-3 md:grid-cols-2">
       {plans.map((p) => (
         <li key={p.id}>
-          <Card>
-            <CardContent className="p-5">
+          <div className="border border-border bg-card p-5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link
@@ -130,8 +128,7 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
                 </Button>
                 <PlansRowActions publicId={p.publicId} archived={p.archived} />
               </div>
-            </CardContent>
-          </Card>
+          </div>
         </li>
       ))}
     </ul>
@@ -140,19 +137,17 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
 
 function EmptyState() {
   return (
-    <Card className="mt-4">
-      <CardContent className="p-12 text-center">
-        <div className="text-lg font-semibold">No plans yet</div>
-        <p className="mt-1 text-sm text-muted-foreground max-w-sm mx-auto">
-          Build your first reconstitution plan. We&apos;ll calculate the BAC
-          water, syringe units, and doses per vial for you.
-        </p>
-        <div className="mt-6">
-          <Button asChild variant="brand" size="lg">
-            <Link href="/plan">Build my first plan</Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="mt-4 border border-border p-12 text-center">
+      <div className="text-lg font-semibold">No plans yet</div>
+      <p className="mt-1 text-sm text-muted-foreground max-w-sm mx-auto">
+        Build your first reconstitution plan. We&apos;ll calculate the BAC
+        water, syringe units, and doses per vial for you.
+      </p>
+      <div className="mt-6">
+        <Button asChild variant="brand" size="lg">
+          <Link href="/plan">Build my first plan</Link>
+        </Button>
+      </div>
+    </div>
   );
 }

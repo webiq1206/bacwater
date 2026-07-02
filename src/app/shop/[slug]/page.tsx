@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Check, Truck } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { AddToCartControl } from "@/components/shop/add-to-cart-control";
@@ -77,7 +76,7 @@ export default async function PdpPage({ params }: Props) {
       ]} />
       <div className="grid gap-10 md:grid-cols-2">
         <div>
-          <div className="aspect-square rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+          <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
             {product.imageUrl ? (
               <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain" />
             ) : (
@@ -98,7 +97,7 @@ export default async function PdpPage({ params }: Props) {
           <p className="mt-4 text-muted-foreground leading-relaxed">
             {product.description}
           </p>
-          <div className="mt-5 rounded-lg border border-border bg-muted/50 p-4">
+          <div className="mt-5 border border-border bg-surface p-4">
             <div className="flex items-start gap-2">
               <Check className="h-4 w-4 text-success mt-0.5" />
               <div className="text-sm">
@@ -173,26 +172,22 @@ export default async function PdpPage({ params }: Props) {
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {related.map((r) => (
-            <Link key={r.id} href={`/shop/${r.slug}`}>
-              <Card className="h-full hover:bg-muted/50 transition-colors">
-                <CardContent className="p-5">
-                  <div className="aspect-square rounded-lg bg-muted flex items-center justify-center overflow-hidden">
-                    {r.imageUrl ? (
-                      <img src={r.imageUrl} alt={r.name} className="h-full w-full object-contain" />
-                    ) : (
-                      <span className="text-4xl text-muted-foreground">&#x2022;</span>
-                    )}
+            <Link key={r.id} href={`/shop/${r.slug}`} className="group block border border-border hover:bg-surface transition-colors p-5">
+              <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
+                {r.imageUrl ? (
+                  <img src={r.imageUrl} alt={r.name} className="h-full w-full object-contain" />
+                ) : (
+                  <span className="text-4xl text-muted-foreground">&#x2022;</span>
+                )}
+              </div>
+              <div className="mt-3 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-sm font-medium leading-tight line-clamp-2 group-hover:underline">
+                    {r.name}
                   </div>
-                  <div className="mt-3 flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="text-sm font-medium leading-tight line-clamp-2">
-                        {r.name}
-                      </div>
-                    </div>
-                    <div className="text-sm font-semibold">{formatCurrency(r.priceCents)}</div>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="text-sm font-semibold">{formatCurrency(r.priceCents)}</div>
+              </div>
             </Link>
           ))}
         </div>

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ContactForm } from "@/components/common/contact-form";
-import { Card, CardContent } from "@/components/ui/card";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
@@ -38,11 +37,9 @@ export default function ContactPage() {
           <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
         </p>
       </div>
-      <Card className="mt-8">
-        <CardContent className="p-8">
-          <ContactForm />
-        </CardContent>
-      </Card>
+      <div className="mt-8 border border-border p-8">
+        <ContactForm />
+      </div>
     </div>
   );
 }

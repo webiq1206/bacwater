@@ -5,7 +5,6 @@ import { prisma } from "@/lib/db";
 import type { CalcResult } from "@/lib/calc";
 import { PlanResults } from "@/components/plan/plan-results";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 import { PlanNotesForm } from "@/components/plan/plan-notes-form";
 import { PlanQr } from "@/components/plan/plan-qr";
@@ -76,49 +75,43 @@ export default async function PublicPlanPage({ params }: Props) {
         <div className="min-w-0">
           <PlanResults result={result} />
 
-          <Card className="mt-6">
-            <CardContent className="p-6 sm:p-8">
-              <h3 className="font-semibold text-lg">Your notes</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                Add anything you want to remember about this plan.
-              </p>
-              <div className="mt-4">
-                <PlanNotesForm publicId={plan.publicId} initial={plan.notes || ""} />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mt-6 border border-border p-6 sm:p-8">
+            <h3 className="font-semibold text-lg">Your notes</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Add anything you want to remember about this plan.
+            </p>
+            <div className="mt-4">
+              <PlanNotesForm publicId={plan.publicId} initial={plan.notes || ""} />
+            </div>
+          </div>
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-24 h-fit no-print">
-          <Card>
-            <CardContent className="p-5">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                Share
-              </div>
-              <PlanQr publicId={plan.publicId} />
-              <div className="mt-3 text-xs text-muted-foreground break-all">
-                bacwater.ai/plan/{plan.publicId}
-              </div>
-              <div className="mt-3">
-                <CopyLinkClient publicId={plan.publicId} />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="border border-border p-5">
+            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+              Share
+            </div>
+            <PlanQr publicId={plan.publicId} />
+            <div className="mt-3 text-xs text-muted-foreground break-all">
+              bacwater.ai/plan/{plan.publicId}
+            </div>
+            <div className="mt-3">
+              <CopyLinkClient publicId={plan.publicId} />
+            </div>
+          </div>
 
           <AiAssistantDrawer plan={result} />
 
-          <Card>
-            <CardContent className="p-5">
-              <div className="flex items-center gap-2 text-foreground">
-                <Sparkles className="h-4 w-4" />
-                <div className="text-sm font-medium">Tip</div>
-              </div>
-              <p className="mt-1.5 text-xs text-muted-foreground">
-                Use the printable label to stick on your reconstituted vial. Scan
-                the QR code to jump right back to this plan.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="border border-border p-5">
+            <div className="flex items-center gap-2 text-foreground">
+              <Sparkles className="h-4 w-4" />
+              <div className="text-sm font-medium">Tip</div>
+            </div>
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              Use the printable label to stick on your reconstituted vial. Scan
+              the QR code to jump right back to this plan.
+            </p>
+          </div>
         </aside>
       </div>
     </div>

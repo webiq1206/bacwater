@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, FlaskConical, HelpCircle, Lightbulb, Ruler } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -75,7 +74,7 @@ export default function DoseCalculatorPage() {
               <ConversionHint>{concInput} mcg/mL = {concInput / 1000} mg/mL</ConversionHint>
             ) : null}
 
-            <div className="mt-4 bg-muted border border-border p-3">
+            <div className="mt-4 bg-surface border border-border p-3">
               <p className="text-xs text-foreground leading-relaxed">
                 <b>Not sure?</b> Concentration = vial strength &divide; BAC water added.
                 Example: a 5 mg vial mixed with 2 mL of BAC water = 2.5 mg/mL.
@@ -94,26 +93,22 @@ export default function DoseCalculatorPage() {
               <button
                 type="button"
                 onClick={() => setVolMode("units")}
-                className={cn(
-                  "border px-4 h-10 text-sm font-medium transition-colors",
-                  volMode === "units"
-                    ? "bg-foreground text-white border-foreground"
-                    : "border-border hover:bg-muted"
-                )}
+                className={cn("chip", volMode === "units" && "chip--active")}
               >
-                Syringe units
+                <div className="flex items-center gap-2 font-medium">
+                  {volMode === "units" && <Check className="h-4 w-4" />}
+                  Syringe units
+                </div>
               </button>
               <button
                 type="button"
                 onClick={() => setVolMode("ml")}
-                className={cn(
-                  "border px-4 h-10 text-sm font-medium transition-colors",
-                  volMode === "ml"
-                    ? "bg-foreground text-white border-foreground"
-                    : "border-border hover:bg-muted"
-                )}
+                className={cn("chip", volMode === "ml" && "chip--active")}
               >
-                mL
+                <div className="flex items-center gap-2 font-medium">
+                  {volMode === "ml" && <Check className="h-4 w-4" />}
+                  mL
+                </div>
               </button>
             </div>
             {volMode === "units" ? (
@@ -146,18 +141,17 @@ export default function DoseCalculatorPage() {
 
         {/* Result + Teaching (right column) */}
         <div className="space-y-4">
-          <Card>
-            <CardContent className="p-7 sm:p-9">
+          <div className="border border-border bg-card p-6 sm:p-8">
               <div className="eyebrow">Your dose</div>
               <div className="mt-3 flex items-baseline gap-2">
-                <span className="text-5xl sm:text-6xl font-serif font-medium tracking-tight text-foreground tabular-nums">
+                <span className="result-hero tabular-nums">
                   {result.doseMcg.toFixed(1)}
                 </span>
                 <span className="text-2xl text-muted-foreground font-serif">mcg</span>
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <div className="mt-1 text-sm text-muted-foreground">
                 = {result.doseMg.toFixed(3)} mg
-              </p>
+              </div>
 
               <div className="rule my-6" />
 
@@ -183,11 +177,9 @@ export default function DoseCalculatorPage() {
                   <Link href="/shop">Shop supplies</Link>
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+          </div>
 
-          <Card>
-            <CardContent className="p-6">
+          <div className="callout-panel">
               <div className="flex items-start gap-2.5">
                 <Lightbulb className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -196,8 +188,7 @@ export default function DoseCalculatorPage() {
                   = {result.doseMg.toFixed(3)} mg = {result.doseMcg.toFixed(1)} mcg.
                 </p>
               </div>
-            </CardContent>
-          </Card>
+          </div>
 
           {/* Teaching sections */}
           <div className="mt-6 space-y-8">
@@ -280,8 +271,11 @@ function StepCard({
 }) {
   return (
     <div className="border border-border bg-card p-6 sm:p-7">
-      <div className="eyebrow">Step {n} &middot; of {total}</div>
-      <h3 className="mt-2 text-xl font-serif font-medium leading-tight">{title}</h3>
+      <div className="flex items-center gap-3 mb-3">
+        <span className="step-number step-number--filled text-[11px]">{n}</span>
+        <div className="eyebrow">Step {n} of {total}</div>
+      </div>
+      <h3 className="text-xl font-serif font-medium leading-tight">{title}</h3>
       {hint ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p> : null}
       <div className="mt-5">{children}</div>
     </div>
@@ -321,8 +315,8 @@ function UnitToggle({ value, onChange, labels, values }: { value: Unit; onChange
 
 function ConversionHint({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-2 flex items-center gap-1.5 text-xs text-foreground">
-      <Check className="h-3 w-3" />
+    <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
+      <Check className="h-3 w-3 inline mr-1" />
       {children}
     </div>
   );
@@ -332,7 +326,7 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
   return (
     <div>
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 border border-border grid place-items-center shrink-0">{icon}</div>
+        <div className="h-10 w-10 border-2 border-foreground/20 grid place-items-center shrink-0">{icon}</div>
         <h3 className="text-lg font-serif font-medium">{title}</h3>
       </div>
       <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
@@ -345,15 +339,13 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
 function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full hover:bg-muted/50 transition-colors">
-        <CardContent className="p-6">
+      <div className="h-full border border-border hover:bg-surface transition-colors p-6">
           <h3 className="font-semibold group-hover:underline">{title}</h3>
           <p className="mt-2 text-sm text-muted-foreground">{body}</p>
           <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground underline group-hover:gap-2 transition-all">
             Open <ArrowRight className="h-4 w-4" />
           </div>
-        </CardContent>
-      </Card>
+      </div>
     </Link>
   );
 }

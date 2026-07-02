@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Info } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -158,14 +157,12 @@ export default function SupplyCalculatorPage() {
                   key={mg}
                   type="button"
                   onClick={() => setVialMg(mg)}
-                  className={cn(
-                    "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
-                    vialMg === mg
-                      ? "bg-foreground text-white border-foreground"
-                      : "border-border hover:bg-muted"
-                  )}
+                  className={cn("chip", vialMg === mg && "chip--active")}
                 >
-                  {mg} mg
+                  <div className="flex items-center gap-2 font-medium">
+                    {vialMg === mg && <Check className="h-4 w-4" />}
+                    {mg} mg
+                  </div>
                 </button>
               ))}
             </div>
@@ -179,15 +176,15 @@ export default function SupplyCalculatorPage() {
                   key={f.id}
                   type="button"
                   onClick={() => setFrequency(f.id)}
-                  className={cn(
-                    "text-left rounded-lg border px-4 py-3 transition-colors",
-                    frequency === f.id
-                      ? "border-foreground bg-muted ring-1 ring-foreground/20"
-                      : "border-border hover:bg-muted"
-                  )}
+                  className={cn("chip text-left", frequency === f.id && "chip--active")}
                 >
-                  <div className="font-medium">{f.label}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{f.hint}</div>
+                  <div className="flex items-center gap-2">
+                    {frequency === f.id && <Check className="h-4 w-4 shrink-0" />}
+                    <div>
+                      <div className="font-medium">{f.label}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{f.hint}</div>
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
@@ -196,32 +193,31 @@ export default function SupplyCalculatorPage() {
           {/* 5. Cycle length */}
           <Section n={5} total={5} title="How long is your cycle?">
             <div className="flex flex-wrap gap-2">
-              {DURATIONS.map((d) => (
-                <button
-                  key={d.weeks}
-                  type="button"
-                  onClick={() => { setDurationWeeks(d.weeks); setShowCustomDuration(false); }}
-                  className={cn(
-                    "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
-                    !showCustomDuration && durationWeeks === d.weeks
-                      ? "bg-foreground text-white border-foreground"
-                      : "border-border hover:bg-muted"
-                  )}
-                >
-                  {d.label}
-                </button>
-              ))}
+              {DURATIONS.map((d) => {
+                const active = !showCustomDuration && durationWeeks === d.weeks;
+                return (
+                  <button
+                    key={d.weeks}
+                    type="button"
+                    onClick={() => { setDurationWeeks(d.weeks); setShowCustomDuration(false); }}
+                    className={cn("chip", active && "chip--active")}
+                  >
+                    <div className="flex items-center gap-2 font-medium">
+                      {active && <Check className="h-4 w-4" />}
+                      {d.label}
+                    </div>
+                  </button>
+                );
+              })}
               <button
                 type="button"
                 onClick={() => setShowCustomDuration(true)}
-                className={cn(
-                  "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
-                  showCustomDuration
-                    ? "bg-foreground text-white border-foreground"
-                    : "border-border hover:bg-muted"
-                )}
+                className={cn("chip", showCustomDuration && "chip--active")}
               >
-                Custom
+                <div className="flex items-center gap-2 font-medium">
+                  {showCustomDuration && <Check className="h-4 w-4" />}
+                  Custom
+                </div>
               </button>
             </div>
             {showCustomDuration ? (
@@ -242,14 +238,13 @@ export default function SupplyCalculatorPage() {
 
         {/* Results */}
         <div className="space-y-4">
-          <Card>
-            <CardContent className="p-7 sm:p-9">
+          <div className="border border-border bg-card p-6 sm:p-8">
               <div className="eyebrow">Your shopping list</div>
               <h2 className="mt-2 text-2xl sm:text-3xl font-serif font-medium tracking-tight">
                 {results.totalDoses} injections over {durationWeeks} weeks
               </h2>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                {results.freq.label.toLowerCase()} × {durationWeeks} weeks ={" "}
+                {results.freq.label.toLowerCase()} &times; {durationWeeks} weeks ={" "}
                 <b>{results.totalDoses}</b> total injections. Here&apos;s
                 everything you&apos;ll need.
               </p>
@@ -294,11 +289,9 @@ export default function SupplyCalculatorPage() {
                   <Link href="/plan">Build a full mixing plan</Link>
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+          </div>
 
-          <Card>
-            <CardContent className="p-6">
+          <div className="bg-surface border border-border p-5">
               <div className="flex items-start gap-2">
                 <Info className="h-4 w-4 text-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -308,8 +301,7 @@ export default function SupplyCalculatorPage() {
                   numbers at your chosen dose.
                 </p>
               </div>
-            </CardContent>
-          </Card>
+          </div>
         </div>
       </div>
     </div>
@@ -330,9 +322,12 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-6 sm:p-7">
-      <div className="eyebrow">Step {n} · of {total}</div>
-      <h3 className="mt-2 text-xl font-serif font-medium leading-tight">{title}</h3>
+    <div className="border border-border bg-card p-5 sm:p-7">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="step-number step-number--filled text-[11px]">{n}</span>
+        <div className="eyebrow">Step {n} of {total}</div>
+      </div>
+      <h3 className="text-xl font-serif font-medium leading-tight">{title}</h3>
       {hint ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p> : null}
       <div className="mt-5">{children}</div>
     </div>
@@ -352,7 +347,7 @@ function SupplyRow({
 }) {
   return (
     <div className="flex items-start gap-4">
-      <div className="shrink-0 w-12 h-12 rounded-lg bg-muted grid place-items-center">
+      <div className="shrink-0 w-12 h-12 bg-muted grid place-items-center">
         <div className="font-semibold text-foreground text-lg tabular-nums">
           {qty}
         </div>
@@ -378,14 +373,14 @@ function UnitToggle<U extends string>({
   options: [U, U];
 }) {
   return (
-    <div className="inline-flex rounded-full border border-border bg-muted p-0.5 shrink-0">
+    <div className="inline-flex border border-border-strong bg-muted p-0.5 shrink-0">
       {options.map((opt) => (
         <button
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
           className={cn(
-            "rounded-full px-3 h-8 text-xs font-semibold transition-colors",
+            "px-3 h-8 text-xs font-semibold transition-colors",
             value === opt
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"

@@ -93,7 +93,7 @@ export default function ToolsPage() {
         {TOOLS.map((t) => {
           const Icon = t.icon;
           return (
-            <Link key={t.href} href={t.href} className="group p-6 hover:bg-muted/50 transition-colors flex flex-col">
+            <Link key={t.href} href={t.href} className="group p-6 hover:bg-surface transition-colors flex flex-col">
               <div className="flex items-start justify-between gap-2">
                 <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
                 {t.tag ? (

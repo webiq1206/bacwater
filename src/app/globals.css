@@ -3,9 +3,10 @@
 @theme {
   --color-background: #ffffff;
   --color-foreground: #111111;
-  --color-muted: #f7f7f7;
+  --color-muted: #f5f5f4;
   --color-muted-foreground: #71717a;
   --color-border: #e4e4e7;
+  --color-border-strong: #d4d4d8;
   --color-input: #e4e4e7;
   --color-ring: #111111;
 
@@ -16,7 +17,7 @@
   --color-primary-foreground: #ffffff;
   --color-secondary: #f4f4f5;
   --color-secondary-foreground: #111111;
-  --color-accent: #f4f4f5;
+  --color-accent: #fafaf9;
   --color-accent-foreground: #111111;
 
   --color-brand: #111111;
@@ -29,6 +30,9 @@
   --color-warning: #b45309;
   --color-warning-foreground: #fffbeb;
   --color-success: #16a34a;
+
+  --color-surface: #fafaf9;
+  --color-surface-raised: #f5f5f4;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-serif: var(--font-serif), "Cormorant Garamond", Georgia, "Times New Roman", serif;
@@ -82,6 +86,84 @@ body {
   height: 1px;
   background: var(--color-border);
   width: 100%;
+}
+
+/* Callout panel — warm surface for "In Plain English" and important info */
+.callout-panel {
+  background: var(--color-surface);
+  border: 2px solid var(--color-foreground);
+  padding: 1.5rem;
+}
+@media (min-width: 640px) {
+  .callout-panel {
+    padding: 2rem;
+  }
+}
+
+/* Prominent section — thick top border, subtle background */
+.section-prominent {
+  border-top: 2px solid var(--color-foreground);
+  padding-top: 1.5rem;
+}
+
+/* Result highlight — big number display */
+.result-hero {
+  font-size: 2.5rem;
+  line-height: 1;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+@media (min-width: 640px) {
+  .result-hero {
+    font-size: 3.5rem;
+  }
+}
+
+/* Step number circle */
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-foreground);
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-number--filled {
+  background: var(--color-foreground);
+  color: var(--color-background);
+  border-color: var(--color-foreground);
+}
+
+/* Selection chip — stronger active state */
+.chip {
+  text-align: left;
+  border: 1px solid var(--color-border);
+  padding: 0.875rem 1rem;
+  transition: all 150ms;
+}
+.chip:hover {
+  border-color: var(--color-muted-foreground);
+  background: var(--color-surface);
+}
+.chip--active {
+  border-width: 2px;
+  border-color: var(--color-foreground);
+  background: var(--color-surface);
+  padding: 0.8125rem 0.9375rem; /* compensate for 2px border */
+}
+
+/* Warning strip — left-bordered warning */
+.warning-strip {
+  border-left: 3px solid var(--color-warning);
+  padding: 0.75rem 1rem;
+  background: #fffbeb;
+  font-size: 0.875rem;
+  color: #92400e;
 }
 
 @media print {

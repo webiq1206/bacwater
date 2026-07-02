@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Sparkles, Send, Loader2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { CalcResult } from "@/lib/calc";
 
@@ -46,80 +45,78 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
   }
 
   return (
-    <Card>
-      <CardContent className="p-5">
-        <div className="flex items-center gap-2 text-foreground">
-          <Sparkles className="h-4 w-4" />
-          <div className="text-sm font-medium">Ask about your plan</div>
-        </div>
-        <p className="mt-1.5 text-xs text-muted-foreground">
-          The assistant explains numbers and answers follow-ups. It never does the math itself.
-        </p>
-        {!open ? (
-          <Button className="mt-3 w-full" variant="brand" size="sm" onClick={() => setOpen(true)}>
-            Open assistant
-          </Button>
-        ) : (
-          <div className="mt-3 rounded-lg border border-border p-3">
-            <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
-              {messages.length === 0 ? (
-                <div className="text-xs text-muted-foreground">
-                  Try one of these:
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {SUGGESTED.map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        onClick={() => send(s)}
-                        className="rounded-full border border-border bg-muted/60 text-[11px] px-3 py-1 hover:bg-muted"
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
+    <div className="border border-border p-5">
+      <div className="flex items-center gap-2 text-foreground">
+        <Sparkles className="h-4 w-4" />
+        <div className="text-sm font-medium">Ask about your plan</div>
+      </div>
+      <p className="mt-1.5 text-xs text-muted-foreground">
+        The assistant explains numbers and answers follow-ups. It never does the math itself.
+      </p>
+      {!open ? (
+        <Button className="mt-3 w-full" variant="brand" size="sm" onClick={() => setOpen(true)}>
+          Open assistant
+        </Button>
+      ) : (
+        <div className="mt-3 border border-border p-3">
+          <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
+            {messages.length === 0 ? (
+              <div className="text-xs text-muted-foreground">
+                Try one of these:
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {SUGGESTED.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => send(s)}
+                      className="border border-border bg-surface text-[11px] px-3 py-1 hover:bg-muted"
+                    >
+                      {s}
+                    </button>
+                  ))}
                 </div>
-              ) : (
-                messages.map((m, i) => (
-                  <div
-                    key={i}
-                    className={
-                      "text-sm rounded-lg px-3 py-2 " +
-                      (m.role === "user"
-                        ? "bg-muted text-foreground"
-                        : "bg-muted")
-                    }
-                  >
-                    {m.content}
-                  </div>
-                ))
-              )}
-              {pending ? (
-                <div className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
-                  <Loader2 className="h-3 w-3 animate-spin" /> Thinking…
+              </div>
+            ) : (
+              messages.map((m, i) => (
+                <div
+                  key={i}
+                  className={
+                    "text-sm px-3 py-2 " +
+                    (m.role === "user"
+                      ? "bg-surface text-foreground"
+                      : "bg-muted")
+                  }
+                >
+                  {m.content}
                 </div>
-              ) : null}
-            </div>
-            <form
-              className="mt-3 flex items-center gap-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                send(input);
-              }}
-            >
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask a question…"
-                className="flex-1 rounded-full border border-input bg-background px-4 h-9 text-sm"
-              />
-              <Button type="submit" size="icon" disabled={pending || !input.trim()}>
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
+              ))
+            )}
+            {pending ? (
+              <div className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
+                <Loader2 className="h-3 w-3 animate-spin" /> Thinking…
+              </div>
+            ) : null}
           </div>
-        )}
-      </CardContent>
-    </Card>
+          <form
+            className="mt-3 flex items-center gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              send(input);
+            }}
+          >
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask a question…"
+              className="flex-1 border border-input bg-background px-4 h-9 text-sm"
+            />
+            <Button type="submit" size="icon" disabled={pending || !input.trim()}>
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+        </div>
+      )}
+    </div>
   );
 }

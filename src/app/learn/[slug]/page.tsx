@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ArticleJsonLd } from "@/components/common/article-json-ld";
@@ -76,7 +75,7 @@ export default async function GuidePage({ params }: Props) {
         {renderBody(guide.body)}
       </article>
 
-      <div className="mt-10 rounded-lg border border-border bg-muted/50 p-6 flex flex-wrap items-center gap-3 justify-between">
+      <div className="mt-10 border border-border bg-surface p-6 flex flex-wrap items-center gap-3 justify-between">
         <div>
           <div className="font-medium">Ready to build a plan?</div>
           <div className="text-sm text-muted-foreground">
@@ -95,14 +94,10 @@ export default async function GuidePage({ params }: Props) {
         <ul className="mt-4 grid gap-3 sm:grid-cols-3">
           {related.map((r) => (
             <li key={r.id}>
-              <Link href={`/learn/${r.slug}`} className="group">
-                <Card className="h-full">
-                  <CardContent className="p-4">
-                    <div className="text-sm font-semibold group-hover:underline">
-                      {r.title}
-                    </div>
-                  </CardContent>
-                </Card>
+              <Link href={`/learn/${r.slug}`} className="group block border border-border hover:bg-surface transition-colors p-4 h-full">
+                <div className="text-sm font-semibold group-hover:underline">
+                  {r.title}
+                </div>
               </Link>
             </li>
           ))}

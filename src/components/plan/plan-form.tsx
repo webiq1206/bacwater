@@ -1,12 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Info, Loader2, Save, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  ChevronRight,
+  Info,
+  Loader2,
+  Save,
+  X,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -45,13 +53,19 @@ const STEPS = [
   "review",
 ] as const;
 
-// ---------- small building blocks ----------
+// ---------- building blocks ----------
 
-function StepEyebrow({ n, total }: { n: number; total: number }) {
+function StepNumber({ n, filled }: { n: number; filled?: boolean }) {
   return (
-    <div className="eyebrow">
-      Step {n} <span className="opacity-40">·</span> of {total}
-    </div>
+    <span className={cn("step-number", filled && "step-number--filled")}>
+      {n}
+    </span>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="eyebrow mb-1">{children}</div>
   );
 }
 
@@ -70,16 +84,16 @@ function ChipButton({
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        "text-left rounded-lg border px-4 py-3 transition-colors",
-        active
-          ? "border-foreground bg-muted ring-1 ring-foreground/20"
-          : "border-border hover:border-foreground/25 hover:bg-muted/40"
-      )}
+      className={cn("chip", active && "chip--active")}
     >
-      <div className="font-medium leading-tight">{children}</div>
+      <div className="flex items-center gap-2">
+        {active && <Check className="h-4 w-4 shrink-0" />}
+        <span className="font-medium leading-tight">{children}</span>
+      </div>
       {hint ? (
-        <div className="text-xs text-muted-foreground mt-1">{hint}</div>
+        <div className={cn("text-xs text-muted-foreground mt-1", active && "ml-6")}>
+          {hint}
+        </div>
       ) : null}
     </button>
   );
@@ -99,9 +113,12 @@ function StepBlock({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border border-border bg-card p-6 sm:p-7">
-      <StepEyebrow n={n} total={total} />
-      <h3 className="mt-2 text-xl font-serif font-medium leading-tight">
+    <div className="border border-border bg-card p-5 sm:p-7">
+      <div className="flex items-center gap-3">
+        <StepNumber n={n} filled />
+        <SectionLabel>Step {n} of {total}</SectionLabel>
+      </div>
+      <h3 className="mt-3 text-xl font-serif font-medium leading-tight">
         {title}
       </h3>
       {hint ? (
@@ -124,14 +141,14 @@ function UnitToggle<U extends string>({
   options: [U, U];
 }) {
   return (
-    <div className="inline-flex rounded-full border border-border bg-muted p-0.5 shrink-0">
+    <div className="inline-flex border border-border-strong bg-muted p-0.5 shrink-0">
       {options.map((opt) => (
         <button
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
           className={cn(
-            "rounded-full px-3 h-8 text-xs font-semibold transition-colors",
+            "px-3 h-8 text-xs font-semibold transition-colors",
             value === opt
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
@@ -147,11 +164,9 @@ function UnitToggle<U extends string>({
 function ConversionHint({
   value,
   unit,
-  kind,
 }: {
   value: number;
   unit: Unit;
-  kind: "vial" | "dose";
 }) {
   if (!value || !Number.isFinite(value)) return null;
   const inMcg = unit === "mcg" ? value : value * 1000;
@@ -161,21 +176,87 @@ function ConversionHint({
       ? `${inMcg.toLocaleString()} mcg`
       : `${inMg.toLocaleString(undefined, { maximumFractionDigits: 4 })} mg`;
   return (
-    <div className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
-      <Info className="h-3.5 w-3.5 shrink-0 mt-0.5 text-foreground" />
-      <span>
-        Same as <b className="text-foreground">{otherLabel}</b>. Pick whichever
-        your label uses. We&apos;ll do the conversion.
+    <div className="mt-2 flex items-start gap-2 text-xs bg-surface px-3 py-2">
+      <Info className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted-foreground" />
+      <span className="text-muted-foreground">
+        Same as <b className="text-foreground">{otherLabel}</b>
       </span>
+    </div>
+  );
+}
+
+function ModeToggle({
+  mode,
+  onChange,
+}: {
+  mode: Mode;
+  onChange: (m: Mode) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1 border border-border bg-muted p-1">
+      <button
+        type="button"
+        onClick={() => onChange("beginner")}
+        className={cn(
+          "px-4 py-2 text-sm font-medium transition-colors",
+          mode === "beginner"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        Guided wizard
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange("advanced")}
+        className={cn(
+          "px-4 py-2 text-sm font-medium transition-colors",
+          mode === "advanced"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        All at once
+      </button>
     </div>
   );
 }
 
 // ---------- main ----------
 
-export function PlanForm({ mode }: Props) {
+export function PlanForm({ mode: initialMode }: Props) {
   const router = useRouter();
+
+  // Mobile detection — default to beginner on small screens
+  const [mode, setMode] = useState<Mode>(initialMode);
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+    if (initialMode === "advanced" && window.innerWidth < 768) {
+      setMode("beginner");
+    }
+  }, [initialMode]);
+
   const [step, setStep] = useState<number>(0);
+  const stepContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to top of wizard step on step change
+  const scrollToStep = useCallback(() => {
+    requestAnimationFrame(() => {
+      if (stepContainerRef.current) {
+        const y =
+          stepContainerRef.current.getBoundingClientRect().top +
+          window.scrollY -
+          80;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    });
+  }, []);
+
+  function goToStep(n: number) {
+    setStep(n);
+    scrollToStep();
+  }
 
   const [peptideSlug, setPeptideSlug] = useState<string>("bpc-157");
   const [customPeptideName, setCustomPeptideName] = useState("");
@@ -223,17 +304,27 @@ export function PlanForm({ mode }: Props) {
     const [lo, hi] = peptide.typicalDoseMcgRange;
     const common = peptide.suggestedDoseMcg;
     const fmtLabel = (mcg: number) =>
-      mcg >= 1000 ? `${mcg} mcg (${mcg / 1000} mg)` : `${mcg} mcg (${(mcg / 1000).toFixed(mcg % 100 === 0 ? 1 : 2)} mg)`;
+      mcg >= 1000
+        ? `${mcg.toLocaleString()} mcg (${mcg / 1000} mg)`
+        : `${mcg.toLocaleString()} mcg (${(mcg / 1000).toFixed(mcg % 100 === 0 ? 1 : 2)} mg)`;
     const list: { mcg: number; label: string; hint: string }[] = [];
     if (lo && lo !== common)
-      list.push({ mcg: lo, label: fmtLabel(lo), hint: "Light, good starting point" });
+      list.push({
+        mcg: lo,
+        label: fmtLabel(lo),
+        hint: "Lower end — good starting point",
+      });
     list.push({
       mcg: common,
       label: fmtLabel(common),
-      hint: "Common, most people start here",
+      hint: "Most common — recommended starting dose",
     });
     if (hi && hi !== common)
-      list.push({ mcg: hi, label: fmtLabel(hi), hint: "High end of typical range" });
+      list.push({
+        mcg: hi,
+        label: fmtLabel(hi),
+        hint: "Upper end of typical range",
+      });
     return list;
   }, [peptide]);
 
@@ -264,20 +355,26 @@ export function PlanForm({ mode }: Props) {
       : null,
   };
 
-  const result: CalcResult = useMemo(() => calculate(input), [
-    peptideSlug,
-    customPeptideName,
-    vialStrengthMg,
-    doseMcg,
-    syringeType,
-    useRecommendedBac,
-    customBacMl,
-    dateMixed,
-    showBlend,
-    secondarySlug,
-    customSecondaryName,
-    secondaryVialMg,
-  ]);
+  const result: CalcResult = useMemo(
+    () => calculate(input),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      peptideSlug,
+      customPeptideName,
+      vialStrengthMg,
+      doseMcg,
+      syringeType,
+      useRecommendedBac,
+      customBacMl,
+      dateMixed,
+      showBlend,
+      secondarySlug,
+      customSecondaryName,
+      secondaryVialMg,
+    ]
+  );
+
+  const syringe = SYRINGES.find((s) => s.id === syringeType) ?? SYRINGES[2];
 
   async function handleSave() {
     setSaving(true);
@@ -314,368 +411,411 @@ export function PlanForm({ mode }: Props) {
     }
   }
 
-  // ---------- ADVANCED: beginner-friendly single-page guided flow ----------
+  // Build a quick summary line for the wizard review step
+  const quickSummaryLines = [
+    { label: "Peptide", value: primaryName },
+    { label: "Vial", value: `${vialStrengthMg} mg` },
+    {
+      label: "Dose",
+      value: `${doseMcg.toLocaleString()} mcg (${(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg)`,
+    },
+    { label: "Syringe", value: syringe.label },
+    {
+      label: "BAC water",
+      value: useRecommendedBac
+        ? `${recommendedBac} mL (recommended)`
+        : `${customBacMl} mL (custom)`,
+    },
+  ];
+
+  // ---------- ADVANCED: all-at-once side-by-side ----------
   if (mode === "advanced") {
     return (
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
-        {/* Guided form: sticky on desktop */}
-        <div className="lg:sticky lg:top-24 space-y-4">
-          {/* 1. Peptide */}
-          <StepBlock
-            n={1}
-            total={6}
-            title="Which peptide are you mixing?"
-            hint="Pick from the list. If yours isn't there, choose Other."
-          >
-            <Select value={peptideSlug} onValueChange={setPeptideSlug}>
-              <SelectTrigger className="h-12">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {PEPTIDES.map((p) => (
-                  <SelectItem key={p.slug} value={p.slug}>
-                    {p.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {peptideSlug === "custom" ? (
-              <div className="mt-3">
-                <Label className="text-xs text-muted-foreground">
-                  Type the name on your label
-                </Label>
-                <Input
-                  className="mt-1"
-                  placeholder="e.g., MyPeptide-500"
-                  value={customPeptideName}
-                  onChange={(e) => setCustomPeptideName(e.target.value)}
-                />
-              </div>
-            ) : null}
+      <div>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          {hasMounted && (
+            <ModeToggle mode={mode} onChange={setMode} />
+          )}
+        </div>
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
+          {/* Form: sticky on desktop */}
+          <div className="lg:sticky lg:top-24 space-y-4">
+            {/* 1. Peptide */}
+            <StepBlock
+              n={1}
+              total={6}
+              title="Which peptide are you mixing?"
+              hint="Pick from the list, or choose &ldquo;Other&rdquo; if yours isn't shown."
+            >
+              <Select value={peptideSlug} onValueChange={setPeptideSlug}>
+                <SelectTrigger className="h-12">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {PEPTIDES.map((p) => (
+                    <SelectItem key={p.slug} value={p.slug}>
+                      {p.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {peptideSlug === "custom" ? (
+                <div className="mt-3">
+                  <Label className="text-xs text-muted-foreground">
+                    Type the name on your label
+                  </Label>
+                  <Input
+                    className="mt-1"
+                    placeholder="e.g., MyPeptide-500"
+                    value={customPeptideName}
+                    onChange={(e) => setCustomPeptideName(e.target.value)}
+                  />
+                </div>
+              ) : null}
 
-            {!showBlend ? (
-              <button
-                type="button"
-                onClick={() => setShowBlend(true)}
-                className="mt-4 text-sm text-foreground font-medium hover:underline inline-flex items-center gap-1"
-              >
-                + Is this a blend? (e.g., Ipamorelin + CJC-1295)
-              </button>
-            ) : (
-              <div className="mt-4 rounded-lg border border-border bg-muted/40 p-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-medium">
-                    Second peptide in the same vial
+              {!showBlend ? (
+                <button
+                  type="button"
+                  onClick={() => setShowBlend(true)}
+                  className="mt-4 text-sm text-foreground font-medium hover:underline inline-flex items-center gap-1"
+                >
+                  + Is this a blend? (e.g., Ipamorelin + CJC-1295)
+                </button>
+              ) : (
+                <div className="mt-4 border-2 border-border bg-surface p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-medium">
+                      Second peptide in the same vial
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowBlend(false)}
+                      className="text-muted-foreground hover:text-foreground"
+                      aria-label="Remove second peptide"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowBlend(false)}
-                    className="text-muted-foreground hover:text-foreground"
-                    aria-label="Remove second peptide"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                  A blend has two peptides mixed in one vial. Every draw
-                  delivers both at once. We&apos;ll show you how much of each.
-                </p>
-                <div className="mt-3">
-                  <Select value={secondarySlug} onValueChange={setSecondarySlug}>
-                    <SelectTrigger className="h-11">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {PEPTIDES.filter((p) => p.slug !== peptideSlug).map((p) => (
-                        <SelectItem key={p.slug} value={p.slug}>
-                          {p.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {secondarySlug === "custom" ? (
-                    <Input
-                      className="mt-2"
-                      placeholder="Name of the second peptide"
-                      value={customSecondaryName}
-                      onChange={(e) => setCustomSecondaryName(e.target.value)}
+                  <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                    A blend has two peptides in one vial. Every draw delivers both.
+                  </p>
+                  <div className="mt-3">
+                    <Select
+                      value={secondarySlug}
+                      onValueChange={setSecondarySlug}
+                    >
+                      <SelectTrigger className="h-11">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PEPTIDES.filter((p) => p.slug !== peptideSlug).map(
+                          (p) => (
+                            <SelectItem key={p.slug} value={p.slug}>
+                              {p.name}
+                            </SelectItem>
+                          )
+                        )}
+                      </SelectContent>
+                    </Select>
+                    {secondarySlug === "custom" ? (
+                      <Input
+                        className="mt-2"
+                        placeholder="Name of the second peptide"
+                        value={customSecondaryName}
+                        onChange={(e) => setCustomSecondaryName(e.target.value)}
+                      />
+                    ) : null}
+                  </div>
+                  <div className="mt-3">
+                    <Label className="text-xs">
+                      How much of it is in the vial?
+                    </Label>
+                    <div className="mt-1 flex items-center gap-2">
+                      <Input
+                        type="number"
+                        inputMode="decimal"
+                        step="0.1"
+                        value={secondaryVialInput}
+                        onChange={(e) =>
+                          setSecondaryVialInput(
+                            parseFloat(e.target.value) || 0
+                          )
+                        }
+                        className="flex-1"
+                      />
+                      <UnitToggle
+                        value={secondaryVialUnit}
+                        onChange={setSecondaryVialUnit}
+                        options={["mg", "mcg"]}
+                      />
+                    </div>
+                    <ConversionHint
+                      value={secondaryVialInput}
+                      unit={secondaryVialUnit}
                     />
-                  ) : null}
+                  </div>
                 </div>
-                <div className="mt-3">
-                  <Label className="text-xs">
-                    How much of it is in the vial?
+              )}
+            </StepBlock>
+
+            {/* 2. Vial strength */}
+            <StepBlock
+              n={2}
+              total={6}
+              title="What size is your vial?"
+              hint={`Look at your label for a number like "5 mg." Common sizes for ${peptide.name}:`}
+            >
+              <div className="flex flex-wrap gap-2">
+                {peptide.commonVialStrengthsMg.map((mg) => (
+                  <ChipButton
+                    key={mg}
+                    active={!showCustomVial && vialStrengthMg === mg}
+                    onClick={() => {
+                      setShowCustomVial(false);
+                      setVialInput(mg);
+                      setVialUnit("mg");
+                    }}
+                  >
+                    {mg} mg
+                  </ChipButton>
+                ))}
+                <ChipButton
+                  active={showCustomVial}
+                  onClick={() => setShowCustomVial(true)}
+                >
+                  Other size...
+                </ChipButton>
+              </div>
+              {showCustomVial ? (
+                <div className="mt-4">
+                  <Label className="text-xs text-muted-foreground">
+                    Enter what&apos;s on your label
                   </Label>
                   <div className="mt-1 flex items-center gap-2">
                     <Input
                       type="number"
                       inputMode="decimal"
                       step="0.1"
-                      value={secondaryVialInput}
+                      value={vialInput}
                       onChange={(e) =>
-                        setSecondaryVialInput(parseFloat(e.target.value) || 0)
+                        setVialInput(parseFloat(e.target.value) || 0)
                       }
                       className="flex-1"
+                      autoFocus
+                      aria-label="Vial strength"
                     />
                     <UnitToggle
-                      value={secondaryVialUnit}
-                      onChange={setSecondaryVialUnit}
+                      value={vialUnit}
+                      onChange={setVialUnit}
                       options={["mg", "mcg"]}
                     />
                   </div>
-                  <ConversionHint
-                    value={secondaryVialInput}
-                    unit={secondaryVialUnit}
-                    kind="vial"
-                  />
+                  <ConversionHint value={vialInput} unit={vialUnit} />
                 </div>
-              </div>
-            )}
-          </StepBlock>
+              ) : null}
+            </StepBlock>
 
-          {/* 2. Vial strength */}
-          <StepBlock
-            n={2}
-            total={6}
-            title="What size is your vial?"
-            hint={`Common sizes for ${peptide.name}. Look at the number printed on the label.`}
-          >
-            <div className="flex flex-wrap gap-2">
-              {peptide.commonVialStrengthsMg.map((mg) => (
-                <ChipButton
-                  key={mg}
-                  active={!showCustomVial && vialStrengthMg === mg}
-                  onClick={() => {
-                    setShowCustomVial(false);
-                    setVialInput(mg);
-                    setVialUnit("mg");
-                  }}
-                >
-                  {mg} mg
-                </ChipButton>
-              ))}
-              <ChipButton
-                active={showCustomVial}
-                onClick={() => setShowCustomVial(true)}
-              >
-                Other size...
-              </ChipButton>
-            </div>
-            {showCustomVial ? (
-              <div className="mt-4">
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    inputMode="decimal"
-                    step="0.1"
-                    value={vialInput}
-                    onChange={(e) =>
-                      setVialInput(parseFloat(e.target.value) || 0)
-                    }
-                    className="flex-1"
-                    autoFocus
-                    aria-label="Vial strength"
-                  />
-                  <UnitToggle
-                    value={vialUnit}
-                    onChange={setVialUnit}
-                    options={["mg", "mcg"]}
-                  />
-                </div>
-                <ConversionHint value={vialInput} unit={vialUnit} kind="vial" />
-              </div>
-            ) : null}
-          </StepBlock>
-
-          {/* 3. Dose */}
-          <StepBlock
-            n={3}
-            total={6}
-            title="How much do you want per injection?"
-            hint={`Typical range: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg).`}
-          >
-            <div className="grid gap-2">
-              {dosePresets.map((d) => (
-                <ChipButton
-                  key={d.mcg}
-                  active={!showCustomDose && doseMcg === d.mcg}
-                  onClick={() => {
-                    setShowCustomDose(false);
-                    setDoseInput(d.mcg);
-                    setDoseUnit("mcg");
-                  }}
-                  hint={d.hint}
-                >
-                  {d.label}
-                </ChipButton>
-              ))}
-              <ChipButton
-                active={showCustomDose}
-                onClick={() => setShowCustomDose(true)}
-              >
-                Custom dose...
-              </ChipButton>
-            </div>
-            {showCustomDose ? (
-              <div className="mt-4">
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    step="10"
-                    value={doseInput}
-                    onChange={(e) =>
-                      setDoseInput(parseFloat(e.target.value) || 0)
-                    }
-                    className="flex-1"
-                    autoFocus
-                    aria-label="Dose amount"
-                  />
-                  <UnitToggle
-                    value={doseUnit}
-                    onChange={setDoseUnit}
-                    options={["mcg", "mg"]}
-                  />
-                </div>
-                <ConversionHint value={doseInput} unit={doseUnit} kind="dose" />
-              </div>
-            ) : null}
-          </StepBlock>
-
-          {/* 4. Syringe */}
-          <StepBlock
-            n={4}
-            total={6}
-            title="Which syringe are you using?"
-            hint="A 1 mL insulin syringe works for almost everyone. Not sure? Stick with the default."
-          >
-            <Select
-              value={syringeType}
-              onValueChange={(v) => setSyringeType(v as SyringeType)}
+            {/* 3. Dose */}
+            <StepBlock
+              n={3}
+              total={6}
+              title="How much per injection?"
+              hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg (${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg).`}
             >
-              <SelectTrigger className="h-12">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SYRINGES.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.label}
-                  </SelectItem>
+              <div className="grid gap-2">
+                {dosePresets.map((d) => (
+                  <ChipButton
+                    key={d.mcg}
+                    active={!showCustomDose && doseMcg === d.mcg}
+                    onClick={() => {
+                      setShowCustomDose(false);
+                      setDoseInput(d.mcg);
+                      setDoseUnit("mcg");
+                    }}
+                    hint={d.hint}
+                  >
+                    {d.label}
+                  </ChipButton>
                 ))}
-              </SelectContent>
-            </Select>
-            <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
-              Insulin syringes are marked in <b>units</b>. 100 units = 1 mL,
-              so 10 units = 0.1 mL. We&apos;ll tell you exactly how many units
-              to draw.
-            </p>
-          </StepBlock>
-
-          {/* 5. BAC water */}
-          <StepBlock
-            n={5}
-            total={6}
-            title="How much BAC water to add?"
-            hint="BAC water is the sterile liquid that dissolves the powder. More water = larger, easier draws."
-          >
-            <div className="grid gap-2">
-              <ChipButton
-                active={useRecommendedBac}
-                onClick={() => setUseRecommendedBac(true)}
-                hint="Chosen to give clean, round numbers on your syringe."
-              >
-                {recommendedBac} mL (recommended)
-              </ChipButton>
-              <ChipButton
-                active={!useRecommendedBac}
-                onClick={() => setUseRecommendedBac(false)}
-                hint="Pick your own amount."
-              >
-                Custom amount
-              </ChipButton>
-            </div>
-            {!useRecommendedBac ? (
-              <div className="mt-4 flex items-center gap-2">
-                <Input
-                  type="number"
-                  step="0.1"
-                  value={customBacMl}
-                  onChange={(e) =>
-                    setCustomBacMl(parseFloat(e.target.value) || 0)
-                  }
-                  className="flex-1"
-                  autoFocus
-                />
-                <div className="text-sm text-muted-foreground">mL</div>
+                <ChipButton
+                  active={showCustomDose}
+                  onClick={() => setShowCustomDose(true)}
+                >
+                  Custom dose...
+                </ChipButton>
               </div>
-            ) : null}
-          </StepBlock>
+              {showCustomDose ? (
+                <div className="mt-4">
+                  <Label className="text-xs text-muted-foreground">
+                    Enter your dose
+                  </Label>
+                  <div className="mt-1 flex items-center gap-2">
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      step="10"
+                      value={doseInput}
+                      onChange={(e) =>
+                        setDoseInput(parseFloat(e.target.value) || 0)
+                      }
+                      className="flex-1"
+                      autoFocus
+                      aria-label="Dose amount"
+                    />
+                    <UnitToggle
+                      value={doseUnit}
+                      onChange={setDoseUnit}
+                      options={["mcg", "mg"]}
+                    />
+                  </div>
+                  <ConversionHint value={doseInput} unit={doseUnit} />
+                </div>
+              ) : null}
+            </StepBlock>
 
-          {/* 6. Date (optional) */}
-          <StepBlock
-            n={6}
-            total={6}
-            title="When did you (or will you) mix it?"
-            hint="Optional. Lets us calculate when the vial expires."
-          >
-            {!showDate ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setShowDate(true);
-                  setDateMixed(new Date().toISOString().slice(0, 10));
-                }}
-                className="text-sm text-foreground font-medium hover:underline"
+            {/* 4. Syringe */}
+            <StepBlock
+              n={4}
+              total={6}
+              title="Which syringe are you using?"
+              hint="Not sure? A 1 mL insulin syringe works for almost everyone."
+            >
+              <Select
+                value={syringeType}
+                onValueChange={(v) => setSyringeType(v as SyringeType)}
               >
-                + Add today&apos;s date
-              </button>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Input
-                  type="date"
-                  value={dateMixed}
-                  onChange={(e) => setDateMixed(e.target.value)}
-                  className="flex-1"
-                />
+                <SelectTrigger className="h-12">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SYRINGES.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="mt-3 bg-surface px-3 py-2 text-xs text-muted-foreground leading-relaxed">
+                <strong className="text-foreground">Quick tip:</strong> Insulin
+                syringes are marked in <b>units</b>. 100 units = 1 mL,
+                so 10 units = 0.1 mL. We&apos;ll tell you exactly how many
+                units to draw.
+              </div>
+            </StepBlock>
+
+            {/* 5. BAC water */}
+            <StepBlock
+              n={5}
+              total={6}
+              title="How much BAC water to add?"
+              hint="BAC water is the sterile liquid that dissolves the powder. More water = larger, easier-to-measure draws."
+            >
+              <div className="grid gap-2">
+                <ChipButton
+                  active={useRecommendedBac}
+                  onClick={() => setUseRecommendedBac(true)}
+                  hint="Chosen to give clean, round numbers on your syringe."
+                >
+                  {recommendedBac} mL (recommended)
+                </ChipButton>
+                <ChipButton
+                  active={!useRecommendedBac}
+                  onClick={() => setUseRecommendedBac(false)}
+                  hint="Pick your own amount."
+                >
+                  Custom amount
+                </ChipButton>
+              </div>
+              {!useRecommendedBac ? (
+                <div className="mt-4">
+                  <Label className="text-xs text-muted-foreground">
+                    BAC water amount
+                  </Label>
+                  <div className="mt-1 flex items-center gap-2">
+                    <Input
+                      type="number"
+                      step="0.1"
+                      value={customBacMl}
+                      onChange={(e) =>
+                        setCustomBacMl(parseFloat(e.target.value) || 0)
+                      }
+                      className="flex-1"
+                      autoFocus
+                    />
+                    <div className="text-sm text-muted-foreground font-medium">
+                      mL
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </StepBlock>
+
+            {/* 6. Date (optional) */}
+            <StepBlock
+              n={6}
+              total={6}
+              title="When did you (or will you) mix it?"
+              hint="Optional. Lets us calculate when the vial expires so you know when to discard it."
+            >
+              {!showDate ? (
                 <button
                   type="button"
                   onClick={() => {
-                    setShowDate(false);
-                    setDateMixed("");
+                    setShowDate(true);
+                    setDateMixed(new Date().toISOString().slice(0, 10));
                   }}
-                  className="text-xs text-muted-foreground hover:text-foreground px-2"
+                  className="text-sm text-foreground font-medium hover:underline"
                 >
-                  Skip
+                  + Add today&apos;s date
                 </button>
-              </div>
-            )}
-          </StepBlock>
-
-          <div className="pt-2">
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              variant="brand"
-              size="lg"
-              className="w-full"
-            >
-              {saving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Save className="h-4 w-4" />
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="date"
+                    value={dateMixed}
+                    onChange={(e) => setDateMixed(e.target.value)}
+                    className="flex-1"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowDate(false);
+                      setDateMixed("");
+                    }}
+                    className="text-xs text-muted-foreground hover:text-foreground px-2"
+                  >
+                    Skip
+                  </button>
+                </div>
               )}
-              Save my plan
-            </Button>
-            <p className="mt-3 text-xs text-muted-foreground text-center">
-              You&apos;ll get a shareable link, a PDF, printable vial labels,
-              and a one-click supply cart.
-            </p>
-          </div>
-        </div>
+            </StepBlock>
 
-        {/* Live results */}
-        <div>
-          <PlanResults result={result} />
+            <div className="pt-2">
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                variant="brand"
+                size="lg"
+                className="w-full"
+              >
+                {saving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                Save my plan
+              </Button>
+              <p className="mt-3 text-xs text-muted-foreground text-center">
+                Saves your plan with a shareable link, downloadable PDF,
+                and printable vial labels.
+              </p>
+            </div>
+          </div>
+
+          {/* Live results */}
+          <div>
+            <PlanResults result={result} />
+          </div>
         </div>
       </div>
     );
@@ -683,15 +823,22 @@ export function PlanForm({ mode }: Props) {
 
   // ---------- BEGINNER: one question at a time ----------
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl" ref={stepContainerRef}>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        {hasMounted && (
+          <ModeToggle mode={mode} onChange={setMode} />
+        )}
+      </div>
+
       <StepBar step={step} total={STEPS.length} />
 
       {step === 0 && (
         <StepPanel
           title="Which peptide are you mixing?"
-          hint="Pick from the list, or choose Other if it's not there."
-          onNext={() => setStep(1)}
+          hint="Pick the peptide from the list. If it's not there, choose &ldquo;Other.&rdquo;"
+          onNext={() => goToStep(1)}
           onBack={null}
+          stepNum={1}
         >
           <Select value={peptideSlug} onValueChange={setPeptideSlug}>
             <SelectTrigger className="h-14 text-base">
@@ -712,16 +859,23 @@ export function PlanForm({ mode }: Props) {
               value={customPeptideName}
               onChange={(e) => setCustomPeptideName(e.target.value)}
             />
-          ) : null}
+          ) : (
+            <div className="mt-4 bg-surface px-4 py-3 text-sm text-muted-foreground">
+              <strong className="text-foreground">{peptide.name}</strong>
+              {" — "}typical dose: {peptide.typicalDoseMcgRange[0].toLocaleString()}–{peptide.typicalDoseMcgRange[1].toLocaleString()} mcg.
+              Common vial sizes: {peptide.commonVialStrengthsMg.join(", ")} mg.
+            </div>
+          )}
         </StepPanel>
       )}
 
       {step === 1 && (
         <StepPanel
           title="What size is your vial?"
-          hint={`Look at your label. Common sizes for ${peptide.name}:`}
-          onNext={() => setStep(2)}
-          onBack={() => setStep(0)}
+          hint={`This is the number on your vial label. Common sizes for ${peptide.name}:`}
+          onNext={() => goToStep(2)}
+          onBack={() => goToStep(0)}
+          stepNum={2}
         >
           <div className="flex flex-wrap gap-2">
             {peptide.commonVialStrengthsMg.map((mg) => (
@@ -734,37 +888,39 @@ export function PlanForm({ mode }: Props) {
                   setShowCustomVial(false);
                 }}
                 className={cn(
-                  "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
-                  !showCustomVial && vialStrengthMg === mg
-                    ? "bg-foreground text-white border-foreground"
-                    : "border-border hover:bg-muted"
+                  "chip",
+                  !showCustomVial && vialStrengthMg === mg && "chip--active"
                 )}
               >
-                {mg} mg
+                <div className="flex items-center gap-2 font-medium">
+                  {!showCustomVial && vialStrengthMg === mg && (
+                    <Check className="h-4 w-4" />
+                  )}
+                  {mg} mg
+                </div>
               </button>
             ))}
             <button
               type="button"
               onClick={() => setShowCustomVial(true)}
-              className={cn(
-                "rounded-full border px-4 h-10 text-sm font-medium transition-colors",
-                showCustomVial
-                  ? "bg-foreground text-white border-foreground"
-                  : "border-border hover:bg-muted"
-              )}
+              className={cn("chip", showCustomVial && "chip--active")}
             >
-              Other size
+              <span className="font-medium">Other size</span>
             </button>
           </div>
           {showCustomVial ? (
             <div className="mt-4">
-              <Label>Enter what&apos;s on your label</Label>
-              <div className="mt-2 flex items-center gap-2">
+              <Label className="text-xs text-muted-foreground">
+                Enter what&apos;s on your label
+              </Label>
+              <div className="mt-1 flex items-center gap-2">
                 <Input
                   type="number"
                   step="0.1"
                   value={vialInput}
-                  onChange={(e) => setVialInput(parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    setVialInput(parseFloat(e.target.value) || 0)
+                  }
                   className="flex-1"
                 />
                 <UnitToggle
@@ -773,7 +929,7 @@ export function PlanForm({ mode }: Props) {
                   options={["mg", "mcg"]}
                 />
               </div>
-              <ConversionHint value={vialInput} unit={vialUnit} kind="vial" />
+              <ConversionHint value={vialInput} unit={vialUnit} />
             </div>
           ) : null}
         </StepPanel>
@@ -781,55 +937,47 @@ export function PlanForm({ mode }: Props) {
 
       {step === 2 && (
         <StepPanel
-          title="How much do you want per injection?"
-          hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg). Not sure? Pick "Common".`}
-          onNext={() => setStep(3)}
-          onBack={() => setStep(1)}
+          title="How much per injection?"
+          hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg (${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg). Not sure? Pick the most common dose.`}
+          onNext={() => goToStep(3)}
+          onBack={() => goToStep(1)}
+          stepNum={3}
         >
           <div className="grid gap-2">
             {dosePresets.map((d) => (
-              <button
+              <ChipButton
                 key={d.mcg}
-                type="button"
+                active={!showCustomDose && doseMcg === d.mcg}
                 onClick={() => {
                   setDoseInput(d.mcg);
                   setDoseUnit("mcg");
                   setShowCustomDose(false);
                 }}
-                className={cn(
-                  "text-left rounded-lg border px-4 py-3 transition-colors",
-                  !showCustomDose && doseMcg === d.mcg
-                    ? "border-foreground bg-muted ring-1 ring-foreground/20"
-                    : "border-border hover:bg-muted"
-                )}
+                hint={d.hint}
               >
-                <div className="font-medium">{d.label}</div>
-                <div className="text-xs text-muted-foreground mt-0.5">
-                  {d.hint}
-                </div>
-              </button>
+                {d.label}
+              </ChipButton>
             ))}
-            <button
-              type="button"
+            <ChipButton
+              active={showCustomDose}
               onClick={() => setShowCustomDose(true)}
-              className={cn(
-                "text-left rounded-lg border px-4 py-3 transition-colors",
-                showCustomDose
-                  ? "border-foreground bg-muted ring-1 ring-foreground/20"
-                  : "border-border hover:bg-muted"
-              )}
             >
-              <div className="font-medium">Custom dose</div>
-            </button>
+              Custom dose
+            </ChipButton>
           </div>
           {showCustomDose ? (
             <div className="mt-4">
-              <div className="flex items-center gap-2">
+              <Label className="text-xs text-muted-foreground">
+                Enter your dose
+              </Label>
+              <div className="mt-1 flex items-center gap-2">
                 <Input
                   type="number"
                   step="10"
                   value={doseInput}
-                  onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    setDoseInput(parseFloat(e.target.value) || 0)
+                  }
                   className="flex-1"
                 />
                 <UnitToggle
@@ -838,7 +986,7 @@ export function PlanForm({ mode }: Props) {
                   options={["mcg", "mg"]}
                 />
               </div>
-              <ConversionHint value={doseInput} unit={doseUnit} kind="dose" />
+              <ConversionHint value={doseInput} unit={doseUnit} />
             </div>
           ) : null}
         </StepPanel>
@@ -847,29 +995,28 @@ export function PlanForm({ mode }: Props) {
       {step === 3 && (
         <StepPanel
           title="Which syringe are you using?"
-          hint="A 1 mL insulin syringe fits almost every dose."
-          onNext={() => setStep(4)}
-          onBack={() => setStep(2)}
+          hint="Not sure? A 1 mL insulin syringe works for almost every dose. It's the most common choice."
+          onNext={() => goToStep(4)}
+          onBack={() => goToStep(2)}
+          stepNum={4}
         >
           <div className="grid gap-2">
             {SYRINGES.map((s) => (
-              <button
+              <ChipButton
                 key={s.id}
-                type="button"
+                active={syringeType === s.id}
                 onClick={() => setSyringeType(s.id)}
-                className={cn(
-                  "text-left rounded-lg border p-4 transition-colors",
-                  syringeType === s.id
-                    ? "border-foreground bg-muted ring-1 ring-foreground/20"
-                    : "border-border hover:bg-muted"
-                )}
+                hint={s.description}
               >
-                <div className="font-medium">{s.label}</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  {s.description}
-                </div>
-              </button>
+                {s.label}
+              </ChipButton>
             ))}
+          </div>
+          <div className="mt-4 bg-surface px-4 py-3 text-xs text-muted-foreground leading-relaxed">
+            <strong className="text-foreground">What are syringe units?</strong>{" "}
+            Insulin syringes use &ldquo;units&rdquo; instead of mL. On a U-100 syringe,
+            100 units = 1 mL. So 10 units = 0.1 mL. We&apos;ll convert
+            everything for you.
           </div>
         </StepPanel>
       )}
@@ -877,99 +1024,123 @@ export function PlanForm({ mode }: Props) {
       {step === 4 && (
         <StepPanel
           title="How much BAC water to add?"
-          hint={`We recommend ${recommendedBac} mL. It gives you clean numbers when drawing.`}
-          onNext={() => setStep(5)}
-          onBack={() => setStep(3)}
+          hint={`We recommend ${recommendedBac} mL. This gives you clean, easy-to-read syringe numbers — no squinting at tiny markings.`}
+          onNext={() => goToStep(5)}
+          onBack={() => goToStep(3)}
+          stepNum={5}
         >
           <div className="grid gap-2">
-            <button
-              type="button"
+            <ChipButton
+              active={useRecommendedBac}
               onClick={() => setUseRecommendedBac(true)}
-              className={cn(
-                "text-left rounded-lg border p-4 transition-colors",
-                useRecommendedBac
-                  ? "border-foreground bg-muted ring-1 ring-foreground/20"
-                  : "border-border hover:bg-muted"
-              )}
+              hint="Chosen to give clean, round syringe numbers. Best for most people."
             >
-              <div className="font-medium">
-                Recommended: {recommendedBac} mL
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Gives you clean, round syringe numbers.
-              </div>
-            </button>
-            <button
-              type="button"
+              Recommended: {recommendedBac} mL
+            </ChipButton>
+            <ChipButton
+              active={!useRecommendedBac}
               onClick={() => setUseRecommendedBac(false)}
-              className={cn(
-                "text-left rounded-lg border p-4 transition-colors",
-                !useRecommendedBac
-                  ? "border-foreground bg-muted ring-1 ring-foreground/20"
-                  : "border-border hover:bg-muted"
-              )}
+              hint="Advanced — only change this if you have a specific reason."
             >
-              <div className="font-medium">I want to pick my own amount</div>
-              {!useRecommendedBac ? (
-                <div className="mt-3 flex items-center gap-2">
-                  <Input
-                    type="number"
-                    step="0.1"
-                    value={customBacMl}
-                    onChange={(e) =>
-                      setCustomBacMl(parseFloat(e.target.value) || 0)
-                    }
-                  />
-                  <span className="text-sm text-muted-foreground">mL</span>
-                </div>
-              ) : null}
-            </button>
+              I want to pick my own amount
+            </ChipButton>
           </div>
+          {!useRecommendedBac && (
+            <div className="mt-4">
+              <Label className="text-xs text-muted-foreground">
+                BAC water amount
+              </Label>
+              <div className="mt-1 flex items-center gap-2">
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={customBacMl}
+                  onChange={(e) =>
+                    setCustomBacMl(parseFloat(e.target.value) || 0)
+                  }
+                />
+                <span className="text-sm text-muted-foreground font-medium">
+                  mL
+                </span>
+              </div>
+            </div>
+          )}
         </StepPanel>
       )}
 
       {step === 5 && (
         <StepPanel
-          title="When did you mix it? (optional)"
-          hint="Today's date lets us calculate when the vial expires."
-          onNext={() => setStep(6)}
-          onBack={() => setStep(4)}
+          title="When did you mix it?"
+          hint="Optional — lets us calculate when the vial expires so you know when to discard it. You can skip this."
+          onNext={() => goToStep(6)}
+          onBack={() => goToStep(4)}
+          stepNum={6}
         >
-          <Input
-            type="date"
-            value={dateMixed}
-            onChange={(e) => setDateMixed(e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={() =>
-              setDateMixed(new Date().toISOString().slice(0, 10))
-            }
-            className="mt-3 text-sm text-foreground hover:underline"
-          >
-            Use today&apos;s date
-          </button>
+          <div className="space-y-3">
+            <Input
+              type="date"
+              value={dateMixed}
+              onChange={(e) => setDateMixed(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() =>
+                setDateMixed(new Date().toISOString().slice(0, 10))
+              }
+              className="text-sm text-foreground font-medium hover:underline"
+            >
+              Use today&apos;s date
+            </button>
+          </div>
         </StepPanel>
       )}
 
       {step === 6 && (
-        <div className="space-y-6">
+        <div className="space-y-8">
+          {/* Review header */}
           <div className="text-center">
-            <h2 className="text-3xl font-serif font-medium tracking-tight">
-              Your plan is ready.
+            <div className="eyebrow">Your plan is ready</div>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
+              Here&apos;s your reconstitution plan.
             </h2>
-            <p className="text-muted-foreground mt-2 max-w-xl mx-auto">
-              Review it below. Save it to get a permanent link, a PDF, and
-              printable vial labels.
+            <p className="text-muted-foreground mt-3 max-w-lg mx-auto leading-relaxed">
+              Everything below is calculated from your inputs. Review it, then
+              save to get a permanent link, a downloadable PDF, and printable
+              vial labels.
             </p>
           </div>
+
+          {/* Quick config summary */}
+          <div className="border-2 border-foreground bg-surface p-5 sm:p-6">
+            <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-4">
+              Your selections
+            </div>
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+              {quickSummaryLines.map((line) => (
+                <div key={line.label} className="flex flex-col">
+                  <dt className="text-xs text-muted-foreground">{line.label}</dt>
+                  <dd className="font-medium mt-0.5">{line.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <button
+              type="button"
+              onClick={() => goToStep(0)}
+              className="mt-4 text-sm text-foreground font-medium hover:underline inline-flex items-center gap-1"
+            >
+              Change something <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
           <PlanResults result={result} />
-          <div className="flex flex-wrap gap-3 justify-center pt-2">
+
+          <div className="flex flex-col gap-3 pt-2">
             <Button
               variant="brand"
-              size="lg"
+              size="xl"
               onClick={handleSave}
               disabled={saving}
+              className="w-full"
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -978,7 +1149,15 @@ export function PlanForm({ mode }: Props) {
               )}
               Save my plan
             </Button>
-            <Button variant="ghost" onClick={() => setStep(0)}>
+            <p className="text-xs text-muted-foreground text-center">
+              Saves your plan with a shareable link, downloadable PDF,
+              and printable vial labels.
+            </p>
+            <Button
+              variant="ghost"
+              onClick={() => goToStep(0)}
+              className="mx-auto"
+            >
               Start over
             </Button>
           </div>
@@ -994,54 +1173,69 @@ function StepPanel({
   children,
   onNext,
   onBack,
+  stepNum,
 }: {
   title: string;
   hint?: string;
   children: React.ReactNode;
   onNext: () => void;
   onBack: (() => void) | null;
+  stepNum: number;
 }) {
   return (
-    <Card>
-      <CardContent className="p-7 sm:p-9">
+    <div className="border border-border bg-card">
+      <div className="p-6 sm:p-8">
+        <div className="flex items-center gap-3 mb-3">
+          <StepNumber n={stepNum} filled />
+          <SectionLabel>Question {stepNum}</SectionLabel>
+        </div>
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
           {title}
         </h2>
         {hint ? (
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
             {hint}
           </p>
         ) : null}
         <div className="mt-6">{children}</div>
-        <div className="mt-8 flex items-center justify-between">
-          {onBack ? (
-            <Button variant="ghost" onClick={onBack}>
-              Back
-            </Button>
-          ) : (
-            <span />
-          )}
-          <Button variant="brand" size="lg" onClick={onNext}>
-            Continue <ArrowRight className="h-4 w-4" />
+      </div>
+      <div className="flex items-center justify-between border-t border-border px-6 py-4 sm:px-8 bg-surface/50">
+        {onBack ? (
+          <Button variant="ghost" onClick={onBack}>
+            <ArrowLeft className="h-4 w-4" /> Back
           </Button>
-        </div>
-      </CardContent>
-    </Card>
+        ) : (
+          <span />
+        )}
+        <Button variant="brand" size="lg" onClick={onNext}>
+          Next <ArrowRight className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
   );
 }
 
 function StepBar({ step, total }: { step: number; total: number }) {
-  const pct = ((step + 1) / total) * 100;
   return (
-    <div className="mb-6">
-      <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-        <div
-          className="h-full bg-foreground transition-all"
-          style={{ width: `${pct}%` }}
-        />
+    <div className="mb-8">
+      <div className="flex items-center gap-1">
+        {Array.from({ length: total }, (_, i) => (
+          <div
+            key={i}
+            className={cn(
+              "h-1.5 flex-1 transition-all",
+              i <= step ? "bg-foreground" : "bg-muted"
+            )}
+          />
+        ))}
       </div>
-      <div className="mt-2 text-xs text-muted-foreground">
-        Step {Math.min(step + 1, total)} of {total}
+      <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+        <span>
+          Step {Math.min(step + 1, total)} of {total}
+        </span>
+        {step === total - 1 && (
+          <span className="font-medium text-foreground">Review</span>
+        )}
       </div>
     </div>
   );

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -80,18 +79,15 @@ export function CheckoutClient() {
   return (
     <form onSubmit={submit} className="mt-8 grid gap-8 md:grid-cols-[1fr_360px]">
       <div className="space-y-6">
-        <Card>
-          <CardContent className="p-6 sm:p-8 space-y-4">
-            <h2 className="text-lg font-semibold">Contact</h2>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" />
-              <p className="mt-1 text-xs text-muted-foreground">We&apos;ll send your order confirmation and tracking here.</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 sm:p-8 space-y-4">
+        <div className="border border-border p-6 sm:p-8 space-y-4">
+          <h2 className="text-lg font-semibold">Contact</h2>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" />
+            <p className="mt-1 text-xs text-muted-foreground">We&apos;ll send your order confirmation and tracking here.</p>
+          </div>
+        </div>
+        <div className="border border-border p-6 sm:p-8 space-y-4">
             <h2 className="text-lg font-semibold">Ship to</h2>
             <div className="grid grid-cols-1 gap-4">
               <div>
@@ -127,17 +123,15 @@ export function CheckoutClient() {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+        </div>
       </div>
 
-      <Card className="h-fit">
-        <CardContent className="p-6 sm:p-8 space-y-4">
-          <h2 className="text-lg font-semibold">Order summary</h2>
-          <ul className="divide-y divide-border">
-            {items.map((i) => (
-              <li key={i.productId} className="py-3 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-muted grid place-items-center shrink-0 overflow-hidden">
+      <div className="border border-border h-fit p-6 sm:p-8 space-y-4">
+        <h2 className="text-lg font-semibold">Order summary</h2>
+        <ul className="divide-y divide-border">
+          {items.map((i) => (
+            <li key={i.productId} className="py-3 flex items-center gap-3">
+              <div className="h-10 w-10 bg-muted grid place-items-center shrink-0 overflow-hidden">
                   {i.imageUrl ? (
                     <img src={i.imageUrl} alt={i.name} className="h-full w-full object-contain" />
                   ) : (
@@ -185,11 +179,10 @@ export function CheckoutClient() {
             {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             Complete order
           </Button>
-          <div className="text-[11px] text-muted-foreground text-center">
-            When Stripe is connected, payment happens on Stripe&apos;s hosted page.
-          </div>
-        </CardContent>
-      </Card>
+        <div className="text-[11px] text-muted-foreground text-center">
+          When Stripe is connected, payment happens on Stripe&apos;s hosted page.
+        </div>
+      </div>
     </form>
   );
 }

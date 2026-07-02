@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { Card, CardContent } from "@/components/ui/card";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
@@ -63,20 +62,16 @@ export default async function LearnPage() {
       <ul className="mt-10 grid gap-4 md:grid-cols-2">
         {guides.map((g) => (
           <li key={g.id}>
-            <Link href={`/learn/${g.slug}`} className="group">
-              <Card className="h-full hover:bg-muted/50 transition-colors">
-                <CardContent className="p-6">
-                  <h2 className="text-lg font-semibold tracking-tight group-hover:underline">
-                    {g.title}
-                  </h2>
-                  <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
-                    {g.body.replace(/[*_#`]/g, "").slice(0, 180)}
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
-                    Read <ArrowRight className="h-4 w-4" />
-                  </div>
-                </CardContent>
-              </Card>
+            <Link href={`/learn/${g.slug}`} className="group block border border-border hover:bg-surface transition-colors p-6 h-full">
+              <h2 className="text-lg font-semibold tracking-tight group-hover:underline">
+                {g.title}
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                {g.body.replace(/[*_#`]/g, "").slice(0, 180)}
+              </p>
+              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
+                Read <ArrowRight className="h-4 w-4" />
+              </div>
             </Link>
           </li>
         ))}

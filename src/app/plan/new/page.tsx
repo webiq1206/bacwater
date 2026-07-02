@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { PlanForm } from "@/components/plan/plan-form";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -25,42 +23,64 @@ export default function PlanNewPage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "HowTo",
-          name: "Build a personalized peptide reconstitution plan",
-          description: "Use BACwater.ai's step-by-step planner to create an exact reconstitution plan for your peptide vial.",
-          step: [
-            { "@type": "HowToStep", position: 1, name: "Choose your peptide", text: "Select the peptide you're working with from the list. We'll pre-fill common vial sizes and doses." },
-            { "@type": "HowToStep", position: 2, name: "Enter vial strength", text: "Enter the amount of peptide in your vial (in mg), as shown on the vial label." },
-            { "@type": "HowToStep", position: 3, name: "Set your dose", text: "Enter how much peptide you want per injection, in mcg or mg." },
-            { "@type": "HowToStep", position: 4, name: "Pick your syringe", text: "Choose which insulin syringe you'll use (0.3 mL, 0.5 mL, or 1 mL)." },
-            { "@type": "HowToStep", position: 5, name: "Get your personalized plan", text: "Review your complete reconstitution plan with BAC water amount, syringe units, doses per vial, and printable labels." },
-          ],
-        }) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: "Build a personalized peptide reconstitution plan",
+            description:
+              "Use BACwater.ai's step-by-step planner to create an exact reconstitution plan for your peptide vial.",
+            step: [
+              {
+                "@type": "HowToStep",
+                position: 1,
+                name: "Choose your peptide",
+                text: "Select the peptide you're working with from the list. We'll pre-fill common vial sizes and doses.",
+              },
+              {
+                "@type": "HowToStep",
+                position: 2,
+                name: "Enter vial strength",
+                text: "Enter the amount of peptide in your vial (in mg), as shown on the vial label.",
+              },
+              {
+                "@type": "HowToStep",
+                position: 3,
+                name: "Set your dose",
+                text: "Enter how much peptide you want per injection, in mcg or mg.",
+              },
+              {
+                "@type": "HowToStep",
+                position: 4,
+                name: "Pick your syringe",
+                text: "Choose which insulin syringe you'll use (0.3 mL, 0.5 mL, or 1 mL).",
+              },
+              {
+                "@type": "HowToStep",
+                position: 5,
+                name: "Get your personalized plan",
+                text: "Review your complete reconstitution plan with BAC water amount, syringe units, doses per vial, and printable labels.",
+              },
+            ],
+          }),
+        }}
       />
-      <Breadcrumbs items={[
-        { label: "Home", href: "/" },
-        { label: "Build My Plan", href: "/plan" },
-        { label: "New Plan", href: "/plan/new" },
-      ]} />
-      <div className="mb-10 sm:mb-14 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="eyebrow">Guided planner</div>
-          <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
-            We&apos;ll walk you through it.
-          </h1>
-          <p className="mt-3 text-muted-foreground leading-relaxed">
-            One question at a time, perfect for your first reconstitution.
-            We&apos;ll handle all the math and explain every step along the way.
-          </p>
-        </div>
-        <Link
-          href="/plan"
-          className="text-sm text-foreground font-medium hover:underline whitespace-nowrap inline-flex items-center gap-1 mt-1"
-        >
-          Show everything at once <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Build My Plan", href: "/plan" },
+          { label: "New Plan", href: "/plan/new" },
+        ]}
+      />
+      <div className="mb-10 sm:mb-14">
+        <div className="eyebrow">Guided planner</div>
+        <h1 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
+          We&apos;ll walk you through it.
+        </h1>
+        <p className="mt-3 text-muted-foreground leading-relaxed">
+          One question at a time, perfect for your first reconstitution. We
+          handle all the math and explain every step in plain English.
+        </p>
       </div>
       <PlanForm mode="beginner" />
     </div>

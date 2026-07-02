@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { formatCurrency } from "@/lib/utils";
@@ -18,21 +17,19 @@ export function CartClient() {
 
   if (items.length === 0) {
     return (
-      <Card className="mt-6">
-        <CardContent className="p-12 text-center">
-          <div className="mx-auto h-12 w-12 rounded-full bg-muted grid place-items-center">
-            <ShoppingBag className="h-5 w-5" />
-          </div>
-          <div className="mt-4 text-lg font-semibold">Your cart is empty</div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Add supplies from the shop or from a plan&apos;s recommendations.
-          </p>
-          <div className="mt-6 flex justify-center gap-3">
-            <Button asChild variant="brand"><Link href="/shop">Shop supplies</Link></Button>
-            <Button asChild variant="ghost"><Link href="/plan">Build a plan</Link></Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mt-6 border border-border p-12 text-center">
+        <div className="mx-auto h-12 w-12 bg-muted grid place-items-center">
+          <ShoppingBag className="h-5 w-5" />
+        </div>
+        <div className="mt-4 text-lg font-semibold">Your cart is empty</div>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Add supplies from the shop or from a plan&apos;s recommendations.
+        </p>
+        <div className="mt-6 flex justify-center gap-3">
+          <Button asChild variant="brand"><Link href="/shop">Shop supplies</Link></Button>
+          <Button asChild variant="ghost"><Link href="/plan">Build a plan</Link></Button>
+        </div>
+      </div>
     );
   }
 
@@ -40,67 +37,64 @@ export function CartClient() {
 
   return (
     <div className="mt-6 grid gap-6 md:grid-cols-[1fr_320px]">
-      <Card>
-        <CardContent className="p-6 sm:p-8">
-          <ul className="divide-y divide-border">
-            {items.map((i) => (
-              <li key={i.productId} className="py-4 flex items-start gap-4">
-                <div className="h-14 w-14 rounded-lg bg-muted grid place-items-center shrink-0 overflow-hidden">
-                  {i.imageUrl ? (
-                    <img src={i.imageUrl} alt={i.name} className="h-full w-full object-contain" />
-                  ) : (
-                    <span className="text-2xl text-muted-foreground">&#x2022;</span>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <Link href={`/shop/${i.slug}`} className="font-medium hover:underline">
-                    {i.name}
-                  </Link>
-                  <div className="text-xs text-muted-foreground mt-0.5">{i.sku}</div>
-                </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="inline-flex items-center rounded-full border border-border">
-                    <button
-                      onClick={() => updateQuantity(i.productId, i.quantity - 1)}
-                      className="h-9 w-9 grid place-items-center rounded-l-full hover:bg-muted"
-                      aria-label="Decrease"
-                    >
-                      <Minus className="h-3.5 w-3.5" />
-                    </button>
-                    <div className="w-9 text-center text-sm tabular-nums">{i.quantity}</div>
-                    <button
-                      onClick={() => updateQuantity(i.productId, i.quantity + 1)}
-                      className="h-9 w-9 grid place-items-center rounded-r-full hover:bg-muted"
-                      aria-label="Increase"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                  <div className="w-20 text-right font-medium tabular-nums">
-                    {formatCurrency(i.priceCents * i.quantity)}
-                  </div>
+      <div className="border border-border p-6 sm:p-8">
+        <ul className="divide-y divide-border">
+          {items.map((i) => (
+            <li key={i.productId} className="py-4 flex items-start gap-4">
+              <div className="h-14 w-14 bg-muted grid place-items-center shrink-0 overflow-hidden">
+                {i.imageUrl ? (
+                  <img src={i.imageUrl} alt={i.name} className="h-full w-full object-contain" />
+                ) : (
+                  <span className="text-2xl text-muted-foreground">&#x2022;</span>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <Link href={`/shop/${i.slug}`} className="font-medium hover:underline">
+                  {i.name}
+                </Link>
+                <div className="text-xs text-muted-foreground mt-0.5">{i.sku}</div>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <div className="inline-flex items-center border border-border">
                   <button
-                    onClick={() => remove(i.productId)}
-                    className="h-9 w-9 grid place-items-center rounded-full border border-border hover:bg-muted"
-                    aria-label="Remove"
+                    onClick={() => updateQuantity(i.productId, i.quantity - 1)}
+                    className="h-9 w-9 grid place-items-center hover:bg-muted"
+                    aria-label="Decrease"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Minus className="h-3.5 w-3.5" />
+                  </button>
+                  <div className="w-9 text-center text-sm tabular-nums">{i.quantity}</div>
+                  <button
+                    onClick={() => updateQuantity(i.productId, i.quantity + 1)}
+                    className="h-9 w-9 grid place-items-center hover:bg-muted"
+                    aria-label="Increase"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
                   </button>
                 </div>
-              </li>
-            ))}
-          </ul>
-          <button
-            onClick={clear}
-            className="mt-4 text-xs text-muted-foreground hover:text-foreground"
-          >
-            Clear cart
-          </button>
-        </CardContent>
-      </Card>
+                <div className="w-20 text-right font-medium tabular-nums">
+                  {formatCurrency(i.priceCents * i.quantity)}
+                </div>
+                <button
+                  onClick={() => remove(i.productId)}
+                  className="h-9 w-9 grid place-items-center border border-border hover:bg-muted"
+                  aria-label="Remove"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <button
+          onClick={clear}
+          className="mt-4 text-xs text-muted-foreground hover:text-foreground"
+        >
+          Clear cart
+        </button>
+      </div>
 
-      <Card className="h-fit">
-        <CardContent className="p-6 sm:p-8 space-y-3">
+      <div className="border border-border h-fit p-6 sm:p-8 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
             <span className="font-semibold">{formatCurrency(subtotal)}</span>
@@ -130,8 +124,7 @@ export function CartClient() {
           <div className="text-[11px] text-muted-foreground text-center">
             Secure checkout. Free shipping on orders over $50.
           </div>
-        </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

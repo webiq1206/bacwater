@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { SignUpForm } from "@/components/auth/sign-up-form";
-import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = { title: "Create your account", robots: { index: false, follow: false } };
 
@@ -12,11 +11,9 @@ export default function SignUpPage() {
       <p className="mt-2 text-center text-sm text-muted-foreground">
         Save your plans, download PDFs, print vial labels, and track your orders.
       </p>
-      <Card className="mt-6">
-        <CardContent className="p-8">
-          <SignUpForm />
-        </CardContent>
-      </Card>
+      <div className="mt-6 border border-border p-8">
+        <SignUpForm />
+      </div>
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link href="/signin" className="text-foreground font-medium hover:underline">

@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight, Beaker, Check, Droplets, HelpCircle, Lightbulb } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -38,6 +37,7 @@ export default function BacWaterCalculatorPage() {
   const concentration = vialMg > 0 && rec > 0 ? vialMg / rec : 0;
   const doseMl = concentration > 0 ? (doseMcg / 1000) / concentration : 0;
   const syringeUnits = doseMl * 100;
+  const dosesPerVial = doseMcg > 0 ? Math.floor(vialMg / (doseMcg / 1000)) : 0;
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
@@ -48,7 +48,7 @@ export default function BacWaterCalculatorPage() {
       ]} />
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
+        <h1 className="mt-3 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
           How much BAC water do I add?
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
@@ -72,16 +72,16 @@ export default function BacWaterCalculatorPage() {
                 ))}
               </SelectContent>
             </Select>
-            <p className="mt-2 text-xs text-muted-foreground">
-              We&apos;ll pre-fill your vial size and dose with common starting values.
-            </p>
+            <div className="mt-3 bg-surface px-3 py-2 text-xs text-muted-foreground">
+              We&apos;ll pre-fill your vial size and dose with common starting values for {peptide.name}.
+            </div>
           </StepCard>
 
           <StepCard
             n={2}
             total={3}
             title="What size is your vial?"
-            hint="This is the number printed on the vial label. It tells you how much peptide powder is inside."
+            hint="Look at the number printed on your vial label — it tells you how much peptide powder is inside."
           >
             <div className="flex flex-wrap gap-2">
               {peptide.commonVialStrengthsMg.map((mg) => (
@@ -90,13 +90,14 @@ export default function BacWaterCalculatorPage() {
                   type="button"
                   onClick={() => { setVialInput(mg); setVialUnit("mg"); }}
                   className={cn(
-                    "border px-4 h-10 text-sm font-medium transition-colors",
-                    vialUnit === "mg" && vialInput === mg
-                      ? "bg-foreground text-white border-foreground"
-                      : "border-border hover:bg-muted"
+                    "chip",
+                    vialUnit === "mg" && vialInput === mg && "chip--active"
                   )}
                 >
-                  {mg} mg
+                  <div className="flex items-center gap-2 font-medium">
+                    {vialUnit === "mg" && vialInput === mg && <Check className="h-4 w-4" />}
+                    {mg} mg
+                  </div>
                 </button>
               ))}
             </div>
@@ -113,7 +114,10 @@ export default function BacWaterCalculatorPage() {
               <UnitToggle value={vialUnit} onChange={setVialUnit} options={["mg", "mcg"]} />
             </div>
             {vialUnit === "mcg" && vialInput > 0 ? (
-              <ConversionHint>{vialInput} mcg = {vialInput / 1000} mg</ConversionHint>
+              <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
+                <Check className="h-3 w-3 inline mr-1" />
+                {vialInput.toLocaleString()} mcg = {(vialInput / 1000).toFixed(vialInput % 1000 === 0 ? 0 : 2)} mg
+              </div>
             ) : null}
           </StepCard>
 
@@ -121,7 +125,7 @@ export default function BacWaterCalculatorPage() {
             n={3}
             total={3}
             title="How much per dose?"
-            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0]}-${peptide.typicalDoseMcgRange[1]} mcg (${peptide.typicalDoseMcgRange[0] / 1000}-${peptide.typicalDoseMcgRange[1] / 1000} mg). We pre-filled a common starting dose.`}
+            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0].toLocaleString()}–${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg (${peptide.typicalDoseMcgRange[0] / 1000}–${peptide.typicalDoseMcgRange[1] / 1000} mg).`}
           >
             <div className="flex items-center gap-2">
               <Input
@@ -135,67 +139,80 @@ export default function BacWaterCalculatorPage() {
               <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mcg", "mg"]} />
             </div>
             {doseUnit === "mg" && doseInput > 0 ? (
-              <ConversionHint>{doseInput} mg = {doseInput * 1000} mcg</ConversionHint>
+              <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
+                <Check className="h-3 w-3 inline mr-1" />
+                {doseInput} mg = {(doseInput * 1000).toLocaleString()} mcg
+              </div>
             ) : null}
           </StepCard>
         </div>
 
         {/* Result + Teaching (right column) */}
         <div className="space-y-4">
-          <Card>
-            <CardContent className="p-7 sm:p-9">
-              <div className="eyebrow">Your answer</div>
-              <div className="mt-3 flex items-baseline gap-2">
-                <span className="text-5xl sm:text-6xl font-serif font-medium tracking-tight text-foreground tabular-nums">
-                  {rec}
-                </span>
-                <span className="text-2xl text-muted-foreground font-serif">mL</span>
-              </div>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                Add <b>{rec} mL</b> of bacteriostatic water to your {vialMg} mg
-                vial. This gives you clean, easy-to-measure doses on a standard
-                insulin syringe.
-              </p>
+          {/* Main result */}
+          <div className="border border-border bg-card p-6 sm:p-8">
+            <div className="eyebrow">Your answer</div>
+            <div className="mt-4 flex items-baseline gap-2">
+              <span className="result-hero">{rec}</span>
+              <span className="text-2xl text-muted-foreground font-serif">mL</span>
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+              Add <strong className="text-foreground">{rec} mL</strong> of
+              bacteriostatic water to your {vialMg} mg vial. This gives you
+              clean, easy-to-measure doses on a standard insulin syringe.
+            </p>
 
-              <div className="rule my-6" />
+            <div className="rule my-6" />
 
-              <div className="space-y-3 text-sm">
-                <ResultRow label="Concentration after mixing" value={`${concentration.toFixed(2)} mg/mL`} />
-                <ResultRow label="Each dose draws" value={`${doseMl.toFixed(3)} mL (${syringeUnits.toFixed(1)} units)`} />
-                <ResultRow label="Doses per vial" value={`${Math.floor(vialMg / (doseMcg / 1000))}`} />
-              </div>
+            <div className="space-y-3 text-sm">
+              <ResultRow
+                label="Concentration after mixing"
+                value={`${concentration.toFixed(2)} mg/mL`}
+                sub={`${(concentration * 1000).toFixed(0)} mcg/mL`}
+              />
+              <ResultRow
+                label="Each dose draws"
+                value={`${syringeUnits.toFixed(1)} units`}
+                sub={`${doseMl.toFixed(3)} mL = ${doseMcg.toLocaleString()} mcg`}
+              />
+              <ResultRow
+                label="Doses per vial"
+                value={`${dosesPerVial}`}
+              />
+            </div>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button asChild variant="brand" size="lg">
-                  <Link href="/plan">
-                    Build a full plan <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/shop">Shop supplies</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button asChild variant="brand" size="lg">
+                <Link href="/plan">
+                  Build a full plan <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/shop">Shop supplies</Link>
+              </Button>
+            </div>
+          </div>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start gap-2.5">
-                <Lightbulb className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+          {/* Why this number */}
+          <div className="callout-panel">
+            <div className="flex items-start gap-2.5">
+              <Lightbulb className="h-5 w-5 shrink-0 mt-0.5" />
+              <div>
+                <div className="font-medium text-sm mb-1">Why this number?</div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  <b>Why this number?</b> We aim for about 10 units per dose on
+                  We aim for about <strong className="text-foreground">10 units per dose</strong> on
                   a U-100 insulin syringe. That makes it easy to draw accurately
                   without squinting at tiny markings. The math:
                   (10 &times; {vialMg}) &divide; (100 &times; {(doseMcg / 1000).toFixed(3)}) = {rec} mL.
                 </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Teaching sections */}
           <div className="mt-6 space-y-8">
             <TeachingSection
-              icon={<Droplets className="h-5 w-5 text-foreground" />}
+              icon={<Droplets className="h-5 w-5" />}
               title="What is bacteriostatic water?"
             >
               <p>
@@ -211,26 +228,26 @@ export default function BacWaterCalculatorPage() {
             </TeachingSection>
 
             <TeachingSection
-              icon={<Beaker className="h-5 w-5 text-foreground" />}
+              icon={<Beaker className="h-5 w-5" />}
               title="What does &ldquo;reconstitute&rdquo; mean?"
             >
               <p>
                 Peptides arrive as a dry powder inside a sealed vial. Before you can
                 measure and inject a dose, you need to dissolve the powder in liquid.
-                That process is called <b>reconstitution</b>. You add BAC water to
+                That process is called <strong>reconstitution</strong>. You add BAC water to
                 the vial, swirl gently, and the powder dissolves into a clear solution.
               </p>
             </TeachingSection>
 
             <TeachingSection
-              icon={<HelpCircle className="h-5 w-5 text-foreground" />}
+              icon={<HelpCircle className="h-5 w-5" />}
               title="Why does the amount of water matter?"
             >
               <p>
-                The amount of water you add determines the <b>concentration</b> of
-                the solution, how much peptide is in each drop of liquid. More water
-                means a weaker solution (you draw more liquid per dose). Less water
-                means a stronger solution (you draw less per dose).
+                The amount of water you add determines the <strong>concentration</strong> of
+                the solution — how much peptide is in each drop of liquid. More water
+                means a weaker solution (you draw more per dose). Less water means a
+                stronger solution (you draw less per dose).
               </p>
               <p>
                 We pick an amount that makes each dose land on a round, easy-to-read
@@ -269,27 +286,35 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border border-border bg-card p-6 sm:p-7">
-      <div className="eyebrow">Step {n} &middot; of {total}</div>
-      <h3 className="mt-2 text-xl font-serif font-medium leading-tight">{title}</h3>
-      {hint ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p> : null}
+    <div className="border border-border bg-card p-5 sm:p-7">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="step-number step-number--filled text-[11px]">{n}</span>
+        <div className="eyebrow">Step {n} of {total}</div>
+      </div>
+      <h3 className="text-xl font-serif font-medium leading-tight">{title}</h3>
+      {hint && <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p>}
       <div className="mt-5">{children}</div>
     </div>
   );
 }
 
-function ResultRow({ label, value }: { label: string; value: string }) {
+function ResultRow({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex items-baseline justify-between gap-4">
       <span className="text-muted-foreground">{label}</span>
-      <span className="font-medium tabular-nums text-right">{value}</span>
+      <div className="text-right">
+        <span className="font-medium tabular-nums">{value}</span>
+        {sub && (
+          <div className="text-xs text-muted-foreground">{sub}</div>
+        )}
+      </div>
     </div>
   );
 }
 
 function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: Unit) => void; options: [Unit, Unit] }) {
   return (
-    <div className="inline-flex border border-border bg-muted p-0.5 shrink-0">
+    <div className="inline-flex border border-border-strong bg-muted p-0.5 shrink-0">
       {options.map((opt) => (
         <button
           key={opt}
@@ -309,20 +334,11 @@ function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: U
   );
 }
 
-function ConversionHint({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mt-2 flex items-center gap-1.5 text-xs text-foreground">
-      <Check className="h-3 w-3 text-muted-foreground" />
-      {children}
-    </div>
-  );
-}
-
 function TeachingSection({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
     <div>
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 border border-border grid place-items-center shrink-0">{icon}</div>
+        <div className="h-10 w-10 border-2 border-foreground/20 grid place-items-center shrink-0">{icon}</div>
         <h3 className="text-lg font-serif font-medium">{title}</h3>
       </div>
       <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
@@ -334,16 +350,12 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
 
 function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
   return (
-    <Link href={href} className="group">
-      <Card className="h-full hover:bg-muted/50 transition-colors">
-        <CardContent className="p-6">
-          <h3 className="font-semibold group-hover:underline">{title}</h3>
-          <p className="mt-2 text-sm text-muted-foreground">{body}</p>
-          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
-            Open <ArrowRight className="h-4 w-4" />
-          </div>
-        </CardContent>
-      </Card>
+    <Link href={href} className="group block border border-border hover:bg-surface transition-colors p-5">
+      <h3 className="font-semibold group-hover:underline">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+      <div className="mt-3 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
+        Open <ArrowRight className="h-4 w-4" />
+      </div>
     </Link>
   );
 }

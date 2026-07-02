@@ -213,7 +213,7 @@ export default async function HomePage() {
         </div>
         <div className="mt-8 grid gap-0 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border border border-border">
           {featured.map((p) => (
-            <Link key={p.id} href={`/shop/${p.slug}`} className="group p-6 hover:bg-muted/50 transition-colors">
+            <Link key={p.id} href={`/shop/${p.slug}`} className="group p-6 hover:bg-surface transition-colors">
               <div className="aspect-square bg-muted flex items-center justify-center">
                 {p.imageUrl ? (
                   <img src={p.imageUrl} alt={p.name} className="h-full w-full object-contain" />

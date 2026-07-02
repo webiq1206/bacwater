@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { SignInForm } from "@/components/auth/sign-in-form";
-import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = { title: "Sign in", robots: { index: false, follow: false } };
 
@@ -13,13 +12,11 @@ export default function SignInPage() {
       <p className="mt-2 text-center text-sm text-muted-foreground">
         Sign in to access your saved plans and order history.
       </p>
-      <Card className="mt-6">
-        <CardContent className="p-8">
-          <Suspense fallback={null}>
-            <SignInForm />
-          </Suspense>
-        </CardContent>
-      </Card>
+      <div className="mt-6 border border-border p-8">
+        <Suspense fallback={null}>
+          <SignInForm />
+        </Suspense>
+      </div>
       <p className="mt-6 text-center text-sm text-muted-foreground">
         New here?{" "}
         <Link href="/signup" className="text-foreground font-medium hover:underline">
