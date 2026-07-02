@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { PrismaClient } from "@prisma/client";
+import { CONTENT } from "./seed-data";
 
 const prisma = new PrismaClient();
 
@@ -104,74 +105,6 @@ const VENDORS = [
   },
 ];
 
-const CONTENT: Array<{ slug: string; kind: string; title: string; body: string }> = [
-  {
-    slug: "what-is-bac-water",
-    kind: "guide",
-    title: "What is BAC Water?",
-    body: `Bacteriostatic water is sterile water mixed with 0.9% benzyl alcohol. The alcohol prevents bacterial growth, which is why the same vial can be used across multiple doses over several weeks. Regular sterile water for injection does **not** contain the preservative. It's single-use only. For any peptide you plan to draw from more than once, BAC water is the right choice.`,
-  },
-  {
-    slug: "how-peptide-reconstitution-works",
-    kind: "guide",
-    title: "How peptide reconstitution works",
-    body: `Peptides are shipped as a freeze-dried powder. To use them, you add BAC water to the vial, which dissolves the powder into a stable solution you can draw from. The key idea: the *concentration* depends on how much BAC water you add. Less water = more concentrated (smaller draw for the same dose). More water = less concentrated (larger draw). Choose an amount that gives you clean, round numbers on your syringe.`,
-  },
-  {
-    slug: "how-to-read-a-peptide-vial",
-    kind: "guide",
-    title: "How to read a peptide vial label",
-    body: `A peptide vial label shows: the peptide name, the strength (usually in mg), a lot number, and sometimes an expiration for the powder. The strength is the total amount of peptide inside, not the dose. Your dose is a fraction of the total, measured in mcg (micrograms). Confirm the strength before you calculate anything.`,
-  },
-  {
-    slug: "how-to-use-an-insulin-syringe",
-    kind: "guide",
-    title: "How to use an insulin syringe",
-    body: `Insulin syringes are marked in **units** on the U-100 scale: 100 units = 1 mL. A 1 mL insulin syringe has 100 markings; a 0.5 mL has 50; a 0.3 mL has 30 (often with half-unit ticks). Read the level from the top of the plunger, not from the tip. Tap out bubbles before injecting.`,
-  },
-  {
-    slug: "what-syringe-units-mean",
-    kind: "guide",
-    title: "What syringe units mean",
-    body: `On a U-100 insulin syringe, one "unit" = 0.01 mL. So 10 units = 0.1 mL, 25 units = 0.25 mL, and so on. When our planner tells you to draw "10 units", it means to pull the plunger back until the top of the plunger sits at the 10-unit mark.`,
-  },
-  {
-    slug: "how-to-store-reconstituted-peptides",
-    kind: "guide",
-    title: "How to store reconstituted peptides",
-    body: `Refrigerate reconstituted peptides at 36-46°F (2-8°C). Keep them upright, protected from light, and away from the freezer coils. Most reconstituted peptides remain stable for ~28-30 days; a few last longer, a few less. Never re-freeze a reconstituted vial.`,
-  },
-  {
-    slug: "how-long-bac-water-lasts",
-    kind: "guide",
-    title: "How long BAC water lasts",
-    body: `Sealed BAC water is stable until its printed expiration (usually 12-24 months). Once punctured, a 30 mL vial is generally considered good for ~28 days refrigerated. If it looks cloudy or has particles, discard it.`,
-  },
-  {
-    slug: "bac-water-vs-sterile-water",
-    kind: "guide",
-    title: "BAC water vs. sterile water",
-    body: `Sterile water for injection has no preservative. It's fine for a single-use reconstitution, but every time you re-enter the vial you introduce contamination risk. BAC water contains 0.9% benzyl alcohol, which suppresses bacterial growth and makes multi-dose vials safe over weeks. For anything you'll draw from more than once, use BAC water.`,
-  },
-  {
-    slug: "common-mistakes-to-avoid",
-    kind: "guide",
-    title: "Common reconstitution mistakes to avoid",
-    body: `**Shaking the vial**: swirl gently. Shaking can denature peptides. **Aiming the water at the powder**: angle it against the wall of the vial. **Skipping the label**: always write the peptide name, date mixed, and expiration on the vial. **Guessing the concentration**: use a calculator (like this one) every time. **Reusing syringes**: always use fresh, sterile syringes.`,
-  },
-  {
-    slug: "faq-general",
-    kind: "faq",
-    title: "Frequently asked questions",
-    body: `**Do I need a prescription for BAC water?** In the US, BAC water is prescription-only when marketed for human use. We provide research-use products intended for laboratory research and educational purposes, not for personal administration.
-
-**Is BACwater.ai a medical service?** No. We provide a calculation utility and supplies. We do not diagnose, prescribe, or provide medical advice.
-
-**Can I save my plans?** Yes. Create a free account and every plan you build is stored with a permanent link.
-
-**Do you ship internationally?** Currently US only. International shipping is on the roadmap.`,
-  },
-];
 
 async function main() {
   for (const p of PRODUCTS) {

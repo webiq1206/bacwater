@@ -2,9 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { getCatalog, relatedContent } from "@/lib/learn/catalog";
+import { RelatedReadingPanel } from "@/components/learn/related-reading";
 
 interface Props { params: Promise<{ slug: string }>; }
 
@@ -55,10 +57,16 @@ export default async function GuidePage({ params }: Props) {
   const { slug } = await params;
   const guide = await prisma.contentBlock.findUnique({ where: { slug } });
   if (!guide) return notFound();
-  const related = await prisma.contentBlock.findMany({
-    where: { kind: "guide", published: true, NOT: { id: guide.id } },
-    take: 3,
-    orderBy: { createdAt: "asc" },
+
+  // Tag-driven related content: surface the most relevant peptides, guides,
+  // comparisons, and FAQs for this article, not just the newest guides.
+  const catalog = await getCatalog();
+  const self = catalog.find((e) => e.url === `/learn/${slug}`);
+  const relatedReading = relatedContent(catalog, {
+    peptide: self?.peptideTags[0],
+    topics: self?.topicTags ?? [],
+    excludeUrl: `/learn/${slug}`,
+    limit: 4,
   });
 
   return (
@@ -89,20 +97,11 @@ export default async function GuidePage({ params }: Props) {
         </Button>
       </div>
 
-      <section className="mt-14">
-        <h2 className="text-xl font-semibold tracking-tight">Also worth reading</h2>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-3">
-          {related.map((r) => (
-            <li key={r.id}>
-              <Link href={`/learn/${r.slug}`} className="group block border border-border hover:bg-surface transition-colors p-4 h-full">
-                <div className="text-sm font-semibold group-hover:underline">
-                  {r.title}
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {relatedReading.length > 0 && (
+        <div className="mt-14">
+          <RelatedReadingPanel title="Also worth reading" items={relatedReading} />
+        </div>
+      )}
     </div>
   );
 }
