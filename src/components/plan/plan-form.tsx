@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarDays,
   Check,
   ChevronRight,
   Info,
@@ -49,6 +48,7 @@ const STEPS = [
   "peptide",
   "vial",
   "dose",
+  "date",
   "review",
 ] as const;
 
@@ -423,6 +423,16 @@ export function PlanForm({ mode: initialMode }: Props) {
       value: useRecommendedBac
         ? `${recommendedBac} mL (recommended)`
         : `${customBacMl} mL (custom)`,
+    },
+    {
+      label: "Mixed",
+      value: dateMixed
+        ? new Date(dateMixed + "T12:00:00").toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "Not set",
     },
   ];
 
@@ -1004,6 +1014,54 @@ export function PlanForm({ mode: initialMode }: Props) {
       )}
 
       {step === 3 && (
+        <StepPanel
+          title="When did you mix it?"
+          hint="Pick the day you added BAC water, or the day you plan to. This sets your discard date. We won't guess this one for you."
+          onNext={() => goToStep(4)}
+          onBack={() => goToStep(2)}
+          stepNum={4}
+          nextDisabled={!dateMixed}
+        >
+          <div className="flex flex-col sm:flex-row items-stretch gap-2">
+            <Input
+              type="date"
+              value={dateMixed}
+              onChange={(e) => setDateMixed(e.target.value)}
+              className="flex-1 h-14 text-base"
+            />
+            <button
+              type="button"
+              onClick={() =>
+                setDateMixed(new Date().toISOString().slice(0, 10))
+              }
+              className="inline-flex items-center justify-center border border-border px-5 h-14 text-sm font-medium hover:bg-surface whitespace-nowrap"
+              style={{ color: "var(--color-accent-guide)" }}
+            >
+              I mixed it today
+            </button>
+          </div>
+          {dateMixed ? (
+            <p className="mt-4 text-sm text-muted-foreground">
+              Mixed{" "}
+              {new Date(dateMixed + "T12:00:00").toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+              . We&apos;ll count your shelf life from this date.
+            </p>
+          ) : (
+            <p
+              className="mt-4 text-sm font-medium"
+              style={{ color: "var(--color-accent-guide)" }}
+            >
+              Choose a date to continue.
+            </p>
+          )}
+        </StepPanel>
+      )}
+
+      {step === 4 && (
         <div className="space-y-8">
           {/* Review header */}
           <div className="text-center">
@@ -1040,64 +1098,6 @@ export function PlanForm({ mode: initialMode }: Props) {
             </button>
           </div>
 
-          {/* Mix date - the one thing only you can answer */}
-          <div
-            className="p-5 sm:p-6"
-            style={{
-              border: dateMixed
-                ? "1px solid var(--color-border)"
-                : "2px solid var(--color-accent-guide)",
-              background: dateMixed
-                ? "var(--color-card)"
-                : "var(--color-accent-guide-soft)",
-            }}
-          >
-            <div className="flex items-center gap-2.5 mb-1">
-              <CalendarDays className="h-5 w-5" style={{ color: "var(--color-accent-guide)" }} />
-              <h4 className="text-sm font-semibold">
-                When did you mix it?{" "}
-                {!dateMixed && (
-                  <span style={{ color: "var(--color-accent-guide)" }}>
-                    (needs your answer)
-                  </span>
-                )}
-              </h4>
-            </div>
-            <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-              Pick the day you added BAC water, or the day you plan to. This sets
-              your discard date. We won&apos;t guess this one for you.
-            </p>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-              <Input
-                type="date"
-                value={dateMixed}
-                onChange={(e) => setDateMixed(e.target.value)}
-                className="flex-1"
-              />
-              <button
-                type="button"
-                onClick={() =>
-                  setDateMixed(new Date().toISOString().slice(0, 10))
-                }
-                className="text-xs font-medium hover:underline whitespace-nowrap px-2 py-2"
-                style={{ color: "var(--color-accent-guide)" }}
-              >
-                I mixed it today
-              </button>
-            </div>
-            {dateMixed && (
-              <p className="mt-2 text-xs text-muted-foreground">
-                Mixed{" "}
-                {new Date(dateMixed + "T12:00:00").toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-                .
-              </p>
-            )}
-          </div>
-
           {/* Smart defaults - auto-inferred settings */}
           <div className="callout-panel">
             <div className="flex items-center gap-2.5 mb-3">
@@ -1105,8 +1105,12 @@ export function PlanForm({ mode: initialMode }: Props) {
               <h4 className="text-sm font-semibold">We handled these for you</h4>
             </div>
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-              Based on your inputs, we automatically set these values. Most people
-              don&apos;t need to change anything here.
+              Based on your inputs, we automatically set these values. Already
+              have syringes or BAC water on hand? Tap{" "}
+              <span className="font-medium" style={{ color: "var(--color-accent-guide)" }}>
+                Change
+              </span>{" "}
+              to match what you&apos;ve got.
             </p>
             <div className="space-y-3">
               <SmartDefault
@@ -1175,7 +1179,7 @@ export function PlanForm({ mode: initialMode }: Props) {
               variant="brand"
               size="xl"
               onClick={handleSave}
-              disabled={saving || !dateMixed}
+              disabled={saving}
               className="w-full"
             >
               {saving ? (
@@ -1186,9 +1190,8 @@ export function PlanForm({ mode: initialMode }: Props) {
               Save my plan
             </Button>
             <p className="text-xs text-muted-foreground text-center">
-              {dateMixed
-                ? "Saves your plan with a shareable link, downloadable PDF, and printable vial labels."
-                : "Choose your mix date above to save your plan."}
+              Saves your plan with a shareable link, downloadable PDF,
+              and printable vial labels.
             </p>
             <Button
               variant="ghost"
@@ -1211,6 +1214,7 @@ function StepPanel({
   onNext,
   onBack,
   stepNum,
+  nextDisabled = false,
 }: {
   title: string;
   hint?: string;
@@ -1218,6 +1222,7 @@ function StepPanel({
   onNext: () => void;
   onBack: (() => void) | null;
   stepNum: number;
+  nextDisabled?: boolean;
 }) {
   return (
     <div className="border border-border bg-card">
@@ -1244,7 +1249,12 @@ function StepPanel({
         ) : (
           <span />
         )}
-        <Button variant="brand" size="lg" onClick={onNext}>
+        <Button
+          variant="brand"
+          size="lg"
+          onClick={onNext}
+          disabled={nextDisabled}
+        >
           Next <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
