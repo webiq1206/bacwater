@@ -1,4 +1,4 @@
-// BACWater.ai — data model
+// BACWater.ai - data model
 // Uses SQLite in development, Postgres in production via DATABASE_URL.
 
 generator client {

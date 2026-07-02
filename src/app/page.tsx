@@ -84,7 +84,7 @@ export default async function HomePage() {
         </div>
         <div className="mt-10 mx-auto max-w-md bg-surface border border-border p-4 text-sm text-muted-foreground text-center">
           <strong className="text-foreground">Not sure where to start?</strong>{" "}
-          The Plan Builder walks you through everything step by step — just
+          The Plan Builder walks you through everything step by step. Just
           answer 3 quick questions and we&apos;ll handle the rest.
         </div>
       </section>

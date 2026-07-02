@@ -5,7 +5,7 @@ import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 export const metadata: Metadata = {
   title: "mg to mcg Converter - Milligrams to Micrograms",
   description:
-    "Convert between milligrams and micrograms for peptide dosing. Vial labels use mg, dose protocols use mcg — this makes switching instant.",
+    "Convert between milligrams and micrograms for peptide dosing. Vial labels use mg, dose protocols use mcg. This makes switching instant.",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

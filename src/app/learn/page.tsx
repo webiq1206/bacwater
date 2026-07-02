@@ -97,7 +97,7 @@ export default async function LearnPage() {
         <div>
           <div className="font-medium text-foreground">Done reading?</div>
           <p className="mt-1 text-sm text-muted-foreground">
-            Put what you learned into practice — the Plan Builder does the math for you.
+            Put what you learned into practice. The Plan Builder does the math for you.
           </p>
         </div>
         <Button asChild variant="brand" className="shrink-0">

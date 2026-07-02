@@ -49,11 +49,11 @@ export function SyringeVisual({
   const plungerRodH = 6;
   const plungerTipW = 8;
 
-  // Fill calculation — liquid fills from left (needle end) toward right
+  // Fill calculation - liquid fills from left (needle end) toward right
   const fillW = (clamped / 100) * barrelInnerW;
   const fillEndX = barrelInnerX + fillW;
 
-  // Plunger head position — moves with fill level (sits at fill boundary)
+  // Plunger head position - moves with fill level (sits at fill boundary)
   const plungerHeadX = fillEndX;
   const plungerHeadW = 10;
 
@@ -125,7 +125,7 @@ export function SyringeVisual({
             fill="var(--color-foreground)"
             opacity={0.2}
           />
-          {/* Needle shaft — tapers to point */}
+          {/* Needle shaft - tapers to point */}
           <polygon
             points={`
               ${needleTipX},${needleCenterY}

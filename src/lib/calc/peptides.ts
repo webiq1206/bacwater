@@ -76,7 +76,7 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [100, 300],
     suggestedDoseMcg: 100,
     refrigeratedShelfDays: 21,
-    storageNote: "Keep in the fridge. Less stable — use within ~3 weeks.",
+    storageNote: "Keep in the fridge. Less stable. Use within ~3 weeks.",
   },
   {
     slug: "cjc-1295-with-dac",

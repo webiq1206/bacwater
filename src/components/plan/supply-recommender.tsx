@@ -119,19 +119,34 @@ export function SupplyRecommender({ supplies }: Props) {
     );
 
   return (
-    <div className="border-2 border-foreground bg-card">
+    <div
+      className="border-2 bg-card shadow-sm"
+      style={{ borderColor: "var(--color-accent-guide)" }}
+    >
+      {/* Accent bar */}
+      <div
+        className="h-1.5 w-full"
+        style={{ background: "var(--color-accent-guide)" }}
+      />
+
       {/* Header */}
-      <div className="p-6 sm:p-8 bg-surface border-b border-border">
+      <div
+        className="p-6 sm:p-8 border-b"
+        style={{
+          background: "var(--color-accent-guide-soft)",
+          borderColor: "var(--color-border)",
+        }}
+      >
         <div className="flex items-center gap-3 mb-3">
           <Package className="h-5 w-5 accent-check" />
           <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Next step</div>
         </div>
-        <h4 className="text-xl sm:text-2xl font-serif font-medium tracking-tight">
+        <h4 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
           Everything you&apos;ll need
         </h4>
         <p className="text-sm text-muted-foreground mt-2 max-w-lg leading-relaxed">
           Based on your plan, here&apos;s exactly what you need to get started.
-          Quantities are pre-calculated — adjust or remove anything you already
+          Quantities are pre-calculated. Adjust or remove anything you already
           have.
         </p>
       </div>
@@ -212,7 +227,13 @@ export function SupplyRecommender({ supplies }: Props) {
       </ul>
 
       {/* Footer CTA */}
-      <div className="p-6 sm:p-8 bg-surface border-t border-border">
+      <div
+        className="p-6 sm:p-8 border-t"
+        style={{
+          background: "var(--color-accent-guide-soft)",
+          borderColor: "var(--color-border)",
+        }}
+      >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           {totalCents > 0 && (
             <div className="text-sm text-muted-foreground">

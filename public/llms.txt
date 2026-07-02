@@ -6,17 +6,17 @@
 
 - [Homepage](https://bacwater.ai/): The complete BAC water calculator and reconstitution guide
 - [Plan Builder](https://bacwater.ai/plan): Enter your peptide, vial strength, dose, and syringe to get an exact reconstitution plan with PDF export and printable vial labels
-- [Step-by-Step Planner](https://bacwater.ai/plan/new): Guided planner for beginners — one question at a time, explains every step
+- [Step-by-Step Planner](https://bacwater.ai/plan/new): Guided planner for beginners, one question at a time, explains every step
 - [Shop Supplies](https://bacwater.ai/shop): BAC water, insulin syringes, and alcohol prep pads from US-licensed vendors
 - [Learning Center](https://bacwater.ai/learn): Beginner guides on BAC water, reconstitution, syringes, storage, and dosing
 - [BAC Water Calculator](https://bacwater.ai/tools/bac-water): Calculate exactly how much BAC water to add based on vial strength and target dose
-- [Reconstitution Calculator](https://bacwater.ai/tools/reconstitution): Full calculator — BAC water amount, syringe units, doses per vial, step-by-step instructions
+- [Reconstitution Calculator](https://bacwater.ai/tools/reconstitution): Full calculator: BAC water amount, syringe units, doses per vial, step-by-step instructions
 - [Dose Calculator](https://bacwater.ai/tools/dose): Convert concentration and draw volume to exact dose in mcg, mg, and syringe units
 - [Supply Calculator](https://bacwater.ai/tools/supplies): Calculate all supplies needed for a full peptide cycle with exact quantities
 - [Syringe Unit Converter](https://bacwater.ai/tools/syringe-units): Convert between mL and U-100 insulin syringe units (100 units = 1 mL)
 - [mg to mcg Converter](https://bacwater.ai/tools/mg-to-mcg): Convert milligrams to micrograms and back (1 mg = 1,000 mcg)
 - [FAQ](https://bacwater.ai/faq): Answers about BAC water, reconstitution, syringes, storage, and ordering
-- [About](https://bacwater.ai/about): About BACwater.ai — our approach, our math, and our supplies
+- [About](https://bacwater.ai/about): About BACwater.ai: our approach, our math, and our supplies
 - [Contact](https://bacwater.ai/contact): Get in touch with the BACwater.ai team
 
 ## Key Facts
@@ -32,4 +32,4 @@
 
 ## About
 
-BACwater.ai provides deterministic peptide reconstitution calculations, printable vial labels with QR codes, PDF plan exports, and premium reconstitution supplies (BAC water, insulin syringes, alcohol prep pads). Every calculation shows the exact formula used so the work can be verified. Built for beginners doing peptide reconstitution for the first time. For research and educational use only — not medical advice.
+BACwater.ai provides deterministic peptide reconstitution calculations, printable vial labels with QR codes, PDF plan exports, and premium reconstitution supplies (BAC water, insulin syringes, alcohol prep pads). Every calculation shows the exact formula used so the work can be verified. Built for beginners doing peptide reconstitution for the first time. For research and educational use only. Not medical advice.

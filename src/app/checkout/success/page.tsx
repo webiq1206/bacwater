@@ -58,13 +58,13 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
             <li className="flex gap-2.5">
               <span className="step-number step-number--filled h-5 w-5 text-[9px] mt-0.5">1</span>
               <span className="text-muted-foreground">
-                <Link href="/plan" className="text-foreground font-medium underline">Build your mixing plan</Link> — answer 3 questions and get step-by-step instructions for when your supplies arrive.
+                <Link href="/plan" className="text-foreground font-medium underline">Build your mixing plan</Link>. Answer 3 questions and get step-by-step instructions for when your supplies arrive.
               </span>
             </li>
             <li className="flex gap-2.5">
               <span className="step-number step-number--filled h-5 w-5 text-[9px] mt-0.5">2</span>
               <span className="text-muted-foreground">
-                <Link href="/learn" className="text-foreground font-medium underline">Read the guides</Link> — learn how reconstitution works, common mistakes to avoid, and storage tips.
+                <Link href="/learn" className="text-foreground font-medium underline">Read the guides</Link>. Learn how reconstitution works, common mistakes to avoid, and storage tips.
               </span>
             </li>
           </ul>

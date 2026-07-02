@@ -92,7 +92,7 @@ export function ShelfLifeTimeline({ peptideName, shelfDays, dateMixed }: Props) 
             Your peptide
           </div>
           <div className="text-lg font-serif font-medium mt-0.5">
-            {peptideName ?? "Custom"} — {shelfDays} days
+            {peptideName ?? "Custom"}, {shelfDays} days
           </div>
         </div>
         {dateMixed && (

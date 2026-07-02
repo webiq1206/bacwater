@@ -43,7 +43,7 @@ export default function AboutPage() {
       <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">Our math</h2>
       <div className="mt-3 space-y-4 text-foreground/90 leading-relaxed">
         <p>
-          Our reconstitution math is deterministic — the same inputs always produce
+          Our reconstitution math is deterministic. The same inputs always produce
           the same outputs. We use transparent, verified formulas backed by
           automated tests, not AI-generated guesses. Every result page shows the
           formula so you can check our work.

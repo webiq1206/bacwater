@@ -142,8 +142,8 @@ function EmptyState() {
         <div className="text-xl font-serif font-medium tracking-tight">You&apos;re just 3 questions away from your first plan</div>
         <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
           Pick your peptide, vial strength, and dose. We&apos;ll calculate
-          everything else — BAC water, syringe units, step-by-step instructions,
-          and a printable vial label.
+          everything else (BAC water, syringe units, step-by-step instructions,
+          and a printable vial label).
         </p>
         <div className="mt-6">
           <Button asChild variant="brand" size="lg">
@@ -157,7 +157,7 @@ function EmptyState() {
         <div className="text-sm">
           <div className="font-medium text-foreground">New to peptides?</div>
           <p className="mt-1 text-muted-foreground text-xs">
-            <Link href="/learn" className="underline">Read the beginner guides</Link> first — they take about 5 minutes.
+            <Link href="/learn" className="underline">Read the beginner guides</Link> first. They take about 5 minutes.
           </p>
         </div>
         <div className="text-sm">

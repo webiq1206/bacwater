@@ -33,11 +33,11 @@ export default function PlanPage() {
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Tell us what&apos;s on your vial label. We&apos;ll calculate
-          everything — BAC water, syringe units, doses per vial, expiration,
-          and supplies — and explain it all in plain English.
+          everything (BAC water, syringe units, doses per vial, expiration,
+          and supplies) and explain it all in plain English.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          New to this? Use the guided wizard — it walks you through one
+          New to this? Use the guided wizard. It walks you through one
           question at a time.
         </p>
       </div>

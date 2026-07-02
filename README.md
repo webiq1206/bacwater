@@ -1,18 +1,18 @@
 # BACWater.ai
 
-The trusted utility for peptide reconstitution — deterministic calculations, personalized plans, printable labels, and premium supplies.
+The trusted utility for peptide reconstitution: deterministic calculations, personalized plans, printable labels, and premium supplies.
 
 Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Prisma, NextAuth v5, Stripe, Resend, and Anthropic Claude.
 
 ## What's inside
 
-- **Plan builder** — beginner (one-question-at-a-time) and advanced (calculator layout). Deterministic math, plain-English explanations, PDF, printable vial label, QR code.
-- **Ecommerce** — shop, cart, guest checkout, Stripe redirect, order tracking.
-- **Learning Center** — MDX-lite guides pulled from the database, editable in admin.
-- **Standalone tools** — BAC water, reconstitution, dose, syringe unit, mg↔mcg, and supply calculators.
-- **AI assistant** — Claude-powered drawer that explains a plan; **never** performs math. Default model is Haiku (cheap, fast) — swap `ANTHROPIC_MODEL` for Sonnet or Opus if you want more depth.
-- **Admin panel** — dashboard, orders (with vendor email workflow via Resend), products, vendors, users, content, contact.
-- **SEO/GEO/AEO** — metadata, sitemap, robots, Organization + Product + Article + FAQ JSON-LD.
+- **Plan builder**: beginner (one-question-at-a-time) and advanced (calculator layout). Deterministic math, plain-English explanations, PDF, printable vial label, QR code.
+- **Ecommerce**: shop, cart, guest checkout, Stripe redirect, order tracking.
+- **Learning Center**: MDX-lite guides pulled from the database, editable in admin.
+- **Standalone tools**: BAC water, reconstitution, dose, syringe unit, mg↔mcg, and supply calculators.
+- **AI assistant**: Claude-powered drawer that explains a plan; **never** performs math. Default model is Haiku (cheap, fast). Swap `ANTHROPIC_MODEL` for Sonnet or Opus if you want more depth.
+- **Admin panel**: dashboard, orders (with vendor email workflow via Resend), products, vendors, users, content, contact.
+- **SEO/GEO/AEO**: metadata, sitemap, robots, Organization + Product + Article + FAQ JSON-LD.
 
 ## Local dev
 
@@ -42,7 +42,7 @@ The first user whose email matches `ADMIN_EMAILS` (comma-separated) is auto-prom
 ## Deploy on Replit
 
 1. Import this repo into Replit.
-2. Replit's Next.js template should be picked up automatically. **Do not let Replit rewrite this to Vite** — Next.js is required for SSR, Prisma, and app router. If it offers to convert, decline and reset.
+2. Replit's Next.js template should be picked up automatically. **Do not let Replit rewrite this to Vite**. Next.js is required for SSR, Prisma, and app router. If it offers to convert, decline and reset.
 3. Add the environment variables from `.env.example` in the Replit Secrets panel.
 4. Set `DATABASE_URL` to your production database (Neon/Supabase Postgres recommended; SQLite is fine for smoke test).
 5. If using Postgres, change `datasource db { provider = "postgresql" }` in `prisma/schema.prisma`, then run `npx prisma db push`.
@@ -53,10 +53,10 @@ The first user whose email matches `ADMIN_EMAILS` (comma-separated) is auto-prom
 
 `src/lib/calc/` is the deterministic core.
 
-- `index.ts` — `calculate()`, `recommendBacWaterMl()`, syringe map.
-- `peptides.ts` — 20+ curated research peptides with typical strengths and shelf life.
-- `converters.ts` — unit conversion helpers.
-- `__tests__/calc.test.ts` — assertion-based tests. Run: `npx tsx src/lib/calc/__tests__/calc.test.ts`.
+- `index.ts`: `calculate()`, `recommendBacWaterMl()`, syringe map.
+- `peptides.ts`: 20+ curated research peptides with typical strengths and shelf life.
+- `converters.ts`: unit conversion helpers.
+- `__tests__/calc.test.ts`: assertion-based tests. Run: `npx tsx src/lib/calc/__tests__/calc.test.ts`.
 
 **The AI assistant never runs this math.** All arithmetic is deterministic.
 

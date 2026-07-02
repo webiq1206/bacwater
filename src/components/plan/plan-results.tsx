@@ -79,7 +79,7 @@ export function PlanResults({ result }: Props) {
         )}
       </div>
 
-      {/* In Plain English — most prominent section */}
+      {/* In Plain English - most prominent section */}
       <div className="callout-panel">
         <div className="flex items-center gap-2.5 mb-4">
           <MessageCircle className="h-5 w-5 accent-check" />
@@ -145,7 +145,7 @@ export function PlanResults({ result }: Props) {
             Step-by-step instructions
           </h4>
           <p className="mt-2 text-sm text-muted-foreground">
-            Follow these steps in order. Take your time — there&apos;s no rush.
+            Follow these steps in order. Take your time. There&apos;s no rush.
           </p>
         </div>
         <ol className="mt-6 space-y-4">
@@ -194,7 +194,7 @@ export function PlanResults({ result }: Props) {
         />
       </div>
 
-      {/* Supply recommender — prominent */}
+      {/* Supply recommender - prominent */}
       <SupplyRecommender supplies={result.supplies} />
 
       {/* Assumptions */}
@@ -225,28 +225,28 @@ export function PlanResults({ result }: Props) {
             <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">1</span>
             <span className="leading-relaxed">
               <strong className="text-foreground">Save your plan</strong>
-              <span className="text-muted-foreground"> — get a permanent link, downloadable PDF, and printable vial labels.</span>
+              <span className="text-muted-foreground">: get a permanent link, downloadable PDF, and printable vial labels.</span>
             </span>
           </li>
           <li className="flex gap-3">
             <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">2</span>
             <span className="leading-relaxed">
               <strong className="text-foreground">Gather your supplies</strong>
-              <span className="text-muted-foreground"> — the supply list above tells you exactly what to order.</span>
+              <span className="text-muted-foreground">: the supply list above tells you exactly what to order.</span>
             </span>
           </li>
           <li className="flex gap-3">
             <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">3</span>
             <span className="leading-relaxed">
               <strong className="text-foreground">Follow the instructions</strong>
-              <span className="text-muted-foreground"> — the step-by-step guide above walks you through mixing.</span>
+              <span className="text-muted-foreground">: the step-by-step guide above walks you through mixing.</span>
             </span>
           </li>
           <li className="flex gap-3">
             <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">4</span>
             <span className="leading-relaxed">
               <strong className="text-foreground">Draw to the mark</strong>
-              <span className="text-muted-foreground"> — the syringe diagram shows exactly where to draw.</span>
+              <span className="text-muted-foreground">: the syringe diagram shows exactly where to draw.</span>
             </span>
           </li>
         </ol>

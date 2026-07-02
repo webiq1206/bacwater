@@ -37,7 +37,7 @@ const PRODUCTS = [
     description:
       "Sterile, single-use U-100 insulin syringes. 31-gauge x 5/16\" needle, clear markings at every unit, latex-free.",
     useCase:
-      "Most popular — best all-around choice when your dose is between 10 and 60 units.",
+      "Most popular. Best all-around choice when your dose is between 10 and 60 units.",
     priceCents: 2900,
     imageUrl: "/images/products/syr-ins-1.svg",
     inventory: 300,
@@ -49,7 +49,7 @@ const PRODUCTS = [
     category: "syringes",
     description:
       "Half-mL U-100 insulin syringes. 31-gauge x 5/16\" needle, easier-to-read markings for smaller doses.",
-    useCase: "Easier to read — ideal when your dose is under 50 units.",
+    useCase: "Easier to read. Ideal when your dose is under 50 units.",
     priceCents: 2900,
     imageUrl: "/images/products/syr-ins-05.svg",
     inventory: 240,
@@ -61,7 +61,7 @@ const PRODUCTS = [
     category: "syringes",
     description:
       "Micro-dose U-100 insulin syringes. 31-gauge x 5/16\" needle, half-unit markings for the smallest, most accurate doses.",
-    useCase: "Most precise — best when your dose is under 30 units.",
+    useCase: "Most precise. Best when your dose is under 30 units.",
     priceCents: 3200,
     imageUrl: "/images/products/syr-ins-03.svg",
     inventory: 180,

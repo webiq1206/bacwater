@@ -92,7 +92,7 @@ body {
   width: 100%;
 }
 
-/* Callout panel — warm surface for "In Plain English" and important info */
+/* Callout panel - warm surface for "In Plain English" and important info */
 .callout-panel {
   background: var(--color-accent-guide-soft);
   border: 1px solid var(--color-border);
@@ -105,13 +105,13 @@ body {
   }
 }
 
-/* Prominent section — thick top border, subtle background */
+/* Prominent section - thick top border, subtle background */
 .section-prominent {
   border-top: 2px solid var(--color-foreground);
   padding-top: 1.5rem;
 }
 
-/* Result highlight — big number display */
+/* Result highlight - big number display */
 .result-hero {
   font-size: 2.5rem;
   line-height: 1;
@@ -146,7 +146,7 @@ body {
   border-color: var(--color-accent-guide);
 }
 
-/* Selection chip — stronger active state */
+/* Selection chip - stronger active state */
 .chip {
   text-align: left;
   border: 1px solid var(--color-border);
@@ -164,7 +164,7 @@ body {
   padding: 0.8125rem 0.9375rem; /* compensate for 2px border */
 }
 
-/* Warning strip — left-bordered warning */
+/* Warning strip - left-bordered warning */
 .warning-strip {
   border-left: 3px solid var(--color-warning);
   padding: 0.75rem 1rem;
@@ -173,7 +173,7 @@ body {
   color: #92400e;
 }
 
-/* Accent check — green checkmark for verified/positive items */
+/* Accent check - green checkmark for verified/positive items */
 .accent-check {
   color: var(--color-accent-guide);
 }

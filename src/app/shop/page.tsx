@@ -93,8 +93,8 @@ export default async function ShopPage() {
           <div>
             <div className="font-medium text-foreground">Not sure how much to order?</div>
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-              Build a <Link href="/plan" className="text-foreground font-medium underline">mixing plan</Link> first
-              — it tells you exactly what supplies you need and pre-fills your cart.
+              Build a <Link href="/plan" className="text-foreground font-medium underline">mixing plan</Link> first.
+              It tells you exactly what supplies you need and pre-fills your cart.
               Or use the <Link href="/tools/supplies" className="text-foreground font-medium underline">supply calculator</Link> to
               figure out quantities for a full cycle.
             </p>

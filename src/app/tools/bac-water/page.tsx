@@ -81,7 +81,7 @@ export default function BacWaterCalculatorPage() {
             n={2}
             total={3}
             title="What size is your vial?"
-            hint="Look at the number printed on your vial label — it tells you how much peptide powder is inside."
+            hint="Look at the number printed on your vial label. It tells you how much peptide powder is inside."
           >
             <div className="flex flex-wrap gap-2">
               {peptide.commonVialStrengthsMg.map((mg) => (
@@ -245,7 +245,7 @@ export default function BacWaterCalculatorPage() {
             >
               <p>
                 The amount of water you add determines the <strong>concentration</strong> of
-                the solution — how much peptide is in each drop of liquid. More water
+                the solution: how much peptide is in each drop of liquid. More water
                 means a weaker solution (you draw more per dose). Less water means a
                 stronger solution (you draw less per dose).
               </p>
