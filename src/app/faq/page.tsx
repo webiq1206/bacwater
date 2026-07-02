@@ -75,6 +75,34 @@ const CORE: {
   },
 ];
 
+/** Plain text for schema/answer fields (strips markdown markers). */
+function stripMarkdown(s: string): string {
+  return s
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/[`#>_]/g, "")
+    .replace(/[ \t]+/g, " ")
+    .trim();
+}
+
+/** Renders a stored FAQ body with basic markdown (bold, paragraphs). */
+function FaqBody({ body }: { body: string }) {
+  const blocks = body.split(/\n\n+/);
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, i) => {
+        const html = block
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+          .replace(/\*([^*]+)\*/g, "<em>$1</em>");
+        return <p key={i} dangerouslySetInnerHTML={{ __html: html }} />;
+      })}
+    </div>
+  );
+}
+
 export default async function FaqPage() {
   const dbFaqs = await prisma.contentBlock.findMany({
     where: { kind: "faq", published: true },
@@ -92,7 +120,7 @@ export default async function FaqPage() {
       ...dbFaqs.map((f) => ({
         "@type": "Question",
         name: f.title,
-        acceptedAnswer: { "@type": "Answer", text: f.body },
+        acceptedAnswer: { "@type": "Answer", text: stripMarkdown(f.body) },
       })),
     ],
   };
@@ -192,7 +220,7 @@ export default async function FaqPage() {
                 <AccordionItem key={f.id} value={f.slug}>
                   <AccordionTrigger>{f.title}</AccordionTrigger>
                   <AccordionContent>
-                    <div className="whitespace-pre-line">{f.body}</div>
+                    <FaqBody body={f.body} />
                   </AccordionContent>
                 </AccordionItem>
               ))}
