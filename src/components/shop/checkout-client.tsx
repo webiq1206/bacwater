@@ -14,7 +14,6 @@ export function CheckoutClient() {
   const router = useRouter();
   const items = useCart((s) => s.items);
   const hydrated = useCart((s) => s.hydrated);
-  const clear = useCart((s) => s.clear);
   const [pending, setPending] = useState(false);
 
   if (!hydrated) return null;
@@ -64,7 +63,9 @@ export function CheckoutClient() {
         setPending(false);
         return;
       }
-      clear();
+      // Do not clear the cart here: if the customer cancels at Stripe they
+      // should return to a full cart. The cart is cleared on the success page
+      // once payment (or the offline order) is confirmed.
       if (data.url) {
         window.location.href = data.url;
       } else {

@@ -99,10 +99,9 @@ export async function POST(req: Request) {
     try {
       const stripe = new Stripe(stripeKey);
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-      const stripeSession = await stripe.checkout.sessions.create({
-        mode: "payment",
-        customer_email: email,
-        line_items: items.map((i) => {
+
+      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+        items.map((i) => {
           const dbp = priceMap.get(i.productId)!;
           return {
             price_data: {
@@ -112,13 +111,31 @@ export async function POST(req: Request) {
             },
             quantity: i.quantity,
           };
-        }),
+        });
+      // Charge the same tax recorded on the order so the amount Stripe collects
+      // matches order.totalCents exactly.
+      if (taxCents > 0) {
+        lineItems.push({
+          price_data: {
+            currency: "usd",
+            product_data: { name: "Estimated sales tax" },
+            unit_amount: taxCents,
+          },
+          quantity: 1,
+        });
+      }
+
+      const stripeSession = await stripe.checkout.sessions.create({
+        mode: "payment",
+        customer_email: email,
+        line_items: lineItems,
         shipping_options: [
           {
             shipping_rate_data: {
               type: "fixed_amount",
               fixed_amount: { amount: shippingCents, currency: "usd" },
-              display_name: shippingCents === 0 ? "Free shipping" : "Standard shipping",
+              display_name:
+                shippingCents === 0 ? "Free shipping" : "Standard shipping",
             },
           },
         ],
@@ -132,12 +149,18 @@ export async function POST(req: Request) {
       });
       return NextResponse.json({ ok: true, url: stripeSession.url, publicId });
     } catch (e) {
-      console.error(e);
-      // fall through - treat as offline test order
+      console.error("Stripe checkout failed", e);
+      // Never mark the order paid on a Stripe error. Leave it pending so no
+      // unpaid order is treated as paid.
+      return NextResponse.json(
+        { ok: false, error: "Could not start checkout. Please try again." },
+        { status: 502 }
+      );
     }
   }
 
-  // Offline test mode - mark as paid immediately so admin flow is testable.
+  // No Stripe key configured (local/dev only): mark paid so the admin flow is
+  // testable offline. In production the key is set, so this never runs.
   await prisma.order.update({
     where: { id: order.id },
     data: { status: "paid" },
