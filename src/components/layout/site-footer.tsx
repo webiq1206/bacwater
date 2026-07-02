@@ -3,6 +3,7 @@ import Link from "next/link";
 const FOOTER = {
   Product: [
     { href: "/plan", label: "Build My Plan" },
+    { href: "/peptides", label: "Peptide Guides" },
     { href: "/shop", label: "Shop Supplies" },
     { href: "/tools", label: "Calculators" },
     { href: "/plans", label: "My Plans" },

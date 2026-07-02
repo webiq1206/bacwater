@@ -80,6 +80,7 @@ export const STATIC_PAGES: SitemapUrl[] = [
   { path: "/plan/new", changeFrequency: "weekly", priority: 0.9 },
   { path: "/plan/advanced", changeFrequency: "weekly", priority: 0.8 },
   { path: "/shop", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/peptides", changeFrequency: "weekly", priority: 0.9 },
   { path: "/learn", changeFrequency: "weekly", priority: 0.8 },
   { path: "/faq", changeFrequency: "weekly", priority: 0.7 },
   { path: "/tools", changeFrequency: "weekly", priority: 0.9 },
@@ -102,6 +103,7 @@ export const STATIC_PAGES: SitemapUrl[] = [
 /** Segment files referenced by the sitemap index. */
 export const SITEMAP_SEGMENTS = [
   "/sitemap-pages.xml",
+  "/sitemap-peptides.xml",
   "/sitemap-learn.xml",
   "/sitemap-products.xml",
 ];
