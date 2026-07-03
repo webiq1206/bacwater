@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-import { ProductJsonLd } from "@/components/common/product-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
+import { SITE_URL } from "@/lib/seo/schema";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import { Infographic } from "@/components/common/infographic";
@@ -62,8 +62,6 @@ export default async function BuyPage() {
     })
     .catch(() => [] as Awaited<ReturnType<typeof prisma.product.findMany>>);
 
-  const featured = products[0];
-
   const catalog = await getCatalog();
   const relatedReading = relatedContent(catalog, {
     topics: ["where-to-buy", "injection-supplies"],
@@ -83,17 +81,25 @@ export default async function BuyPage() {
           { name: "Buy Bac Water", url: "/buy" },
         ]}
       />
-      {featured && (
-        <ProductJsonLd
-          product={{
-            name: featured.name,
-            description: featured.description,
-            slug: featured.slug,
-            sku: featured.sku,
-            priceCents: featured.priceCents,
-            currency: featured.currency,
-            imageUrl: featured.imageUrl,
-            inventory: featured.inventory,
+      {products.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "CollectionPage",
+              name: "Buy Bacteriostatic Water Online",
+              url: `${SITE_URL}/buy`,
+              mainEntity: {
+                "@type": "ItemList",
+                itemListElement: products.map((p, i) => ({
+                  "@type": "ListItem",
+                  position: i + 1,
+                  url: `${SITE_URL}/shop/${p.slug}`,
+                  name: p.name,
+                })),
+              },
+            }),
           }}
         />
       )}

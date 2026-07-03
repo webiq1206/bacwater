@@ -151,12 +151,37 @@ export default async function LearnPage({
 
   const peptideOptions = PEPTIDES.filter((p) => p.slug !== "custom");
 
+  // Determine schema URL/name/description — mirror the generateMetadata logic so
+  // indexable filtered pages declare the correct URL in their structured data.
+  const single = singleDimension(f);
+  const isIndexableFilter = !!(single && results.length >= 3);
+
+  let schemaUrl = `${SITE_URL}/learn`;
+  let schemaName = "BAC Water Learning Center";
+  let schemaDescription =
+    "Filter beginner guides, comparisons, and FAQs on bac water and peptide reconstitution.";
+
+  if (isIndexableFilter) {
+    const label =
+      single === "type"
+        ? CONTENT_TYPE_LABEL[f.type!]
+        : single === "topic"
+          ? TOPIC_LABEL[f.topic!]
+          : shortName(
+              PEPTIDES.find((p) => p.slug === f.peptide)?.name ?? f.peptide!
+            );
+    const canonical = hrefWith({}, { [single!]: f[single!] } as ActiveFilters);
+    schemaUrl = `${SITE_URL}${canonical}`;
+    schemaName = `${label} guides · BAC Water Learning Center`;
+    schemaDescription = `Bac water and reconstitution content filtered to ${label}. Guides, comparisons, and FAQs written for beginners.`;
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-12 sm:pt-16 pb-24 sm:pb-32">
       <WebPageJsonLd
-        name="BAC Water Learning Center"
-        description="Filter beginner guides, comparisons, and FAQs on bac water and peptide reconstitution."
-        url="/learn"
+        name={schemaName}
+        description={schemaDescription}
+        url={schemaUrl}
         breadcrumb={[
           { name: "Home", url: "/" },
           { name: "Learning Center", url: "/learn" },
@@ -168,8 +193,8 @@ export default async function LearnPage({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
-            name: "BAC Water Learning Center",
-            url: `${SITE_URL}/learn`,
+            name: schemaName,
+            url: schemaUrl,
             mainEntity: {
               "@type": "ItemList",
               itemListElement: results.slice(0, 30).map((e, i) => ({

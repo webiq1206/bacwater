@@ -22,7 +22,7 @@ export const orgNode = {
   "@id": ORG_ID,
   name: "BACwater.ai",
   url: SITE_URL,
-  logo: `${SITE_URL}/icon.svg`,
+  logo: `${SITE_URL}/favicon.ico`,
   description:
     "BACwater.ai is the complete BAC water calculator and reconstitution guide: deterministic calculations, printable plans, and premium supplies.",
   contactPoint: {
