@@ -15,7 +15,7 @@ interface Props { params: Promise<{ slug: string }>; }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const g = await prisma.contentBlock.findUnique({ where: { slug } });
+  const g = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
   return g
     ? {
         title: g.title,
@@ -58,7 +58,7 @@ function renderBody(body: string) {
 
 export default async function GuidePage({ params }: Props) {
   const { slug } = await params;
-  const guide = await prisma.contentBlock.findUnique({ where: { slug } });
+  const guide = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
   if (!guide) return notFound();
 
   const refs = guideReferences(slug);

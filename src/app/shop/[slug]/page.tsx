@@ -14,7 +14,7 @@ interface Props { params: Promise<{ slug: string }>; }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const p = await prisma.product.findUnique({ where: { slug } });
+  const p = await prisma.product.findFirst({ where: { slug, active: true } });
   return p
     ? {
         title: `${p.name} - Buy Online`,
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  const products = await prisma.product.findMany({ select: { slug: true } }).catch(() => []);
+  const products = await prisma.product.findMany({ where: { active: true }, select: { slug: true } }).catch(() => []);
   return products.map((p) => ({ slug: p.slug }));
 }
 
@@ -47,7 +47,7 @@ const FAQS = [
 
 export default async function PdpPage({ params }: Props) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({ where: { slug } });
+  const product = await prisma.product.findFirst({ where: { slug, active: true } });
   if (!product) return notFound();
 
   const related = await prisma.product.findMany({
