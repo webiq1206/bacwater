@@ -12,6 +12,14 @@ export const metadata = {
   title: "Buy BAC Water, Syringes & Supplies",
   description:
     "Premium bacteriostatic water, insulin syringes, and alcohol prep pads. Everything you need to reconstitute peptides safely. Free shipping available.",
+  openGraph: {
+    title: "Buy BAC Water, Syringes & Supplies",
+    description:
+      "Premium bacteriostatic water, insulin syringes, and alcohol prep pads. Everything you need to reconstitute peptides safely. Free shipping available.",
+    url: "/shop",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 const CATEGORY_INFO: Record<string, { label: string; hint: string }> = {

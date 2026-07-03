@@ -9,6 +9,14 @@ export const metadata = {
   title: "Free Peptide Reconstitution Calculator",
   description:
     "Free peptide reconstitution calculator. Enter your vial size, dose, and syringe to get exact BAC water amount, syringe units, and doses per vial. For research use.",
+  openGraph: {
+    title: "Free Peptide Reconstitution Calculator",
+    description:
+      "Free peptide reconstitution calculator. Enter your vial size, dose, and syringe to get exact BAC water amount, syringe units, and doses per vial. For research use.",
+    url: "/tools/reconstitution",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function Page() {

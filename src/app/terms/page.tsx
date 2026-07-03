@@ -6,6 +6,13 @@ export const metadata = {
   alternates: { canonical: "/terms" },
   title: "Terms of Service",
   description: "Terms of service for BACwater.ai. Research use, accuracy, orders, returns, and site usage terms.",
+  openGraph: {
+    title: "Terms of Service",
+    description: "Terms of service for BACwater.ai. Research use, accuracy, orders, returns, and site usage terms.",
+    url: "/terms",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function TermsPage() {

@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "Supply Calculator - What You Need for a Cycle",
   description:
     "Enter your peptide, dose, and cycle length to get a complete shopping list with exact quantities of BAC water, syringes, and alcohol prep pads.",
+  openGraph: {
+    title: "Supply Calculator - What You Need for a Cycle",
+    description:
+      "Enter your peptide, dose, and cycle length to get a complete shopping list with exact quantities of BAC water, syringes, and alcohol prep pads.",
+    url: "/tools/supplies",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

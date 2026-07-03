@@ -6,6 +6,13 @@ export const metadata = {
   alternates: { canonical: "/disclaimer" },
   title: "Disclaimer",
   description: "BACwater.ai is an educational and research tool. Products are for laboratory research only. Not medical advice.",
+  openGraph: {
+    title: "Disclaimer",
+    description: "BACwater.ai is an educational and research tool. Products are for laboratory research only. Not medical advice.",
+    url: "/disclaimer",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function DisclaimerPage() {

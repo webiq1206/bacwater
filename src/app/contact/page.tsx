@@ -7,6 +7,13 @@ export const metadata = {
   alternates: { canonical: "/contact" },
   title: "Contact Us",
   description: "Have a question about an order, a plan, or our products? Reach the BACwater.ai team.",
+  openGraph: {
+    title: "Contact Us",
+    description: "Have a question about an order, a plan, or our products? Reach the BACwater.ai team.",
+    url: "/contact",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function ContactPage() {

@@ -59,9 +59,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BACwater.ai",
-    description:
-      "Personalized peptide reconstitution plans and premium supplies.",
   },
   robots: { index: true, follow: true },
 };

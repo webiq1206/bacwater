@@ -6,6 +6,13 @@ export const metadata = {
   alternates: { canonical: "/privacy" },
   title: "Privacy Policy",
   description: "How BACwater.ai collects, uses, and protects your data. Payments processed by Stripe. No ad trackers.",
+  openGraph: {
+    title: "Privacy Policy",
+    description: "How BACwater.ai collects, uses, and protects your data. Payments processed by Stripe. No ad trackers.",
+    url: "/privacy",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function PrivacyPage() {

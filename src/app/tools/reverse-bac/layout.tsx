@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "Reverse BAC Water Calculator - Units to Water",
   description:
     "Work backwards. Choose the dose and the exact syringe units you want to draw, and get the precise amount of bacteriostatic water to add to your vial.",
+  openGraph: {
+    title: "Reverse BAC Water Calculator - Units to Water",
+    description:
+      "Work backwards. Choose the dose and the exact syringe units you want to draw, and get the precise amount of bacteriostatic water to add to your vial.",
+    url: "/tools/reverse-bac",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

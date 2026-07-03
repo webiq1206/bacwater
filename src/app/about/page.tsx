@@ -8,6 +8,14 @@ export const metadata = {
   title: "About Us",
   description:
     "BACwater.ai is the most beginner-friendly BAC water calculator and reconstitution guide. Exact math, plain-English explanations, and premium supplies in one place.",
+  openGraph: {
+    title: "About Us",
+    description:
+      "BACwater.ai is the most beginner-friendly BAC water calculator and reconstitution guide. Exact math, plain-English explanations, and premium supplies in one place.",
+    url: "/about",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function AboutPage() {

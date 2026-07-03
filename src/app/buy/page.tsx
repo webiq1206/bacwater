@@ -25,6 +25,14 @@ export const metadata: Metadata = {
   description:
     "Buy sealed, research-grade bacteriostatic water and reconstitution supplies with fast US shipping. Order bac water vials, kits, and syringes and skip the pharmacy run.",
   alternates: { canonical: "/buy" },
+  openGraph: {
+    title: "Buy Bacteriostatic Water Online",
+    description:
+      "Buy sealed, research-grade bacteriostatic water and reconstitution supplies with fast US shipping. Order bac water vials, kits, and syringes and skip the pharmacy run.",
+    url: "/buy",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 const FAQS = [

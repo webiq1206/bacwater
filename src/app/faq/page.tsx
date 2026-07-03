@@ -15,6 +15,14 @@ export const metadata = {
   description:
     "Direct answers on BAC water: what it is, how much to add, whether it needs refrigerating, how long it lasts, ingredients and pH, prescription status, and safety.",
   alternates: { canonical: "/faq" },
+  openGraph: {
+    title: "BAC Water FAQ: Storage, Dosing, Prescription & Uses",
+    description:
+      "Direct answers on BAC water: what it is, how much to add, whether it needs refrigerating, how long it lasts, ingredients and pH, prescription status, and safety.",
+    url: "/faq",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 const CORE: {

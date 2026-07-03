@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "Dose Calculator - mcg to Syringe Units",
   description:
     "Enter your vial concentration and draw volume to calculate your exact dose in mcg, mg, and insulin syringe units. Shows the math step by step.",
+  openGraph: {
+    title: "Dose Calculator - mcg to Syringe Units",
+    description:
+      "Enter your vial concentration and draw volume to calculate your exact dose in mcg, mg, and insulin syringe units. Shows the math step by step.",
+    url: "/tools/dose",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

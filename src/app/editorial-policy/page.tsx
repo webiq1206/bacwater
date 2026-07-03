@@ -7,6 +7,14 @@ export const metadata = {
   title: "Editorial & Sourcing Policy",
   description:
     "How BACwater.ai researches, fact-checks, and maintains its reconstitution guides and calculators. Company-level accountability, verified formulas, quarterly review.",
+  openGraph: {
+    title: "Editorial & Sourcing Policy",
+    description:
+      "How BACwater.ai researches, fact-checks, and maintains its reconstitution guides and calculators. Company-level accountability, verified formulas, quarterly review.",
+    url: "/editorial-policy",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function EditorialPolicyPage() {

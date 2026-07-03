@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   description:
     "Per-peptide bac water calculators and reconstitution guides. Exact water amounts, syringe units, storage, and shelf life for every peptide we carry.",
   alternates: { canonical: "/peptides" },
+  openGraph: {
+    title: "Peptide BAC Water Calculators & Reconstitution Guides",
+    description:
+      "Per-peptide bac water calculators and reconstitution guides. Exact water amounts, syringe units, storage, and shelf life for every peptide we carry.",
+    url: "/peptides",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 const CATEGORY_ORDER: { key: PeptideCategory; label: string }[] = [

@@ -7,6 +7,14 @@ export const metadata = {
   title: "Shipping & Returns",
   description:
     "How BACwater.ai ships orders, expected delivery times, order tracking, and our returns policy for research supplies.",
+  openGraph: {
+    title: "Shipping & Returns",
+    description:
+      "How BACwater.ai ships orders, expected delivery times, order tracking, and our returns policy for research supplies.",
+    url: "/shipping-returns",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function ShippingReturnsPage() {

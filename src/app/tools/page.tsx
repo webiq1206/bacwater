@@ -9,6 +9,14 @@ export const metadata = {
   title: "Free Peptide Calculators & Tools",
   description:
     "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly, no jargon.",
+  openGraph: {
+    title: "Free Peptide Calculators & Tools",
+    description:
+      "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly, no jargon.",
+    url: "/tools",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 const TOOLS = [

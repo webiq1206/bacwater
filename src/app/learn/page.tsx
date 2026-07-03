@@ -86,6 +86,14 @@ export async function generateMetadata({
       description:
         "Filter beginner guides, comparisons, and FAQs on bac water, reconstitution, syringes, storage, and dosing. Written for first-timers.",
       alternates: { canonical: "/learn" },
+      openGraph: {
+        title: "Peptide Reconstitution Guides & BAC Water Learning Center",
+        description:
+          "Filter beginner guides, comparisons, and FAQs on bac water, reconstitution, syringes, storage, and dosing. Written for first-timers.",
+        url: "/learn",
+        type: "website",
+        siteName: "BACwater.ai",
+      },
     };
   }
 
@@ -111,6 +119,13 @@ export async function generateMetadata({
         title: `${label} guides · BAC Water Learning Center`,
         description: `Bac water and reconstitution content filtered to ${label}. Guides, comparisons, and FAQs written for beginners.`,
         alternates: { canonical },
+        openGraph: {
+          title: `${label} guides · BAC Water Learning Center`,
+          description: `Bac water and reconstitution content filtered to ${label}. Guides, comparisons, and FAQs written for beginners.`,
+          url: canonical,
+          type: "website",
+          siteName: "BACwater.ai",
+        },
       };
     }
   }

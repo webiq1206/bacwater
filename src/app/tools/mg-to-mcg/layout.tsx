@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "mg to mcg Converter - Milligrams to Micrograms",
   description:
     "Convert between milligrams and micrograms for peptide dosing. Vial labels use mg, dose protocols use mcg. This makes switching instant.",
+  openGraph: {
+    title: "mg to mcg Converter - Milligrams to Micrograms",
+    description:
+      "Convert between milligrams and micrograms for peptide dosing. Vial labels use mg, dose protocols use mcg. This makes switching instant.",
+    url: "/tools/mg-to-mcg",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

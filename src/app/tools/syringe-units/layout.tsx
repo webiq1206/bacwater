@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "Syringe Unit Converter - mL to Units",
   description:
     "Convert between milliliters and insulin syringe units instantly. Two-way converter with a quick-reference table for U-100 insulin syringes.",
+  openGraph: {
+    title: "Syringe Unit Converter - mL to Units",
+    description:
+      "Convert between milliliters and insulin syringe units instantly. Two-way converter with a quick-reference table for U-100 insulin syringes.",
+    url: "/tools/syringe-units",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

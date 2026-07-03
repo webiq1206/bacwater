@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "BAC Water Calculator - How Much to Add",
   description:
     "Enter your peptide and vial size to find out exactly how much bacteriostatic water to add for clean, easy-to-measure doses on a standard insulin syringe.",
+  openGraph: {
+    title: "BAC Water Calculator - How Much to Add",
+    description:
+      "Enter your peptide and vial size to find out exactly how much bacteriostatic water to add for clean, easy-to-measure doses on a standard insulin syringe.",
+    url: "/tools/bac-water",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
