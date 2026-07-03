@@ -9,7 +9,6 @@ const FOOTER = {
     { href: "/tools", label: "Calculators" },
     { href: "/tools/reverse-bac", label: "Reverse Calculator" },
     { href: "/tools/vial-labels", label: "Vial Labels" },
-    { href: "/plans", label: "My Plans" },
   ],
   Learn: [
     { href: "/learn", label: "Learning Center" },

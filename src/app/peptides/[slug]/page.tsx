@@ -36,6 +36,7 @@ import { Button } from "@/components/ui/button";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
+import { findVialSizePage } from "@/lib/peptides/vial-sizes";
 
 const CATEGORY_LABEL: Record<string, string> = {
   healing: "Healing & recovery",
@@ -246,13 +247,26 @@ export default async function PeptidePage({
                 </tr>
               </thead>
               <tbody>
-                {rows.map((r) => (
+                {rows.map((r) => {
+                  const sizePage = findVialSizePage(p.slug, `${r.vialMg}mg`);
+                  return (
                   <tr
                     key={r.vialMg}
                     id={`bac-water-${r.vialMg}mg`}
                     className="border-t border-border scroll-mt-24"
                   >
-                    <td className="px-4 py-3 font-medium">{r.vialMg} mg</td>
+                    <td className="px-4 py-3 font-medium">
+                      {sizePage ? (
+                        <Link
+                          href={`/peptides/${p.slug}/${sizePage.sizeParam}`}
+                          className="underline underline-offset-2 decoration-border hover:decoration-foreground"
+                        >
+                          {r.vialMg} mg
+                        </Link>
+                      ) : (
+                        <>{r.vialMg} mg</>
+                      )}
+                    </td>
                     <td className="px-4 py-3 tabular-nums">{r.bacMl} mL</td>
                     <td className="px-4 py-3 tabular-nums">
                       {r.concentrationMgPerMl} mg/mL
@@ -260,7 +274,8 @@ export default async function PeptidePage({
                     <td className="px-4 py-3 tabular-nums">{r.doseLabel}</td>
                     <td className="px-4 py-3 tabular-nums">{r.units} units</td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

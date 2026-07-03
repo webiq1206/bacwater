@@ -13,7 +13,7 @@ const NAV = [
   { href: "/shop", label: "Shop" },
   { href: "/learn", label: "Learn" },
   { href: "/tools", label: "Tools" },
-  { href: "/plans", label: "My Plans" },
+  { href: "/buy", label: "Buy Bac Water" },
 ];
 
 export function SiteHeader() {
