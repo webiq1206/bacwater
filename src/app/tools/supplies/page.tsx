@@ -99,12 +99,13 @@ export default function SupplyCalculatorPage() {
       <div className="max-w-3xl">
         <div className="eyebrow">Supply Calculator</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          How much do I need?
+          Peptide Supply Calculator
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Tell us what you&apos;re running and we&apos;ll figure out exactly how
-          many peptide vials, BAC water bottles, syringes, and alcohol pads
-          you&apos;ll need, with a one-click cart.
+          Tell us your peptide, dose, and cycle length and this supply
+          calculator will figure out exactly how many peptide vials, BAC water
+          bottles, syringes, and alcohol pads you&apos;ll need, with a
+          one-click cart.
         </p>
       </div>
 

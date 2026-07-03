@@ -177,11 +177,12 @@ export default async function LearnPage({
       <div className="max-w-3xl">
         <div className="eyebrow">Learning Center</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          Everything you need to reconstitute with confidence.
+          BAC Water &amp; Peptide Reconstitution Guides
         </h1>
         <p className="mt-3 text-muted-foreground">
-          Filter our guides, comparisons, and FAQs by topic, content type, or
-          peptide. Short, honest, written for beginners.
+          Filter our BAC water and peptide reconstitution guides, comparisons,
+          and FAQs by topic, content type, or peptide. Short, honest, written
+          for beginners.
         </p>
       </div>
 

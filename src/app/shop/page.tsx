@@ -72,11 +72,12 @@ export default async function ShopPage() {
       <div className="max-w-3xl">
         <div className="eyebrow">Shop</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          Everything you need to get started
+          Buy BAC Water, Syringes &amp; Reconstitution Supplies
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Premium supplies sourced from US-licensed vendors. Not sure what to
-          buy? Use our{" "}
+          Premium bacteriostatic water, insulin syringes, and reconstitution
+          supplies sourced from US-licensed vendors. Not sure what to buy? Use
+          our{" "}
           <Link href="/tools/supplies" className="font-medium underline">
             supply calculator
           </Link>{" "}

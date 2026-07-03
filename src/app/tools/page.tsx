@@ -102,12 +102,13 @@ export default function ToolsPage() {
       <div className="max-w-3xl">
         <div className="eyebrow">Free tools</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          Calculators &amp; converters
+          Free Peptide Calculators &amp; Converters
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Quick, focused tools for when you need a single answer. Everything
-          below is free, runs instantly in your browser, and explains the math
-          in plain English. For research and educational use.
+          Quick, focused peptide calculators and unit converters for when you
+          need a single answer. Everything below is free, runs instantly in
+          your browser, and explains the math in plain English. For research
+          and educational use.
         </p>
       </div>
 

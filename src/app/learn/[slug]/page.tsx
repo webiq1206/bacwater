@@ -13,17 +13,50 @@ import { guideReferences } from "@/lib/content/references";
 
 interface Props { params: Promise<{ slug: string }>; }
 
+function extractMetaDescription(body: string): string {
+  const paragraphs = body.split(/\n\n+/);
+  for (const block of paragraphs) {
+    const trimmed = block.trim();
+    // Skip markdown headings, list items, table rows, and fenced code blocks
+    if (/^#{1,6}\s/.test(trimmed)) continue;
+    if (/^[-*+]\s/.test(trimmed)) continue;
+    if (/^\d+\.\s/.test(trimmed)) continue;
+    if (/^\|/.test(trimmed)) continue;
+    if (/^```/.test(trimmed)) continue;
+    if (trimmed.length < 20) continue;
+    // Strip remaining markdown formatting and normalize whitespace
+    const clean = trimmed
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/\*([^*]+)\*/g, "$1")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .replace(/[#_]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (clean.length < 20) continue;
+    // Trim at a sentence boundary around 150-160 characters
+    if (clean.length <= 160) return clean;
+    const cutoff = clean.slice(0, 160);
+    const lastSentence = cutoff.search(/[.!?][^.!?]*$/);
+    if (lastSentence > 80) return clean.slice(0, lastSentence + 1).trim();
+    const lastSpace = cutoff.lastIndexOf(" ");
+    return (lastSpace > 80 ? clean.slice(0, lastSpace) : cutoff).trim();
+  }
+  // Fallback: strip all markdown and truncate
+  return body.replace(/[*_#`]/g, "").replace(/\s+/g, " ").trim().slice(0, 155);
+}
+
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const g = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
-  return g
-    ? {
-        title: g.title,
-        description: g.body.replace(/[*_#`]/g, "").slice(0, 155),
-        openGraph: { title: g.title, description: g.body.replace(/[*_#`]/g, "").slice(0, 155) },
-        alternates: { canonical: `/learn/${slug}` },
-      }
-    : { title: "Guide not found" };
+  if (!g) return { title: "Guide not found" };
+  const description = extractMetaDescription(g.body);
+  return {
+    title: g.title,
+    description,
+    openGraph: { title: g.title, description },
+    alternates: { canonical: `/learn/${slug}` },
+  };
 }
 
 export async function generateStaticParams() {
