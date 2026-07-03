@@ -151,7 +151,7 @@ export default async function LearnPage({
 
   const peptideOptions = PEPTIDES.filter((p) => p.slug !== "custom");
 
-  // Determine schema URL/name/description — mirror the generateMetadata logic so
+  // Determine schema URL/name/description - mirror the generateMetadata logic so
   // indexable filtered pages declare the correct URL in their structured data.
   const single = singleDimension(f);
   const isIndexableFilter = !!(single && results.length >= 3);
