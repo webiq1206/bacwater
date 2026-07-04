@@ -30,23 +30,23 @@ export const metadata: Metadata = {
 const CHECKLIST: { check: string; why: string }[] = [
   {
     check: "Sealed and tamper-evident",
-    why: "An intact seal is your first sign the vial has not been opened, punctured, or refilled since it left the manufacturer.",
+    why: "A sealed cap is your first clue. It shows no one opened, poked, or refilled the bottle after it was made.",
   },
   {
     check: "Sterile, USP-grade",
-    why: "USP-grade sterile product is made to a recognized pharmacopeia standard, so you know what is in the vial and how it was prepared.",
+    why: "'USP-grade' means it was made to a trusted quality rule-set. That tells you what is really in the bottle and how it was made.",
   },
   {
     check: "Preservative clearly stated (0.9% benzyl alcohol)",
-    why: "The label should name the bacteriostatic preservative and its concentration. If it does not, you cannot tell true bacteriostatic water from plain sterile water.",
+    why: "The label should name the preservative and how much is in it (0.9% benzyl alcohol). If it does not, you cannot tell real BAC water from plain sterile water.",
   },
   {
     check: "US-based shipping and support",
-    why: "A US shipping address and reachable support mean faster delivery, clearer accountability, and someone to contact if an order arrives damaged.",
+    why: "A US address and easy-to-reach support mean faster delivery and someone to talk to if your order shows up damaged.",
   },
   {
     check: "Lot or batch number plus a clear returns policy",
-    why: "A printed lot number and a written returns policy show the supplier tracks its product and stands behind it if something is wrong.",
+    why: "A printed batch number and a written returns policy show the seller tracks the product and will help if something is wrong.",
   },
 ];
 

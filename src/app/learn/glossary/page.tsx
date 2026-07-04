@@ -37,27 +37,27 @@ const TERMS: Term[] = [
     term: "Bacteriostatic water",
     anchor: "bacteriostatic-water",
     definition:
-      "Sterile water with 0.9% benzyl alcohol added as a preservative that inhibits the growth of bacteria. Because of the preservative, the same vial can be punctured multiple times, which is why it is commonly used to dissolve and dilute lyophilized peptides. It is often shortened to BAC water. Per FDA labeling, it is not for use in newborns.",
+      "This is sterile water with 0.9% benzyl alcohol (a germ-fighting preservative) added. The preservative stops germs from growing. Because of it, you can put a needle into the same vial many times. That is why it is used to dissolve and mix dried peptides. It is often called BAC water for short. Per FDA labeling, it is not for use in newborns.",
     related: { label: "What is BAC water?", href: "/learn/what-is-bac-water" },
   },
   {
     term: "Benzyl alcohol",
     anchor: "benzyl-alcohol",
     definition:
-      "The bacteriostatic preservative in BAC water, present at 0.9% by weight. It slows bacterial growth so a multi-dose vial stays usable across repeated punctures. Benzyl alcohol is what distinguishes bacteriostatic water from plain sterile water.",
+      "This is the germ-fighting preservative in BAC water. It makes up 0.9% of the water by weight. It slows germ growth, so you can use one vial across many needle draws. Benzyl alcohol is what makes BAC water different from plain sterile water.",
     related: { label: "Benzyl alcohol, explained", href: "/learn/vs/benzyl-alcohol" },
   },
   {
     term: "Bacteriostatic",
     anchor: "bacteriostatic",
     definition:
-      "Describes an agent that inhibits bacterial growth rather than killing bacteria outright. This is different from bactericidal, which means actively killing bacteria. The preservative in BAC water is bacteriostatic, so the water resists contamination but is not sterilizing anything already introduced.",
+      "\"Bacteriostatic\" means it stops germs from growing. It does not kill germs that are already there. (A different word, \"bactericidal,\" means it kills germs.) The preservative in BAC water is bacteriostatic. So the water holds off new germs, but it does not kill germs that already got in.",
   },
   {
     term: "Reconstitution",
     anchor: "reconstitution",
     definition:
-      "The process of adding a liquid, called a diluent, to a dried powder to return it to a usable solution. For peptides, this usually means drawing bacteriostatic water into a vial of lyophilized powder. The amount of diluent you add determines the final concentration.",
+      "This means adding a liquid to a dried powder to turn it back into a usable liquid. The liquid you add is called a diluent. For peptides, this usually means adding BAC water to a vial of dried powder. How much you add sets how strong the final liquid is.",
     related: {
       label: "How reconstitution works",
       href: "/learn/how-peptide-reconstitution-works",
@@ -67,39 +67,39 @@ const TERMS: Term[] = [
     term: "Lyophilization / lyophilized",
     anchor: "lyophilization",
     definition:
-      "Lyophilization is freeze-drying: freezing a solution and then removing the water under vacuum, leaving a stable dry powder or cake. A lyophilized peptide is one supplied in this dried form. Freeze-drying helps the peptide stay stable in shipping and storage until it is reconstituted.",
+      "Lyophilization is just freeze-drying. First the liquid is frozen. Then the water is pulled out, leaving a dry powder or cake. A lyophilized peptide is one that comes in this dried form. Freeze-drying helps the peptide stay stable during shipping and storage until you mix it.",
   },
   {
     term: "Diluent",
     anchor: "diluent",
     definition:
-      "The liquid used to dissolve or dilute a dried substance during reconstitution. For peptides, bacteriostatic water is the most common diluent because its preservative supports repeated vial punctures. Sterile water and other solutions can also serve as diluents depending on the product.",
+      "A diluent is the liquid you use to dissolve or thin a dried substance when you mix it. For peptides, BAC water is the most common diluent. Its preservative lets you draw from the vial many times. Sterile water and other liquids can also be diluents, based on the product.",
   },
   {
     term: "Concentration (mg/mL)",
     anchor: "concentration",
     definition:
-      "How much peptide is dissolved in each milliliter of solution, expressed in milligrams per milliliter. It is calculated by dividing the total milligrams of peptide by the volume of diluent added. Adding more diluent lowers the concentration; adding less raises it.",
+      "This is how much peptide is in each milliliter of liquid. It is shown as milligrams per milliliter (mg/mL). To find it, divide the total milligrams of peptide by the amount of liquid you added. More liquid makes it weaker. Less liquid makes it stronger.",
     related: { label: "Dose calculator", href: "/tools/dose" },
   },
   {
     term: "U-100",
     anchor: "u-100",
     definition:
-      "A standard for insulin syringes where the scale is marked in units, with 100 units equal to 1 milliliter. On a U-100 syringe, 1 unit equals 0.01 mL. Peptide users borrow these syringes and their unit markings to measure small volumes precisely.",
+      "This is a standard for insulin syringes. The scale is marked in units, and 100 units equal 1 milliliter. So on a U-100 syringe, 1 unit is 0.01 mL. Peptide users borrow these syringes and their unit marks to measure small amounts with care.",
     related: { label: "Syringe units explained", href: "/tools/syringe-units" },
   },
   {
     term: "Subcutaneous",
     anchor: "subcutaneous",
     definition:
-      "Refers to the layer of fatty tissue just beneath the skin. A subcutaneous injection places fluid into that layer, typically using a short, fine needle. The abbreviation is often written as subQ or SC.",
+      "\"Subcutaneous\" means the layer of fatty tissue just under the skin. A subcutaneous injection puts fluid into that layer. It usually uses a short, thin needle. It is often written as subQ or SC for short.",
   },
   {
     term: "Sterile water",
     anchor: "sterile-water",
     definition:
-      "Water for injection that has been purified and sterilized but contains no preservative. Without a bacteriostatic agent, an opened vial is intended for a single use. This is the main practical difference from bacteriostatic water, which can be re-entered because of its preservative.",
+      "This is water for injection that has been cleaned and made germ-free. But it has no preservative. Without a germ-fighting ingredient, an opened vial is for a single use only. That is the main difference from BAC water, which you can draw from many times because of its preservative.",
     related: { label: "Sterile water vs BAC water", href: "/learn/vs/sterile-water" },
   },
 ];

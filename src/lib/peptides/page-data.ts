@@ -65,10 +65,9 @@ export function directAnswer(p: PeptideRef): string {
   const conc = round(vialMg / bacMl, 2);
   const units = round(((doseMcg / 1000) / (vialMg / bacMl)) * 100, 1);
   return (
-    `To reconstitute a ${vialMg} mg vial of ${name}, add about ${round(bacMl, 2)} mL of ` +
-    `bacteriostatic water (bac water). That yields ${conc} mg/mL, so a typical ${formatDose(doseMcg)} ` +
-    `dose measures about ${units} units on a 1 mL (U-100) insulin syringe. Use more or less bac ` +
-    `water to move the dose to an easier-to-read mark.`
+    `To mix a ${vialMg} mg vial of ${name}, add about ${round(bacMl, 2)} mL of BAC water. ` +
+    `Now each 1 mL of liquid holds ${conc} mg of peptide. So a ${formatDose(doseMcg)} dose is about ` +
+    `${units} units on a 1 mL insulin syringe. Want a rounder number? Add a little more or a little less water.`
   );
 }
 

@@ -35,7 +35,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     metaDescription:
       "Bac water contains a benzyl alcohol preservative for multi-dose use. Sterile water has none and is single-use. Use bac water for peptide reconstitution.",
     verdict:
-      "For reconstituting peptides you draw from more than once, use bacteriostatic water. It contains 0.9% benzyl alcohol, a preservative that suppresses bacterial growth so a vial stays usable for weeks. Sterile water has no preservative, which makes it single-use once opened. That preservative is the entire difference.",
+      "If you will use a vial more than once, pick BAC water. It has a preservative (a germ-fighting ingredient) that stops germs from growing, so the vial stays good for weeks. Sterile water has no preservative. Once you open it, use it one time and throw it away. That one preservative is the whole difference.",
     table: [
       { dimension: "Preservative", bac: "0.9% benzyl alcohol", other: "None" },
       { dimension: "Multi-dose safe", bac: "Yes, about 28 days refrigerated", other: "No, single use" },
@@ -45,21 +45,21 @@ export const COMPARISONS: ComparisonTopic[] = [
     body: [
       {
         h2: "Why the preservative matters",
-        p: "Every time you insert a needle into a vial you introduce a small contamination risk. The benzyl alcohol in bacteriostatic water suppresses bacterial growth, which is what makes a multi-dose vial safe to use over days or weeks. Sterile water offers no such protection, so it is intended for a single draw.",
+        p: "Each time you put a needle into a vial, you add a small risk of germs getting in. The benzyl alcohol (germ-fighting preservative) in BAC water stops germs from growing. This is what lets you use one vial over days or weeks. Sterile water has none of this protection. That is why it is meant for a single draw only.",
       },
       {
         h2: "Can you substitute one for the other?",
-        p: "You can use bacteriostatic water anywhere sterile water is called for, since the preservative does not affect the peptide. You should not use sterile water where bacteriostatic water is called for if you plan to re-enter the vial, because it will not resist contamination between draws.",
+        p: "You can use BAC water any time sterile water is called for. The preservative does not harm the peptide. But do not use sterile water in place of BAC water if you plan to draw from the vial more than once. It cannot fight germs between draws.",
       },
     ],
     faqs: [
       {
         q: "Is bac water the same as sterile water?",
-        a: "No. Bacteriostatic water contains 0.9% benzyl alcohol as a preservative, and sterile water contains no preservative at all. That preservative is what lets a bac water vial be used across multiple draws, while sterile water is single-use.",
+        a: "No. BAC water has 0.9% benzyl alcohol (a germ-fighting preservative). Sterile water has no preservative at all. That is why you can use a BAC water vial many times, but sterile water is one-time use only.",
       },
       {
         q: "Can I use sterile water instead of bac water for peptides?",
-        a: "Only if you will draw the entire vial in a single session. For any peptide you plan to draw from more than once, bacteriostatic water is the standard choice because its preservative resists contamination between draws.",
+        a: "Only if you will use the whole vial in one sitting. For any peptide you draw more than once, BAC water is the standard choice. Its preservative fights germs between draws.",
       },
     ],
   },
@@ -71,7 +71,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     metaDescription:
       "Saline is 0.9% sodium chloride with no preservative. Bac water adds benzyl alcohol for multi-dose use. Bac water is the standard choice for reconstitution.",
     verdict:
-      "Plain saline is 0.9% sodium chloride with no preservative, so like sterile water it is single-use once opened. Bacteriostatic water adds a benzyl alcohol preservative that resists contamination across multiple draws. For reconstituting peptides you use over time, bacteriostatic water is the standard choice.",
+      "Plain saline is salt water (0.9% sodium chloride). It has no preservative, so like sterile water it is one-time use once opened. BAC water adds benzyl alcohol (a germ-fighting preservative) that fights germs across many draws. For peptides you use over time, BAC water is the standard choice.",
     table: [
       { dimension: "Contents", bac: "Sterile water plus 0.9% benzyl alcohol", other: "0.9% sodium chloride in water" },
       { dimension: "Preservative", bac: "Yes", other: "No (plain saline)" },
@@ -81,21 +81,21 @@ export const COMPARISONS: ComparisonTopic[] = [
     body: [
       {
         h2: "Preservative, not salt, is the point",
-        p: "The practical difference for reconstitution is the preservative, not the salt content. Plain normal saline has no preservative, so an opened vial should be treated as single-use. Bacteriostatic water keeps a multi-dose vial usable, which is why it is the default for peptides drawn over time.",
+        p: "For mixing peptides, the key difference is the preservative, not the salt. Plain saline has no preservative. Once you open a vial, use it one time only. BAC water keeps a vial safe to use many times. That is why it is the go-to for peptides used over time.",
       },
       {
         h2: "A note on preserved saline",
-        p: "Bacteriostatic sodium chloride (0.9% saline with benzyl alcohol) does exist and behaves more like bac water. If your saline is preserved, check the label for benzyl alcohol. Plain saline, the common form, is not preserved.",
+        p: "There is also a preserved saline (0.9% saline with benzyl alcohol added). It acts more like BAC water. If your saline is preserved, check the label for benzyl alcohol. Plain saline is the common kind, and it is not preserved.",
       },
     ],
     faqs: [
       {
         q: "Is bac water the same as saline?",
-        a: "No. Saline is 0.9% sodium chloride in water. Bacteriostatic water is sterile water with a 0.9% benzyl alcohol preservative and no added salt. For reconstituting multi-dose peptide vials, bac water is the standard choice because it is preserved.",
+        a: "No. Saline is salt water (0.9% sodium chloride). BAC water is sterile water with 0.9% benzyl alcohol (a germ-fighting preservative) and no added salt. For mixing peptide vials you use many times, BAC water is the standard choice because it is preserved.",
       },
       {
         q: "Can I use saline instead of bac water for peptides?",
-        a: "Plain saline has no preservative, so an opened vial is single-use. For any peptide you draw more than once, bacteriostatic water is preferred because its preservative resists contamination between draws.",
+        a: "Plain saline has no preservative, so an opened vial is one-time use. For any peptide you draw more than once, BAC water is better. Its preservative fights germs between draws.",
       },
     ],
   },
@@ -107,7 +107,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     metaDescription:
       "0.9% sodium chloride is saline: salt water with no preservative. Bac water is preserved sterile water. Use bac water for multi-dose peptide reconstitution.",
     verdict:
-      "A 0.9% sodium chloride solution is saline, meaning salt dissolved in water with no preservative in its plain form. Bacteriostatic water is sterile water preserved with benzyl alcohol and no added salt. For reconstituting peptides you draw more than once, use bacteriostatic water.",
+      "A 0.9% sodium chloride solution is just saline, which means salt mixed into water. In its plain form it has no preservative. BAC water is sterile water kept safe with benzyl alcohol (a germ-fighting preservative), and it has no added salt. For peptides you draw more than once, use BAC water.",
     table: [
       { dimension: "Also known as", bac: "Bacteriostatic water, bac water", other: "Normal saline, 0.9% NaCl" },
       { dimension: "Added salt", bac: "No", other: "Yes, 0.9% sodium chloride" },
@@ -117,13 +117,13 @@ export const COMPARISONS: ComparisonTopic[] = [
     body: [
       {
         h2: "Sodium chloride solution is saline",
-        p: "0.9% sodium chloride and normal saline are the same thing. The comparison to bacteriostatic water is therefore the same as the saline comparison: the deciding factor for reconstitution is whether the diluent is preserved for multi-dose use, which plain sodium chloride solution is not.",
+        p: "0.9% sodium chloride and normal saline are the same thing. So this comparison is the same as the saline one. The thing that matters for mixing peptides is whether the liquid has a preservative for many uses. Plain sodium chloride solution does not.",
       },
     ],
     faqs: [
       {
         q: "Is bac water the same as sodium chloride?",
-        a: "No. A 0.9% sodium chloride solution is saline, which contains dissolved salt and, in its plain form, no preservative. Bacteriostatic water is preserved sterile water with no added salt. Bac water is the standard choice for multi-dose peptide reconstitution.",
+        a: "No. A 0.9% sodium chloride solution is saline. It has salt in it and, in its plain form, no preservative. BAC water is preserved sterile water with no added salt. BAC water is the standard choice for mixing peptides you use many times.",
       },
     ],
   },
@@ -135,7 +135,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     metaDescription:
       "Distilled, deionized, and tap water are not sterile and not for injection. Only use bacteriostatic or sterile water to reconstitute peptides.",
     verdict:
-      "Do not reconstitute peptides with distilled, deionized, or regular tap water. None of them are sterile or intended for injection, so they carry a real contamination risk. Use bacteriostatic water, which is both sterile and preserved for multi-dose use, or sterile water for a single draw.",
+      "Do not mix peptides with distilled, deionized, or tap water. None of these are sterile. None are made for injection. They carry a real risk of germs. Use BAC water, which is sterile and preserved for many uses. Or use sterile water for a single draw.",
     table: [
       { dimension: "Sterile", bac: "Yes", other: "No" },
       { dimension: "Preservative", bac: "0.9% benzyl alcohol", other: "None" },
@@ -144,14 +144,14 @@ export const COMPARISONS: ComparisonTopic[] = [
     ],
     body: [
       {
-        h2: "Purity is not the same as sterility",
-        p: "Distilled and deionized water are purified to remove minerals, but purification is not sterilization. They can still carry microorganisms and are not manufactured as injectables. Reconstituting a peptide with them risks contaminating the entire vial.",
+        h2: "Clean is not the same as germ-free",
+        p: "Distilled and deionized water are cleaned to take out minerals. But clean is not the same as germ-free. They can still hold germs. They are not made for injection. Mixing a peptide with them can put germs in the whole vial.",
       },
     ],
     faqs: [
       {
         q: "Can I use distilled water instead of bac water?",
-        a: "No. Distilled, deionized, and tap water are not sterile and are not intended for injection. Use bacteriostatic water for multi-dose reconstitution, or sterile water for a single draw.",
+        a: "No. Distilled, deionized, and tap water are not sterile. They are not made for injection. Use BAC water for peptides you use many times, or sterile water for a single draw.",
       },
     ],
   },
@@ -163,7 +163,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     metaDescription:
       "Benzyl alcohol is not an alternative to bac water. It is the 0.9% preservative inside bac water that makes it bacteriostatic and multi-dose safe.",
     verdict:
-      "These are not two competing diluents. Benzyl alcohol is the preservative inside bacteriostatic water. Bac water is simply sterile water with 0.9% benzyl alcohol added. The benzyl alcohol is what suppresses bacterial growth and makes the water bacteriostatic, so you would never reconstitute with benzyl alcohol on its own.",
+      "These are not two rival liquids. Benzyl alcohol is the preservative inside BAC water. BAC water is just sterile water with 0.9% benzyl alcohol (a germ-fighting ingredient) added. The benzyl alcohol is what stops germs from growing. So you would never mix a peptide with benzyl alcohol by itself.",
     table: [
       { dimension: "What it is", bac: "Sterile water plus 0.9% benzyl alcohol", other: "The preservative ingredient itself" },
       { dimension: "Used as a diluent", bac: "Yes", other: "No, it is a component" },
@@ -173,13 +173,13 @@ export const COMPARISONS: ComparisonTopic[] = [
     body: [
       {
         h2: "Benzyl alcohol is the ingredient, not the alternative",
-        p: "If you searched for bac water versus benzyl alcohol, the short answer is that one contains the other. Bacteriostatic water is the finished diluent, and benzyl alcohol is the 0.9% preservative in it. Comparing them is like comparing salt water to salt.",
+        p: "If you looked up BAC water versus benzyl alcohol, here is the short answer. One is part of the other. BAC water is the finished liquid you mix with. Benzyl alcohol is the 0.9% preservative inside it. Comparing them is like comparing salt water to salt.",
       },
     ],
     faqs: [
       {
         q: "Is benzyl alcohol the same as bac water?",
-        a: "No. Benzyl alcohol is the preservative inside bacteriostatic water. Bac water is sterile water with 0.9% benzyl alcohol added, and that ingredient is what makes it bacteriostatic and safe for multi-dose use.",
+        a: "No. Benzyl alcohol is the preservative inside BAC water. BAC water is sterile water with 0.9% benzyl alcohol added. That ingredient is what fights germs and makes the vial safe to use many times.",
       },
     ],
   },
@@ -191,7 +191,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     metaDescription:
       "Bac water dissolves most peptides. Dilute acetic acid is only used for specific peptides that will not fully dissolve in water. Bac water is the default.",
     verdict:
-      "Bacteriostatic water is the default diluent for most peptides. Dilute acetic acid is a specialty option used only for certain peptides that do not fully dissolve in water. Unless a peptide is specifically noted as hard to dissolve, bacteriostatic water is the correct choice.",
+      "BAC water is the go-to liquid for mixing most peptides. Dilute acetic acid (weak vinegar acid) is a special option. It is only used for a few peptides that will not fully dissolve in water. Unless a peptide is marked as hard to dissolve, BAC water is the right choice.",
     table: [
       { dimension: "Typical use", bac: "Most peptides", other: "Specific poorly-soluble peptides only" },
       { dimension: "Preservative", bac: "0.9% benzyl alcohol", other: "None" },
@@ -200,14 +200,14 @@ export const COMPARISONS: ComparisonTopic[] = [
     ],
     body: [
       {
-        h2: "Acetic acid is a specialty solvent",
-        p: "A small number of peptides resist dissolving in plain water. In research settings, a very dilute acetic acid solution is sometimes used to get them into solution first. This is the exception, not the rule. For the vast majority of peptides, bacteriostatic water dissolves the powder cleanly.",
+        h2: "Acetic acid is a special-case solvent",
+        p: "A few peptides will not dissolve in plain water. In research, a very weak acetic acid (vinegar acid) solution is sometimes used to get them to dissolve first. This is the rare case, not the rule. For almost all peptides, BAC water dissolves the powder just fine.",
       },
     ],
     faqs: [
       {
         q: "When would I use acetic acid instead of bac water?",
-        a: "Only for specific peptides that do not fully dissolve in water. Dilute acetic acid is a specialty solvent for hard-to-dissolve compounds. For most peptides, bacteriostatic water is the correct and standard diluent.",
+        a: "Only for certain peptides that will not fully dissolve in water. Dilute acetic acid (weak vinegar acid) is a special-case solvent for hard-to-dissolve powders. For most peptides, BAC water is the right and standard choice.",
       },
     ],
   },
@@ -219,7 +219,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     metaDescription:
       "Reconstitution solution is usually bacteriostatic water under another name. Check the label for 0.9% benzyl alcohol to confirm it is preserved for multi-dose use.",
     verdict:
-      "In most cases a product sold as reconstitution solution is bacteriostatic water under a different name. The way to confirm is the label: if it lists 0.9% benzyl alcohol, it is preserved and works exactly like bac water. If it lists no preservative, treat it as single-use like sterile water.",
+      "Most of the time, a product sold as \"reconstitution solution\" is just BAC water under a different name. The way to be sure is to read the label. If it lists 0.9% benzyl alcohol (a germ-fighting preservative), it works just like BAC water. If it lists no preservative, treat it as one-time use like sterile water.",
     table: [
       { dimension: "What it usually is", bac: "Sterile water plus 0.9% benzyl alcohol", other: "Often bacteriostatic water, rebranded" },
       { dimension: "How to confirm", bac: "Labeled bacteriostatic water", other: "Check label for benzyl alcohol" },
@@ -229,13 +229,13 @@ export const COMPARISONS: ComparisonTopic[] = [
     body: [
       {
         h2: "Read the label to be sure",
-        p: "Reconstitution solution is not a single standardized product. Some are simply bacteriostatic water, some are preserved differently, and a few are unpreserved. The only reliable way to know how to handle it is to read the ingredient list and look for a preservative such as benzyl alcohol.",
+        p: "\"Reconstitution solution\" is not one set product. Some kinds are just BAC water. Some use a different preservative. A few have no preservative at all. The only safe way to know how to use it is to read the ingredient list. Look for a preservative like benzyl alcohol.",
       },
     ],
     faqs: [
       {
         q: "Is reconstitution solution the same as bac water?",
-        a: "Usually yes. Most reconstitution solution is bacteriostatic water sold under a different name. Confirm by checking the label for 0.9% benzyl alcohol. If it is present, it is preserved and works like bac water; if not, treat it as single-use.",
+        a: "Usually yes. Most reconstitution solution is BAC water sold under a different name. To be sure, check the label for 0.9% benzyl alcohol. If it is there, it works like BAC water. If not, treat it as one-time use.",
       },
     ],
   },

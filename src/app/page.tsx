@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Term } from "@/components/common/term";
 import {
   ArrowRight,
   Beaker,
@@ -66,7 +67,7 @@ export default async function HomePage() {
     <div>
       <WebPageJsonLd
         name="BAC Water Calculator and Reconstitution Guide"
-        description="Bacteriostatic water (bac water) is sterile water with 0.9% benzyl alcohol added as a preservative, the standard diluent for reconstituting lyophilized peptides. Calculate exactly how much to add for your vial."
+        description="BAC water is germ-free water with a safe preservative that stops germs from growing, so one bottle stays usable for weeks. Use it to mix dried peptides into a liquid you can measure, and calculate exactly how much to add."
         url="/"
         citations={CORE_BACWATER_REFERENCES}
       />
@@ -129,11 +130,12 @@ export default async function HomePage() {
             What is bacteriostatic water?
           </h2>
           <p className="mt-4 text-lg text-foreground/90 leading-relaxed">
-            Bacteriostatic water (bac water) is sterile water with 0.9% benzyl
-            alcohol added as a preservative. It is the standard diluent for
-            reconstituting lyophilized peptides, because the preservative lets
-            you draw from one vial safely for weeks. The calculators here work
-            out exactly how much to add for your vial.
+            BAC water is clean, germ-free water with a tiny bit of a safe{" "}
+            <Term id="preservative">preservative</Term> added. The preservative
+            stops germs from growing. That means you can use the same small
+            bottle again and again for weeks. People use it to turn dried peptide
+            powder into a liquid they can measure. The calculators here tell you
+            exactly how much to add.
           </p>
         </div>
         <div className="mt-8 max-w-3xl overflow-x-auto border border-border">
@@ -379,9 +381,9 @@ export default async function HomePage() {
             You can trust the math.
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Every calculation shows exactly how the answer was reached, warns
-            you about anything unusual, and never guesses. The AI assistant
-            explains results in plain English. It never does the math itself.
+            Every answer shows its work. It warns you if something looks odd. It
+            never guesses. Our AI helper explains the results in plain words. It
+            never does the math on its own.
           </p>
           <div className="mt-8 flex gap-3">
             <Button asChild variant="brand">

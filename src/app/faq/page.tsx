@@ -32,19 +32,19 @@ const CORE: {
 }[] = [
   {
     q: "What is BAC water (bacteriostatic water)?",
-    a: "Bacteriostatic water (BAC water) is sterile water that contains 0.9% benzyl alcohol as a preservative. BAC stands for bacteriostatic, meaning the benzyl alcohol suppresses bacterial growth. That preservative is why the same vial can be used safely across multiple doses over several weeks.",
+    a: "BAC water is sterile water with a small amount of preservative added. The preservative is called benzyl alcohol (a germ-fighting ingredient). It stops germs from growing in the water. This lets you use the same bottle many times over several weeks. \"BAC\" is short for bacteriostatic, which just means it holds germs back.",
   },
   {
     q: "What is BAC water used for?",
-    a: "BAC water is used to reconstitute (mix) lyophilized research peptides and other powders into a solution. Because it is preserved, it is the standard diluent for multi-dose peptide vials that you draw from more than once, unlike single-use sterile water.",
+    a: "BAC water is used to mix dried peptide powder into a liquid you can measure. The preservative in it keeps the liquid safe to use for weeks, so you can draw from the same bottle many times. Plain sterile water has no preservative, so it is one-time use only.",
   },
   {
     q: "What is BAC water made of, and what is its pH?",
-    a: "BAC water is sterile water for injection with 0.9% benzyl alcohol added as a bacteriostatic preservative. Its pH typically falls in a mildly acidic to neutral range (about 4.5 to 7). The benzyl alcohol is the only meaningful difference between BAC water and plain sterile water.",
+    a: "BAC water is sterile water with 0.9% benzyl alcohol (a germ-fighting preservative) added. Its pH is close to neutral (about 4.5 to 7, where 7 is neutral). In plain terms, it is close to the acidity of plain water. The benzyl alcohol is the only real difference between BAC water and plain sterile water.",
   },
   {
     q: "How much BAC water should I add to reconstitute a peptide?",
-    a: "Add enough BAC water so your dose lands at a clean, easy-to-read number on your insulin syringe. For a 5 mg peptide vial, 2 mL of BAC water is a common starting point, which makes a 250 mcg dose about 10 units.",
+    a: "Add enough BAC water so your dose lands on an easy-to-read number on your syringe. For a 5 mg peptide vial, 2 mL of BAC water is a common place to start. That makes a 250 mcg dose come out to about 10 units.",
     cta: {
       href: "/tools/bac-water",
       text: "BAC water calculator",
@@ -53,7 +53,7 @@ const CORE: {
   },
   {
     q: "What size insulin syringe should I use for peptides?",
-    a: "For most peptides, a 1 mL (U-100) insulin syringe is the best default. If your dose is consistently under 30 units, a 0.3 mL insulin syringe with half-unit markings is easier to read accurately. A 0.5 mL syringe is a good middle ground.",
+    a: "For most peptides, a 1 mL (U-100) insulin syringe works well. If your dose is always under 30 units, a 0.3 mL syringe is easier to read. It has half-unit marks. A 0.5 mL syringe is a good middle choice.",
     cta: {
       href: "/tools/syringe-units",
       text: "syringe unit converter",
@@ -62,7 +62,7 @@ const CORE: {
   },
   {
     q: "Does BAC water need to be refrigerated, and how long does it last?",
-    a: "Refrigerate BAC water after the first puncture. An opened 30 mL vial is generally good for about 28 days in the fridge, while unopened BAC water is stable at room temperature until its printed expiration date. Reconstituted peptides also belong in the fridge and are usually stable for about 28 to 30 days.",
+    a: "Put BAC water in the fridge after you first open it. An opened 30 mL bottle is usually good for about 28 days in the fridge. An unopened bottle is fine at room temperature until the printed expiration date. Mixed peptides also go in the fridge. They usually last about 28 to 30 days.",
     cta: {
       href: "/plan",
       text: "plan builder",
@@ -71,15 +71,15 @@ const CORE: {
   },
   {
     q: "Do I need a prescription to buy BAC water?",
-    a: "In the US, bacteriostatic water is prescription-only when it is labeled for human use. The BAC water sold here is for laboratory research and educational purposes, so it is not sold over the counter for human use, and we do not provide medical advice.",
+    a: "In the US, BAC water is prescription-only when it is labeled for human use. The BAC water sold here is for research and educational use only. It is not sold over the counter for human use. We do not give medical advice.",
   },
   {
     q: "Is BAC water safe?",
-    a: "Used correctly, BAC water is a standard, well-established diluent. The main precautions are to swab the stopper before each draw, refrigerate after opening, and discard the vial if it turns cloudy or develops particles. Benzyl alcohol sensitivity is uncommon but possible, so check the ingredients if you have known allergies.",
+    a: "Used the right way, BAC water is safe and widely used. A few simple steps matter. Wipe the top of the bottle before each draw. Keep it in the fridge after you open it. If the liquid turns cloudy or has floating bits, throw it out. Benzyl alcohol allergies are rare but possible. If you have known allergies, check the ingredients first. This is for research and educational use only, and it is not medical advice.",
   },
   {
     q: "Is BACwater.ai a medical service?",
-    a: "No. BACwater.ai provides a BAC water calculator, reconstitution guides, and research supplies. We do not diagnose, prescribe, or provide medical advice. Consult a licensed healthcare provider for any medical guidance.",
+    a: "No. BACwater.ai gives you a BAC water calculator, mixing guides, and research supplies. We do not diagnose, prescribe, or give medical advice. Talk to a licensed healthcare professional for any medical questions.",
   },
 ];
 

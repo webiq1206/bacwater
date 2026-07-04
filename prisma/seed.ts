@@ -11,9 +11,9 @@ const PRODUCTS = [
     name: "Bacteriostatic Water, 30 mL",
     category: "bac-water",
     description:
-      "Sterile 0.9% benzyl alcohol bacteriostatic water for reconstitution. Multi-dose 30 mL vial, refrigerator-friendly, sourced from a US-licensed compounding facility.",
+      "Clean, germ-free BAC water for mixing peptides. It has 0.9% benzyl alcohol, a germ-fighting preservative. This is a 30 mL bottle you can use many times. Keep it in the fridge after you open it. It comes from a licensed US maker.",
     useCase:
-      "Used as the diluent for reconstituting research peptides and lyophilized powders.",
+      "Use it to mix dried research peptides and powders into a liquid. It is the standard liquid for this job.",
     priceCents: 1900,
     imageUrl: "/images/products/bac-30.svg",
     inventory: 200,
@@ -24,8 +24,8 @@ const PRODUCTS = [
     name: "Bacteriostatic Water, 30 mL, 3-pack",
     category: "bac-water",
     description:
-      "Three 30 mL vials of bacteriostatic water. Best value for weekly protocols and multiple peptides.",
-    useCase: "Bulk diluent supply for longer protocols.",
+      "This pack has three 30 mL bottles of BAC water. It is the best value if you use it every week. It is also handy if you mix more than one peptide.",
+    useCase: "A larger supply of mixing liquid for longer plans.",
     priceCents: 4900,
     imageUrl: "/images/products/bac-30-3.svg",
     inventory: 120,
@@ -36,9 +36,9 @@ const PRODUCTS = [
     name: "1 mL Insulin Syringes (100 pack)",
     category: "syringes",
     description:
-      "Sterile, single-use U-100 insulin syringes. 31-gauge x 5/16\" needle, clear markings at every unit, latex-free.",
+      "These are clean, one-time-use U-100 insulin syringes. The needle is 31-gauge and 5/16 inch. The scale is easy to read, with a mark at every unit. They are latex-free.",
     useCase:
-      "Most popular. Best all-around choice when your dose is between 10 and 60 units.",
+      "Our most popular pick. It is the best all-around choice for doses of 10 to 60 units.",
     priceCents: 2900,
     imageUrl: "/images/products/syr-ins-1.svg",
     inventory: 300,
@@ -49,8 +49,8 @@ const PRODUCTS = [
     name: "0.5 mL Insulin Syringes (100 pack)",
     category: "syringes",
     description:
-      "Half-mL U-100 insulin syringes. 31-gauge x 5/16\" needle, easier-to-read markings for smaller doses.",
-    useCase: "Easier to read. Ideal when your dose is under 50 units.",
+      "These are 0.5 mL U-100 insulin syringes. The needle is 31-gauge and 5/16 inch. The marks are easier to read for smaller doses.",
+    useCase: "Easier to read. It works best for doses under 50 units.",
     priceCents: 2900,
     imageUrl: "/images/products/syr-ins-05.svg",
     inventory: 240,
@@ -61,8 +61,8 @@ const PRODUCTS = [
     name: "0.3 mL Insulin Syringes (100 pack)",
     category: "syringes",
     description:
-      "Micro-dose U-100 insulin syringes. 31-gauge x 5/16\" needle, half-unit markings for the smallest, most accurate doses.",
-    useCase: "Most precise. Best when your dose is under 30 units.",
+      "These are 0.3 mL U-100 insulin syringes for very small doses. The needle is 31-gauge and 5/16 inch. They have half-unit marks for the most exact doses.",
+    useCase: "The most exact choice. It works best for doses under 30 units.",
     priceCents: 3200,
     imageUrl: "/images/products/syr-ins-03.svg",
     inventory: 180,
@@ -73,9 +73,9 @@ const PRODUCTS = [
     name: "Alcohol Prep Pads (200 count)",
     category: "alcohol-pads",
     description:
-      "Individually wrapped 70% isopropyl alcohol pads. Sterile, medium size, resealable box.",
+      "Each pad is wrapped on its own and holds 70% isopropyl alcohol (rubbing alcohol). The pads are clean and medium size. They come in a box you can reseal.",
     useCase:
-      "Sanitize vial tops and injection sites before and after each dose.",
+      "Use them to clean the vial top and the skin before and after each dose.",
     priceCents: 1200,
     imageUrl: "/images/products/alc-200.svg",
     inventory: 400,
@@ -86,8 +86,8 @@ const PRODUCTS = [
     name: "Reconstitution Starter Kit",
     category: "other",
     description:
-      "Everything you need to reconstitute your first peptide vial: 2× BAC water 30 mL, 1 box of 1 mL insulin syringes, 1 box of 200 alcohol prep pads.",
-    useCase: "The easiest way to get started: one purchase, one delivery.",
+      "This kit has all you need to mix your first peptide vial. You get two 30 mL bottles of BAC water. You also get one box of 1 mL insulin syringes. And you get one box of 200 alcohol prep pads.",
+    useCase: "The easiest way to start. You buy once and get it all in one delivery.",
     priceCents: 7900,
     imageUrl: "/images/products/kit-start.svg",
     inventory: 100,

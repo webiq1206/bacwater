@@ -28,9 +28,9 @@ export const CATEGORY_CONTEXT: Record<PeptideCategory, string> = {
   healing:
     "Healing and recovery peptides are among the most commonly reconstituted research compounds. The reconstitution process is the same as any other peptide: add bacteriostatic water, swirl gently, and refrigerate.",
   growth:
-    "Growth hormone secretagogues are usually reconstituted at low concentrations because the studied amounts are small. Choosing the right amount of BAC water is what keeps each dose at an easy-to-read mark on an insulin syringe.",
+    "Growth hormone secretagogues (peptides studied for nudging the body's own growth-hormone signals) are usually mixed at low strength, because the amounts studied are small. Picking the right amount of BAC water keeps each dose on an easy-to-read mark on the syringe.",
   metabolic:
-    "Metabolic peptides, including the GLP-1 class, are frequently reconstituted at home for research. Because the studied amounts vary widely, calculating the BAC water amount for your specific vial matters more here than almost anywhere else.",
+    "Metabolic peptides include the GLP-1 class (they act on a body signal called GLP-1 that helps control appetite and blood sugar). They are often mixed at home for research. The amounts studied vary a lot, so working out the BAC water for your exact vial matters more here than almost anywhere.",
   cognitive:
     "Cognitive research peptides are typically reconstituted in small volumes. The reconstitution method is standard, and shelf life once mixed follows the same refrigeration rules as other peptides.",
   cosmetic:
@@ -56,24 +56,24 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
     caveat: "Because a typical research amount is larger, a 1 mL insulin syringe is usually the most practical choice.",
   },
   ipamorelin: {
-    what: "Ipamorelin is a selective growth hormone secretagogue peptide studied for its targeted action.",
+    what: "Ipamorelin is a lab-made peptide. It is a growth hormone secretagogue, which means it is studied for gently nudging the body's own growth-hormone signals.",
     uses: "It is frequently reconstituted alongside CJC-1295 in growth hormone research. Studied amounts are small, so concentration and syringe choice matter.",
     caveat: "Small research amounts mean a 0.3 mL insulin syringe with half-unit marks is often easier to read than a 1 mL syringe.",
   },
   "cjc-1295-no-dac": {
-    what: "CJC-1295 without DAC, sometimes called Mod GRF 1-29, is a growth hormone releasing hormone analog with a short half-life.",
+    what: "CJC-1295 without DAC, also called Mod GRF 1-29, is a lab-made peptide in the growth-hormone group. It has a short half-life, which means it does not last long in the body once it is used.",
     uses: "It is often studied together with Ipamorelin. The 'no DAC' version is less stable once reconstituted, so it is typically mixed in smaller batches.",
     aka: "Also searched as CJC no DAC or Mod GRF 1-29.",
     caveat: "This version is less stable in solution. Use it within about three weeks and keep it cold and dark.",
   },
   "cjc-1295-with-dac": {
-    what: "CJC-1295 with DAC is a growth hormone releasing hormone analog engineered with a Drug Affinity Complex for a longer half-life.",
+    what: "CJC-1295 with DAC is a lab-made peptide in the growth-hormone group. The 'DAC' part is added so it lasts longer in the body (a longer half-life) than the no-DAC version.",
     uses: "The DAC extends how long it stays active in research models compared to the no-DAC version, which is the main reason researchers choose one over the other.",
     aka: "Also searched as CJC with DAC.",
     caveat: "Studied amounts are larger than the no-DAC version, so verify which variant your vial contains before calculating.",
   },
   sermorelin: {
-    what: "Sermorelin is a growth hormone releasing hormone analog, one of the shorter fragments studied in this class.",
+    what: "Sermorelin is a lab-made peptide in the growth-hormone group. It is one of the shorter pieces studied in this class.",
     uses: "It is a long-standing research compound in the growth hormone secretagogue group. Reconstitution follows the standard method.",
     caveat: "Sermorelin is relatively delicate once mixed. Refrigerate it right away and use it within about three weeks.",
   },
@@ -82,7 +82,7 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
     uses: "It sits in the same secretagogue family as Ipamorelin and GHRP peptides. Studied amounts are small.",
   },
   semaglutide: {
-    what: "Semaglutide is a GLP-1 receptor agonist peptide, one of the most widely studied metabolic research compounds.",
+    what: "Semaglutide is a lab-made peptide. It is one of the most studied peptides for how the body handles food and weight. It works on a body signal called GLP-1 (a GLP-1 receptor agonist).",
     uses: "It is frequently reconstituted for research into metabolic and appetite pathways. Studied amounts start very low and increase slowly.",
     aka: "Sometimes searched as GLP-3 (a common misspelling of GLP-1) and known by the brand names Ozempic and Wegovy.",
     caveat: "Research amounts vary widely and are usually very small. Confirm the exact milligram strength printed on your vial before calculating.",
@@ -94,7 +94,7 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
     ],
   },
   tirzepatide: {
-    what: "Tirzepatide is a dual GIP and GLP-1 receptor agonist peptide, studied in metabolic research.",
+    what: "Tirzepatide is a lab-made peptide studied for how the body handles food and weight. It works on two body signals at once, called GIP and GLP-1 (a dual receptor agonist), instead of just one.",
     uses: "It acts on two receptor pathways rather than one, which is what distinguishes it from single-agonist GLP-1 peptides in research.",
     aka: "Known by the brand names Mounjaro and Zepbound, and sometimes searched as GLP-3 or GLP-1.",
     caveat: "Tirzepatide vials come in a wide range of strengths. Never freeze the reconstituted solution, and verify the exact strength on your vial before calculating.",
@@ -116,37 +116,37 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
     caveat: "As an emerging compound, published references are limited. Verify your vial strength and confirm your intended amount before mixing.",
   },
   cagrilintide: {
-    what: "Cagrilintide is a long-acting amylin analog peptide studied in metabolic research, often alongside GLP-1 peptides.",
+    what: "Cagrilintide is a lab-made peptide studied for how the body handles food and weight. It is an amylin analog (a lab-made copy of a natural body signal called amylin) and is often studied next to GLP-1 peptides.",
     uses: "It is studied for its complementary action to GLP-1 compounds. Reconstitution is standard.",
   },
   "mots-c": {
-    what: "MOTS-c is a mitochondrial-derived peptide studied in metabolic and longevity research.",
+    what: "MOTS-c is a lab-made copy of a peptide that comes from the mitochondria, the tiny power plants inside cells. It is studied in metabolic and longevity research.",
     uses: "Studied amounts are relatively large compared with growth peptides, so doses are often measured in milligrams.",
   },
   epithalon: {
-    what: "Epithalon is a synthetic tetrapeptide studied in longevity and cellular research.",
+    what: "Epithalon is a small lab-made peptide (it is made of four building blocks, so it is called a tetrapeptide). It is studied in longevity and cellular research.",
     uses: "It is commonly researched in cycles. Reconstitution follows the standard method.",
     aka: "Also spelled Epitalon. Both spellings refer to the same peptide.",
   },
   "ghk-cu": {
-    what: "GHK-Cu is a copper-binding tripeptide studied in skin, hair, and tissue research.",
+    what: "GHK-Cu is a small lab-made peptide (made of three building blocks, so it is called a tripeptide) that holds onto copper. It is studied in skin, hair, and tissue research.",
     uses: "It is one of the most common cosmetic research peptides and is available in higher vial strengths than most peptides.",
     aka: "Also called copper peptide.",
     caveat: "A blue tint after reconstitution is completely normal and comes from the copper. It is not a sign of contamination.",
   },
   "melanotan-2": {
-    what: "Melanotan II is a synthetic analog of a melanocyte-stimulating hormone studied in pigmentation research.",
+    what: "Melanotan II is a lab-made copy of a natural hormone that affects skin color (a melanocyte-stimulating hormone). It is studied in pigmentation research.",
     uses: "It is studied for its effect on melanin pathways. Researchers typically begin with a very small test amount.",
     aka: "Often abbreviated MT2 or MT-2.",
     caveat: "Because responses vary, researchers usually start with a very low test amount and observe before adjusting.",
   },
   "ss-31": {
-    what: "SS-31, also known as Elamipretide, is a mitochondria-targeting peptide studied in cellular energy research.",
+    what: "SS-31, also known as Elamipretide, is a lab-made peptide that targets the mitochondria (the tiny power plants inside cells). It is studied in cellular energy research.",
     uses: "It is studied for its interaction with mitochondrial membranes. Reconstitution is standard.",
     aka: "Also known as Elamipretide.",
   },
   selank: {
-    what: "Selank is a synthetic peptide derived from a naturally occurring immunomodulatory peptide, studied in cognitive research.",
+    what: "Selank is a lab-made peptide based on a natural one that helps steer the immune system. It is studied in cognitive research.",
     uses: "It is studied in behavioral and cognitive research models. Reconstitution follows the standard method.",
   },
   semax: {
@@ -154,7 +154,7 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
     uses: "It is often grouped with Selank in nootropic research. Studied amounts are small.",
   },
   "aod-9604": {
-    what: "AOD-9604 is a modified fragment of growth hormone studied in metabolic research.",
+    what: "AOD-9604 is a lab-made piece of the growth-hormone molecule (a fragment, not the whole thing). It is studied in metabolic research.",
     uses: "It is a fragment rather than a full growth hormone peptide, which is what distinguishes it in research. Studied amounts are small.",
   },
   "kisspeptin-10": {
@@ -163,7 +163,7 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
     caveat: "Strengths in this group vary. Confirm the milligram amount on your vial before calculating.",
   },
   "pt-141": {
-    what: "PT-141, also known as Bremelanotide, is a melanocortin receptor agonist peptide studied in reproductive research.",
+    what: "PT-141, also known as Bremelanotide, is a lab-made peptide that works on a body signal system called melanocortin. It is studied in reproductive research.",
     uses: "It is related to Melanotan II but studied for different pathways. Reconstitution is standard.",
     aka: "Also known as Bremelanotide.",
   },

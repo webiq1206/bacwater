@@ -166,21 +166,18 @@ export default function ShelfLifePage() {
             temperature.
           </p>
           <p>
-            There is a nuance worth understanding. The preservative in bac water,
-            benzyl alcohol, is what makes the water bacteriostatic. Preservative
-            activity is temperature dependent, and some pharmacology references
-            note that antimicrobial activity can be somewhat lower at colder
-            temperatures. The practical takeaway is not that refrigeration is bad.
-            It is that refrigeration and clean, aseptic handling both matter.
-            Cold storage protects the peptide; careful technique (wiping the
-            stopper, not touching the needle, drawing cleanly) is what keeps the
-            solution free of contamination. One does not replace the other.
+            Here is a small thing to know. The preservative in BAC water is
+            benzyl alcohol. It is what fights germs. Germ-fighting works a little
+            slower when it is cold. That does not mean the fridge is bad. It
+            means two things keep your vial safe, not one. The cold keeps the
+            peptide strong. Clean habits keep germs out. You need both.
           </p>
           <p>
-            So keep the vial cold, keep it out of light, use a fresh sterile
-            needle each time, and respect the discard date. If a solution ever
-            looks cloudy, discolored, or has floating particles, discard it
-            regardless of the date.
+            Clean habits means: wipe the rubber top before each poke, do not
+            touch the needle, and pull the liquid out gently. Keep the vial cold
+            and out of light, use a fresh needle each time, and respect the
+            discard date. If the liquid ever looks cloudy, changes color, or has
+            floating bits, throw it out, no matter the date.
           </p>
         </div>
       </section>
