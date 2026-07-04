@@ -117,7 +117,10 @@ export default async function GuidePage({ params }: Props) {
       ]} />
       <div className="eyebrow">Guide</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">{guide.title}</h1>
-      <ReviewedBy className="mt-3" />
+      <ReviewedBy
+        className="mt-3"
+        updated={guide.updatedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+      />
       <article className="mt-4 prose prose-neutral max-w-none">
         {renderBody(guide.body)}
       </article>

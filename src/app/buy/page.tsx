@@ -10,6 +10,8 @@ import { FaqJsonLd } from "@/components/common/faq-json-ld";
 import { SITE_URL } from "@/lib/seo/schema";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
+import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
+import { StockBadge } from "@/components/shop/stock-badge";
 import { Infographic } from "@/components/common/infographic";
 import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { shippingSvg, shippingAlt } from "@/lib/infographics/static";
@@ -180,9 +182,12 @@ export default async function BuyPage() {
                   </p>
                 )}
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="font-semibold tabular-nums">
-                    {formatCurrency(p.priceCents)}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold tabular-nums">
+                      {formatCurrency(p.priceCents)}
+                    </span>
+                    <StockBadge inventory={p.inventory} active={p.active} />
+                  </div>
                   <span className="inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all" style={{ color: "var(--color-accent-guide)" }}>
                     View <ArrowRight className="h-4 w-4" />
                   </span>
@@ -206,6 +211,13 @@ export default async function BuyPage() {
             </Link>
           </Button>
         </div>
+        <RelatedReadingDynamic
+          useInterest
+          hideWhenNoSignal
+          topics={["dosage", "storage", "reconstitution-method"]}
+          title="Based on the peptide you were looking at"
+          limit={4}
+        />
       </section>
 
       {/* Near me */}

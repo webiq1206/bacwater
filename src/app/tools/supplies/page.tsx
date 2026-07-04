@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { setInterestPeptide } from "@/lib/learn/interest";
 
 type Frequency = "daily" | "twice-daily" | "every-other-day" | "weekly";
 type Unit = "mg" | "mcg";
@@ -47,6 +48,7 @@ export default function SupplyCalculatorPage() {
   function handlePeptideChange(slug: string) {
     const p = PEPTIDES.find((x) => x.slug === slug) ?? PEPTIDES[0];
     setPeptideSlug(slug);
+    if (slug !== "custom") setInterestPeptide(slug);
     setDoseInput(p.suggestedDoseMcg / 1000);
     setDoseUnit("mg");
     setVialMg(p.commonVialStrengthsMg[0]);

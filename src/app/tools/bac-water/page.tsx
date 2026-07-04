@@ -12,6 +12,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 import { setInterestPeptide } from "@/lib/learn/interest";
+import { SyringeVisual } from "@/components/plan/syringe-visual";
 
 type Unit = "mg" | "mcg";
 
@@ -204,6 +205,16 @@ export default function BacWaterCalculatorPage() {
 
             <ResearchDisclaimer className="mt-6" />
           </div>
+
+          {/* Syringe visualization: shows where to draw to */}
+          {valid && (
+            <SyringeVisual
+              fillPercent={Math.min(100, syringeUnits)}
+              readoutLabel={`${syringeUnits.toFixed(1)} units`}
+              scale="u100"
+              maxLabel="1 mL (100 units)"
+            />
+          )}
 
           {/* Why this number */}
           <div className="callout-panel">

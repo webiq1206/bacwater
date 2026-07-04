@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { setInterestPeptide } from "@/lib/learn/interest";
 import {
   ArrowLeft,
   ArrowRight,
@@ -255,6 +256,12 @@ export function PlanForm({ mode: initialMode }: Props) {
 
   const [peptideSlug, setPeptideSlug] = useState<string>("bpc-157");
   const [customPeptideName, setCustomPeptideName] = useState("");
+  // Picking a peptide is an interest signal used to personalize panels
+  // elsewhere on the site (homepage, buy page, FAQ).
+  const selectPeptide = useCallback((slug: string) => {
+    setPeptideSlug(slug);
+    if (slug !== "custom") setInterestPeptide(slug);
+  }, []);
 
   const [vialInput, setVialInput] = useState<number>(5);
   const [vialUnit, setVialUnit] = useState<Unit>("mg");
@@ -455,7 +462,7 @@ export function PlanForm({ mode: initialMode }: Props) {
               title="Which peptide are you mixing?"
               hint="Pick from the list, or choose &ldquo;Other&rdquo; if yours isn't shown."
             >
-              <Select value={peptideSlug} onValueChange={setPeptideSlug}>
+              <Select value={peptideSlug} onValueChange={selectPeptide}>
                 <SelectTrigger className="h-12">
                   <SelectValue />
                 </SelectTrigger>
@@ -862,7 +869,7 @@ export function PlanForm({ mode: initialMode }: Props) {
           onBack={null}
           stepNum={1}
         >
-          <Select value={peptideSlug} onValueChange={setPeptideSlug}>
+          <Select value={peptideSlug} onValueChange={selectPeptide}>
             <SelectTrigger className="h-14 text-base">
               <SelectValue />
             </SelectTrigger>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Term } from "@/components/common/term";
+import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 import {
   ArrowRight,
   Beaker,
@@ -340,6 +341,13 @@ export default async function HomePage() {
           Jump straight to the reconstitution guide and calculator for your
           peptide, or compare bac water with other diluents.
         </p>
+        <RelatedReadingDynamic
+          useInterest
+          hideWhenNoSignal
+          topics={["dosage", "reconstitution-method", "storage"]}
+          title="Pick up where you left off"
+          limit={4}
+        />
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {POPULAR_PEPTIDES.map((p) => (
             <Link

@@ -9,7 +9,15 @@ import { LAST_REVIEWED } from "@/lib/content-meta";
  * lift as a self-contained trust statement. Pairs with `reviewedBy` +
  * `lastReviewed` in the page schema.
  */
-export function ReviewedBy({ className = "" }: { className?: string }) {
+export function ReviewedBy({
+  className = "",
+  updated,
+}: {
+  className?: string;
+  /** When set, shows this page's real "Last updated" date instead of the
+   *  site-wide review date. Pass a formatted string like "August 2026". */
+  updated?: string;
+}) {
   return (
     <div className={`text-xs text-muted-foreground ${className}`}>
       Reviewed and maintained by the{" "}
@@ -19,7 +27,8 @@ export function ReviewedBy({ className = "" }: { className?: string }) {
       >
         BACwater.ai editorial team
       </Link>{" "}
-      against cited sources. Last reviewed {LAST_REVIEWED}.
+      against cited sources.{" "}
+      {updated ? `Last updated ${updated}.` : `Last reviewed ${LAST_REVIEWED}.`}
     </div>
   );
 }
