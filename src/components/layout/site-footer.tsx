@@ -73,12 +73,12 @@ export function SiteFooter() {
             © {new Date().getFullYear()} BACwater.ai. All rights reserved.
           </div>
           <div className="max-w-2xl md:text-right">
-            The content and products on this site are provided for research and
-            informational purposes only. Nothing here is intended to diagnose,
-            treat, cure, or prevent any disease, and nothing here constitutes
-            medical advice or creates a doctor-patient relationship. Consult a
-            licensed healthcare provider before making any decisions related to
-            your health.{" "}
+            The content and products on this site are for research and
+            educational purposes only. BACwater.ai is not a medical company.
+            Nothing here is intended to diagnose, treat, cure, or prevent any
+            disease, and nothing here is medical advice or creates a
+            doctor-patient relationship. Always verify anything health-related
+            with your doctor before acting on it.{" "}
             <Link href="/disclaimer" className="underline hover:text-foreground">
               Full disclaimer
             </Link>

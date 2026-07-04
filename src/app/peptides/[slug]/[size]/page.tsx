@@ -13,6 +13,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
+import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -233,6 +234,8 @@ export default async function VialSizePage({ params }: Props) {
           </div>
         </section>
       )}
+
+      <ResearchDisclaimer className="mt-10" />
 
       <References references={CORE_BACWATER_REFERENCES} />
     </div>
