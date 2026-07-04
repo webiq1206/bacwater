@@ -42,6 +42,7 @@ export default function BacWaterCalculatorPage() {
   const doseMl = concentration > 0 ? (doseMcg / 1000) / concentration : 0;
   const syringeUnits = doseMl * 100;
   const dosesPerVial = doseMcg > 0 ? Math.floor(vialMg / (doseMcg / 1000)) : 0;
+  const valid = vialMg > 0 && doseMcg > 0;
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
@@ -157,33 +158,38 @@ export default function BacWaterCalculatorPage() {
           <div className="border border-border bg-card p-6 sm:p-8">
             <div className="eyebrow">Your answer</div>
             <div className="mt-4 flex items-baseline gap-2">
-              <span className="result-hero">{rec}</span>
+              <span className="result-hero">{valid ? rec : "--"}</span>
               <span className="text-2xl text-muted-foreground font-serif">mL</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Add <strong className="text-foreground">{rec} mL</strong> of
-              bacteriostatic water to your {vialMg} mg vial. This gives you
-              clean, easy-to-measure doses on a standard insulin syringe.
+              {valid ? (
+                <>Add <strong className="text-foreground">{rec} mL</strong> of bacteriostatic water to your {vialMg} mg vial. This gives you clean, easy-to-measure doses on a standard insulin syringe.</>
+              ) : (
+                <>Enter a vial strength and a dose to see exactly how much bac water to add.</>
+              )}
             </p>
 
-            <div className="rule my-6" />
-
-            <div className="space-y-3 text-sm">
-              <ResultRow
-                label="Concentration after mixing"
-                value={`${concentration.toFixed(2)} mg/mL`}
-                sub={`${(concentration * 1000).toFixed(0)} mcg/mL`}
-              />
-              <ResultRow
-                label="Each dose draws"
-                value={`${syringeUnits.toFixed(1)} units`}
-                sub={`${doseMl.toFixed(3)} mL = ${doseMcg.toLocaleString()} mcg`}
-              />
-              <ResultRow
-                label="Doses per vial"
-                value={`${dosesPerVial}`}
-              />
-            </div>
+            {valid && (
+              <>
+                <div className="rule my-6" />
+                <div className="space-y-3 text-sm">
+                  <ResultRow
+                    label="Concentration after mixing"
+                    value={`${concentration.toFixed(2)} mg/mL`}
+                    sub={`${(concentration * 1000).toFixed(0)} mcg/mL`}
+                  />
+                  <ResultRow
+                    label="Each dose draws"
+                    value={`${syringeUnits.toFixed(1)} units`}
+                    sub={`${doseMl.toFixed(3)} mL = ${doseMcg.toLocaleString()} mcg`}
+                  />
+                  <ResultRow
+                    label="Doses per vial"
+                    value={`${dosesPerVial}`}
+                  />
+                </div>
+              </>
+            )}
 
             <div className="mt-6 flex flex-wrap gap-3">
               <Button asChild variant="brand" size="lg">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, HelpCircle } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
@@ -17,6 +17,32 @@ export default async function CheckoutSuccess({ searchParams }: Props) {
         include: { items: true },
       })
     : null;
+
+  // If we can't locate the order (stale or bad link), do NOT claim success and
+  // do NOT clear the cart.
+  if (!found) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-20 sm:pt-28 pb-24 sm:pb-32">
+        <div className="border border-border p-8 sm:p-12 text-center">
+          <div className="mx-auto h-12 w-12 border border-border bg-surface grid place-items-center">
+            <HelpCircle className="h-6 w-6 text-muted-foreground" />
+          </div>
+          <h1 className="mt-5 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
+            We couldn&apos;t find that order
+          </h1>
+          <p className="mt-2 text-muted-foreground leading-relaxed">
+            If you just paid, your confirmation is on its way by email. Check
+            your inbox for the receipt and tracking. If you don&apos;t see it,
+            reach out and we&apos;ll help.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
+            <Button asChild variant="brand"><Link href="/contact">Contact us</Link></Button>
+            <Button asChild variant="outline"><Link href="/shop">Back to shop</Link></Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-20 sm:pt-28 pb-24 sm:pb-32">

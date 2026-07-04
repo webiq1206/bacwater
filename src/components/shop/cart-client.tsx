@@ -5,6 +5,7 @@ import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { formatCurrency } from "@/lib/utils";
+import { FREE_SHIP_THRESHOLD_CENTS, FREE_SHIP_COPY } from "@/lib/shipping";
 
 export function CartClient() {
   const items = useCart((s) => s.items);
@@ -58,9 +59,10 @@ export function CartClient() {
               <div className="flex items-center gap-3 shrink-0">
                 <div className="inline-flex items-center border border-border">
                   <button
-                    onClick={() => updateQuantity(i.productId, i.quantity - 1)}
-                    className="h-9 w-9 grid place-items-center hover:bg-muted"
-                    aria-label="Decrease"
+                    onClick={() => updateQuantity(i.productId, Math.max(1, i.quantity - 1))}
+                    disabled={i.quantity <= 1}
+                    className="h-9 w-9 grid place-items-center hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+                    aria-label={`Decrease quantity of ${i.name}`}
                   >
                     <Minus className="h-3.5 w-3.5" />
                   </button>
@@ -68,7 +70,7 @@ export function CartClient() {
                   <button
                     onClick={() => updateQuantity(i.productId, i.quantity + 1)}
                     className="h-9 w-9 grid place-items-center hover:bg-muted"
-                    aria-label="Increase"
+                    aria-label={`Increase quantity of ${i.name}`}
                   >
                     <Plus className="h-3.5 w-3.5" />
                   </button>
@@ -102,11 +104,11 @@ export function CartClient() {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Shipping</span>
-            <span className="text-muted-foreground">{subtotal >= 5000 ? <span className="text-success font-medium">Free</span> : "Calculated at checkout"}</span>
+            <span className="text-muted-foreground">{subtotal >= FREE_SHIP_THRESHOLD_CENTS ? <span className="text-success font-medium">Free</span> : "Calculated at checkout"}</span>
           </div>
-          {subtotal < 5000 ? (
+          {subtotal < FREE_SHIP_THRESHOLD_CENTS ? (
             <p className="text-xs text-muted-foreground">
-              Add {formatCurrency(5000 - subtotal)} more for free shipping
+              Add {formatCurrency(FREE_SHIP_THRESHOLD_CENTS - subtotal)} more for free shipping
             </p>
           ) : null}
           <div className="flex justify-between text-sm">
@@ -123,7 +125,7 @@ export function CartClient() {
             </Link>
           </Button>
           <div className="text-[11px] text-muted-foreground text-center">
-            Secure checkout. Free shipping on orders over $50.
+            Secure checkout. {FREE_SHIP_COPY}
           </div>
       </div>
     </div>

@@ -151,7 +151,7 @@ export default function SyringeUnitConverterPage() {
           <p>
             For peptide reconstitution, working in units makes dosing simpler.
             That&apos;s why our plan builder gives you your dose in units.
-            just draw to that line on your syringe.
+            Just draw to that line on your syringe.
           </p>
         </TeachingSection>
       </div>

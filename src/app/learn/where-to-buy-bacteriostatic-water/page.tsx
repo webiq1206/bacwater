@@ -61,7 +61,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Is bacteriostatic water sold near me or at pharmacies?",
-    a: "Availability is inconsistent. A local pharmacy may carry it, may order it in, or may not stock it at all, so a searches for it near you can return few results. Because it is a niche multi-dose vial rather than a mass-market product, many buyers find sealed, clearly labeled options more reliably from online research suppliers that ship in the US.",
+    a: "Availability is inconsistent. A local pharmacy may carry it, may order it in, or may not stock it at all, so a search for it near you can return few results. Because it is a niche multi-dose vial rather than a mass-market product, many buyers find sealed, clearly labeled options more reliably from online research suppliers that ship in the US.",
   },
   {
     q: "How much does bacteriostatic water cost?",

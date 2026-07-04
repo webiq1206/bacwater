@@ -28,6 +28,8 @@ export default function DoseCalculatorPage() {
     return { doseMg, doseMcg, ml: actualMl, units: actualMl * 100 };
   }, [concMgPerMl, actualMl]);
 
+  const valid = concMgPerMl > 0 && actualMl > 0;
+
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <Breadcrumbs items={[
@@ -146,27 +148,35 @@ export default function DoseCalculatorPage() {
               <div className="eyebrow">Your dose</div>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="result-hero tabular-nums">
-                  {result.doseMg.toFixed(result.doseMg >= 1 ? 1 : 3)}
+                  {valid ? result.doseMg.toFixed(result.doseMg >= 1 ? 1 : 3) : "--"}
                 </span>
                 <span className="text-2xl text-muted-foreground font-serif">mg</span>
               </div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                = {result.doseMcg.toFixed(1)} mcg
-              </div>
+              {valid ? (
+                <>
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    = {result.doseMcg.toFixed(1)} mcg
+                  </div>
 
-              <div className="rule my-6" />
+                  <div className="rule my-6" />
 
-              <div className="space-y-3 text-sm">
-                <ResultRow label="Concentration" value={`${concMgPerMl.toFixed(2)} mg/mL`} />
-                <ResultRow label="Volume drawn" value={`${result.ml.toFixed(3)} mL (${result.units.toFixed(1)} units)`} />
-                <ResultRow label="Dose" value={`${result.doseMcg.toFixed(1)} mcg (${result.doseMg.toFixed(3)} mg)`} />
-              </div>
+                  <div className="space-y-3 text-sm">
+                    <ResultRow label="Concentration" value={`${concMgPerMl.toFixed(2)} mg/mL`} />
+                    <ResultRow label="Volume drawn" value={`${result.ml.toFixed(3)} mL (${result.units.toFixed(1)} units)`} />
+                    <ResultRow label="Dose" value={`${result.doseMcg.toFixed(1)} mcg (${result.doseMg.toFixed(3)} mg)`} />
+                  </div>
 
-              <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
-                Drawing <b>{result.units.toFixed(1)} units</b> from a solution
-                at <b>{concMgPerMl.toFixed(2)} mg/mL</b> gives
-                you <b>{result.doseMcg.toFixed(1)} mcg</b> of peptide per injection.
-              </p>
+                  <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
+                    Drawing <b>{result.units.toFixed(1)} units</b> from a solution
+                    at <b>{concMgPerMl.toFixed(2)} mg/mL</b> gives
+                    you <b>{result.doseMcg.toFixed(1)} mcg</b> of peptide per injection.
+                  </p>
+                </>
+              ) : (
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  Enter your concentration and how much you&apos;re drawing to see your dose.
+                </p>
+              )}
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button asChild variant="brand" size="lg">

@@ -200,7 +200,9 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
         ? "Insulin syringes, 0.5 mL / 50 units (100 pack)"
         : syringe.id === "insulin-1ml"
           ? "Insulin syringes, 1 mL / 100 units (100 pack)"
-          : "Syringes with mL scale (100 pack)";
+          // Non-insulin syringe types are not stocked; recommend the closest
+          // purchasable option we carry (the 1 mL insulin syringe).
+          : "Insulin syringes, 1 mL / 100 units (100 pack)";
   supplies.push({
     sku:
       syringe.id === "insulin-0.3ml"
@@ -209,7 +211,7 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
           ? "SYR-INS-05"
           : syringe.id === "insulin-1ml"
             ? "SYR-INS-10"
-            : "SYR-ML",
+            : "SYR-INS-10",
     name: syringeName,
     quantity: Math.max(1, Math.ceil(injectionSyringes / 100)),
     reason: `Enough for approximately ${injectionSyringes} injections.`,

@@ -49,6 +49,8 @@ export function PeptideCalc({
     };
   }, [vialMg, doseMcg]);
 
+  const valid = vialMg > 0 && doseMcg > 0;
+
   return (
     <div className="border-2 border-foreground bg-card">
       <div className="p-6 sm:p-8">
@@ -126,15 +128,21 @@ export function PeptideCalc({
               Add this much bac water
             </div>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="result-hero">{result.bacMl}</span>
+              <span className="result-hero">{valid ? result.bacMl : "--"}</span>
               <span className="text-2xl text-muted-foreground font-serif">mL</span>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-px bg-border flex-1">
-            <Stat label="Concentration" value={`${result.concentrationMgPerMl} mg/mL`} />
-            <Stat label="Per dose" value={`${result.units} units`} />
-            <Stat label="Doses / vial" value={`${result.dosesPerVial}`} />
-          </div>
+          {valid ? (
+            <div className="grid grid-cols-3 gap-px bg-border flex-1">
+              <Stat label="Concentration" value={`${result.concentrationMgPerMl} mg/mL`} />
+              <Stat label="Per dose" value={`${result.units} units`} />
+              <Stat label="Doses / vial" value={`${result.dosesPerVial}`} />
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground flex-1">
+              Enter a vial strength and a dose to see your numbers.
+            </p>
+          )}
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">

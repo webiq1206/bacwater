@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { AddToCartControl } from "@/components/shop/add-to-cart-control";
+import { StockBadge } from "@/components/shop/stock-badge";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { ProductJsonLd } from "@/components/common/product-json-ld";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -102,8 +103,11 @@ export default async function PdpPage({ params }: Props) {
           <h1 className="mt-1 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
             {product.name}
           </h1>
-          <div className="mt-4 text-2xl font-semibold tabular-nums">
-            {formatCurrency(product.priceCents)}
+          <div className="mt-4 flex items-center gap-3">
+            <div className="text-2xl font-semibold tabular-nums">
+              {formatCurrency(product.priceCents)}
+            </div>
+            <StockBadge inventory={product.inventory} active={product.active} showInStock />
           </div>
           <p className="mt-4 text-muted-foreground leading-relaxed">
             {product.description}
@@ -133,6 +137,8 @@ export default async function PdpPage({ params }: Props) {
                 name: product.name,
                 priceCents: product.priceCents,
                 imageUrl: product.imageUrl,
+                inventory: product.inventory,
+                active: product.active,
               }}
             />
           </div>

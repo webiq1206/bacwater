@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { formatCurrency } from "@/lib/utils";
+import { shippingCents, taxCents, FREE_SHIP_COPY } from "@/lib/shipping";
 import { toast } from "@/components/ui/toaster";
 
 export function CheckoutClient() {
@@ -19,8 +20,8 @@ export function CheckoutClient() {
   if (!hydrated) return null;
 
   const subtotal = cartSubtotalCents(items);
-  const shipping = subtotal > 5000 ? 0 : 899;
-  const tax = Math.round(subtotal * 0.07);
+  const shipping = shippingCents(subtotal);
+  const tax = taxCents(subtotal);
   const total = subtotal + shipping + tax;
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -110,13 +111,13 @@ export function CheckoutClient() {
                 </div>
                 <div>
                   <Label htmlFor="state">State</Label>
-                  <Input id="state" name="state" required autoComplete="address-level1" maxLength={2} />
+                  <Input id="state" name="state" required autoComplete="address-level1" maxLength={2} placeholder="CA" className="uppercase placeholder:normal-case" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="postal">ZIP</Label>
-                  <Input id="postal" name="postal" required autoComplete="postal-code" />
+                  <Input id="postal" name="postal" required autoComplete="postal-code" inputMode="numeric" placeholder="90210" />
                 </div>
                 <div>
                   <Label htmlFor="phone">Phone</Label>
@@ -159,7 +160,7 @@ export function CheckoutClient() {
               <span>{shipping === 0 ? <span className="text-success font-medium">Free</span> : formatCurrency(shipping)}</span>
             </div>
             {shipping > 0 ? (
-              <p className="text-xs text-muted-foreground">Free shipping on orders over $50</p>
+              <p className="text-xs text-muted-foreground">{FREE_SHIP_COPY}</p>
             ) : null}
             <div className="flex justify-between">
               <span className="text-muted-foreground">Tax (est.)</span>
@@ -181,7 +182,7 @@ export function CheckoutClient() {
             Complete order
           </Button>
         <div className="text-[11px] text-muted-foreground text-center">
-          When Stripe is connected, payment happens on Stripe&apos;s hosted page.
+          You&apos;ll be taken to our secure Stripe checkout to enter payment. Your card details never touch our servers.
         </div>
       </div>
     </form>

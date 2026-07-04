@@ -4,6 +4,7 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { shippingCents as computeShipping, taxCents as computeTax } from "@/lib/shipping";
 
 const schema = z.object({
   email: z.string().email(),
@@ -50,10 +51,30 @@ export async function POST(req: Request) {
     if (!dbp) {
       return NextResponse.json({ ok: false, error: "Unknown product in cart." }, { status: 400 });
     }
+    // Guard against ordering something that is no longer for sale or is out of
+    // stock (prevents overselling; the client also disables Add to Cart).
+    if (!dbp.active) {
+      return NextResponse.json(
+        { ok: false, error: `${dbp.name} is no longer available. Please remove it from your cart.` },
+        { status: 409 }
+      );
+    }
+    if (dbp.inventory < i.quantity) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            dbp.inventory <= 0
+              ? `${dbp.name} is sold out. Please remove it from your cart.`
+              : `Only ${dbp.inventory} of ${dbp.name} left. Please lower the quantity.`,
+        },
+        { status: 409 }
+      );
+    }
     subtotal += dbp.priceCents * i.quantity;
   }
-  const shippingCents = subtotal > 5000 ? 0 : 899;
-  const taxCents = Math.round(subtotal * 0.07);
+  const shippingCents = computeShipping(subtotal);
+  const taxCents = computeTax(subtotal);
   const totalCents = subtotal + shippingCents + taxCents;
 
   const session = await auth();
