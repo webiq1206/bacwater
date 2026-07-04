@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ export function CartClient() {
   const remove = useCart((s) => s.remove);
   const updateQuantity = useCart((s) => s.updateQuantity);
   const clear = useCart((s) => s.clear);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   if (!hydrated) return null;
 
@@ -89,12 +91,30 @@ export function CartClient() {
             </li>
           ))}
         </ul>
-        <button
-          onClick={clear}
-          className="mt-4 text-xs text-muted-foreground hover:text-foreground"
-        >
-          Clear cart
-        </button>
+        {confirmClear ? (
+          <div className="mt-4 flex items-center gap-3 text-xs">
+            <span className="text-muted-foreground">Remove all items?</span>
+            <button
+              onClick={() => { clear(); setConfirmClear(false); }}
+              className="font-medium text-destructive hover:underline"
+            >
+              Yes, clear
+            </button>
+            <button
+              onClick={() => setConfirmClear(false)}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmClear(true)}
+            className="mt-4 text-xs text-muted-foreground hover:text-foreground"
+          >
+            Clear cart
+          </button>
+        )}
       </div>
 
       <div className="border border-border h-fit p-6 sm:p-8 space-y-3">

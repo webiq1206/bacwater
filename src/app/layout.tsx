@@ -106,9 +106,15 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             </Script>
           </>
         )}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:border focus:border-border focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
+        >
+          Skip to content
+        </a>
         <CartHydrator />
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">{children}</main>
         <SiteFooter />
         <Toaster />
       </body>

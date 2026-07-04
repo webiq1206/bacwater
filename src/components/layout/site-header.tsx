@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, User, X } from "lucide-react";
 import { useState } from "react";
 import { useCart, cartCount } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
@@ -66,6 +66,14 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <Link
+            href="/plans"
+            className="inline-flex items-center justify-center border border-border bg-white h-10 w-10 hover:bg-muted transition-colors"
+            aria-label="My plans"
+            title="My plans"
+          >
+            <User className="h-4 w-4" />
+          </Link>
+          <Link
             href="/cart"
             className="relative inline-flex items-center gap-2 border border-border bg-white px-3 h-10 text-sm font-medium hover:bg-muted transition-colors"
             aria-label="Cart"
@@ -91,7 +99,7 @@ export function SiteHeader() {
       {open ? (
         <div className="md:hidden border-t border-border bg-white">
           <nav className="mx-auto flex max-w-7xl flex-col p-3">
-            {NAV.map((n) => (
+            {[...NAV, { href: "/plans", label: "My Plans" }].map((n) => (
               <Link
                 key={n.href}
                 href={n.href}

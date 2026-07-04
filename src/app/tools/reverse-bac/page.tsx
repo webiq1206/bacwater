@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
+import { CopyButton } from "@/components/common/copy-button";
 import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 import { setInterestPeptide } from "@/lib/learn/interest";
 
@@ -187,6 +188,7 @@ export default function ReverseBacCalculatorPage() {
               <span className="result-hero">{result ? bac : "--"}</span>
               <span className="text-2xl text-muted-foreground font-serif">mL</span>
             </div>
+            {result && <div className="mt-2"><CopyButton value={`${bac} mL`} label="Copy amount" /></div>}
             {result ? (
               <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
                 Add <strong className="text-foreground">{bac} mL</strong> of
@@ -322,7 +324,7 @@ function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: U
           type="button"
           onClick={() => onChange(opt)}
           className={cn(
-            "px-3 h-8 text-xs font-semibold transition-colors",
+            "px-3 h-10 text-xs font-semibold transition-colors",
             value === opt ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
           )}
         >

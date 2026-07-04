@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Beaker } from "lucide-react";
+import { ArrowRight, Beaker, Check } from "lucide-react";
+import { CopyButton } from "@/components/common/copy-button";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -71,6 +72,7 @@ export function PeptideCalc({
                 <button
                   key={mg}
                   type="button"
+                  aria-pressed={!customVial && vialMg === mg}
                   onClick={() => {
                     setVialMg(mg);
                     setCustomVial(false);
@@ -80,7 +82,10 @@ export function PeptideCalc({
                     !customVial && vialMg === mg && "chip--active"
                   )}
                 >
-                  <span className="font-medium">{mg} mg</span>
+                  <span className="flex items-center gap-1.5 font-medium">
+                    {!customVial && vialMg === mg && <Check className="h-3.5 w-3.5" />}
+                    {mg} mg
+                  </span>
                 </button>
               ))}
               <button
@@ -99,6 +104,7 @@ export function PeptideCalc({
                 value={vialMg || ""}
                 onChange={(e) => setVialMg(parseFloat(e.target.value) || 0)}
                 placeholder="Vial strength in mg"
+                aria-label="Custom vial strength in mg"
               />
             )}
           </div>
@@ -113,6 +119,7 @@ export function PeptideCalc({
               className="mt-2"
               value={doseMcg || ""}
               onChange={(e) => setDoseMcg(parseFloat(e.target.value) || 0)}
+              aria-label="Dose per injection in micrograms"
             />
             <p className="mt-1.5 text-xs text-muted-foreground">
               = {(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg per dose
@@ -131,6 +138,7 @@ export function PeptideCalc({
               <span className="result-hero">{valid ? result.bacMl : "--"}</span>
               <span className="text-2xl text-muted-foreground font-serif">mL</span>
             </div>
+            {valid && <div className="mt-2"><CopyButton value={`${result.bacMl} mL`} label="Copy amount" /></div>}
           </div>
           {valid ? (
             <div className="grid grid-cols-3 gap-px bg-border flex-1">

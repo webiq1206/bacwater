@@ -113,6 +113,18 @@ export default async function ShopPage() {
       </div>
 
       <div className="mt-10 space-y-14">
+        {Object.keys(byCategory).length === 0 && (
+          <div className="border border-border p-8 sm:p-12 text-center">
+            <div className="text-lg font-serif font-medium tracking-tight">Products are on the way</div>
+            <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+              Our shop is being restocked. In the meantime, build a mixing plan and
+              we&apos;ll show you exactly what you need.
+            </p>
+            <Link href="/plan" className="mt-6 inline-block text-sm font-medium underline hover:no-underline">
+              Build a plan
+            </Link>
+          </div>
+        )}
         {Object.entries(byCategory).map(([cat, items]) => {
           const info = CATEGORY_INFO[cat] ?? { label: cat, hint: "" };
           return (

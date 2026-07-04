@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
+import { CopyButton } from "@/components/common/copy-button";
 
 type Unit = "mg" | "mcg";
 
@@ -152,6 +153,7 @@ export default function DoseCalculatorPage() {
                 </span>
                 <span className="text-2xl text-muted-foreground font-serif">mg</span>
               </div>
+              {valid && <div className="mt-1"><CopyButton value={`${result.doseMcg.toFixed(1)} mcg`} label="Copy dose" /></div>}
               {valid ? (
                 <>
                   <div className="mt-1 text-sm text-muted-foreground">

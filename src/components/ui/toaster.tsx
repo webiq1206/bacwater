@@ -26,10 +26,17 @@ export function Toaster() {
   }, []);
 
   return (
-    <div className="fixed bottom-4 right-4 z-[80] flex flex-col gap-2">
+    <div
+      className="fixed bottom-4 right-4 z-[80] flex flex-col gap-2"
+      role="region"
+      aria-label="Notifications"
+      aria-live="polite"
+      aria-atomic="false"
+    >
       {items.map((t) => (
         <div
           key={t.id}
+          role="status"
           className={
             "min-w-[280px] rounded-lg border border-border bg-card p-4 shadow-sm " +
             (t.variant === "destructive"

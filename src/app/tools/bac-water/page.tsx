@@ -13,6 +13,7 @@ import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 import { setInterestPeptide } from "@/lib/learn/interest";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
+import { CopyButton } from "@/components/common/copy-button";
 
 type Unit = "mg" | "mcg";
 
@@ -162,6 +163,7 @@ export default function BacWaterCalculatorPage() {
               <span className="result-hero">{valid ? rec : "--"}</span>
               <span className="text-2xl text-muted-foreground font-serif">mL</span>
             </div>
+            {valid && <div className="mt-2"><CopyButton value={`${rec} mL`} label="Copy amount" /></div>}
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
               {valid ? (
                 <>Add <strong className="text-foreground">{rec} mL</strong> of bacteriostatic water to your {vialMg} mg vial. This gives you clean, easy-to-measure doses on a standard insulin syringe.</>
@@ -352,7 +354,7 @@ function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: U
           type="button"
           onClick={() => onChange(opt)}
           className={cn(
-            "px-3 h-8 text-xs font-semibold transition-colors",
+            "px-3 h-10 text-xs font-semibold transition-colors",
             value === opt
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"

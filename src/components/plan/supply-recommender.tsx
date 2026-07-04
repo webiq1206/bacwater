@@ -22,6 +22,7 @@ interface Row extends SupplyRecommendation {
 
 export function SupplyRecommender({ supplies }: Props) {
   const [rows, setRows] = useState<Row[] | null>(null);
+  const [pricesFailed, setPricesFailed] = useState(false);
   const addMany = useCart((s) => s.addMany);
 
   useEffect(() => {
@@ -53,10 +54,12 @@ export function SupplyRecommender({ supplies }: Props) {
               removed: false,
             };
           });
+          setPricesFailed(false);
           setRows(merged);
         }
       )
       .catch(() => {
+        setPricesFailed(true);
         setRows(
           supplies.map((s) => ({
             ...s,
@@ -150,6 +153,22 @@ export function SupplyRecommender({ supplies }: Props) {
           have.
         </p>
       </div>
+
+      {rows === null && (
+        <div className="px-6 sm:px-8 py-3 text-xs text-muted-foreground border-b border-border">
+          Loading live prices...
+        </div>
+      )}
+      {pricesFailed && (
+        <div className="px-6 sm:px-8 py-3 text-xs text-muted-foreground border-b border-border">
+          We couldn&apos;t load live prices right now. You can still see what you
+          need below, or{" "}
+          <Link href="/shop" className="text-foreground font-medium underline">
+            browse the shop
+          </Link>
+          .
+        </div>
+      )}
 
       {/* Items */}
       <ul className="divide-y divide-border">
