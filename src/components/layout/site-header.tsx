@@ -16,7 +16,7 @@ const NAV = [
   { href: "/buy", label: "Buy Bac Water" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const pathname = usePathname();
   const items = useCart((s) => s.items);
   const hydrated = useCart((s) => s.hydrated);
@@ -65,14 +65,16 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/plans"
-            className="inline-flex items-center justify-center border border-border bg-white h-10 w-10 hover:bg-muted transition-colors"
-            aria-label="My plans"
-            title="My plans"
-          >
-            <User className="h-4 w-4" />
-          </Link>
+          {isAuthenticated && (
+            <Link
+              href="/plans"
+              className="inline-flex items-center justify-center border border-border bg-white h-10 w-10 hover:bg-muted transition-colors"
+              aria-label="My plans"
+              title="My plans"
+            >
+              <User className="h-4 w-4" />
+            </Link>
+          )}
           <Link
             href="/cart"
             className="relative inline-flex items-center gap-2 border border-border bg-white px-3 h-10 text-sm font-medium hover:bg-muted transition-colors"
@@ -99,7 +101,7 @@ export function SiteHeader() {
       {open ? (
         <div className="md:hidden border-t border-border bg-white">
           <nav className="mx-auto flex max-w-7xl flex-col p-3">
-            {[...NAV, { href: "/plans", label: "My Plans" }].map((n) => (
+            {NAV.map((n) => (
               <Link
                 key={n.href}
                 href={n.href}
@@ -109,6 +111,15 @@ export function SiteHeader() {
                 {n.label}
               </Link>
             ))}
+            {isAuthenticated && (
+              <Link
+                href="/plans"
+                onClick={() => setOpen(false)}
+                className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border last:border-b-0"
+              >
+                My Plans
+              </Link>
+            )}
           </nav>
         </div>
       ) : null}

@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { CartHydrator } from "@/components/shop/cart-hydrator";
 import { Toaster } from "@/components/ui/toaster";
 import { OrgJsonLd } from "@/components/common/org-json-ld";
+import { auth } from "@/lib/auth";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -63,9 +64,11 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
+  const isAuthenticated = !!session?.user;
   return (
     <html
       lang="en"
@@ -113,7 +116,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           Skip to content
         </a>
         <CartHydrator />
-        <SiteHeader />
+        <SiteHeader isAuthenticated={isAuthenticated} />
         <main id="main" className="flex-1">{children}</main>
         <SiteFooter />
         <Toaster />
