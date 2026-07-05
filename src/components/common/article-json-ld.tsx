@@ -6,13 +6,15 @@ export function ArticleJsonLd({
   title,
   body,
   slug,
+  url: urlOverride,
   createdAt,
   updatedAt,
   citations,
 }: {
   title: string;
   body: string;
-  slug: string;
+  slug?: string;
+  url?: string;
   createdAt: Date;
   updatedAt: Date;
   citations?: Reference[];
@@ -21,7 +23,7 @@ export function ArticleJsonLd({
     .replace(/[*_`#>|]/g, "")
     .replace(/\s+/g, " ")
     .trim();
-  const url = `${SITE_URL}/learn/${slug}`;
+  const url = urlOverride ?? `${SITE_URL}/learn/${slug}`;
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Article",

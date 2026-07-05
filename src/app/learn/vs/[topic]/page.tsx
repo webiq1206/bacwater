@@ -12,6 +12,7 @@ import { Infographic } from "@/components/common/infographic";
 import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
+import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import {
   Accordion,
@@ -23,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import { topicReferences } from "@/lib/content/references";
+import { SITE_URL } from "@/lib/seo/schema";
+import { LAST_REVIEWED_ISO } from "@/lib/content-meta";
 
 export function generateStaticParams() {
   return COMPARISONS.map((c) => ({ topic: c.slug }));
@@ -85,6 +88,14 @@ export default async function ComparisonPage({
         ]}
         citations={refs}
         reviewed
+      />
+      <ArticleJsonLd
+        title={c.title}
+        body={[c.verdict, ...c.body.map((s) => `${s.h2}\n\n${s.p}`)].join("\n\n")}
+        url={`${SITE_URL}/learn/vs/${c.slug}`}
+        createdAt={new Date(LAST_REVIEWED_ISO)}
+        updatedAt={new Date(LAST_REVIEWED_ISO)}
+        citations={refs}
       />
       <FaqJsonLd items={c.faqs} />
       <ImageJsonLd
