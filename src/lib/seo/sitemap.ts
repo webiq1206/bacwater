@@ -53,12 +53,11 @@ export function urlsetXml(urls: SitemapUrl[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`;
 }
 
-export function sitemapIndexXml(paths: string[], lastModified: Date): string {
-  const iso = lastModified.toISOString();
+export function sitemapIndexXml(paths: string[]): string {
   const body = paths
     .map(
       (p) =>
-        `<sitemap><loc>${escapeXml(`${SITE_URL}${p}`)}</loc><lastmod>${iso}</lastmod></sitemap>`
+        `<sitemap><loc>${escapeXml(`${SITE_URL}${p}`)}</loc></sitemap>`
     )
     .join("");
   return `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</sitemapindex>`;

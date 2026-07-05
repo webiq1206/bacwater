@@ -52,6 +52,17 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const g = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
   if (!g) return { title: "Guide not found" };
+
+  // FAQ content blocks are canonicalized to /faq; noindex the /learn/faq-* URLs
+  // so search engines see one authoritative version of each FAQ answer.
+  if (g.kind === "faq") {
+    return {
+      title: g.title,
+      robots: { index: false, follow: true },
+      alternates: { canonical: "/faq" },
+    };
+  }
+
   const description = extractMetaDescription(g.body);
   return {
     title: g.title,
@@ -74,6 +85,8 @@ export async function generateStaticParams() {
   }).catch(() => []);
   return guides.map((g) => ({ slug: g.slug }));
 }
+
+export const dynamic = "auto";
 
 function inlineMarkdown(text: string): string {
   return text

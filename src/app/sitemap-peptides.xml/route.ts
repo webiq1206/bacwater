@@ -4,19 +4,18 @@ import { urlsetXml, xmlResponse } from "@/lib/seo/sitemap";
 
 export const revalidate = 3600;
 
+// Peptide and vial-size pages are code-defined; omit lastmod so crawlers
+// don't treat every hourly revalidation as a content change.
 export function GET() {
-  const now = new Date();
   return xmlResponse(
     urlsetXml([
       ...PEPTIDES.map((p) => ({
         path: `/peptides/${p.slug}`,
-        lastModified: now,
         changeFrequency: "monthly" as const,
         priority: 0.8,
       })),
       ...VIAL_SIZE_PAGES.map((v) => ({
         path: `/peptides/${v.slug}/${v.sizeParam}`,
-        lastModified: now,
         changeFrequency: "monthly" as const,
         priority: 0.7,
       })),

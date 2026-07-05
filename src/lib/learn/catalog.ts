@@ -233,9 +233,12 @@ const STATIC_ENTRIES: LearnEntry[] = [
 ];
 
 export async function getCatalog(): Promise<LearnEntry[]> {
+  // Exclude FAQ content blocks from the catalog: their canonical URL is /faq,
+  // not /learn/faq-*, so surfacing them here would create duplicate-indexation
+  // signals. They remain accessible at /learn/[slug] with noindex for deep links.
   const blocks = await prisma.contentBlock
     .findMany({
-      where: { published: true, kind: { in: ["guide", "faq"] } },
+      where: { published: true, kind: "guide" },
       select: { id: true, slug: true, kind: true, title: true, body: true },
     })
     .catch(

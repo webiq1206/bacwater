@@ -10,10 +10,9 @@ export const revalidate = 3600;
 const REDIRECTED = new Set(["bac-water-vs-sterile-water", "how-long-bac-water-lasts"]);
 
 export async function GET() {
-  const now = new Date();
   const guides = await prisma.contentBlock
     .findMany({
-      where: { kind: { in: ["guide", "faq"] }, published: true },
+      where: { kind: "guide", published: true },
       select: { slug: true, updatedAt: true },
     })
     .catch(() => [] as { slug: string; updatedAt: Date }[]);
@@ -27,15 +26,16 @@ export async function GET() {
       priority: 0.6,
     }));
 
+  // Comparisons are code-defined; no reliable update date, so omit lastmod.
   const comparisonUrls: SitemapUrl[] = COMPARISONS.map((c) => ({
     path: `/learn/vs/${c.slug}`,
-    lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
   // Single-dimension filter views that are indexable (>= 3 results). These are
   // the legitimate, non-duplicate landing pages the taxonomy creates.
+  // Filter views are structural; no meaningful update date, so omit lastmod.
   const catalog = await getCatalog().catch(() => []);
   const filterUrls: SitemapUrl[] = [];
   for (const c of CONTENT_TYPES) {
@@ -43,7 +43,6 @@ export async function GET() {
     if (count >= 3)
       filterUrls.push({
         path: `/learn?type=${c.key}`,
-        lastModified: now,
         changeFrequency: "weekly",
         priority: 0.5,
       });
@@ -53,7 +52,6 @@ export async function GET() {
     if (count >= 3)
       filterUrls.push({
         path: `/learn?topic=${t.key}`,
-        lastModified: now,
         changeFrequency: "weekly",
         priority: 0.5,
       });
