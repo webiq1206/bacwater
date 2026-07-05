@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
         destination: "/learn/vs/sterile-water",
         permanent: true,
       },
+      {
+        // DB guide duplicated the static shelf-life editorial at
+        // /learn/bac-water-shelf-life. Redirect consolidates link equity and
+        // prevents keyword cannibalization on storage/shelf-life searches.
+        source: "/learn/how-long-bac-water-lasts",
+        destination: "/learn/bac-water-shelf-life",
+        permanent: true,
+      },
       // Legacy/compat paths: permanent (308) redirects so link equity
       // consolidates and crawlers see a clean redirect (not a render-time 307).
       { source: "/plan/advanced", destination: "/plan", permanent: true },

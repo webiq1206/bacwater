@@ -145,7 +145,7 @@ const DB_TAGS: Record<string, Tagging> = {
 };
 
 /** DB slugs that now redirect elsewhere and must not appear in the catalog. */
-const REDIRECTED = new Set(["bac-water-vs-sterile-water"]);
+const REDIRECTED = new Set(["bac-water-vs-sterile-water", "how-long-bac-water-lasts"]);
 
 function inferTagging(slug: string, kind: string): Tagging {
   // Fallback for content added later without an explicit mapping.

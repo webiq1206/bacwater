@@ -46,7 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <ul className="mt-3 space-y-2 text-sm">
             <li><Link href="/learn/what-is-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">What is BAC water?</Link></li>
             <li><Link href="/learn/vs/sterile-water" className="text-muted-foreground hover:text-foreground underline transition-colors">BAC water vs. sterile water</Link></li>
-            <li><Link href="/learn/how-long-bac-water-lasts" className="text-muted-foreground hover:text-foreground underline transition-colors">How long BAC water lasts</Link></li>
+            <li><Link href="/learn/bac-water-shelf-life" className="text-muted-foreground hover:text-foreground underline transition-colors">How long BAC water lasts</Link></li>
             <li><Link href="/learn/too-much-bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">What happens if you add too much BAC water</Link></li>
           </ul>
         </section>

@@ -262,7 +262,7 @@ export default function ShelfLifePage() {
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {[
             { href: "/learn/vs/benzyl-alcohol", label: "BAC water vs benzyl alcohol" },
-            { href: "/learn/how-long-bac-water-lasts", label: "How long BAC water lasts" },
+            { href: "/learn/how-to-store-reconstituted-peptides", label: "How to store reconstituted peptides" },
             { href: "/learn/what-is-bac-water", label: "What is BAC water?" },
             { href: "/faq", label: "BAC water FAQ" },
           ].map((l) => (

@@ -7,7 +7,7 @@ import { CONTENT_TYPES, TOPICS } from "@/lib/learn/taxonomy";
 export const revalidate = 3600;
 
 // Slugs that now 301-redirect elsewhere; keep them out of the sitemap.
-const REDIRECTED = new Set(["bac-water-vs-sterile-water"]);
+const REDIRECTED = new Set(["bac-water-vs-sterile-water", "how-long-bac-water-lasts"]);
 
 export async function GET() {
   const now = new Date();
