@@ -12,6 +12,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { CopyButton } from "@/components/common/copy-button";
+import { StickyResultBar } from "@/components/tools/sticky-result-bar";
 import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 import { setInterestPeptide } from "@/lib/learn/interest";
 
@@ -72,6 +73,12 @@ export default function ReverseBacCalculatorPage() {
         { label: "Tools", href: "/tools" },
         { label: "Reverse BAC Water Calculator", href: "/tools/reverse-bac" },
       ]} />
+      <StickyResultBar
+        label="Bac water to add"
+        value={result ? `${bac} mL` : "--"}
+        sub={result ? `${targetUnits} units` : undefined}
+        visible={!!result}
+      />
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-3 text-4xl sm:text-5xl font-serif font-medium tracking-tight">

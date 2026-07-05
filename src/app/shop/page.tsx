@@ -29,11 +29,11 @@ const CATEGORY_INFO: Record<string, { label: string; hint: string }> = {
   },
   syringes: {
     label: "Insulin Syringes",
-    hint: "Used to draw your dose from the reconstituted vial. Marked in units (100 units = 1 mL) for precise, easy dosing.",
+    hint: "Used to draw measured amounts from the reconstituted vial. Marked in units (100 units = 1 mL) for precise, easy measuring.",
   },
   "alcohol-pads": {
     label: "Alcohol Prep Pads",
-    hint: "Wipe the vial top before drawing and the injection site before injecting. Two pads per injection is standard.",
+    hint: "Wipe the vial top before each draw to keep the surface clean. A fresh pad per draw is standard handling.",
   },
   other: {
     label: "Kits & Bundles",

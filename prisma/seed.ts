@@ -75,7 +75,7 @@ const PRODUCTS = [
     description:
       "Each pad is wrapped on its own and holds 70% isopropyl alcohol (rubbing alcohol). The pads are clean and medium size. They come in a box you can reseal.",
     useCase:
-      "Use them to clean the vial top and the skin before and after each dose.",
+      "Use them to clean the vial top before each draw and to keep your work surface tidy.",
     priceCents: 1200,
     imageUrl: "/images/products/alc-200.svg",
     inventory: 400,

@@ -30,7 +30,7 @@ export const CATEGORY_CONTEXT: Record<PeptideCategory, string> = {
   growth:
     "Growth hormone secretagogues (peptides studied for nudging the body's own growth-hormone signals) are usually mixed at low strength, because the amounts studied are small. Picking the right amount of BAC water keeps each dose on an easy-to-read mark on the syringe.",
   metabolic:
-    "Metabolic peptides include the GLP-1 class (they act on a body signal called GLP-1 that helps control appetite and blood sugar). They are often mixed at home for research. The amounts studied vary a lot, so working out the BAC water for your exact vial matters more here than almost anywhere.",
+    "Metabolic peptides include the GLP-1 class (they act on a body signal called GLP-1, which is studied in research for its role in appetite and blood sugar pathways). They are often reconstituted for research. The amounts studied vary a lot, so working out the BAC water for your exact vial matters more here than almost anywhere.",
   cognitive:
     "Cognitive research peptides are typically reconstituted in small volumes. The reconstitution method is standard, and shelf life once mixed follows the same refrigeration rules as other peptides.",
   cosmetic:

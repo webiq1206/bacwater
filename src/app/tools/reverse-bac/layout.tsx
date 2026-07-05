@@ -80,7 +80,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             },
             {
               q: "Why would I want a specific number of units?",
-              a: "Round numbers like 10 or 20 units are easier to draw accurately and harder to misread than an odd volume like 0.17 mL. Choosing the units first makes every injection simpler.",
+              a: "Round numbers like 10 or 20 units are easier to draw accurately and harder to misread than an odd volume like 0.17 mL. Choosing the units first makes every draw simpler.",
             },
             {
               q: "What if the calculator asks for a lot of water?",

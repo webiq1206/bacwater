@@ -111,7 +111,7 @@ export default function SyringeUnitConverterPage() {
           <p>
             Insulin syringes use a special scale called &ldquo;units&rdquo;
             instead of milliliters (mL). This scale was designed for insulin, but
-            the same syringes are commonly used for peptide injections.
+            the same syringes are commonly used for measuring peptides in research.
           </p>
           <p>
             On a <b>U-100 syringe</b> (the most common type), the conversion is

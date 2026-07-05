@@ -16,10 +16,10 @@ type Frequency = "daily" | "twice-daily" | "every-other-day" | "weekly";
 type Unit = "mg" | "mcg";
 
 const FREQUENCIES: { id: Frequency; label: string; perWeek: number; hint: string }[] = [
-  { id: "daily", label: "Once a day", perWeek: 7, hint: "Most common, e.g., every morning." },
-  { id: "twice-daily", label: "Twice a day", perWeek: 14, hint: "Morning + evening." },
+  { id: "daily", label: "Once a day", perWeek: 7, hint: "Most common in research schedules." },
+  { id: "twice-daily", label: "Twice a day", perWeek: 14, hint: "Morning and evening." },
   { id: "every-other-day", label: "Every other day", perWeek: 3.5, hint: "3-4 times a week." },
-  { id: "weekly", label: "Once a week", perWeek: 1, hint: "Some protocols use weekly dosing." },
+  { id: "weekly", label: "Once a week", perWeek: 1, hint: "Some research schedules use weekly draws." },
 ];
 
 const DURATIONS = [
@@ -127,12 +127,12 @@ export default function SupplyCalculatorPage() {
             </Select>
           </Section>
 
-          {/* 2. Dose per injection */}
+          {/* 2. Amount per draw */}
           <Section
             n={2}
             total={5}
-            title="How much per injection?"
-            hint={`Typical range: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the common starting dose.`}
+            title="How much per draw?"
+            hint={`Typical studied range: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the most commonly studied amount.`}
           >
             <div className="flex items-center gap-2">
               <Input
@@ -172,7 +172,7 @@ export default function SupplyCalculatorPage() {
           </Section>
 
           {/* 4. Frequency */}
-          <Section n={4} total={5} title="How often will you inject?">
+          <Section n={4} total={5} title="How often will you draw?">
             <div className="grid gap-2">
               {FREQUENCIES.map((f) => (
                 <button
@@ -244,11 +244,11 @@ export default function SupplyCalculatorPage() {
           <div className="border border-border bg-card p-6 sm:p-8">
               <div className="eyebrow">Your shopping list</div>
               <h2 className="mt-2 text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-                {results.totalDoses} injections over {durationWeeks} weeks
+                {results.totalDoses} draws over {durationWeeks} weeks
               </h2>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                 {results.freq.label.toLowerCase()} &times; {durationWeeks} weeks ={" "}
-                <b>{results.totalDoses}</b> total injections. Here&apos;s
+                <b>{results.totalDoses}</b> total draws. Here&apos;s
                 everything you&apos;ll need.
               </p>
 
@@ -268,14 +268,14 @@ export default function SupplyCalculatorPage() {
                 />
                 <SupplyRow
                   qty={results.syringeBoxes}
-                  label={`Insulin Syringes, box of 100${results.syringeBoxes === 1 ? "" : ""} (${results.syringesNeeded} injections)`}
-                  why="One fresh syringe per injection. Never reuse."
+                  label={`Insulin Syringes, box of 100${results.syringeBoxes === 1 ? "" : ""} (${results.syringesNeeded} draws)`}
+                  why="One fresh syringe per draw. Never reuse."
                   buyable="SYR-INS-10"
                 />
                 <SupplyRow
                   qty={results.padBoxes}
                   label={`Alcohol Prep Pads, box of 200${results.padBoxes === 1 ? "" : ""} (${results.padsNeeded} pads)`}
-                  why="Two pads per injection: one to wipe the vial top, one for the injection site."
+                  why="Two pads per draw to keep the vial top and your work surface clean."
                   buyable="ALC-200"
                 />
               </div>

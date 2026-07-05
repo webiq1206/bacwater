@@ -109,7 +109,7 @@ export default function MgMcgConverterPage() {
           </p>
           <ul className="list-disc pl-4 space-y-1">
             <li><b>mg (milligram)</b>: one thousandth of a gram. Vial sizes are usually listed in mg (e.g., &ldquo;5 mg vial&rdquo;).</li>
-            <li><b>mcg (microgram)</b>: one millionth of a gram, or one thousandth of a milligram. Individual doses are usually listed in mcg (e.g., &ldquo;250 mcg per injection&rdquo;).</li>
+            <li><b>mcg (microgram)</b>: one millionth of a gram, or one thousandth of a milligram. Individual doses are usually listed in mcg (e.g., &ldquo;250 mcg per draw&rdquo;).</li>
           </ul>
           <p>
             <b>The rule is simple:</b> 1 mg = 1,000 mcg. To go from mg to mcg,

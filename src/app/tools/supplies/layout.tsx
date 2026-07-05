@@ -34,8 +34,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24">
         <section className="max-w-3xl mb-10 border border-border p-5 sm:p-6">
           <p className="text-base leading-relaxed text-foreground/90">
-            <strong>The supplies you need depend on your peptide, dose, injection frequency, and cycle length.</strong>{" "}
-            A typical 4-week daily protocol requires 1 peptide vial, 1 vial of BAC water, 28 insulin syringes, and 56 alcohol prep pads (2 per injection). Enter your details below for an exact shopping list with quantities and reasons.
+            <strong>The supplies you need depend on your peptide, amount per draw, draw frequency, and cycle length.</strong>{" "}
+            A typical 4-week daily schedule uses 1 peptide vial, 1 vial of BAC water, 28 insulin syringes, and 56 alcohol prep pads (2 per draw). Enter your details below for an exact shopping list with quantities and reasons.
           </p>
         </section>
       </div>
@@ -61,16 +61,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             rows: [
               ["Peptide vial", "1"],
               ["Bac water", "1 vial"],
-              ["Insulin syringes", "28 (1 per injection)"],
-              ["Alcohol prep pads", "56 (2 per injection)"],
+              ["Insulin syringes", "28 (1 per draw)"],
+              ["Alcohol prep pads", "56 (2 per draw)"],
             ],
             caption:
-              "Quantities scale with your dose, injection frequency, and cycle length.",
+              "Quantities scale with your amount per draw, draw frequency, and cycle length.",
           }}
           faqs={[
             {
               q: "How many syringes do I need for a peptide cycle?",
-              a: "Usually one insulin syringe per injection. A 4-week daily protocol is about 28 syringes. Multiply your injections per day by the number of days in your cycle.",
+              a: "Usually one insulin syringe per draw. A 4-week daily schedule is about 28 syringes. Multiply your draws per day by the number of days in your cycle.",
             },
             {
               q: "How much bac water do I need for a cycle?",
@@ -78,7 +78,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             },
             {
               q: "Do I need alcohol prep pads?",
-              a: "Yes. Wipe the vial stopper and the injection site with an alcohol prep pad each time. Two pads per injection is a common plan.",
+              a: "Yes. Wipe the vial stopper with an alcohol prep pad before each draw to keep the surface clean. Two pads per draw is a common plan.",
             },
           ]}
         />

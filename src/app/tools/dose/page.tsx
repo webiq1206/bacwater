@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { CopyButton } from "@/components/common/copy-button";
+import { StickyResultBar } from "@/components/tools/sticky-result-bar";
 
 type Unit = "mg" | "mcg";
 
@@ -38,6 +39,12 @@ export default function DoseCalculatorPage() {
         { label: "Tools", href: "/tools" },
         { label: "Dose Calculator", href: "/tools/dose" },
       ]} />
+      <StickyResultBar
+        label="Your dose"
+        value={valid ? `${result.doseMcg.toFixed(1)} mcg` : "--"}
+        sub={valid ? `${result.units.toFixed(0)} units` : undefined}
+        visible={valid}
+      />
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
@@ -171,7 +178,7 @@ export default function DoseCalculatorPage() {
                   <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
                     Drawing <b>{result.units.toFixed(1)} units</b> from a solution
                     at <b>{concMgPerMl.toFixed(2)} mg/mL</b> gives
-                    you <b>{result.doseMcg.toFixed(1)} mcg</b> of peptide per injection.
+                    you <b>{result.doseMcg.toFixed(1)} mcg</b> of peptide per draw.
                   </p>
                 </>
               ) : (

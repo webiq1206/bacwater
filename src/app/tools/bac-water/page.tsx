@@ -14,6 +14,7 @@ import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynami
 import { setInterestPeptide } from "@/lib/learn/interest";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { CopyButton } from "@/components/common/copy-button";
+import { StickyResultBar } from "@/components/tools/sticky-result-bar";
 
 type Unit = "mg" | "mcg";
 
@@ -53,6 +54,12 @@ export default function BacWaterCalculatorPage() {
         { label: "Tools", href: "/tools" },
         { label: "BAC Water Calculator", href: "/tools/bac-water" },
       ]} />
+      <StickyResultBar
+        label="Add this much bac water"
+        value={valid ? `${rec} mL` : "--"}
+        sub={valid ? `${syringeUnits.toFixed(0)} units/dose` : undefined}
+        visible={valid}
+      />
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-3 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
@@ -266,7 +273,7 @@ export default function BacWaterCalculatorPage() {
             >
               <p>
                 Peptides arrive as a dry powder inside a sealed vial. Before you can
-                measure and inject a dose, you need to dissolve the powder in liquid.
+                measure a dose, you need to dissolve the powder in liquid.
                 That process is called <strong>reconstitution</strong>. You add BAC water to
                 the vial, swirl gently, and the powder dissolves into a clear solution.
               </p>

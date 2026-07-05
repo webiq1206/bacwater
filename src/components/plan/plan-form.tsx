@@ -317,18 +317,18 @@ export function PlanForm({ mode: initialMode }: Props) {
       list.push({
         mcg: lo,
         label: fmtLabel(lo),
-        hint: "Lower end, good starting point",
+        hint: "Lower end of the studied range",
       });
     list.push({
       mcg: common,
       label: fmtLabel(common),
-      hint: "Most common, recommended starting dose",
+      hint: "Most commonly studied amount",
     });
     if (hi && hi !== common)
       list.push({
         mcg: hi,
         label: fmtLabel(hi),
-        hint: "Upper end of typical range",
+        hint: "Upper end of the studied range",
       });
     return list;
   }, [peptide]);
@@ -635,8 +635,8 @@ export function PlanForm({ mode: initialMode }: Props) {
             <StepBlock
               n={3}
               total={6}
-              title="How much per injection?"
-              hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
+              title="How much per draw?"
+              hint={`Typical studied range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
             >
               <div className="grid gap-2">
                 {dosePresets.map((d) => (
@@ -967,8 +967,8 @@ export function PlanForm({ mode: initialMode }: Props) {
 
       {step === 2 && (
         <StepPanel
-          title="How much per injection?"
-          hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). Not sure? Pick the most common dose.`}
+          title="How much per draw?"
+          hint={`Typical studied range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). Not sure? Pick the most commonly studied amount.`}
           onNext={() => goToStep(3)}
           onBack={() => goToStep(1)}
           stepNum={3}

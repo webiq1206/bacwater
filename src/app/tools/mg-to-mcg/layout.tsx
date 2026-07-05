@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <section className="max-w-3xl mb-10 border border-border p-5 sm:p-6">
           <p className="text-base leading-relaxed text-foreground/90">
             <strong>1 milligram (mg) = 1,000 micrograms (mcg).</strong>{" "}
-            To convert mg to mcg, multiply by 1,000. To convert mcg to mg, divide by 1,000. Peptide vial labels typically use mg (e.g., 5 mg BPC-157), while dose protocols use mcg (e.g., 250 mcg per injection). Use the converter below for instant results.
+            To convert mg to mcg, multiply by 1,000. To convert mcg to mg, divide by 1,000. Peptide vial labels typically use mg (e.g., 5 mg BPC-157), while dose amounts use mcg (e.g., 250 mcg per draw). Use the converter below for instant results.
           </p>
         </section>
       </div>
