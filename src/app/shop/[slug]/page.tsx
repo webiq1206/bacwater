@@ -20,7 +20,13 @@ export async function generateMetadata({ params }: Props) {
     ? {
         title: `${p.name} - Buy Online`,
         description: p.description,
-        openGraph: { title: p.name, description: p.description },
+        openGraph: {
+          title: p.name,
+          description: p.description,
+          url: `/shop/${slug}`,
+          type: "website",
+          siteName: "BACwater.ai",
+        },
         alternates: { canonical: `/shop/${slug}` },
       }
     : { title: "Product not found" };

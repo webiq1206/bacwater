@@ -22,6 +22,9 @@ export const metadata = {
     title: "Free Printable Peptide Vial Labels",
     description:
       "Free printable peptide vial labels with QR codes, generated from your reconstitution plan.",
+    url: "/tools/vial-labels",
+    type: "website",
+    siteName: "BACwater.ai",
   },
 };
 

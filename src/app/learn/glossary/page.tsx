@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Peptide Reconstitution Glossary",
     description: "Plain-English definitions for peptide reconstitution.",
+    url: "/learn/glossary",
+    type: "website",
+    siteName: "BACwater.ai",
   },
 };
 

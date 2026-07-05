@@ -47,6 +47,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `How to Reconstitute ${v.sizeMg} mg ${short} · BACwater.ai`,
       description: `Exact bac water amount and syringe units for a ${v.sizeMg} mg ${short} vial.`,
+      url: `/peptides/${slug}/${size}`,
+      type: "website",
+      siteName: "BACwater.ai",
     },
   };
 }

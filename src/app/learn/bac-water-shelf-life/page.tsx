@@ -59,6 +59,9 @@ export const metadata: Metadata = {
     title: "BAC Water and Peptide Shelf Life: Storage and Refrigeration",
     description:
       "The definitive guide to how long BAC water and reconstituted peptides last, and how to store them.",
+    url: "/learn/bac-water-shelf-life",
+    type: "website",
+    siteName: "BACwater.ai",
   },
 };
 

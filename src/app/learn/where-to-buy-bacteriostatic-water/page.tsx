@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Where to Buy Bacteriostatic Water (2026 Buyer's Guide)",
     description: DESCRIPTION,
+    url: "/learn/where-to-buy-bacteriostatic-water",
+    type: "website",
+    siteName: "BACwater.ai",
   },
 };
 

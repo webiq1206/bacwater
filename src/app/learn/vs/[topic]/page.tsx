@@ -44,6 +44,9 @@ export async function generateMetadata({
     openGraph: {
       title: `${c.metaTitle} · BACwater.ai`,
       description: c.metaDescription,
+      url: `/learn/vs/${c.slug}`,
+      type: "website",
+      siteName: "BACwater.ai",
       images: [
         {
           url: `/learn/vs/${c.slug}/infographic.svg`,

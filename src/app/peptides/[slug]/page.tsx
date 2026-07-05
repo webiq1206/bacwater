@@ -78,6 +78,9 @@ export async function generateMetadata({
     openGraph: {
       title: `${title} · BACwater.ai`,
       description,
+      url: `/peptides/${p.slug}`,
+      type: "website",
+      siteName: "BACwater.ai",
       ...(chart
         ? {
             images: [

@@ -54,7 +54,13 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: g.title,
     description,
-    openGraph: { title: g.title, description },
+    openGraph: {
+      title: g.title,
+      description,
+      url: `/learn/${slug}`,
+      type: "website",
+      siteName: "BACwater.ai",
+    },
     alternates: { canonical: `/learn/${slug}` },
   };
 }
