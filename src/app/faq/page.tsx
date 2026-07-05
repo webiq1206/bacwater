@@ -123,7 +123,10 @@ export default async function FaqPage() {
       ...CORE.map((f) => ({
         "@type": "Question",
         name: f.q,
-        acceptedAnswer: { "@type": "Answer", text: f.a },
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: f.cta ? `${f.a} Our ${f.cta.text}${f.cta.tail}` : f.a,
+        },
       })),
       ...dbFaqs.map((f) => ({
         "@type": "Question",

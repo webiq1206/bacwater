@@ -5,6 +5,7 @@ import { PEPTIDES } from "@/lib/calc/peptides";
 import { shortName } from "@/lib/peptides/page-data";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
+import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
@@ -65,6 +66,9 @@ export const metadata: Metadata = {
   },
 };
 
+const SHELF_LIFE_BODY =
+  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. A reconstituted peptide usually keeps for a few weeks refrigerated, depending on the peptide. Refrigerate mixed vials, keep them out of light, and discard any solution that turns cloudy or develops particles. The benzyl alcohol preservative lets you draw from the vial repeatedly. Refrigeration slows peptide breakdown but does not replace clean, aseptic handling. Wipe the rubber top before each draw, keep the vial cold and out of light, use a fresh needle each time, and respect the discard date. If the liquid turns cloudy, changes color, or has floating bits, discard it regardless of the date.";
+
 export default function ShelfLifePage() {
   const storageRows = STORAGE_SLUGS.map((slug) =>
     PEPTIDES.find((p) => p.slug === slug)
@@ -72,6 +76,14 @@ export default function ShelfLifePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
+      <ArticleJsonLd
+        title="BAC Water and Peptide Shelf Life: Storage and Refrigeration"
+        body={SHELF_LIFE_BODY}
+        slug="bac-water-shelf-life"
+        createdAt={new Date("2025-01-01")}
+        updatedAt={new Date("2026-07-01")}
+        citations={SHELF_LIFE_REFERENCES}
+      />
       <WebPageJsonLd
         name="BAC Water and Peptide Shelf Life"
         description={DIRECT_ANSWER}

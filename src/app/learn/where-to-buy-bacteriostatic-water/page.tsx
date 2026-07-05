@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import {
   Accordion,
@@ -72,9 +73,20 @@ const FAQS: { q: string; a: string }[] = [
   },
 ];
 
+const WHERE_TO_BUY_BODY =
+  "Bacteriostatic water is sold as a multi-dose vial by some pharmacies and by online research suppliers. It is sterile water with a preservative, 0.9% benzyl alcohol, that lets you draw from the same vial more than once. The real decision is not the store but the product: buy a sealed, sterile, clearly labeled vial from a supplier that ships in the US and publishes a returns policy. Before you buy, check that the vial is sealed and tamper-evident, sterile and USP-grade, clearly labeled with 0.9% benzyl alcohol, shipped from a US-based supplier, and accompanied by a lot number and returns policy. Two common routes exist: a pharmacy that may stock it or require a prescription, and an online research supplier that sells it for research use only. Avoid listings where the vial is not sealed, the preservative concentration is not stated, or sourcing details are missing.";
+
 export default function WhereToBuyBacteriosaticWaterPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
+      <ArticleJsonLd
+        title="Where to Buy Bacteriostatic Water (2026 Buyer's Guide)"
+        body={WHERE_TO_BUY_BODY}
+        slug="where-to-buy-bacteriostatic-water"
+        createdAt={new Date("2025-01-01")}
+        updatedAt={new Date("2026-07-01")}
+        citations={CORE_BACWATER_REFERENCES}
+      />
       <WebPageJsonLd
         name="Where to Buy Bacteriostatic Water"
         description={DESCRIPTION}
