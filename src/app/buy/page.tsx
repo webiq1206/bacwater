@@ -173,7 +173,7 @@ export default async function BuyPage() {
               <Link
                 key={p.slug}
                 href={`/shop/${p.slug}`}
-                className="group block border border-border p-5 hover:bg-surface transition-colors"
+                className="group block border border-border p-5 hover:bg-muted transition-colors"
               >
                 <div className="font-medium">{p.name}</div>
                 {p.useCase && (

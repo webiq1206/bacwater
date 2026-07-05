@@ -344,7 +344,7 @@ export default async function LearnPage({
             <li key={e.id}>
               <Link
                 href={e.url}
-                className="group block border border-border hover:bg-surface transition-colors p-6 h-full"
+                className="group block border border-border hover:bg-muted transition-colors p-6 h-full"
               >
                 <div className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
                   {CONTENT_TYPE_LABEL[e.contentType] ?? e.contentType}

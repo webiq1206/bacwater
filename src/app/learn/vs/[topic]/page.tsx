@@ -193,7 +193,7 @@ export default async function ComparisonPage({
             <Link
               key={o.slug}
               href={`/learn/vs/${o.slug}`}
-              className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+              className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
             >
               <span className="font-medium">{o.title}</span>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
@@ -219,7 +219,7 @@ export default async function ComparisonPage({
             <Link
               key={pep.slug}
               href={`/peptides/${pep.slug}`}
-              className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+              className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
             >
               <span className="font-medium">{pep.label}</span>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />

@@ -109,7 +109,7 @@ export default function PeptidesHubPage() {
                     <Link
                       key={p.slug}
                       href={`/peptides/${p.slug}`}
-                      className="group block border border-border p-5 hover:bg-surface transition-colors"
+                      className="group block border border-border p-5 hover:bg-muted transition-colors"
                     >
                       <div className="flex items-center justify-between gap-3">
                         <span className="font-medium">{short}</span>

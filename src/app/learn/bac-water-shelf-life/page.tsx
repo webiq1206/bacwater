@@ -284,7 +284,7 @@ export default function ShelfLifePage() {
             <Link
               key={l.href}
               href={l.href}
-              className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+              className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
             >
               <span className="font-medium">{l.label}</span>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />

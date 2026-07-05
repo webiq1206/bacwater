@@ -390,7 +390,7 @@ function TeachingSection({ icon, title, children }: { icon: React.ReactNode; tit
 
 function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
   return (
-    <Link href={href} className="group block border border-border hover:bg-surface transition-colors p-5">
+    <Link href={href} className="group block border border-border hover:bg-muted transition-colors p-5">
       <h3 className="font-semibold group-hover:underline">{title}</h3>
       <p className="mt-1 text-sm text-muted-foreground">{body}</p>
       <div className="mt-3 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
