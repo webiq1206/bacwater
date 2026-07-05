@@ -13,7 +13,7 @@ export async function GET() {
   const now = new Date();
   const guides = await prisma.contentBlock
     .findMany({
-      where: { kind: "guide", published: true },
+      where: { kind: { in: ["guide", "faq"] }, published: true },
       select: { slug: true, updatedAt: true },
     })
     .catch(() => [] as { slug: string; updatedAt: Date }[]);

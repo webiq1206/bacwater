@@ -11,13 +11,13 @@ export default function robots(): MetadataRoute.Robots {
       // AI answer-engine crawlers (GEO): explicitly allowed so the site is
       // eligible for citation in ChatGPT, Claude, Perplexity, Google AI
       // Overviews, and Apple Intelligence.
-      { userAgent: "GPTBot", allow: "/" },
-      { userAgent: "ChatGPT-User", allow: "/" },
-      { userAgent: "ClaudeBot", allow: "/" },
-      { userAgent: "PerplexityBot", allow: "/" },
-      { userAgent: "Google-Extended", allow: "/" },
-      { userAgent: "Applebot-Extended", allow: "/" },
-      { userAgent: "CCBot", allow: "/" },
+      { userAgent: "GPTBot", allow: "/", disallow: ["/admin", "/api", "/plan/*/pdf"] },
+      { userAgent: "ChatGPT-User", allow: "/", disallow: ["/admin", "/api", "/plan/*/pdf"] },
+      { userAgent: "ClaudeBot", allow: "/", disallow: ["/admin", "/api", "/plan/*/pdf"] },
+      { userAgent: "PerplexityBot", allow: "/", disallow: ["/admin", "/api", "/plan/*/pdf"] },
+      { userAgent: "Google-Extended", allow: "/", disallow: ["/admin", "/api", "/plan/*/pdf"] },
+      { userAgent: "Applebot-Extended", allow: "/", disallow: ["/admin", "/api", "/plan/*/pdf"] },
+      { userAgent: "CCBot", allow: "/", disallow: ["/admin", "/api", "/plan/*/pdf"] },
     ],
     sitemap: `${base}/sitemap.xml`,
   };
