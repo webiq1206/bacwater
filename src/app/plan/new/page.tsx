@@ -7,6 +7,14 @@ export const metadata = {
   title: "Step-by-Step Reconstitution Planner",
   description:
     "Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math.",
+  openGraph: {
+    title: "Step-by-Step Reconstitution Planner",
+    description:
+      "Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math.",
+    url: "/plan/new",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function PlanNewPage() {

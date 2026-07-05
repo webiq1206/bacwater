@@ -7,6 +7,14 @@ export const metadata = {
   title: "Peptide Reconstitution Plan Builder",
   description:
     "Enter your peptide, vial strength, dose, and syringe. Get an exact reconstitution plan with plain-English explanations and a printable PDF.",
+  openGraph: {
+    title: "Peptide Reconstitution Plan Builder",
+    description:
+      "Enter your peptide, vial strength, dose, and syringe. Get an exact reconstitution plan with plain-English explanations and a printable PDF.",
+    url: "/plan",
+    type: "website",
+    siteName: "BACwater.ai",
+  },
 };
 
 export default function PlanPage() {

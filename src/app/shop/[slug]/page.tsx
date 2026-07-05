@@ -26,7 +26,13 @@ export async function generateMetadata({ params }: Props) {
           url: `/shop/${slug}`,
           type: "website",
           siteName: "BACwater.ai",
+          ...(p.imageUrl
+            ? { images: [{ url: p.imageUrl, alt: p.name }] }
+            : {}),
         },
+        ...(p.imageUrl
+          ? { twitter: { images: [p.imageUrl] } }
+          : {}),
         alternates: { canonical: `/shop/${slug}` },
       }
     : { title: "Product not found" };
