@@ -82,7 +82,7 @@ export default function ReverseBacCalculatorPage() {
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-3 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          I want my dose to read as exact units
+          Reverse BAC Water Calculator: Units to Water
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Choose the dose you want and the exact units you want to draw on the

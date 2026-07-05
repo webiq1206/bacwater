@@ -48,7 +48,7 @@ export default function DoseCalculatorPage() {
       <div className="max-w-3xl">
         <div className="eyebrow">Calculator</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          What dose am I drawing?
+          Dose Calculator: mcg to Syringe Units
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Already mixed your vial? Enter your concentration and how much liquid
