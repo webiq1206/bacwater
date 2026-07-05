@@ -33,7 +33,7 @@ export default function NotFound() {
           <Link
             key={link.href}
             href={link.href}
-            className="flex items-center justify-between px-5 py-3.5 text-sm font-medium hover:bg-surface transition-colors group"
+            className="flex items-center justify-between px-5 py-3.5 text-sm font-medium hover:bg-muted transition-colors group"
           >
             {link.label}
             <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />

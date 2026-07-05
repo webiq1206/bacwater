@@ -382,7 +382,7 @@ export default async function PeptidePage({
               <Link
                 key={r.slug}
                 href={`/peptides/${r.slug}`}
-                className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+                className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
               >
                 <span className="font-medium">{shortName(r.name)}</span>
                 <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />

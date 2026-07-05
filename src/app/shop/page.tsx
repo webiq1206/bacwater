@@ -143,7 +143,7 @@ export default async function ShopPage() {
                 {items.map((p) => {
                   const isMostPopular = p.slug === "insulin-syringes-1ml-100" || p.slug === "bac-water-30ml";
                   return (
-                    <Link key={p.id} href={`/shop/${p.slug}`} className="group block border border-border hover:bg-surface transition-colors p-5 relative">
+                    <Link key={p.id} href={`/shop/${p.slug}`} className="group block border border-border hover:bg-muted transition-colors p-5 relative">
                       {isMostPopular && (
                         <span className="badge-match absolute top-3 right-3">Most popular</span>
                       )}

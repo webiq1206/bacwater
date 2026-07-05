@@ -308,7 +308,7 @@ export default async function HomePage() {
         </div>
         <div className="mt-8 grid gap-0 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border border border-border">
           {featured.map((p) => (
-            <Link key={p.id} href={`/shop/${p.slug}`} className="group p-6 hover:bg-surface transition-colors">
+            <Link key={p.id} href={`/shop/${p.slug}`} className="group p-6 hover:bg-muted transition-colors">
               <div className="aspect-square bg-muted flex items-center justify-center">
                 {p.imageUrl ? (
                   <img src={p.imageUrl} alt={p.name} width={400} height={400} loading="lazy" className="h-full w-full object-contain" />
@@ -353,7 +353,7 @@ export default async function HomePage() {
             <Link
               key={p.slug}
               href={`/peptides/${p.slug}`}
-              className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+              className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
             >
               <span className="font-medium">{p.label}</span>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
@@ -365,7 +365,7 @@ export default async function HomePage() {
             <Link
               key={c.slug}
               href={`/learn/vs/${c.slug}`}
-              className="group flex items-center justify-between border border-border p-4 hover:bg-surface transition-colors"
+              className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
             >
               <span className="font-medium">{c.label}</span>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />

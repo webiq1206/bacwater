@@ -1043,7 +1043,7 @@ export function PlanForm({ mode: initialMode }: Props) {
               onClick={() =>
                 setDateMixed(new Date().toISOString().slice(0, 10))
               }
-              className="inline-flex items-center justify-center border border-border px-5 h-14 text-sm font-medium hover:bg-surface whitespace-nowrap"
+              className="inline-flex items-center justify-center border border-border px-5 h-14 text-sm font-medium hover:bg-muted whitespace-nowrap"
               style={{ color: "var(--color-accent-guide)" }}
             >
               I mixed it today

@@ -195,7 +195,7 @@ export default async function PdpPage({ params }: Props) {
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {related.map((r) => (
-            <Link key={r.id} href={`/shop/${r.slug}`} className="group block border border-border hover:bg-surface transition-colors p-5">
+            <Link key={r.id} href={`/shop/${r.slug}`} className="group block border border-border hover:bg-muted transition-colors p-5">
               <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
                 {r.imageUrl ? (
                   <img src={r.imageUrl} alt={r.name} width={300} height={300} loading="lazy" className="h-full w-full object-contain" />
