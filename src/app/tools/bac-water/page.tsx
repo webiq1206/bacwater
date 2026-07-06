@@ -363,7 +363,7 @@ function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: U
           className={cn(
             "px-3 h-10 text-xs font-semibold transition-colors",
             value === opt
-              ? "bg-background text-foreground shadow-sm"
+              ? "bg-card text-foreground shadow-lift"
               : "text-muted-foreground hover:text-foreground"
           )}
         >

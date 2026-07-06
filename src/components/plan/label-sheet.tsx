@@ -139,7 +139,7 @@ export function LabelSheet({
               max={30}
               value={count}
               onChange={(e) => setCountSafe(parseInt(e.target.value, 10))}
-              className="h-10 w-24 border border-input bg-background px-3 text-sm"
+              className="h-10 w-24 border border-input bg-card px-3 text-sm"
             />
           </label>
           <label className="text-sm">
@@ -150,13 +150,13 @@ export function LabelSheet({
               type="date"
               value={allDate}
               onChange={(e) => applyAll(e.target.value)}
-              className="h-10 border border-input bg-background px-3 text-sm"
+              className="h-10 border border-input bg-card px-3 text-sm"
             />
           </label>
           <button
             type="button"
             onClick={clearAll}
-            className="h-10 inline-flex items-center gap-1.5 border border-border bg-background px-3 text-sm font-medium hover:bg-muted"
+            className="h-10 inline-flex items-center gap-1.5 border border-border bg-card px-3 text-sm font-medium hover:bg-muted"
           >
             <RotateCcw className="h-3.5 w-3.5" /> Clear dates
           </button>

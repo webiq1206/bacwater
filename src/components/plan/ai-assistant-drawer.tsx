@@ -109,7 +109,7 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask a question…"
-              className="flex-1 border border-input bg-background px-4 h-9 text-sm"
+              className="flex-1 border border-input bg-card px-4 h-9 text-sm"
             />
             <Button type="submit" size="icon" disabled={pending || !input.trim()}>
               <Send className="h-4 w-4" />

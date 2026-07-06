@@ -54,7 +54,7 @@ export default async function OrdersListPage({ searchParams }: Props) {
 
       <form className="mt-4 flex flex-wrap gap-2 items-center" action="/admin/orders">
         <Input name="q" placeholder="Search order id, email, or name" defaultValue={q} className="max-w-sm" />
-        <select name="status" defaultValue={status || ""} className="h-10 rounded-full border border-input bg-background px-3 text-sm">
+        <select name="status" defaultValue={status || ""} className="h-10 rounded-full border border-input bg-card px-3 text-sm">
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
           <option value="paid">Paid</option>
@@ -63,7 +63,7 @@ export default async function OrdersListPage({ searchParams }: Props) {
           <option value="cancelled">Cancelled</option>
           <option value="refunded">Refunded</option>
         </select>
-        <select name="vendor" defaultValue={vendor || ""} className="h-10 rounded-full border border-input bg-background px-3 text-sm">
+        <select name="vendor" defaultValue={vendor || ""} className="h-10 rounded-full border border-input bg-card px-3 text-sm">
           <option value="">All vendor states</option>
           <option value="none">None</option>
           <option value="queued">Queued</option>

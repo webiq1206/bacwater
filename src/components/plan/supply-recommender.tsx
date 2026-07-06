@@ -222,7 +222,7 @@ export function SupplyRecommender({ supplies }: Props) {
                     return next;
                   });
                 }}
-                className="h-9 w-16 border border-input bg-background text-center text-sm tabular-nums"
+                className="h-9 w-16 border border-input bg-card text-center text-sm tabular-nums"
               />
               <button
                 type="button"

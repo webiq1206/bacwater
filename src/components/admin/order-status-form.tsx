@@ -28,7 +28,7 @@ export function OrderStatusForm({ publicId, status, notes }: { publicId: string;
     >
       <div>
         <label className="text-xs text-muted-foreground">Status</label>
-        <select value={s} onChange={(e) => setS(e.target.value)} className="mt-1 w-full h-10 rounded-lg border border-input bg-background px-3 text-sm">
+        <select value={s} onChange={(e) => setS(e.target.value)} className="mt-1 w-full h-10 rounded-lg border border-input bg-card px-3 text-sm">
           {STATUSES.map((x) => <option key={x} value={x}>{x}</option>)}
         </select>
       </div>

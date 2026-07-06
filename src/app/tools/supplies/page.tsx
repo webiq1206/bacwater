@@ -385,7 +385,7 @@ function UnitToggle<U extends string>({
           className={cn(
             "px-3 h-8 text-xs font-semibold transition-colors",
             value === opt
-              ? "bg-background text-foreground shadow-sm"
+              ? "bg-card text-foreground shadow-lift"
               : "text-muted-foreground hover:text-foreground"
           )}
         >

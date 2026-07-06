@@ -296,7 +296,7 @@ export default async function LearnPage({
           <select
             name="peptide"
             defaultValue={f.peptide ?? ""}
-            className="h-11 border border-input bg-background px-3 text-sm sm:w-64"
+            className="h-11 border border-input bg-card px-3 text-sm sm:w-64"
             aria-label="Filter by peptide"
           >
             <option value="">All peptides</option>
@@ -313,7 +313,7 @@ export default async function LearnPage({
               name="q"
               defaultValue={f.q ?? ""}
               placeholder="Search guides and FAQs"
-              className="h-11 w-full border border-input bg-background pl-9 pr-3 text-sm"
+              className="h-11 w-full border border-input bg-card pl-9 pr-3 text-sm"
               aria-label="Search"
             />
           </div>

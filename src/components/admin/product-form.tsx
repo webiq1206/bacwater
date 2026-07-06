@@ -62,7 +62,7 @@ export function ProductForm({ product }: { product?: Product }) {
         </div>
         <div>
           <Label>Category</Label>
-          <select name="category" defaultValue={product?.category || "bac-water"} className="mt-2 w-full h-12 rounded-lg border border-input bg-background px-4 text-base">
+          <select name="category" defaultValue={product?.category || "bac-water"} className="mt-2 w-full h-12 rounded-lg border border-input bg-card px-4 text-base">
             <option value="bac-water">BAC water</option>
             <option value="syringes">Syringes</option>
             <option value="alcohol-pads">Alcohol pads</option>

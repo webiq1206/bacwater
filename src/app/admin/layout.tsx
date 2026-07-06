@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-muted/40">
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr]">
-        <aside className="border-r border-border bg-background lg:min-h-screen">
+        <aside className="border-r border-border bg-card lg:min-h-screen">
           <div className="p-4">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <span aria-hidden className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand text-brand-foreground text-[11px] font-bold">
