@@ -66,9 +66,9 @@ export function shippingAlt(): string {
 
 export function shippingSvg(): string {
   const width = 720;
-  const height = 190;
+  const height = 168;
   const padX = 48;
-  const y = 110;
+  const y = 116;
   const n = SHIP_STEPS.length;
   const span = width - padX * 2;
   const step = span / (n - 1);
@@ -77,17 +77,20 @@ export function shippingSvg(): string {
 
   const nodes = SHIP_STEPS.map((s, i) => {
     const cx = padX + i * step;
+    // Anchor edge labels inward so long descriptions never overflow the canvas:
+    // first step left-aligned to its node, last right-aligned, middle centered.
+    const anchor = i === 0 ? "start" : i === n - 1 ? "end" : "middle";
     return `
-      <circle cx="${cx}" cy="${y}" r="12" fill="${PALETTE.accent}"/>
-      <text x="${cx}" y="${y + 5}" text-anchor="middle" font-size="12" font-weight="700" fill="${PALETTE.white}">${i + 1}</text>
-      <text x="${cx}" y="${y - 28}" text-anchor="middle" font-size="17" font-weight="700" fill="${PALETTE.foreground}">${esc(s.big)}</text>
-      ${splitSub(s.sub, cx, y + 34, 190)}
+      <circle cx="${cx}" cy="${y}" r="13" fill="${PALETTE.accent}"/>
+      <text x="${cx}" y="${y + 4}" text-anchor="middle" font-size="12" font-weight="700" fill="${PALETTE.white}">${i + 1}</text>
+      <text x="${cx}" y="${y - 24}" text-anchor="${anchor}" font-size="17" font-weight="700" fill="${PALETTE.foreground}">${esc(s.big)}</text>
+      ${splitSub(s.sub, cx, y + 32, 200, anchor)}
     `;
   }).join("");
 
   const inner = `
-    <text x="${padX}" y="44" font-size="20" font-weight="700" fill="${PALETTE.foreground}">How fast bac water ships</text>
-    <text x="${padX}" y="68" font-size="13" fill="${PALETTE.muted}">From order to your door, with tracking the whole way.</text>
+    <text x="${padX}" y="38" font-size="20" font-weight="700" fill="${PALETTE.foreground}">How fast bac water ships</text>
+    <text x="${padX}" y="62" font-size="13" fill="${PALETTE.muted}">From order to your door, with tracking the whole way.</text>
     ${line}
     ${nodes}
   `;
@@ -103,7 +106,13 @@ export function shippingSvg(): string {
 
 /* ---------- helpers ---------- */
 
-function splitSub(sub: string, cx: number, y: number, maxW: number): string {
+function splitSub(
+  sub: string,
+  x: number,
+  y: number,
+  maxW: number,
+  anchor: string = "middle"
+): string {
   const approxChar = 5.6;
   const maxChars = Math.max(8, Math.floor(maxW / approxChar));
   const words = sub.split(" ");
@@ -122,7 +131,7 @@ function splitSub(sub: string, cx: number, y: number, maxW: number): string {
     .slice(0, 2)
     .map(
       (ln, i) =>
-        `<text x="${cx}" y="${y + i * 14}" text-anchor="middle" font-size="11" fill="${PALETTE.muted}">${esc(ln)}</text>`
+        `<text x="${x}" y="${y + i * 14}" text-anchor="${anchor}" font-size="11" fill="${PALETTE.muted}">${esc(ln)}</text>`
     )
     .join("");
 }
