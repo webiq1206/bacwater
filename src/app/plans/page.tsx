@@ -6,6 +6,8 @@ import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
+import { formatDose, formatSyringeReading, formatUnits } from "@/lib/calc/format";
+import type { CalcResult } from "@/lib/calc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PlansRowActions } from "@/components/plan/plans-row-actions";
 
@@ -74,12 +76,23 @@ export default async function PlansPage() {
   );
 }
 
-function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; peptideName: string | null; vialStrengthMg: number; doseMcg: number; syringeUnits: number; dosesPerVial: number; dateMixed: Date | null; expirationDate: Date | null; createdAt: Date; archived: boolean }> }) {
+function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; peptideName: string | null; vialStrengthMg: number; doseMcg: number; syringeUnits: number; dosesPerVial: number; dateMixed: Date | null; expirationDate: Date | null; createdAt: Date; archived: boolean; data: string }> }) {
   return (
     <ul className="mt-4 grid gap-3 md:grid-cols-2">
-      {plans.map((p) => (
+      {plans.map((p) => {
+        // Read the syringe reading from the stored result so it matches the
+        // plan page and PDF exactly (same rounding, correct units/mL label).
+        // Fall back to the denormalized column for older/corrupt rows.
+        let readout: string;
+        try {
+          const parsed = JSON.parse(p.data) as CalcResult;
+          readout = formatSyringeReading(parsed.syringeReadout);
+        } catch {
+          readout = `${formatUnits(p.syringeUnits)} units`;
+        }
+        return (
         <li key={p.id}>
-          <div className="border border-border bg-card p-5">
+          <div className="border border-border bg-card p-5 rounded-2xl">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link
@@ -103,9 +116,9 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
                 <dt className="text-muted-foreground">Vial</dt>
                 <dd className="text-right">{p.vialStrengthMg} mg</dd>
                 <dt className="text-muted-foreground">Dose</dt>
-                <dd className="text-right">{p.doseMcg >= 1000 ? `${p.doseMcg / 1000} mg` : `${p.doseMcg} mcg`}</dd>
-                <dt className="text-muted-foreground">Syringe</dt>
-                <dd className="text-right font-medium text-foreground">{p.syringeUnits} units</dd>
+                <dd className="text-right">{formatDose(p.doseMcg)}</dd>
+                <dt className="text-muted-foreground">Draw per dose</dt>
+                <dd className="text-right font-medium text-foreground">{readout}</dd>
                 <dt className="text-muted-foreground">Doses/vial</dt>
                 <dd className="text-right">{p.dosesPerVial}</dd>
               </dl>
@@ -130,7 +143,8 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
               </div>
           </div>
         </li>
-      ))}
+        );
+      })}
     </ul>
   );
 }

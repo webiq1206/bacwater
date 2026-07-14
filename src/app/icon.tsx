@@ -7,13 +7,13 @@ export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 
 /**
- * Favicon rendered as the header wordmark's initial "B" in Cormorant Garamond
- * (the site's --font-serif). Generated with next/og so the real font is
- * embedded, since SVG favicons cannot load a webfont. Falls back to a system
- * serif if the font fetch fails.
+ * Favicon rendered as the header wordmark's initial "B" in Montserrat (the
+ * site's brand voice). Generated with next/og so the real font is embedded,
+ * since SVG favicons cannot load a webfont. Charcoal mark on a bone tile.
+ * Falls back to a system sans if the font fetch fails.
  */
 export default async function Icon() {
-  const cormorant = await loadGoogleFont("Cormorant+Garamond", 600, "B");
+  const montserrat = await loadGoogleFont("Montserrat", 600, "B");
   return new ImageResponse(
     (
       <div
@@ -23,18 +23,18 @@ export default async function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#f7f5f3",
           borderRadius: "12px",
         }}
       >
         <div
           style={{
-            fontFamily: cormorant
-              ? "Cormorant Garamond"
-              : "Georgia, 'Times New Roman', serif",
-            fontSize: "50px",
+            fontFamily: montserrat
+              ? "Montserrat"
+              : "'Helvetica Neue', Arial, sans-serif",
+            fontSize: "44px",
             fontWeight: 600,
-            color: "#111111",
+            color: "#2c302f",
             lineHeight: 1,
           }}
         >
@@ -44,12 +44,12 @@ export default async function Icon() {
     ),
     {
       ...size,
-      ...(cormorant
+      ...(montserrat
         ? {
             fonts: [
               {
-                name: "Cormorant Garamond",
-                data: cormorant,
+                name: "Montserrat",
+                data: montserrat,
                 weight: 600 as const,
                 style: "normal" as const,
               },

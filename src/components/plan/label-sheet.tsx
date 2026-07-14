@@ -9,8 +9,10 @@ interface Props {
   publicId: string;
   peptideName: string;
   vialStrengthMg: number;
-  bacWaterMl: number;
-  syringeUnits: number;
+  /** Pre-formatted BAC water volume, e.g. "2" or "1.33". */
+  bacWaterMl: string;
+  /** Pre-formatted syringe reading, e.g. "10 units" or "0.25 mL". */
+  doseReading: string;
   shelfDays: number;
 }
 
@@ -29,7 +31,7 @@ export function LabelSheet({
   peptideName,
   vialStrengthMg,
   bacWaterMl,
-  syringeUnits,
+  doseReading,
   shelfDays,
 }: Props) {
   const [count, setCount] = useState(6);
@@ -84,11 +86,11 @@ export function LabelSheet({
           font-size: 9px;
           line-height: 1.1;
           border: none;
-          border-bottom: 1px solid #9ca3af;
+          border-bottom: 1px solid #9aa09b;
           padding: 0 2px;
           width: 1in;
           background: transparent;
-          color: #111111;
+          color: #2c302f;
           font-family: inherit;
         }
         .vl-date-input::-webkit-calendar-picker-indicator {
@@ -185,8 +187,7 @@ export function LabelSheet({
                     {peptideName || "Peptide"}
                   </div>
                   <div className="text-[8px] text-muted-foreground leading-tight mt-0.5">
-                    {vialStrengthMg} mg vial &middot; {bacWaterMl} mL BAC
-                    &middot; {syringeUnits} u/dose
+                    {`${vialStrengthMg} mg vial · ${bacWaterMl} mL BAC · ${doseReading}/dose`}
                   </div>
                 </div>
                 <div className="shrink-0">

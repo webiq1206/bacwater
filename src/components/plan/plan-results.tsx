@@ -5,6 +5,7 @@ import type { CalcResult } from "@/lib/calc";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { ShelfLifeTimeline } from "@/components/plan/shelf-life-timeline";
 import { formatDate } from "@/lib/utils";
+import { formatConcentration, formatDose, formatMl } from "@/lib/calc/format";
 import { SupplyRecommender } from "@/components/plan/supply-recommender";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 
@@ -49,10 +50,10 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-px bg-border">
           <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} />
-          <Stat label="BAC water added" value={`${result.usedBacMl} mL`} />
+          <Stat label="BAC water added" value={`${formatMl(result.usedBacMl)} mL`} />
           <Stat
             label="Concentration"
-            value={`${result.finalConcentrationMgPerMl} mg/mL`}
+            value={`${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL`}
             sub={`${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`}
           />
           <Stat label="Doses per vial" value={`${result.dosesPerVial}`} />
@@ -103,12 +104,12 @@ export function PlanResults({ result }: Props) {
           <p>
             Add{" "}
             <strong>
-              {result.usedBacMl} mL of BAC water
+              {formatMl(result.usedBacMl)} mL of BAC water
             </strong>{" "}
             to the vial. This creates a solution where every milliliter
             contains{" "}
             <strong>
-              {result.finalConcentrationMgPerMl} mg
+              {formatConcentration(result.finalConcentrationMgPerMl)} mg
             </strong>{" "}
             ({result.finalConcentrationMcgPerMl.toLocaleString()} mcg) of
             peptide.

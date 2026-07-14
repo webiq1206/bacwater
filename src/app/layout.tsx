@@ -1,24 +1,30 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, JetBrains_Mono, Cormorant_Garamond } from "next/font/google";
+import { cookies } from "next/headers";
+import { Montserrat, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { CartHydrator } from "@/components/shop/cart-hydrator";
 import { Toaster } from "@/components/ui/toaster";
 import { OrgJsonLd } from "@/components/common/org-json-ld";
+import { AgeGate } from "@/components/common/age-gate";
 import { auth } from "@/lib/auth";
 
-const inter = Inter({
-  variable: "--font-inter",
+// Montserrat carries the voice (body, labels, and light-weight headings).
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-serif",
+// Fraunces italic is the accent, used sparingly (a single word, the "Co.").
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -69,10 +75,11 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
   const isAuthenticated = !!session?.user;
+  const ageVerified = (await cookies()).get("bacwater_age_ok")?.value === "1";
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${cormorant.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${fraunces.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <OrgJsonLd />
@@ -120,6 +127,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         <main id="main" className="flex-1">{children}</main>
         <SiteFooter />
         <Toaster />
+        <AgeGate initialVerified={ageVerified} />
       </body>
     </html>
   );

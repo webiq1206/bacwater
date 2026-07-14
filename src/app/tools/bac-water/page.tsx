@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
+import { formatConcentration, formatUnits } from "@/lib/calc/format";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
@@ -57,7 +58,7 @@ export default function BacWaterCalculatorPage() {
       <StickyResultBar
         label="Add this much bac water"
         value={valid ? `${rec} mL` : "--"}
-        sub={valid ? `${syringeUnits.toFixed(0)} units/dose` : undefined}
+        sub={valid ? `${formatUnits(syringeUnits)} units/dose` : undefined}
         visible={valid}
       />
       <div className="max-w-3xl">
@@ -185,12 +186,12 @@ export default function BacWaterCalculatorPage() {
                 <div className="space-y-3 text-sm">
                   <ResultRow
                     label="Concentration after mixing"
-                    value={`${concentration.toFixed(2)} mg/mL`}
-                    sub={`${(concentration * 1000).toFixed(0)} mcg/mL`}
+                    value={`${formatConcentration(concentration)} mg/mL`}
+                    sub={`${Math.round(concentration * 1000).toLocaleString()} mcg/mL`}
                   />
                   <ResultRow
                     label="Each dose draws"
-                    value={`${syringeUnits.toFixed(1)} units`}
+                    value={`${formatUnits(syringeUnits)} units`}
                     sub={`${doseMl.toFixed(3)} mL = ${doseMcg.toLocaleString()} mcg`}
                   />
                   <ResultRow
@@ -219,7 +220,7 @@ export default function BacWaterCalculatorPage() {
           {valid && (
             <SyringeVisual
               fillPercent={Math.min(100, syringeUnits)}
-              readoutLabel={`${syringeUnits.toFixed(1)} units`}
+              readoutLabel={`${formatUnits(syringeUnits)} units`}
               scale="u100"
               maxLabel="1 mL (100 units)"
             />

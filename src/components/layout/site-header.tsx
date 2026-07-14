@@ -42,7 +42,7 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-1">
           {NAV.map((n) => {
             const active =
               pathname === n.href ||
@@ -92,14 +92,14 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
             type="button"
             aria-label="Menu"
             onClick={() => setOpen((s) => !s)}
-            className="md:hidden inline-flex h-10 w-10 items-center justify-center border border-border hover:bg-muted"
+            className="lg:hidden inline-flex h-10 w-10 items-center justify-center border border-border hover:bg-muted"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
       </div>
       {open ? (
-        <div className="md:hidden border-t border-border bg-white">
+        <div className="lg:hidden border-t border-border bg-white">
           <nav className="mx-auto flex max-w-7xl flex-col p-3">
             {NAV.map((n) => (
               <Link

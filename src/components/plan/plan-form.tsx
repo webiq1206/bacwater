@@ -41,8 +41,20 @@ import { cn } from "@/lib/utils";
 type Mode = "beginner" | "advanced";
 type Unit = "mg" | "mcg";
 
+export interface PlanFormInitial {
+  peptideSlug?: string | null;
+  peptideName?: string | null;
+  vialStrengthMg?: number;
+  doseMcg?: number;
+  bacWaterMl?: number;
+  syringeType?: SyringeType;
+  dateMixed?: string | null;
+}
+
 interface Props {
   mode: Mode;
+  /** Prefill the form (used when editing an existing plan). */
+  initial?: PlanFormInitial;
 }
 
 const STEPS = [
@@ -224,8 +236,39 @@ function ModeToggle({
 
 // ---------- main ----------
 
-export function PlanForm({ mode: initialMode }: Props) {
+export function PlanForm({ mode: initialMode, initial }: Props) {
   const router = useRouter();
+
+  // Derive first-render values from an optional prefill (edit flow). Computed
+  // once; the useState initializers below read from it.
+  const init = useMemo(() => {
+    if (!initial) return null;
+    const known = initial.peptideSlug
+      ? PEPTIDES.find((p) => p.slug === initial.peptideSlug)
+      : undefined;
+    const slug = known ? known.slug : initial.peptideName ? "custom" : "bpc-157";
+    const ref = known ?? PEPTIDES.find((p) => p.slug === slug);
+    const vialMg = initial.vialStrengthMg ?? 5;
+    const doseMcg = initial.doseMcg ?? 250;
+    const recommended = recommendBacWaterMl(vialMg, doseMcg);
+    const bac = initial.bacWaterMl;
+    const dosePresetValues = ref
+      ? [ref.typicalDoseMcgRange[0], ref.suggestedDoseMcg, ref.typicalDoseMcgRange[1]]
+      : [];
+    return {
+      slug,
+      customName: slug === "custom" ? initial.peptideName ?? "" : "",
+      vialMg,
+      showCustomVial: !(ref?.commonVialStrengthsMg ?? []).includes(vialMg),
+      doseMcg,
+      showCustomDose: !dosePresetValues.includes(doseMcg),
+      syringeType: initial.syringeType ?? "insulin-1ml",
+      useRecommendedBac: bac == null || Math.abs(bac - recommended) < 1e-9,
+      customBacMl: bac ?? recommended,
+      dateMixed: initial.dateMixed ? initial.dateMixed.slice(0, 10) : "",
+      showDate: !!initial.dateMixed,
+    };
+  }, [initial]);
 
   const [mode, setMode] = useState<Mode>(initialMode);
   const [hasMounted, setHasMounted] = useState(false);
@@ -235,49 +278,73 @@ export function PlanForm({ mode: initialMode }: Props) {
 
   const [step, setStep] = useState<number>(0);
   const stepContainerRef = useRef<HTMLDivElement>(null);
+  // Set when the user navigates steps, so we only auto-scroll on real step
+  // changes (not on the first render or when editing an already-visible field).
+  const pendingScrollRef = useRef(false);
 
-  // Auto-scroll to top of wizard step on step change
-  const scrollToStep = useCallback(() => {
-    requestAnimationFrame(() => {
-      if (stepContainerRef.current) {
-        const y =
-          stepContainerRef.current.getBoundingClientRect().top +
-          window.scrollY -
-          80;
-        window.scrollTo({ top: y, behavior: "smooth" });
-      }
-    });
-  }, []);
+  // Auto-scroll so the current step sits just below the sticky header.
+  // This runs AFTER the new step has been committed to the DOM, so the
+  // measurement reflects the step that is now on screen (the previous
+  // requestAnimationFrame version measured the outgoing step's layout).
+  useEffect(() => {
+    if (!pendingScrollRef.current) return;
+    pendingScrollRef.current = false;
+    const el = stepContainerRef.current;
+    if (!el) return;
+    const HEADER_OFFSET = 88; // sticky header (64px) + breathing room
+    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+    // Only scroll when the step isn't already comfortably in view, so we never
+    // yank the page when the user is already looking at the right place.
+    const alreadyInView =
+      Math.abs(window.scrollY - Math.max(0, top)) < 24;
+    if (!alreadyInView) {
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    }
+  }, [step]);
 
   function goToStep(n: number) {
+    pendingScrollRef.current = true;
     setStep(n);
-    scrollToStep();
   }
 
-  const [peptideSlug, setPeptideSlug] = useState<string>("bpc-157");
-  const [customPeptideName, setCustomPeptideName] = useState("");
+  const [peptideSlug, setPeptideSlug] = useState<string>(init?.slug ?? "bpc-157");
+  const [customPeptideName, setCustomPeptideName] = useState(init?.customName ?? "");
   // Picking a peptide is an interest signal used to personalize panels
   // elsewhere on the site (homepage, buy page, FAQ).
   const selectPeptide = useCallback((slug: string) => {
     setPeptideSlug(slug);
-    if (slug !== "custom") setInterestPeptide(slug);
+    if (slug !== "custom") {
+      setInterestPeptide(slug);
+      // Reset vial strength and dose to this peptide's typical defaults so the
+      // preset chips stay in sync and stale numbers from the previous peptide
+      // don't silently carry over.
+      const p = PEPTIDES.find((x) => x.slug === slug);
+      if (p) {
+        setVialInput(p.commonVialStrengthsMg[0] ?? 5);
+        setVialUnit("mg");
+        setShowCustomVial(false);
+        setDoseInput(p.suggestedDoseMcg);
+        setDoseUnit("mcg");
+        setShowCustomDose(false);
+      }
+    }
   }, []);
 
-  const [vialInput, setVialInput] = useState<number>(5);
+  const [vialInput, setVialInput] = useState<number>(init?.vialMg ?? 5);
   const [vialUnit, setVialUnit] = useState<Unit>("mg");
-  const [showCustomVial, setShowCustomVial] = useState(false);
+  const [showCustomVial, setShowCustomVial] = useState(init?.showCustomVial ?? false);
 
-  const [doseInput, setDoseInput] = useState<number>(250);
+  const [doseInput, setDoseInput] = useState<number>(init?.doseMcg ?? 250);
   const [doseUnit, setDoseUnit] = useState<Unit>("mcg");
-  const [showCustomDose, setShowCustomDose] = useState(false);
+  const [showCustomDose, setShowCustomDose] = useState(init?.showCustomDose ?? false);
 
-  const [syringeType, setSyringeType] = useState<SyringeType>("insulin-1ml");
+  const [syringeType, setSyringeType] = useState<SyringeType>(init?.syringeType ?? "insulin-1ml");
 
-  const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(true);
-  const [customBacMl, setCustomBacMl] = useState<number>(2);
+  const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(init?.useRecommendedBac ?? true);
+  const [customBacMl, setCustomBacMl] = useState<number>(init?.customBacMl ?? 2);
 
-  const [dateMixed, setDateMixed] = useState<string>("");
-  const [showDate, setShowDate] = useState<boolean>(false);
+  const [dateMixed, setDateMixed] = useState<string>(init?.dateMixed ?? "");
+  const [showDate, setShowDate] = useState<boolean>(init?.showDate ?? false);
 
   // Blend
   const [showBlend, setShowBlend] = useState<boolean>(false);

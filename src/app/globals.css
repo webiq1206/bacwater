@@ -1,46 +1,59 @@
 @import "tailwindcss";
 
 @theme {
-  /* Light gray page ground so white cards and panels lift off it (matches the
-     clean light-gray look of the improvement-plan report). Cards stay #ffffff. */
-  --color-background: #f6f7f8;
-  --color-foreground: #111111;
-  --color-muted: #f5f5f4;
-  --color-muted-foreground: #71717a;
-  --color-border: #e4e4e7;
-  --color-border-strong: #d4d4d8;
-  --color-input: #e4e4e7;
-  --color-ring: #111111;
+  /* --- Brand palette -----------------------------------------------------
+     A warm, quiet range. Bone and charcoal do the work; sage and mist carry
+     the secondary type; the line tone is for hairlines only.
+       Bone     #F7F5F3   Charcoal #2C302F   Sage #5D6561
+       Mist     #9AA09B   Line     #E4E1DD
+     ---------------------------------------------------------------------- */
+  --color-bone: #f7f5f3;
+  --color-charcoal: #2c302f;
+  --color-sage: #5d6561;
+  --color-mist: #9aa09b;
+  --color-line: #e4e1dd;
+
+  /* Bone page ground; pure-white cards lift off it. */
+  --color-background: #f7f5f3;
+  --color-foreground: #2c302f;
+  --color-muted: #efece8;
+  --color-muted-foreground: #5d6561;
+  --color-border: #e4e1dd;
+  --color-border-strong: #d5d0c9;
+  --color-input: #e4e1dd;
+  --color-ring: #2c302f;
 
   --color-card: #ffffff;
-  --color-card-foreground: #111111;
+  --color-card-foreground: #2c302f;
 
-  --color-primary: #111111;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #f4f4f5;
-  --color-secondary-foreground: #111111;
-  --color-accent: #fafaf9;
-  --color-accent-foreground: #111111;
+  --color-primary: #2c302f;
+  --color-primary-foreground: #f7f5f3;
+  --color-secondary: #efece8;
+  --color-secondary-foreground: #2c302f;
+  --color-accent: #f2f0ed;
+  --color-accent-foreground: #2c302f;
 
-  --color-brand: #111111;
-  --color-brand-foreground: #ffffff;
-  --color-brand-soft: #f4f4f5;
-  --color-brand-ink: #111111;
+  --color-brand: #2c302f;
+  --color-brand-foreground: #f7f5f3;
+  --color-brand-soft: #efece8;
+  --color-brand-ink: #2c302f;
 
-  --color-destructive: #b91c1c;
+  --color-destructive: #a13a2f;
   --color-destructive-foreground: #ffffff;
-  --color-warning: #b45309;
-  --color-warning-foreground: #fffbeb;
-  --color-success: #16a34a;
+  --color-warning: #8a6a2f;
+  --color-warning-foreground: #fbf7ee;
+  --color-success: #4a7a5c;
 
-  --color-accent-guide: #2d6a4f;
-  --color-accent-guide-soft: #f0f7f2;
+  /* Guide accents (callouts, step markers, checks) use sage — quiet and warm,
+     distinct from the charcoal used for primary actions. */
+  --color-accent-guide: #5d6561;
+  --color-accent-guide-soft: #eef0ec;
 
   --color-surface: #ffffff;
   --color-surface-raised: #ffffff;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-serif: var(--font-serif), "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
   --radius-sm: 0.25rem;
@@ -80,15 +93,31 @@ body {
 }
 
 ::selection {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: color-mix(in srgb, var(--color-sage) 22%, transparent);
   color: var(--color-foreground);
 }
 
+/* Display headings. The brand voice is Montserrat Light; this class name is
+   kept for compatibility with existing markup. Headings never exceed 300. */
 .font-serif {
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+  font-weight: 300;
+}
+
+/* Fraunces italic — the accent, used sparingly for a single word or the "Co." */
+.font-accent {
   font-family: var(--font-serif);
-  font-feature-settings: "kern" 1, "liga" 1, "dlig" 1;
-  letter-spacing: -0.02em;
-  font-weight: 600;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Enforce the brand rule: no heading text is heavier than 300. This wins over
+   utility weights (font-medium / font-semibold) applied on heading elements. */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  letter-spacing: -0.01em;
 }
 
 .eyebrow {
@@ -128,10 +157,10 @@ body {
 .result-hero {
   font-size: 2.5rem;
   line-height: 1;
-  font-weight: 600;
+  font-weight: 300;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
-  color: var(--color-accent-guide);
+  color: var(--color-foreground);
 }
 @media (min-width: 640px) {
   .result-hero {

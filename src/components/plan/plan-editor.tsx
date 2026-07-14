@@ -1,6 +1,7 @@
 "use client";
 
-import { PlanForm } from "@/components/plan/plan-form";
+import { PlanForm, type PlanFormInitial } from "@/components/plan/plan-form";
+import type { SyringeType } from "@/lib/calc";
 
 interface Initial {
   peptideSlug: string;
@@ -8,13 +9,21 @@ interface Initial {
   vialStrengthMg: number;
   doseMcg: number;
   bacWaterMl: number;
-  syringeType: never;
+  syringeType: string;
   dateMixed: string;
   notes: string;
 }
 
-// For simplicity, edit reuses the advanced form (state is internal to PlanForm).
-// A fuller build would hydrate PlanForm with these initials - deferred for now.
-export function PlanEditor(_props: { initial: Initial }) {
-  return <PlanForm mode="advanced" />;
+// Edit reuses the advanced form, prefilled with the saved plan's values.
+export function PlanEditor({ initial }: { initial: Initial }) {
+  const prefill: PlanFormInitial = {
+    peptideSlug: initial.peptideSlug,
+    peptideName: initial.peptideName,
+    vialStrengthMg: initial.vialStrengthMg,
+    doseMcg: initial.doseMcg,
+    bacWaterMl: initial.bacWaterMl,
+    syringeType: initial.syringeType as SyringeType,
+    dateMixed: initial.dateMixed || null,
+  };
+  return <PlanForm mode="advanced" initial={prefill} />;
 }

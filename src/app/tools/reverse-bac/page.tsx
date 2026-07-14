@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PEPTIDES } from "@/lib/calc";
+import { formatConcentration } from "@/lib/calc/format";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
@@ -217,8 +218,8 @@ export default function ReverseBacCalculatorPage() {
                 <div className="space-y-3 text-sm">
                   <ResultRow
                     label="Concentration after mixing"
-                    value={`${result.concentration.toFixed(2)} mg/mL`}
-                    sub={`${(result.concentration * 1000).toFixed(0)} mcg/mL`}
+                    value={`${formatConcentration(result.concentration)} mg/mL`}
+                    sub={`${Math.round(result.concentration * 1000).toLocaleString()} mcg/mL`}
                   />
                   <ResultRow
                     label="Each dose draws"

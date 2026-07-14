@@ -239,6 +239,9 @@ function buildInstructions(input: {
     input.syringe.scale === "u100"
       ? `Draw ${round(input.units, 1)} units on the ${input.syringe.label}.`
       : `Draw ${round(input.units / 100, 2)} mL on the ${input.syringe.label}.`;
+  // Lowercase only the first letter so it flows after "and", without mangling
+  // units like "mL" into "ml".
+  const drawLabelInline = drawLabel.charAt(0).toLowerCase() + drawLabel.slice(1);
 
   return [
     "Wash your hands and lay out your supplies on a clean surface.",
@@ -248,7 +251,7 @@ function buildInstructions(input: {
     "Gently swirl (do not shake) until the powder is fully dissolved. The solution should look clear.",
     "Label the vial with the peptide name, date mixed, and expiration.",
     "Refrigerate the reconstituted vial immediately.",
-    `When ready to dose: wipe the vial top, invert the vial, and ${drawLabel.toLowerCase()}`,
+    `When ready to dose: wipe the vial top, invert the vial, and ${drawLabelInline}`,
     "Wipe the injection site, inject, then dispose of the syringe safely in a sharps container.",
   ];
 }

@@ -6,6 +6,7 @@ import { ArrowRight, Check, FlaskConical, HelpCircle, Lightbulb, Ruler } from "l
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatConcentration, formatUnits } from "@/lib/calc/format";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { CopyButton } from "@/components/common/copy-button";
@@ -42,7 +43,7 @@ export default function DoseCalculatorPage() {
       <StickyResultBar
         label="Your dose"
         value={valid ? `${result.doseMcg.toFixed(1)} mcg` : "--"}
-        sub={valid ? `${result.units.toFixed(0)} units` : undefined}
+        sub={valid ? `${formatUnits(result.units)} units` : undefined}
         visible={valid}
       />
       <div className="max-w-3xl">
@@ -170,14 +171,14 @@ export default function DoseCalculatorPage() {
                   <div className="rule my-6" />
 
                   <div className="space-y-3 text-sm">
-                    <ResultRow label="Concentration" value={`${concMgPerMl.toFixed(2)} mg/mL`} />
-                    <ResultRow label="Volume drawn" value={`${result.ml.toFixed(3)} mL (${result.units.toFixed(1)} units)`} />
+                    <ResultRow label="Concentration" value={`${formatConcentration(concMgPerMl)} mg/mL`} />
+                    <ResultRow label="Volume drawn" value={`${result.ml.toFixed(3)} mL (${formatUnits(result.units)} units)`} />
                     <ResultRow label="Dose" value={`${result.doseMcg.toFixed(1)} mcg (${result.doseMg.toFixed(3)} mg)`} />
                   </div>
 
                   <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
-                    Drawing <b>{result.units.toFixed(1)} units</b> from a solution
-                    at <b>{concMgPerMl.toFixed(2)} mg/mL</b> gives
+                    Drawing <b>{formatUnits(result.units)} units</b> from a solution
+                    at <b>{formatConcentration(concMgPerMl)} mg/mL</b> gives
                     you <b>{result.doseMcg.toFixed(1)} mcg</b> of peptide per draw.
                   </p>
                 </>
@@ -206,7 +207,7 @@ export default function DoseCalculatorPage() {
                 <Lightbulb className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   <b>The math:</b> dose = concentration &times; volume.
-                  {" "}{concMgPerMl.toFixed(2)} mg/mL &times; {result.ml.toFixed(3)} mL
+                  {" "}{formatConcentration(concMgPerMl)} mg/mL &times; {result.ml.toFixed(3)} mL
                   = {result.doseMg.toFixed(3)} mg = {result.doseMcg.toFixed(1)} mcg.
                 </p>
               </div>

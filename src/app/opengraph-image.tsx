@@ -11,37 +11,35 @@ export const contentType = "image/png";
 const TAGLINE = "The complete BAC water calculator & reconstitution guide";
 
 export default async function OGImage() {
-  // Match the header wordmark: "BACwater" in Cormorant Garamond (the site's
-  // --font-serif), ".ai" and the tagline in Inter (the site's --font-inter).
-  const [cormorant, inter] = await Promise.all([
-    loadGoogleFont("Cormorant+Garamond", 500, "BACwater"),
-    loadGoogleFont("Inter", 400, `${TAGLINE} .aiAI`),
+  // Match the header wordmark: "BACwater" in Montserrat (the site's brand
+  // voice), with ".ai" and the tagline in the same family. Brand palette:
+  // bone ground, charcoal wordmark, sage accents.
+  const [montserratBold, montserratRegular] = await Promise.all([
+    loadGoogleFont("Montserrat", 600, "BACwater"),
+    loadGoogleFont("Montserrat", 400, `${TAGLINE} .aiAI`),
   ]);
 
   const fonts = [
-    cormorant && {
-      name: "Cormorant Garamond",
-      data: cormorant,
-      weight: 500 as const,
+    montserratBold && {
+      name: "Montserrat",
+      data: montserratBold,
+      weight: 600 as const,
       style: "normal" as const,
     },
-    inter && {
-      name: "Inter",
-      data: inter,
+    montserratRegular && {
+      name: "Montserrat",
+      data: montserratRegular,
       weight: 400 as const,
       style: "normal" as const,
     },
   ].filter(Boolean) as {
     name: string;
     data: ArrayBuffer;
-    weight: 400 | 500;
+    weight: 400 | 600;
     style: "normal";
   }[];
 
-  const serif = cormorant
-    ? "Cormorant Garamond"
-    : "Georgia, 'Times New Roman', serif";
-  const sans = inter ? "Inter" : "'Helvetica Neue', Arial, sans-serif";
+  const sans = fonts.length ? "Montserrat" : "'Helvetica Neue', Arial, sans-serif";
 
   return new ImageResponse(
     (
@@ -53,17 +51,17 @@ export default async function OGImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#f7f5f3",
         }}
       >
         <div style={{ display: "flex", alignItems: "baseline" }}>
           <span
             style={{
-              fontFamily: serif,
-              fontSize: "116px",
-              fontWeight: 500,
-              color: "#111111",
-              letterSpacing: "-2px",
+              fontFamily: sans,
+              fontSize: "112px",
+              fontWeight: 600,
+              color: "#2c302f",
+              letterSpacing: "-3px",
               lineHeight: 1,
             }}
           >
@@ -74,7 +72,7 @@ export default async function OGImage() {
               fontFamily: sans,
               fontSize: "26px",
               fontWeight: 400,
-              color: "#71717a",
+              color: "#9aa09b",
               letterSpacing: "6px",
               textTransform: "uppercase" as const,
               lineHeight: 1,
@@ -89,7 +87,7 @@ export default async function OGImage() {
             marginTop: "30px",
             width: "120px",
             height: "2px",
-            backgroundColor: "#2d6a4f",
+            backgroundColor: "#5d6561",
           }}
         />
         <div
@@ -97,7 +95,7 @@ export default async function OGImage() {
             marginTop: "30px",
             fontFamily: sans,
             fontSize: "27px",
-            color: "#555555",
+            color: "#5d6561",
             letterSpacing: "0.3px",
           }}
         >
