@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tools/bac-water" },
   title: "BAC Water Calculator - How Much to Add",
   description:
-    "Enter your peptide and vial size to find out exactly how much bacteriostatic water to add for clean, easy-to-measure doses on a standard insulin syringe.",
+    "Enter your peptide and vial amount to find out exactly how much bacteriostatic water to add for clean, easy-to-measure amounts on a standard insulin syringe.",
   openGraph: {
     title: "BAC Water Calculator - How Much to Add",
     description:
-      "Enter your peptide and vial size to find out exactly how much bacteriostatic water to add for clean, easy-to-measure doses on a standard insulin syringe.",
+      "Enter your peptide and vial amount to find out exactly how much bacteriostatic water to add for clean, easy-to-measure amounts on a standard insulin syringe.",
     url: "/tools/bac-water",
     type: "website",
     siteName: "BACwater.ai",
@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <WebPageJsonLd
         name="BAC Water Calculator"
-        description="Enter your peptide and vial size to find out exactly how much bacteriostatic water to add for clean, easy-to-measure doses on a standard insulin syringe."
+        description="Enter your peptide and vial amount to find out exactly how much bacteriostatic water to add for clean, easy-to-measure amounts on a standard insulin syringe."
         url="/tools/bac-water"
         breadcrumb={[
           { name: "Home", url: "/" },
@@ -34,8 +34,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24">
         <section className="max-w-3xl mb-10 border border-border p-5 sm:p-6">
           <p className="text-base leading-relaxed text-foreground/90">
-            <strong>The amount of BAC water to add depends on your vial strength and your target dose.</strong>{" "}
-            Most users add 1 to 2 mL of bacteriostatic water to create a concentration where each dose equals 5 to 10 units on a standard U-100 insulin syringe. For example, adding 2 mL to a 5 mg BPC-157 vial creates a 2.5 mg/mL concentration, making a 250 mcg dose exactly 10 units. Use the calculator below for your exact numbers.
+            <strong>The amount of BAC water to add depends on your vial amount and how much you want to measure.</strong>{" "}
+            As an example, adding 2 mL to a 5 mg BPC-157 vial makes 2.5 mg/mL, so measuring 250 mcg comes out to 10 units on a U-100 syringe. Use the calculator below for your exact numbers.
           </p>
         </section>
       </div>
@@ -54,11 +54,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           app={{
             name: "BAC Water Calculator",
             description:
-              "Find how much bacteriostatic water to add to a peptide vial for clean, easy-to-measure doses on an insulin syringe.",
+              "Find how much bacteriostatic water to add to a peptide vial for clean, easy-to-measure amounts on an insulin syringe.",
             url: "/tools/bac-water",
           }}
           quickRef={{
-            head: ["Vial strength", "Bac water to add", "Example dose", "Units"],
+            head: ["Vial amount", "Bac water to add", "Example measurement", "Units"],
             rows: [
               ["2 mg", "1 mL", "100 mcg", "5 units"],
               ["5 mg", "2 mL", "250 mcg", "10 units"],
@@ -71,15 +71,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           faqs={[
             {
               q: "How much bac water for a 5 mg vial?",
-              a: "A common starting point is 2 mL of bacteriostatic water for a 5 mg vial. That gives 2.5 mg/mL, so a 250 mcg dose is 10 units on a U-100 syringe. Adjust the water to move the dose to an easier mark.",
+              a: "A common starting point is 2 mL of bacteriostatic water for a 5 mg vial. That gives 2.5 mg/mL, so measuring 250 mcg is 10 units on a U-100 syringe. Adjust the water to move the measurement to an easier mark.",
             },
             {
               q: "Can you add too much bac water?",
-              a: "Adding more is not a safety problem, but it makes each dose a larger volume to draw. Too little makes the dose a very small, hard-to-measure volume. Aim for a dose that lands near a round number of units.",
+              a: "Adding more is not a safety problem, but it makes each measurement a larger volume to measure. Too little makes the measurement a very small, hard-to-measure volume. Aim for a measurement that lands near a round number of units.",
             },
             {
-              q: "Does adding more bac water change the dose?",
-              a: "No. More bac water lowers the concentration, so you draw a larger volume for the same amount of peptide. The dose stays the same; only the volume you draw changes.",
+              q: "Does adding more bac water change how much peptide you get?",
+              a: "No. More bac water lowers the concentration, so you measure a larger volume for the same amount of peptide. The amount of peptide stays the same; only the volume you measure changes.",
             },
           ]}
         />

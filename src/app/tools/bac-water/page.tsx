@@ -58,7 +58,7 @@ export default function BacWaterCalculatorPage() {
       <StickyResultBar
         label="Add this much bac water"
         value={valid ? `${rec} mL` : "--"}
-        sub={valid ? `${formatUnits(syringeUnits)} units/dose` : undefined}
+        sub={valid ? `${formatUnits(syringeUnits)} units/measurement` : undefined}
         visible={valid}
       />
       <div className="max-w-3xl">
@@ -67,7 +67,7 @@ export default function BacWaterCalculatorPage() {
           How much BAC water do I add?
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Tell us your peptide, vial size, and dose. We&apos;ll tell you exactly
+          Tell us your peptide, vial amount, and how much you want to measure. We&apos;ll tell you exactly
           how much bacteriostatic water to add so your syringe math comes out clean
           and easy to measure.
         </p>
@@ -139,8 +139,8 @@ export default function BacWaterCalculatorPage() {
           <StepCard
             n={3}
             total={3}
-            title="How much per dose?"
-            hint={`Typical range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
+            title="How much do you measure each time?"
+            hint={`Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
           >
             <div className="flex items-center gap-2">
               <Input
@@ -174,9 +174,9 @@ export default function BacWaterCalculatorPage() {
             {valid && <div className="mt-2"><CopyButton value={`${rec} mL`} label="Copy amount" /></div>}
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
               {valid ? (
-                <>Add <strong className="text-foreground">{rec} mL</strong> of bacteriostatic water to your {vialMg} mg vial. This gives you clean, easy-to-measure doses on a standard insulin syringe.</>
+                <>Add <strong className="text-foreground">{rec} mL</strong> of bacteriostatic water to your {vialMg} mg vial. This gives you clean, easy-to-measure amounts on a standard insulin syringe.</>
               ) : (
-                <>Enter a vial strength and a dose to see exactly how much bac water to add.</>
+                <>Enter a vial amount and how much you want to measure to see exactly how much bac water to add.</>
               )}
             </p>
 
@@ -190,12 +190,12 @@ export default function BacWaterCalculatorPage() {
                     sub={`${Math.round(concentration * 1000).toLocaleString()} mcg/mL`}
                   />
                   <ResultRow
-                    label="Each dose draws"
+                    label="Amount per measurement"
                     value={`${formatUnits(syringeUnits)} units`}
                     sub={`${doseMl.toFixed(3)} mL = ${doseMcg.toLocaleString()} mcg`}
                   />
                   <ResultRow
-                    label="Doses per vial"
+                    label="Measurements per vial"
                     value={`${dosesPerVial}`}
                   />
                 </div>
@@ -233,8 +233,8 @@ export default function BacWaterCalculatorPage() {
               <div>
                 <div className="font-medium text-sm mb-1">Why this number?</div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  We aim for about <strong className="text-foreground">10 units per dose</strong> on
-                  a U-100 insulin syringe. That makes it easy to draw accurately
+                  We aim for about <strong className="text-foreground">10 units per measurement</strong> on
+                  a U-100 insulin syringe. That makes it easy to measure accurately
                   without squinting at tiny markings. The math:
                   (10 &times; {vialMg}) &divide; (100 &times; {(doseMcg / 1000).toFixed(3)}) = {rec} mL.
                 </p>
@@ -274,7 +274,7 @@ export default function BacWaterCalculatorPage() {
             >
               <p>
                 Peptides arrive as a dry powder inside a sealed vial. Before you can
-                measure a dose, you need to dissolve the powder in liquid.
+                measure an amount, you need to dissolve the powder in liquid.
                 That process is called <strong>reconstitution</strong>. You add BAC water to
                 the vial, swirl gently, and the powder dissolves into a clear solution.
               </p>
@@ -287,11 +287,11 @@ export default function BacWaterCalculatorPage() {
               <p>
                 The amount of water you add determines the <strong>concentration</strong> of
                 the solution: how much peptide is in each drop of liquid. More water
-                means a weaker solution (you draw more per dose). Less water means a
-                stronger solution (you draw less per dose).
+                means a weaker solution (you measure more each time). Less water means a
+                stronger solution (you measure less each time).
               </p>
               <p>
-                We pick an amount that makes each dose land on a round, easy-to-read
+                We pick an amount that makes each measurement land on a round, easy-to-read
                 number on your syringe. No squinting at tiny lines, no guessing
                 between markings.
               </p>
@@ -302,7 +302,7 @@ export default function BacWaterCalculatorPage() {
           <div className="mt-6">
             <h2 className="text-xl font-serif font-medium tracking-tight">Related tools</h2>
             <div className="mt-3 grid gap-3">
-              <RelatedTool href="/tools/dose" title="Dose Calculator" body="Know your concentration and volume? Find out exactly what dose you're getting." />
+              <RelatedTool href="/tools/dose" title="Dose Calculator" body="Know your concentration and volume? Find out exactly how much you're getting." />
               <RelatedTool href="/tools/syringe-units" title="Syringe Unit Converter" body="Convert between mL and insulin syringe units (100 units = 1 mL)." />
               <RelatedTool href="/tools/supplies" title="Supply Calculator" body="Figure out how many vials, syringes, and prep pads you need for your cycle." />
             </div>

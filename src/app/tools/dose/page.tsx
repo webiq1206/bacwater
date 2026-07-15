@@ -41,7 +41,7 @@ export default function DoseCalculatorPage() {
         { label: "Dose Calculator", href: "/tools/dose" },
       ]} />
       <StickyResultBar
-        label="Your dose"
+        label="Amount you measure"
         value={valid ? `${result.doseMcg.toFixed(1)} mcg` : "--"}
         sub={valid ? `${formatUnits(result.units)} units` : undefined}
         visible={valid}
@@ -53,7 +53,7 @@ export default function DoseCalculatorPage() {
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Already mixed your vial? Enter your concentration and how much liquid
-          you&apos;re drawing. We&apos;ll tell you the exact dose in both mg and mcg.
+          you&apos;re measuring. We&apos;ll tell you the exact amount in both mg and mcg.
         </p>
       </div>
 
@@ -98,7 +98,7 @@ export default function DoseCalculatorPage() {
           <StepCard
             n={2}
             total={2}
-            title="How much are you drawing?"
+            title="How much are you measuring?"
             hint="Enter the amount of liquid you're pulling into your syringe, in either mL or syringe units."
           >
             <div className="flex flex-wrap gap-2 mb-3">
@@ -154,14 +154,14 @@ export default function DoseCalculatorPage() {
         {/* Result + Teaching (right column) */}
         <div className="space-y-4">
           <div className="section-dark rounded-2xl p-6 sm:p-8">
-              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your dose</div>
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Amount you measure</div>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="result-hero tabular-nums">
                   {valid ? result.doseMg.toFixed(result.doseMg >= 1 ? 1 : 3) : "--"}
                 </span>
                 <span className="text-2xl text-muted-foreground font-serif">mg</span>
               </div>
-              {valid && <div className="mt-1"><CopyButton value={`${result.doseMcg.toFixed(1)} mcg`} label="Copy dose" /></div>}
+              {valid && <div className="mt-1"><CopyButton value={`${result.doseMcg.toFixed(1)} mcg`} label="Copy amount" /></div>}
               {valid ? (
                 <>
                   <div className="mt-1 text-sm text-muted-foreground">
@@ -172,19 +172,19 @@ export default function DoseCalculatorPage() {
 
                   <div className="space-y-3 text-sm">
                     <ResultRow label="Concentration" value={`${formatConcentration(concMgPerMl)} mg/mL`} />
-                    <ResultRow label="Volume drawn" value={`${result.ml.toFixed(3)} mL (${formatUnits(result.units)} units)`} />
-                    <ResultRow label="Dose" value={`${result.doseMcg.toFixed(1)} mcg (${result.doseMg.toFixed(3)} mg)`} />
+                    <ResultRow label="Volume measured" value={`${result.ml.toFixed(3)} mL (${formatUnits(result.units)} units)`} />
+                    <ResultRow label="Amount" value={`${result.doseMcg.toFixed(1)} mcg (${result.doseMg.toFixed(3)} mg)`} />
                   </div>
 
                   <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
-                    Drawing <b>{formatUnits(result.units)} units</b> from a solution
+                    Measuring <b>{formatUnits(result.units)} units</b> from a solution
                     at <b>{formatConcentration(concMgPerMl)} mg/mL</b> gives
-                    you <b>{result.doseMcg.toFixed(1)} mcg</b> of peptide per draw.
+                    you <b>{result.doseMcg.toFixed(1)} mcg</b> of peptide each time.
                   </p>
                 </>
               ) : (
                 <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                  Enter your concentration and how much you&apos;re drawing to see your dose.
+                  Enter your concentration and how much you&apos;re measuring to see the amount you&apos;re getting.
                 </p>
               )}
 
@@ -206,7 +206,7 @@ export default function DoseCalculatorPage() {
               <div className="flex items-start gap-2.5">
                 <Lightbulb className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  <b>The math:</b> dose = concentration &times; volume.
+                  <b>The math:</b> amount = concentration &times; volume.
                   {" "}{formatConcentration(concMgPerMl)} mg/mL &times; {result.ml.toFixed(3)} mL
                   = {result.doseMg.toFixed(3)} mg = {result.doseMcg.toFixed(1)} mcg.
                 </p>
@@ -254,12 +254,12 @@ export default function DoseCalculatorPage() {
             >
               <p>
                 Use this when you&apos;ve already mixed your vial and want to
-                double-check what dose you&apos;re getting. Common situations:
+                double-check how much you&apos;re getting. Common situations:
               </p>
               <ul className="list-disc pl-4 space-y-1">
                 <li>You forgot how much BAC water you added and want to recalculate</li>
-                <li>You want to verify the dose from a plan someone else gave you</li>
-                <li>You&apos;re adjusting your dose and want to see the new numbers</li>
+                <li>You want to verify the amount from a plan someone else gave you</li>
+                <li>You&apos;re adjusting how much you measure and want to see the new numbers</li>
               </ul>
             </TeachingSection>
           </div>

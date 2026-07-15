@@ -35,6 +35,7 @@ import {
 } from "@/lib/calc";
 import { savePlanAction } from "@/lib/plan-actions";
 import { PlanResults } from "@/components/plan/plan-results";
+import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
 import { toast } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
@@ -1271,6 +1272,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           </div>
 
           <PlanResults result={result} />
+
+          <AiAssistantDrawer plan={result} />
 
           <div className="flex flex-col gap-3 pt-2">
             {/* Desktop: inline save. On mobile this lives in the sticky bar below. */}

@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tools/dose" },
   title: "Dose Calculator - mcg to Syringe Units",
   description:
-    "Enter your vial concentration and draw volume to calculate your exact dose in mcg, mg, and insulin syringe units. Shows the math step by step.",
+    "Enter your vial concentration and the volume you measure to calculate your exact amount in mcg, mg, and insulin syringe units. Shows the math step by step.",
   openGraph: {
     title: "Dose Calculator - mcg to Syringe Units",
     description:
-      "Enter your vial concentration and draw volume to calculate your exact dose in mcg, mg, and insulin syringe units. Shows the math step by step.",
+      "Enter your vial concentration and the volume you measure to calculate your exact amount in mcg, mg, and insulin syringe units. Shows the math step by step.",
     url: "/tools/dose",
     type: "website",
     siteName: "BACwater.ai",
@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <WebPageJsonLd
         name="Dose Calculator"
-        description="Enter your vial concentration and draw volume to calculate your exact dose in mcg, mg, and insulin syringe units. Shows the math step by step."
+        description="Enter your vial concentration and the volume you measure to calculate your exact amount in mcg, mg, and insulin syringe units. Shows the math step by step."
         url="/tools/dose"
         breadcrumb={[
           { name: "Home", url: "/" },
@@ -34,8 +34,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24">
         <section className="max-w-3xl mb-10 border border-border p-5 sm:p-6">
           <p className="text-base leading-relaxed text-foreground/90">
-            <strong>Your dose depends on two things: the concentration of your reconstituted peptide (mg/mL) and the volume you draw.</strong>{" "}
-            On a U-100 insulin syringe, 10 units = 0.1 mL. If your concentration is 2.5 mg/mL and you draw 10 units (0.1 mL), your dose is 250 mcg. Enter your values below to calculate your exact dose in mcg, mg, and syringe units.
+            <strong>The amount you measure depends on two things: the concentration of your reconstituted peptide (mg/mL) and the volume you measure.</strong>{" "}
+            On a U-100 insulin syringe, 10 units = 0.1 mL. If your concentration is 2.5 mg/mL and you measure 10 units (0.1 mL), the amount is 250 mcg. Enter your values below to calculate your exact amount in mcg, mg, and syringe units.
           </p>
         </section>
       </div>
@@ -53,11 +53,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           app={{
             name: "Dose Calculator",
             description:
-              "Calculate your exact dose in mcg, mg, and insulin syringe units from your vial concentration and draw volume.",
+              "Calculate your exact amount in mcg, mg, and insulin syringe units from your vial concentration and the volume you measure.",
             url: "/tools/dose",
           }}
           quickRef={{
-            head: ["Concentration", "Draw (units)", "Volume", "Dose"],
+            head: ["Concentration", "Measure (units)", "Volume", "Amount"],
             rows: [
               ["1 mg/mL", "10 units", "0.1 mL", "100 mcg"],
               ["2.5 mg/mL", "10 units", "0.1 mL", "250 mcg"],
@@ -66,20 +66,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               ["5 mg/mL", "20 units", "0.2 mL", "1,000 mcg"],
             ],
             caption:
-              "On a U-100 syringe, 10 units equals 0.1 mL. Dose (mcg) = concentration (mg/mL) x volume (mL) x 1,000.",
+              "On a U-100 syringe, 10 units equals 0.1 mL. Amount (mcg) = concentration (mg/mL) x volume (mL) x 1,000.",
           }}
           faqs={[
             {
-              q: "How do I calculate my dose from concentration?",
-              a: "Multiply the concentration (mg/mL) by the volume you draw (mL), then multiply by 1,000 to get micrograms. For example, 2.5 mg/mL drawn at 0.1 mL is 250 mcg.",
+              q: "How do I calculate the amount from concentration?",
+              a: "Multiply the concentration (mg/mL) by the volume you measure (mL), then multiply by 1,000 to get micrograms. For example, 2.5 mg/mL measured at 0.1 mL is 250 mcg.",
             },
             {
-              q: "How many units should I draw for a 250 mcg dose?",
+              q: "How many units should I measure for 250 mcg?",
               a: "It depends on concentration. At 2.5 mg/mL, 250 mcg is 0.1 mL, which is 10 units on a U-100 syringe. Use the calculator to match your own concentration.",
             },
             {
-              q: "Is my dose in mg or mcg?",
-              a: "Peptide doses are usually stated in micrograms (mcg). 1 mg equals 1,000 mcg, so a 0.25 mg dose is 250 mcg.",
+              q: "Is the amount in mg or mcg?",
+              a: "The amounts you measure are usually stated in micrograms (mcg). 1 mg equals 1,000 mcg, so 0.25 mg is 250 mcg.",
             },
           ]}
         />

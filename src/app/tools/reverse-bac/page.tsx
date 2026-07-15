@@ -86,8 +86,8 @@ export default function ReverseBacCalculatorPage() {
           Reverse BAC Water Calculator: Units to Water
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Choose the dose you want and the exact units you want to draw on the
-          syringe. We&apos;ll tell you precisely how much bacteriostatic water to
+          Choose the amount you want to measure and the exact units you want to
+          land on. We&apos;ll tell you precisely how much bacteriostatic water to
           add so it lands there.
         </p>
       </div>
@@ -138,7 +138,7 @@ export default function ReverseBacCalculatorPage() {
             </div>
           </StepCard>
 
-          <StepCard n={3} total={4} title="How much per dose?">
+          <StepCard n={3} total={4} title="How much do you measure each time?">
             <div className="flex items-center gap-2">
               <Input
                 type="number"
@@ -158,7 +158,7 @@ export default function ReverseBacCalculatorPage() {
             ) : null}
           </StepCard>
 
-          <StepCard n={4} total={4} title="Units you want to draw" hint="The mark you want to fill to on a U-100 insulin syringe.">
+          <StepCard n={4} total={4} title="Units you want to land on" hint="The mark you want to fill to on a U-100 insulin syringe.">
             <div className="flex flex-wrap gap-2">
               {TARGET_PRESETS.map((u) => (
                 <button
@@ -201,13 +201,13 @@ export default function ReverseBacCalculatorPage() {
               <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
                 Add <strong className="text-foreground">{bac} mL</strong> of
                 bacteriostatic water to your {vialMg} mg vial. A{" "}
-                {doseMcg.toLocaleString()} mcg dose then measures exactly{" "}
+                {doseMcg.toLocaleString()} mcg amount then measures exactly{" "}
                 <strong className="text-foreground">{targetUnits} units</strong>{" "}
                 on a U-100 insulin syringe.
               </p>
             ) : (
               <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                Enter a vial strength, dose, and target units to see the exact
+                Enter a vial amount, the amount to measure, and target units to see the exact
                 amount of bac water to add.
               </p>
             )}
@@ -222,11 +222,11 @@ export default function ReverseBacCalculatorPage() {
                     sub={`${Math.round(result.concentration * 1000).toLocaleString()} mcg/mL`}
                   />
                   <ResultRow
-                    label="Each dose draws"
+                    label="Amount per measurement"
                     value={`${targetUnits} units`}
                     sub={`${result.doseMl.toFixed(3)} mL = ${doseMcg.toLocaleString()} mcg`}
                   />
-                  <ResultRow label="Doses per vial" value={`${result.dosesPerVial}`} />
+                  <ResultRow label="Measurements per vial" value={`${result.dosesPerVial}`} />
                 </div>
               </>
             )}
@@ -276,9 +276,9 @@ export default function ReverseBacCalculatorPage() {
               <div>
                 <div className="font-medium text-sm mb-1">How it works</div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  The units you want set the draw volume ({targetUnits} units ={" "}
+                  The units you want set the volume you measure ({targetUnits} units ={" "}
                   {(targetUnits / 100).toFixed(2)} mL on a U-100 syringe). We then
-                  pick the bac water so the concentration puts your dose in exactly
+                  pick the bac water so the concentration puts your amount in exactly
                   that volume.
                 </p>
               </div>

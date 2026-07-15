@@ -8,11 +8,11 @@ export const metadata = {
   alternates: { canonical: "/tools/reconstitution" },
   title: "Free Peptide Reconstitution Calculator",
   description:
-    "Free peptide reconstitution calculator. Enter your vial size, dose, and syringe to get exact BAC water amount, syringe units, and doses per vial. For research use.",
+    "Free peptide reconstitution calculator. Enter your vial amount, the amount to measure, and syringe to get exact BAC water amount, syringe units, and measurements per vial. For research use.",
   openGraph: {
     title: "Free Peptide Reconstitution Calculator",
     description:
-      "Free peptide reconstitution calculator. Enter your vial size, dose, and syringe to get exact BAC water amount, syringe units, and doses per vial. For research use.",
+      "Free peptide reconstitution calculator. Enter your vial amount, the amount to measure, and syringe to get exact BAC water amount, syringe units, and measurements per vial. For research use.",
     url: "/tools/reconstitution",
     type: "website",
     siteName: "BACwater.ai",
@@ -24,7 +24,7 @@ export default function Page() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Free Peptide Reconstitution Calculator"
-        description="Free peptide reconstitution calculator. Enter your vial size, dose, and syringe to get exact BAC water amount, syringe units, and doses per vial. For research use."
+        description="Free peptide reconstitution calculator. Enter your vial amount, the amount to measure, and syringe to get exact BAC water amount, syringe units, and measurements per vial. For research use."
         url="/tools/reconstitution"
         breadcrumb={[
           { name: "Home", url: "/" },
@@ -34,7 +34,7 @@ export default function Page() {
       />
       <SoftwareAppJsonLd
         name="Peptide Reconstitution Calculator"
-        description="Free peptide reconstitution calculator: enter your vial size, dose, and syringe to get the exact BAC water amount, syringe units, and doses per vial."
+        description="Free peptide reconstitution calculator: enter your vial amount, the amount to measure, and syringe to get the exact BAC water amount, syringe units, and measurements per vial."
         url="/tools/reconstitution"
       />
       <Breadcrumbs items={[
@@ -48,9 +48,9 @@ export default function Page() {
           Reconstitution Calculator
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Enter your peptide, vial size, dose, and syringe type. We&apos;ll
+          Enter your peptide, vial amount, the amount to measure, and syringe type. We&apos;ll
           calculate exactly how much BAC water to add, how many syringe units
-          to draw, and how many doses you&apos;ll get per vial.
+          to measure, and how many measurements you&apos;ll get per vial.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
           Want a guided, step-by-step walkthrough instead?{" "}

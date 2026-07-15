@@ -20,12 +20,12 @@ import {
 } from "@/components/ui/accordion";
 
 const DIRECT_ANSWER =
-  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Refrigerate mixed vials, keep them out of light, and discard any solution that turns cloudy or develops particles.";
+  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles — follow the instructions that came with yours.";
 
 const FAQS: { q: string; a: string }[] = [
   {
     q: "Does bacteriostatic water need to be refrigerated?",
-    a: "An unopened vial can be stored at room temperature until its printed expiry. Once you reconstitute a peptide, refrigerate the mixed vial (about 2 to 8 C) and keep it out of light. Refrigeration slows peptide breakdown, but it does not replace clean, aseptic handling.",
+    a: "An unopened vial can be stored at room temperature until its printed expiry. Once you reconstitute a peptide, many products say to keep the mixed vial cold (about 2 to 8 C) and out of light; follow the instructions that came with yours. Refrigeration slows peptide breakdown, but it does not replace clean, aseptic handling.",
   },
   {
     q: "How long does a reconstituted peptide last in the fridge?",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
 };
 
 const SHELF_LIFE_BODY =
-  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Refrigerate mixed vials, keep them out of light, and discard any solution that turns cloudy or develops particles. The benzyl alcohol preservative lets you draw from the vial repeatedly. Refrigeration slows peptide breakdown but does not replace clean, aseptic handling. Wipe the rubber top before each draw, keep the vial cold and out of light, use a fresh needle each time, and respect the discard date. If the liquid turns cloudy, changes color, or has floating bits, discard it regardless of the date.";
+  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles — follow the instructions that came with yours. The benzyl alcohol preservative lets you draw from the vial repeatedly. Refrigeration slows peptide breakdown but does not replace clean, aseptic handling. Wipe the rubber top before each draw, use a fresh needle each time, and respect the discard date. If the liquid turns cloudy, changes color, or has floating bits, set it aside regardless of the date.";
 
 export default function ShelfLifePage() {
   const storageRows = STORAGE_SLUGS.map((slug) =>
@@ -190,10 +190,11 @@ export default function ShelfLifePage() {
           </p>
           <p>
             Clean habits means: wipe the rubber top before each poke, do not
-            touch the needle, and pull the liquid out gently. Keep the vial cold
-            and out of light, use a fresh needle each time, and respect the
-            discard date. If the liquid ever looks cloudy, changes color, or has
-            floating bits, throw it out, no matter the date.
+            touch the needle, and pull the liquid out gently. Use a fresh needle
+            each time, follow the storage instructions that came with your
+            product, and respect the discard date. If the liquid ever looks
+            cloudy, changes color, or has floating bits, throw it out, no matter
+            the date.
           </p>
         </div>
       </section>

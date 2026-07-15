@@ -104,7 +104,7 @@ export default function SupplyCalculatorPage() {
           Peptide Supply Calculator
         </h1>
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Tell us your peptide, dose, and cycle length and this supply
+          Tell us your peptide, how much you measure, and cycle length and this supply
           calculator will figure out exactly how many peptide vials, BAC water
           bottles, syringes, and alcohol pads you&apos;ll need, with a
           one-click cart.

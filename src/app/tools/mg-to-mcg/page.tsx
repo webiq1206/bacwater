@@ -34,7 +34,7 @@ export default function MgMcgConverterPage() {
           <div className="grid gap-6 sm:grid-cols-2 items-end">
             <div>
               <label className="text-sm font-medium">Milligrams (mg)</label>
-              <p className="text-xs text-muted-foreground mt-0.5">The larger unit. Vial sizes are usually in mg</p>
+              <p className="text-xs text-muted-foreground mt-0.5">The larger unit. Vial amounts are usually in mg</p>
               <Input
                 type="number"
                 inputMode="decimal"
@@ -50,7 +50,7 @@ export default function MgMcgConverterPage() {
             </div>
             <div>
               <label className="text-sm font-medium">Micrograms (mcg)</label>
-              <p className="text-xs text-muted-foreground mt-0.5">The smaller unit. Doses are usually in mcg</p>
+              <p className="text-xs text-muted-foreground mt-0.5">The smaller unit. Measurements are usually in mcg</p>
               <Input
                 type="number"
                 inputMode="decimal"
@@ -108,8 +108,8 @@ export default function MgMcgConverterPage() {
             Both measure weight, just at different scales, like feet vs. inches.
           </p>
           <ul className="list-disc pl-4 space-y-1">
-            <li><b>mg (milligram)</b>: one thousandth of a gram. Vial sizes are usually listed in mg (e.g., &ldquo;5 mg vial&rdquo;).</li>
-            <li><b>mcg (microgram)</b>: one millionth of a gram, or one thousandth of a milligram. Individual doses are usually listed in mcg (e.g., &ldquo;250 mcg per draw&rdquo;).</li>
+            <li><b>mg (milligram)</b>: one thousandth of a gram. Vial amounts are usually listed in mg (e.g., &ldquo;5 mg vial&rdquo;).</li>
+            <li><b>mcg (microgram)</b>: one millionth of a gram, or one thousandth of a milligram. The amounts you measure are usually listed in mcg (e.g., &ldquo;250 mcg per measurement&rdquo;).</li>
           </ul>
           <p>
             <b>The rule is simple:</b> 1 mg = 1,000 mcg. To go from mg to mcg,
@@ -122,12 +122,12 @@ export default function MgMcgConverterPage() {
           title="Why do labels use both?"
         >
           <p>
-            Vial sizes use mg because the total amount of peptide is large enough
+            Vial amounts use mg because the total amount of peptide is large enough
             that mg keeps the numbers simple (e.g., &ldquo;5 mg&rdquo; instead of
             &ldquo;5,000 mcg&rdquo;).
           </p>
           <p>
-            Doses use mcg because individual doses are much smaller, and mcg
+            The amounts you measure use mcg because they are much smaller, and mcg
             avoids confusing decimals (e.g., &ldquo;250 mcg&rdquo; instead of
             &ldquo;0.25 mg&rdquo;).
           </p>
@@ -142,13 +142,13 @@ export default function MgMcgConverterPage() {
           title="A real-world example"
         >
           <p>
-            You have a <b>5 mg vial</b> of BPC-157 and want to take <b>250 mcg per dose</b>.
+            You have a <b>5 mg vial</b> of BPC-157 and want to measure <b>250 mcg each time</b>.
           </p>
           <p>
             First, convert 250 mcg to mg: 250 &divide; 1,000 = 0.25 mg.
           </p>
           <p>
-            Now you can see how many doses fit in the vial: 5 mg &divide; 0.25 mg = <b>20 doses</b>.
+            Now you can see how many measurements fit in the vial: 5 mg &divide; 0.25 mg = <b>20 measurements</b>.
           </p>
           <p>
             Our <Link href="/plan" className="text-foreground underline font-medium">plan builder</Link> does

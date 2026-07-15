@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tools/mg-to-mcg" },
   title: "mg to mcg Converter - Milligrams to Micrograms",
   description:
-    "Convert between milligrams and micrograms for peptide dosing. Vial labels use mg, dose protocols use mcg. This makes switching instant.",
+    "Convert between milligrams and micrograms for peptide measurements. Vial labels use mg, the amounts you measure use mcg. This makes switching instant.",
   openGraph: {
     title: "mg to mcg Converter - Milligrams to Micrograms",
     description:
-      "Convert between milligrams and micrograms for peptide dosing. Vial labels use mg, dose protocols use mcg. This makes switching instant.",
+      "Convert between milligrams and micrograms for peptide measurements. Vial labels use mg, the amounts you measure use mcg. This makes switching instant.",
     url: "/tools/mg-to-mcg",
     type: "website",
     siteName: "BACwater.ai",
@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <section className="max-w-3xl mb-10 border border-border p-5 sm:p-6">
           <p className="text-base leading-relaxed text-foreground/90">
             <strong>1 milligram (mg) = 1,000 micrograms (mcg).</strong>{" "}
-            To convert mg to mcg, multiply by 1,000. To convert mcg to mg, divide by 1,000. Peptide vial labels typically use mg (e.g., 5 mg BPC-157), while dose amounts use mcg (e.g., 250 mcg per draw). Use the converter below for instant results.
+            To convert mg to mcg, multiply by 1,000. To convert mcg to mg, divide by 1,000. Peptide vial labels typically use mg (e.g., 5 mg BPC-157), while the amounts you measure use mcg (e.g., 250 mcg per measurement). Use the converter below for instant results.
           </p>
         </section>
       </div>
@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           app={{
             name: "mg to mcg Converter",
             description:
-              "Convert between milligrams and micrograms for peptide dosing, with a quick-reference table.",
+              "Convert between milligrams and micrograms for peptide measurements, with a quick-reference table.",
             url: "/tools/mg-to-mcg",
           }}
           quickRef={{
@@ -78,8 +78,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               a: "0.25 mg is 250 mcg. Multiply 0.25 by 1,000 to convert milligrams to micrograms.",
             },
             {
-              q: "Why do vials use mg but doses use mcg?",
-              a: "Vials are labeled by total content in milligrams (for example 5 mg), while individual doses are small enough that micrograms (for example 250 mcg) state them more precisely.",
+              q: "Why do vials use mg but measurements use mcg?",
+              a: "Vials are labeled by total content in milligrams (for example 5 mg), while the amounts you measure are small enough that micrograms (for example 250 mcg) state them more precisely.",
             },
           ]}
         />
