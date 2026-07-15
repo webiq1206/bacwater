@@ -284,12 +284,12 @@ export default function SupplyCalculatorPage() {
 
               <div className="flex flex-wrap gap-3">
                 <Button asChild variant="brand" size="lg">
-                  <Link href="/shop">
-                    Shop these supplies <ArrowRight className="h-4 w-4" />
+                  <Link href="/plan">
+                    Build a full mixing plan <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/plan">Build a full mixing plan</Link>
+                <Button variant="outline" size="lg" onClick={() => window.print()}>
+                  Print this list
                 </Button>
               </div>
           </div>

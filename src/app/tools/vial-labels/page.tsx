@@ -248,20 +248,21 @@ export default function VialLabelsPage() {
       <References references={CORE_BACWATER_REFERENCES} />
 
       {/* Closing CTA */}
-      <div className="mt-14 border border-border bg-surface p-6">
+      <div className="section-dark mt-14 rounded-2xl p-6 sm:p-8">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
           Get your free vial labels
         </h2>
-        <p className="mt-3 text-foreground/90 leading-relaxed">
+        <p className="mt-3 text-muted-foreground leading-relaxed">
           Build a reconstitution plan and your printable, QR-coded vial labels
-          come with it. Need supplies too? Everything you need is in the{" "}
+          come with it. Want to know how many syringes and vials a cycle needs?
+          The{" "}
           <Link
-            href="/shop"
-            className="underline decoration-border underline-offset-2 hover:decoration-foreground"
+            href="/tools/supplies"
+            className="text-foreground underline decoration-border underline-offset-2 hover:decoration-foreground"
           >
-            shop
-          </Link>
-          .
+            supply calculator
+          </Link>{" "}
+          counts it for you — nothing is for sale.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild variant="brand">
