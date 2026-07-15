@@ -1,11 +1,8 @@
 import Link from "next/link";
-import { Boxes, FileText, LayoutGrid, MessageCircle, Package, ShoppingCart, Users } from "lucide-react";
+import { FileText, LayoutGrid, MessageCircle, Users } from "lucide-react";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutGrid },
-  { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/admin/products", label: "Products", icon: Package },
-  { href: "/admin/vendors", label: "Vendors", icon: Boxes },
   { href: "/admin/plans", label: "Plans", icon: FileText },
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/content", label: "Content", icon: FileText },
