@@ -1,8 +1,13 @@
 /* eslint-disable no-console */
 import { PrismaClient } from "@prisma/client";
 import { CONTENT } from "./seed-data";
+import { retailFromCostCents } from "../src/lib/pricing";
 
 const prisma = new PrismaClient();
+
+// Supplier costs are researched estimates (single-unit reseller prices; the
+// Bac Water Co. bulk quote will likely lower BAC water). Retail is derived as
+// cost × 1.25 rounded to the nearest whole dollar — see src/lib/pricing.ts.
 
 const PRODUCTS = [
   {
@@ -14,7 +19,7 @@ const PRODUCTS = [
       "Clean, germ-free BAC water for mixing peptides. It has 0.9% benzyl alcohol, a germ-fighting preservative. This is a 30 mL bottle you can use many times. Keep it in the fridge after you open it. It comes from a licensed US maker.",
     useCase:
       "Use it to mix dried research peptides and powders into a liquid. It is the standard liquid for this job.",
-    priceCents: 1900,
+    supplierCostCents: 1999,
     imageUrl: "/images/products/bac-30.svg",
     inventory: 200,
   },
@@ -26,7 +31,7 @@ const PRODUCTS = [
     description:
       "This pack has three 30 mL bottles of BAC water. It is the best value if you use it every week. It is also handy if you mix more than one peptide.",
     useCase: "A larger supply of mixing liquid for longer plans.",
-    priceCents: 4900,
+    supplierCostCents: 4900,
     imageUrl: "/images/products/bac-30-3.svg",
     inventory: 120,
   },
@@ -39,7 +44,7 @@ const PRODUCTS = [
       "These are clean, one-time-use U-100 insulin syringes. The needle is 31-gauge and 5/16 inch. The scale is easy to read, with a mark at every unit. They are latex-free.",
     useCase:
       "Our most popular pick. It is the best all-around choice for doses of 10 to 60 units.",
-    priceCents: 2900,
+    supplierCostCents: 1999,
     imageUrl: "/images/products/syr-ins-1.svg",
     inventory: 300,
   },
@@ -51,7 +56,7 @@ const PRODUCTS = [
     description:
       "These are 0.5 mL U-100 insulin syringes. The needle is 31-gauge and 5/16 inch. The marks are easier to read for smaller doses.",
     useCase: "Easier to read. It works best for doses under 50 units.",
-    priceCents: 2900,
+    supplierCostCents: 1999,
     imageUrl: "/images/products/syr-ins-05.svg",
     inventory: 240,
   },
@@ -63,7 +68,7 @@ const PRODUCTS = [
     description:
       "These are 0.3 mL U-100 insulin syringes for very small doses. The needle is 31-gauge and 5/16 inch. They have half-unit marks for the most exact doses.",
     useCase: "The most exact choice. It works best for doses under 30 units.",
-    priceCents: 3200,
+    supplierCostCents: 2200,
     imageUrl: "/images/products/syr-ins-03.svg",
     inventory: 180,
   },
@@ -76,7 +81,7 @@ const PRODUCTS = [
       "Each pad is wrapped on its own and holds 70% isopropyl alcohol (rubbing alcohol). The pads are clean and medium size. They come in a box you can reseal.",
     useCase:
       "Use them to clean the vial top before each draw and to keep your work surface tidy.",
-    priceCents: 1200,
+    supplierCostCents: 599,
     imageUrl: "/images/products/alc-200.svg",
     inventory: 400,
   },
@@ -88,7 +93,7 @@ const PRODUCTS = [
     description:
       "This kit has all you need to mix your first peptide vial. You get two 30 mL bottles of BAC water. You also get one box of 1 mL insulin syringes. And you get one box of 200 alcohol prep pads.",
     useCase: "The easiest way to start. You buy once and get it all in one delivery.",
-    priceCents: 7900,
+    supplierCostCents: 6596,
     imageUrl: "/images/products/kit-start.svg",
     inventory: 100,
   },
@@ -108,19 +113,21 @@ const VENDORS = [
 
 async function main() {
   for (const p of PRODUCTS) {
+    const priceCents = retailFromCostCents(p.supplierCostCents);
     await prisma.product.upsert({
       where: { sku: p.sku },
       update: {
         name: p.name,
         description: p.description,
         useCase: p.useCase,
-        priceCents: p.priceCents,
+        supplierCostCents: p.supplierCostCents,
+        priceCents,
         imageUrl: p.imageUrl,
         inventory: p.inventory,
         active: true,
         category: p.category,
       },
-      create: { ...p, active: true },
+      create: { ...p, priceCents, active: true },
     });
   }
 

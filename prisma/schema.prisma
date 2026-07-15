@@ -107,7 +107,8 @@ model Product {
   category       String       // bac-water | syringes | alcohol-pads | other
   description    String
   useCase        String?
-  priceCents     Int
+  supplierCostCents Int?       // what we pay the supplier; retail is derived from this
+  priceCents     Int          // retail = round(supplierCost * 1.25) to nearest $1
   currency       String       @default("USD")
   imageUrl       String?
   inventory      Int          @default(0)

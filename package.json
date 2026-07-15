@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "tsx prisma/seed.ts || true",
+    "postbuild": "prisma db push --skip-generate && tsx prisma/seed.ts || true",
     "start": "next start",
     "db:seed": "tsx prisma/seed.ts"
   },

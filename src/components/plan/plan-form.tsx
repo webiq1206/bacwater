@@ -913,7 +913,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
   // ---------- BEGINNER: one question at a time ----------
   return (
-    <div className="mx-auto max-w-2xl" ref={stepContainerRef}>
+    <div className="mx-auto max-w-2xl pb-24 sm:pb-0" ref={stepContainerRef}>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         {hasMounted && (
           <ModeToggle mode={mode} onChange={setMode} />
@@ -1251,12 +1251,13 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           <PlanResults result={result} />
 
           <div className="flex flex-col gap-3 pt-2">
+            {/* Desktop: inline save. On mobile this lives in the sticky bar below. */}
             <Button
               variant="brand"
               size="xl"
               onClick={handleSave}
               disabled={saving}
-              className="w-full"
+              className="w-full hidden sm:flex"
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -1275,6 +1276,24 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               className="mx-auto"
             >
               Start over
+            </Button>
+          </div>
+
+          {/* Mobile: sticky Save bar so the primary action is always reachable. */}
+          <div className="sm:hidden fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+            <Button
+              variant="brand"
+              size="lg"
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full"
+            >
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              Save my plan
             </Button>
           </div>
         </div>
@@ -1301,7 +1320,7 @@ function StepPanel({
   nextDisabled?: boolean;
 }) {
   return (
-    <div className="border border-border bg-card">
+    <div className="border border-border bg-card rounded-2xl">
       <div className="p-6 sm:p-8">
         <div className="flex items-center gap-3 mb-3">
           <StepNumber n={stepNum} filled />
@@ -1317,7 +1336,9 @@ function StepPanel({
         ) : null}
         <div className="mt-6">{children}</div>
       </div>
-      <div className="flex items-center justify-between border-t border-border px-6 py-4 sm:px-8 bg-surface/50">
+
+      {/* Desktop: footer nav inside the card. */}
+      <div className="hidden sm:flex items-center justify-between border-t border-border px-8 py-4 bg-surface/50 rounded-b-2xl">
         {onBack ? (
           <Button variant="ghost" onClick={onBack}>
             <ArrowLeft className="h-4 w-4" /> Back
@@ -1325,13 +1346,29 @@ function StepPanel({
         ) : (
           <span />
         )}
+        <Button variant="brand" size="lg" onClick={onNext} disabled={nextDisabled}>
+          Continue <ArrowRight className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Mobile: sticky nav pinned to the bottom of the viewport so Continue is
+          always one tap away, never hidden below the fold. */}
+      <div className="sm:hidden fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-border bg-white/95 backdrop-blur-sm px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+        {onBack ? (
+          <Button variant="outline" size="lg" onClick={onBack} aria-label="Go back">
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Button>
+        ) : (
+          <span className="w-2" />
+        )}
         <Button
           variant="brand"
           size="lg"
           onClick={onNext}
           disabled={nextDisabled}
+          className="flex-1"
         >
-          Next <ArrowRight className="h-4 w-4" />
+          Continue <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

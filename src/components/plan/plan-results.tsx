@@ -1,13 +1,32 @@
 "use client";
 
-import { AlertTriangle, Check, CheckCircle2, Info, MessageCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  Check,
+  ClipboardList,
+  Info,
+  ListChecks,
+  MessageCircle,
+  Snowflake,
+} from "lucide-react";
 import type { CalcResult } from "@/lib/calc";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { ShelfLifeTimeline } from "@/components/plan/shelf-life-timeline";
 import { formatDate } from "@/lib/utils";
-import { formatConcentration, formatDose, formatMl } from "@/lib/calc/format";
+import {
+  formatConcentration,
+  formatDose,
+  formatMl,
+  formatUnits,
+} from "@/lib/calc/format";
 import { SupplyRecommender } from "@/components/plan/supply-recommender";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface Props {
   result: CalcResult;
@@ -15,48 +34,45 @@ interface Props {
 
 export function PlanResults({ result }: Props) {
   const { syringeReadout } = result;
+  const doseLabel = formatDose(result.input.doseMcg);
 
   return (
-    <div className="space-y-6">
-      {/* Hero result */}
-      <div className="border border-border bg-card p-6 sm:p-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="eyebrow">Your result</div>
-        </div>
-        <h3 className="text-xl sm:text-2xl font-serif font-medium tracking-tight">
-          {result.input.peptideName || "Reconstitution Plan"}
-        </h3>
+    <div className="space-y-5">
+      {/* 1 — PLAN SUMMARY (hero) ------------------------------------------- */}
+      <section className="border border-border bg-card rounded-2xl p-6 sm:p-8">
+        <div className="eyebrow">Your plan</div>
+        <h2 className="mt-1 text-2xl sm:text-3xl font-serif tracking-tight">
+          {result.input.peptideName || "Reconstitution plan"}
+        </h2>
 
-        <div className="mt-6 flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-10">
-          <div>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
-              Draw this much per dose
-            </div>
-            <div className="mt-1 result-hero">
-              {syringeReadout.kind === "u100"
-                ? `${syringeReadout.valueRounded} units`
-                : `${syringeReadout.valueRounded} mL`}
-            </div>
-            <div className="mt-1 text-sm text-muted-foreground">
-              on your {result.input.syringeType.replace("insulin-", "").replace("ml", " mL")} syringe
-            </div>
+        <div className="mt-6 rounded-xl bg-accent-guide-soft p-5 sm:p-6">
+          <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
+            Draw this much for each dose
           </div>
-          <div className="text-sm text-muted-foreground">
-            = {(result.input.doseMcg / 1000).toFixed(result.input.doseMcg % 1000 === 0 ? 0 : 2)} mg
-            ({result.input.doseMcg.toLocaleString()} mcg)
-            = {result.doseVolumeMl.toFixed(3)} mL
+          <div className="mt-1 result-hero">
+            {syringeReadout.kind === "u100"
+              ? `${formatUnits(syringeReadout.valueRounded)} units`
+              : `${formatMl(syringeReadout.valueRounded)} mL`}
+          </div>
+          <div className="mt-1.5 text-sm text-muted-foreground">
+            on your{" "}
+            {result.input.syringeType
+              .replace("insulin-", "")
+              .replace("ml", " mL")}{" "}
+            syringe · that&apos;s {doseLabel} ={" "}
+            {result.doseVolumeMl.toFixed(3)} mL
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-px bg-border">
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden">
           <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} />
-          <Stat label="BAC water added" value={`${formatMl(result.usedBacMl)} mL`} />
+          <Stat label="BAC water" value={`${formatMl(result.usedBacMl)} mL`} />
           <Stat
             label="Concentration"
             value={`${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL`}
             sub={`${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`}
           />
-          <Stat label="Doses per vial" value={`${result.dosesPerVial}`} />
+          <Stat label="Doses / vial" value={`${result.dosesPerVial}`} />
         </div>
 
         <div className="mt-6">
@@ -64,9 +80,7 @@ export function PlanResults({ result }: Props) {
             fillPercent={syringeReadout.fillPercent}
             readoutLabel={syringeReadout.displayLabel}
             scale={syringeReadout.kind}
-            maxLabel={
-              syringeReadout.kind === "u100" ? "100 units" : "1 mL"
-            }
+            maxLabel={syringeReadout.kind === "u100" ? "100 units" : "1 mL"}
           />
         </div>
 
@@ -81,181 +95,238 @@ export function PlanResults({ result }: Props) {
         )}
 
         <ResearchDisclaimer className="mt-6" />
-      </div>
+      </section>
 
-      {/* In Plain English - most prominent section */}
-      <div className="callout-panel">
-        <div className="flex items-center gap-2.5 mb-4">
+      {/* 2 — PLAIN ENGLISH (supporting) ----------------------------------- */}
+      <section className="callout-panel rounded-2xl">
+        <div className="flex items-center gap-2.5 mb-3">
           <MessageCircle className="h-5 w-5 accent-check" />
-          <h4 className="text-lg font-serif font-medium tracking-tight">
-            In plain English
-          </h4>
+          <h3 className="text-lg font-serif tracking-tight">In plain English</h3>
         </div>
         <div className="text-[15px] leading-relaxed space-y-3">
           <p>
-            You have a vial of{" "}
-            <strong>{result.input.peptideName || "peptide"}</strong> that
-            contains{" "}
+            Your vial holds{" "}
             <strong>
               {result.input.vialStrengthMg} mg
             </strong>{" "}
-            of powder.
+            of {result.input.peptideName || "peptide"} powder. Add{" "}
+            <strong>{formatMl(result.usedBacMl)} mL of BAC water</strong> and
+            swirl gently until it&apos;s clear.
           </p>
           <p>
-            Add{" "}
-            <strong>
-              {formatMl(result.usedBacMl)} mL of BAC water
-            </strong>{" "}
-            to the vial. This creates a solution where every milliliter
-            contains{" "}
-            <strong>
-              {formatConcentration(result.finalConcentrationMgPerMl)} mg
-            </strong>{" "}
-            ({result.finalConcentrationMcgPerMl.toLocaleString()} mcg) of
-            peptide.
-          </p>
-          <p>
-            To get your{" "}
-            <strong>
-              {(result.input.doseMcg / 1000).toFixed(result.input.doseMcg % 1000 === 0 ? 0 : 2)} mg
-            </strong>{" "}
-            ({result.input.doseMcg.toLocaleString()} mcg) dose, draw{" "}
-            <strong>{result.syringeReadout.displayLabel}</strong>.
-            That&apos;s{" "}
-            <strong>{result.doseVolumeMl.toFixed(3)} mL</strong> of
-            the mixed solution.
-          </p>
-          <p>
-            You&apos;ll get about{" "}
-            <strong>{result.dosesPerVial} doses</strong> from this vial
-            before it runs out.
+            Every draw of{" "}
+            <strong>{result.syringeReadout.displayLabel}</strong> gives you a{" "}
+            <strong>{doseLabel}</strong> dose. You&apos;ll get about{" "}
+            <strong>{result.dosesPerVial} doses</strong> from the vial.
           </p>
           {result.secondary && (
             <p>
               Because this is a blend, each draw also delivers{" "}
               <strong>
-                {(result.secondary.companionDoseMcg / 1000).toFixed(result.secondary.companionDoseMcg % 1000 === 0 ? 0 : 2)} mg
+                {formatDose(result.secondary.companionDoseMcg)}
               </strong>{" "}
-              ({result.secondary.companionDoseMcg.toLocaleString()} mcg) of {result.secondary.peptideName}.
+              of {result.secondary.peptideName}.
             </p>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* Step-by-step instructions */}
-      <div className="border border-border bg-card p-6 sm:p-8">
-        <div className="section-prominent mb-0 border-t-0">
-          <h4 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-            Step-by-step instructions
-          </h4>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Follow these steps in order. Take your time. There&apos;s no rush.
-          </p>
-        </div>
-        <ol className="mt-6 space-y-4">
-          {result.instructions.map((s, i) => (
-            <li key={i} className="flex gap-4 text-sm">
-              <span className="step-number--filled step-number text-[11px]">
-                {i + 1}
-              </span>
-              <span className="pt-1 leading-relaxed">{s}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      {/* Storage & shelf life timeline */}
-      <div className="border border-border bg-card p-6 sm:p-8">
-        <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
-          <div>
-            <h4 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-              Storage &amp; shelf life
-            </h4>
-            <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-lg">
-              {result.expiration.note}
-            </p>
-          </div>
-          <div className="text-right border-l border-border pl-6">
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
-              Shelf life
-            </div>
-            <div className="text-2xl font-semibold mt-1 tabular-nums">
-              {result.expiration.days} days
-            </div>
-            <div className="text-xs text-muted-foreground">refrigerated</div>
-            {result.expiration.date && (
-              <div className="mt-2 text-sm font-medium">
-                Expires {formatDate(result.expiration.date)}
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="rule mb-6" />
-        <ShelfLifeTimeline
-          peptideName={result.input.peptideName}
-          shelfDays={result.expiration.days}
-          dateMixed={result.input.dateMixed}
-        />
-      </div>
-
-      {/* Supply recommender - prominent */}
+      {/* 3 — RECOMMENDED SUPPLIES / SHOP ---------------------------------- */}
       <SupplyRecommender supplies={result.supplies} />
 
-      {/* Assumptions */}
-      <div className="border border-border bg-card p-6 sm:p-8">
-        <div className="flex items-center gap-2 mb-4">
-          <Info className="h-4 w-4 text-muted-foreground" />
-          <h4 className="font-medium text-sm uppercase tracking-wide text-muted-foreground">
-            Assumptions used
-          </h4>
-        </div>
-        <ul className="space-y-2 text-sm text-muted-foreground">
-          {result.assumptions.map((a, i) => (
-            <li key={i} className="flex gap-2.5">
-              <Check className="h-4 w-4 mt-0.5 accent-check shrink-0" />
-              <span>{a}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* 4 — DOSAGE REFERENCE (visual) ------------------------------------ */}
+      <DosageReference result={result} />
 
-      {/* What to do next */}
-      <div className="callout-panel">
-        <h4 className="text-lg font-serif font-medium tracking-tight mb-4">
-          What to do next
-        </h4>
-        <ol className="space-y-3 text-sm">
-          <li className="flex gap-3">
-            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">1</span>
-            <span className="leading-relaxed">
-              <strong className="text-foreground">Save your plan</strong>
-              <span className="text-muted-foreground">: get a permanent link, downloadable PDF, and printable vial labels.</span>
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">2</span>
-            <span className="leading-relaxed">
-              <strong className="text-foreground">Gather your supplies</strong>
-              <span className="text-muted-foreground">: the supply list above tells you exactly what to order.</span>
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">3</span>
-            <span className="leading-relaxed">
-              <strong className="text-foreground">Follow the instructions</strong>
-              <span className="text-muted-foreground">: the step-by-step guide above walks you through mixing.</span>
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="step-number step-number--filled text-[10px] mt-0.5 h-5 w-5 text-[9px]">4</span>
-            <span className="leading-relaxed">
-              <strong className="text-foreground">Draw to the mark</strong>
-              <span className="text-muted-foreground">: the syringe diagram shows exactly where to draw.</span>
-            </span>
-          </li>
-        </ol>
-      </div>
+      {/* 5 — SECONDARY INFO (collapsed by default) ------------------------ */}
+      <section className="border border-border bg-card rounded-2xl px-6 sm:px-8">
+        <Accordion type="multiple">
+          <AccordionItem value="steps" className="border-b-0 border-t border-border first:border-t-0">
+            <AccordionTrigger>
+              <span className="flex items-center gap-2.5">
+                <ListChecks className="h-4 w-4 accent-check" />
+                Step-by-step mixing instructions
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="text-muted-foreground mb-4">
+                Follow these in order. Take your time — there&apos;s no rush.
+              </p>
+              <ol className="space-y-4">
+                {result.instructions.map((s, i) => (
+                  <li key={i} className="flex gap-4 text-sm text-foreground">
+                    <span className="step-number--filled step-number text-[11px] shrink-0">
+                      {i + 1}
+                    </span>
+                    <span className="pt-1 leading-relaxed">{s}</span>
+                  </li>
+                ))}
+              </ol>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="storage" className="border-b-0 border-t border-border">
+            <AccordionTrigger>
+              <span className="flex items-center gap-2.5">
+                <Snowflake className="h-4 w-4 accent-check" />
+                Storage &amp; shelf life
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
+                <p className="text-muted-foreground leading-relaxed max-w-md">
+                  {result.expiration.note}
+                </p>
+                <div className="text-right">
+                  <div className="text-2xl font-serif tabular-nums text-foreground">
+                    {result.expiration.days} days
+                  </div>
+                  <div className="text-xs text-muted-foreground">refrigerated</div>
+                  {result.expiration.date && (
+                    <div className="mt-1 text-sm font-medium text-foreground">
+                      Discard {formatDate(result.expiration.date)}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <ShelfLifeTimeline
+                peptideName={result.input.peptideName}
+                shelfDays={result.expiration.days}
+                dateMixed={result.input.dateMixed}
+              />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="assumptions" className="border-b-0 border-t border-border">
+            <AccordionTrigger>
+              <span className="flex items-center gap-2.5">
+                <Info className="h-4 w-4 accent-check" />
+                How we calculated this
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <ul className="space-y-2 text-muted-foreground">
+                {result.assumptions.map((a, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <Check className="h-4 w-4 mt-0.5 accent-check shrink-0" />
+                    <span>{a}</span>
+                  </li>
+                ))}
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="next" className="border-b-0 border-t border-border">
+            <AccordionTrigger>
+              <span className="flex items-center gap-2.5">
+                <ClipboardList className="h-4 w-4 accent-check" />
+                What to do next
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <ol className="space-y-3 text-sm">
+                {[
+                  ["Save your plan", "get a permanent link, PDF, and printable vial labels."],
+                  ["Gather your supplies", "the list above tells you exactly what to order."],
+                  ["Follow the instructions", "the step-by-step guide walks you through mixing."],
+                  ["Draw to the mark", "the syringe diagram shows exactly where to draw."],
+                ].map(([title, rest], i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="step-number step-number--filled shrink-0 mt-0.5 h-5 w-5 text-[9px]">
+                      {i + 1}
+                    </span>
+                    <span className="leading-relaxed">
+                      <strong className="text-foreground">{title}</strong>
+                      <span className="text-muted-foreground">: {rest}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
     </div>
+  );
+}
+
+/**
+ * A compact, visual dosage reference so users can see what common draws deliver
+ * at their concentration. Mirrors the dosage table in the downloadable PDF; the
+ * user's own dose row is highlighted.
+ */
+function DosageReference({ result }: { result: CalcResult }) {
+  const isU100 = result.syringeReadout.kind === "u100";
+  const concMcgPerMl = result.finalConcentrationMcgPerMl;
+
+  type Row = { draw: string; volume: string; amount: string; active: boolean };
+  const rows: Row[] = [];
+
+  if (isU100) {
+    const userUnits = Math.round(result.syringeReadout.valueRounded / 5) * 5;
+    for (let u = 5; u <= 50; u += 5) {
+      const ml = u / 100;
+      rows.push({
+        draw: `${u} units`,
+        volume: `${ml.toFixed(2)} mL`,
+        amount: formatDose(Math.round(ml * concMcgPerMl)),
+        active: u === userUnits,
+      });
+    }
+  } else {
+    const userMl = Math.round(result.syringeReadout.valueRounded * 10) / 10;
+    for (let i = 1; i <= 10; i++) {
+      const ml = i / 10;
+      rows.push({
+        draw: `${ml.toFixed(1)} mL`,
+        volume: `${ml.toFixed(2)} mL`,
+        amount: formatDose(Math.round(ml * concMcgPerMl)),
+        active: Math.abs(ml - userMl) < 0.001,
+      });
+    }
+  }
+
+  return (
+    <section className="border border-border bg-card rounded-2xl p-6 sm:p-8">
+      <h3 className="text-lg font-serif tracking-tight">Dosage reference</h3>
+      <p className="mt-1 text-sm text-muted-foreground">
+        At {formatConcentration(result.finalConcentrationMgPerMl)} mg/mL, here&apos;s
+        what each draw delivers. Your dose is highlighted.
+      </p>
+      <div className="mt-4 overflow-hidden rounded-xl border border-border">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-muted text-left text-xs uppercase tracking-wide text-muted-foreground">
+              <th className="px-4 py-2.5 font-medium">Draw</th>
+              <th className="px-4 py-2.5 font-medium">Volume</th>
+              <th className="px-4 py-2.5 font-medium text-right">Delivers</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr
+                key={i}
+                className={
+                  r.active
+                    ? "bg-accent-guide-soft font-medium text-foreground"
+                    : "border-t border-border text-muted-foreground"
+                }
+              >
+                <td className="px-4 py-2.5 tabular-nums">
+                  {r.draw}
+                  {r.active && (
+                    <span className="ml-2 text-[10px] uppercase tracking-wide accent-check">
+                      your dose
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-2.5 tabular-nums">{r.volume}</td>
+                <td className="px-4 py-2.5 tabular-nums text-right">{r.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
 
@@ -273,10 +344,8 @@ function Stat({
       <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
         {label}
       </div>
-      <div className="mt-1.5 text-lg font-semibold tabular-nums">{value}</div>
-      {sub && (
-        <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>
-      )}
+      <div className="mt-1.5 text-lg tabular-nums text-foreground">{value}</div>
+      {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
     </div>
   );
 }

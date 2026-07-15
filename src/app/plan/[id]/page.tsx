@@ -10,6 +10,8 @@ import { PlanNotesForm } from "@/components/plan/plan-notes-form";
 import { PlanQr } from "@/components/plan/plan-qr";
 import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
 import { CopyLinkClient } from "@/components/plan/copy-link";
+import { PlanShareButton } from "@/components/plan/plan-share-button";
+import { PlanActionBar } from "@/components/plan/plan-action-bar";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -63,6 +65,11 @@ export default async function PublicPlanPage({ params }: Props) {
               <Download className="h-4 w-4" /> Download PDF
             </Link>
           </Button>
+          <PlanShareButton
+            url={`/plan/${plan.publicId}`}
+            title={`${plan.peptideName ?? "Reconstitution"} plan`}
+            text="Here's my peptide reconstitution plan from BACwater.ai"
+          />
           <Button asChild variant="brand">
             <Link href={`/plan/${plan.publicId}/edit`}>
               <Save className="h-4 w-4" /> Edit
@@ -95,7 +102,13 @@ export default async function PublicPlanPage({ params }: Props) {
             <div className="mt-3 text-xs text-muted-foreground break-all">
               bacwater.ai/plan/{plan.publicId}
             </div>
-            <div className="mt-3">
+            <div className="mt-3 flex flex-col gap-2">
+              <PlanShareButton
+                url={`/plan/${plan.publicId}`}
+                title={`${plan.peptideName ?? "Reconstitution"} plan`}
+                text="Here's my peptide reconstitution plan from BACwater.ai"
+                className="w-full"
+              />
               <CopyLinkClient publicId={plan.publicId} />
             </div>
           </div>
@@ -114,6 +127,8 @@ export default async function PublicPlanPage({ params }: Props) {
           </div>
         </aside>
       </div>
+
+      <PlanActionBar publicId={plan.publicId} peptideName={plan.peptideName} />
     </div>
   );
 }
