@@ -325,6 +325,14 @@ export function calculate(input: CalcInput): CalcResult {
 
   const finalConcentrationMgPerMl = vialStrengthMg / usedBacMl;
   const finalConcentrationMcgPerMl = finalConcentrationMgPerMl * 1000;
+
+  // V-07 (PRD §9.4): flag an implausibly strong solution — usually a sign the
+  // vial amount or the water amount was mistyped.
+  if (finalConcentrationMgPerMl > 100)
+    warnings.push(
+      `This makes ${round(finalConcentrationMgPerMl, 1)} mg in every mL, which is much stronger than usual. Check the vial amount and the water amount.`
+    );
+
   const doseVolumeMl = doseMg / finalConcentrationMgPerMl;
   const syringeUnits = doseVolumeMl * 100;
   const dosesPerVial = Math.floor(vialStrengthMg / doseMg);
@@ -351,11 +359,16 @@ export function calculate(input: CalcInput): CalcResult {
     }
   }
 
-  // Guardrail: a draw this small is very hard to measure accurately on a
-  // standard insulin syringe. Flag it instead of silently returning a number.
-  if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < 2)
+  // V-04 (PRD §9.4): an amount smaller than the smallest mark cannot be
+  // measured at all. Below that, flag it rather than return an unusable number.
+  if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < smallestMarkUnits)
     warnings.push(
-      `This amount works out to only ${round(syringeUnits, 1)} units, which is very hard to measure accurately. Use less BAC water so it lands at a larger, easier-to-read mark, or switch to a 0.3 mL syringe.`
+      `This is ${round(syringeUnits, 1)} units. The smallest mark on your syringe is ${smallestMarkUnits} unit${smallestMarkUnits === 1 ? "" : "s"}, so it is too small to measure. Use less BAC water, or switch to a 0.3 mL syringe.`
+    );
+  // Still measurable, but small enough to be hard to read accurately.
+  else if (syringe.scale === "u100" && syringeUnits >= smallestMarkUnits && syringeUnits < 4)
+    warnings.push(
+      `This amount is only ${round(syringeUnits, 1)} units, which is hard to measure accurately. Using less BAC water lands it at a larger, easier-to-read mark.`
     );
 
   const syringeReadout = {
@@ -373,6 +386,15 @@ export function calculate(input: CalcInput): CalcResult {
     ),
   };
 
+  // V-12 (PRD §9.4): be explicit when rounding changed the number we show.
+  const shownValue = syringe.scale === "u100" ? round(syringeUnits, 1) : round(doseVolumeMl, 2);
+  const exactValue = syringe.scale === "u100" ? syringeUnits : doseVolumeMl;
+  if (Math.abs(exactValue - shownValue) > 0.0005) {
+    assumptions.push(
+      `Rounded from ${round(exactValue, 3)} to ${shownValue} ${syringe.scale === "u100" ? "units" : "mL"} for display.`
+    );
+  }
+
   const days = peptideRef?.refrigeratedShelfDays ?? 28;
   let expDate: string | null = null;
   if (input.dateMixed) {
@@ -389,9 +411,13 @@ export function calculate(input: CalcInput): CalcResult {
   assumptions.push(
     "Syringe units use the U-100 insulin scale: 100 units = 1 mL."
   );
+  // V-11 (PRD §9.4): compatibility is never assumed, and it is stated every time.
+  assumptions.push(
+    "We have not checked that this BAC water works with your specific compound. Follow the instructions that came with your product."
+  );
   if (!peptideRef) {
     assumptions.push(
-      "No specific peptide reference selected. Storage defaults to 28 days refrigerated. Check your peptide's actual stability."
+      "No specific compound reference selected. How long a mixed vial lasts depends on the compound, so follow the instructions that came with your product."
     );
   }
   if (!isFiniteNumber(input.bacWaterMl)) {

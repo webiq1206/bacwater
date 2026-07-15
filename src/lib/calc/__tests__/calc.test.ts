@@ -122,6 +122,32 @@ warns(v13, /10 times bigger/, "V-13 flags the order-of-magnitude outlier");
 // Normal dose stays quiet on the magnitude guards.
 noWarn(a, /times (bigger|smaller)|1,000 times/, "magnitude guards quiet on a normal dose");
 
+function hasAssumption(res: { assumptions: string[] }, needle: RegExp, label: string) {
+  if (res.assumptions.some((x) => needle.test(x))) console.log(`OK   ${label}`);
+  else {
+    console.error(`FAIL ${label}\n  no assumption matched ${needle}\n  got ${JSON.stringify(res.assumptions)}`);
+    process.exitCode = 1;
+  }
+}
+
+// V-04: 1 unit on a 1 mL barrel (marks every 2 units) is below the smallest mark.
+const v04 = calculate({ vialStrengthMg: 5, doseMcg: 25, bacWaterMl: 2, syringeType: "insulin-1ml" });
+warns(v04, /too small to measure/, "V-04 flags an amount below the smallest mark");
+
+// V-07: 500 mg in 2 mL = 250 mg/mL, implausibly strong.
+const v07 = calculate({ vialStrengthMg: 500, doseMcg: 1000, bacWaterMl: 2, syringeType: "insulin-1ml" });
+warns(v07, /much stronger than usual/, "V-07 flags an implausible concentration");
+
+// V-12: 308 mcg at 2.5 mg/mL = 12.32 units, rounded to 12.3.
+const v12 = calculate({ vialStrengthMg: 5, doseMcg: 308, bacWaterMl: 2, syringeType: "insulin-1ml" });
+hasAssumption(v12, /Rounded from/, "V-12 notes when a value was rounded");
+// 10 units is exact, so no rounding note should appear.
+if (!a.assumptions.some((x) => /Rounded from/.test(x))) console.log("OK   V-12 quiet when the value lands cleanly");
+else { console.error("FAIL V-12 rounding note on an exact value", a.assumptions); process.exitCode = 1; }
+
+// V-11: the compatibility caveat is always present.
+hasAssumption(a, /have not checked that this BAC water works/, "V-11 compatibility caveat always shown");
+
 if (process.exitCode !== 1) {
   console.log("\nAll calculation tests passed.");
 }
