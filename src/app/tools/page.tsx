@@ -8,11 +8,11 @@ export const metadata = {
   alternates: { canonical: "/tools" },
   title: "Free Peptide Calculators & Tools",
   description:
-    "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly, no jargon.",
+    "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Plain-language, no jargon.",
   openGraph: {
     title: "Free Peptide Calculators & Tools",
     description:
-      "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly, no jargon.",
+      "Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Plain-language, no jargon.",
     url: "/tools",
     type: "website",
     siteName: "BACwater.ai",
@@ -91,7 +91,7 @@ export default function ToolsPage() {
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Free Peptide Calculators & Tools"
-        description="Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Beginner-friendly, no jargon."
+        description="Free calculators for BAC water, reconstitution, dose, syringe units, mg/mcg conversion, and supply planning. Plain-language, no jargon."
         url="/tools"
         breadcrumb={[
           { name: "Home", url: "/" },

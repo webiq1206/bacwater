@@ -44,6 +44,14 @@ const nextConfig: NextConfig = {
         destination: "/learn/what-is-bac-water",
         permanent: true,
       },
+      // Per-vial-size pages (e.g. /peptides/bpc-157/5mg) were keyword-swapped
+      // doorway variants that also asserted a "typical dose" (PRD §9.1.5).
+      // Consolidate them into the compound page and redirect (PRD §9.11).
+      {
+        source: "/peptides/:slug/:size",
+        destination: "/peptides/:slug",
+        permanent: true,
+      },
     ];
   },
   async headers() {

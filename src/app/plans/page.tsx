@@ -169,9 +169,9 @@ function EmptyState() {
       </div>
       <div className="mt-8 pt-6 border-t border-border grid sm:grid-cols-3 gap-4 text-center">
         <div className="text-sm">
-          <div className="font-medium text-foreground">New to peptides?</div>
+          <div className="font-medium text-foreground">Want the background?</div>
           <p className="mt-1 text-muted-foreground text-xs">
-            <Link href="/learn" className="underline">Read the beginner guides</Link> first. They take about 5 minutes.
+            <Link href="/learn" className="underline">Read the guides</Link> first. They take about 5 minutes.
           </p>
         </div>
         <div className="text-sm">

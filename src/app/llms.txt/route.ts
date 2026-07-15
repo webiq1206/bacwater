@@ -36,7 +36,7 @@ export function GET() {
 
 - [Homepage](${u("/")}): The complete BAC water calculator and reconstitution guide
 - [Plan Builder](${u("/plan")}): Enter your peptide, vial strength, dose, and syringe to get an exact reconstitution plan with PDF export and printable vial labels
-- [Guided planner](${u("/plan/new")}): Beginner planner, one question at a time
+- [Guided planner](${u("/plan/new")}): Guided planner, one question at a time
 - [Compound reference](${u("/peptides")}): Per-compound BAC water calculators and reconstitution references
 - [Learning Center](${u("/learn")}): Filterable guides, comparisons, and FAQs on BAC water and reconstitution
 - [FAQ](${u("/faq")}): Direct answers on BAC water storage, ingredients, prescription status, and safety

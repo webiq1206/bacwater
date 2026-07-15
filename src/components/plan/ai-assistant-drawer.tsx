@@ -51,7 +51,9 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
         <div className="text-sm font-medium">Ask about your plan</div>
       </div>
       <p className="mt-1.5 text-xs text-muted-foreground">
-        The assistant explains numbers and answers follow-ups. It never does the math itself.
+        It explains the numbers in your plan and answers follow-ups. It never
+        does the math itself, and it won&apos;t tell you how much to take or
+        whether something is safe.
       </p>
       {!open ? (
         <Button className="mt-3 w-full" variant="brand" size="sm" onClick={() => setOpen(true)}>

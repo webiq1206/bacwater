@@ -7,11 +7,11 @@ export const metadata = {
   alternates: { canonical: "/about" },
   title: "About Us",
   description:
-    "BACwater.ai is the most beginner-friendly BAC water calculator and reconstitution guide. Exact math, plain-English explanations, and premium supplies in one place.",
+    "BACwater.ai is an unmonetized BAC water and reconstitution calculator. Exact math on the numbers you enter, plain-English explanations, and every value labeled by source. Nothing is for sale.",
   openGraph: {
     title: "About Us",
     description:
-      "BACwater.ai is the most beginner-friendly BAC water calculator and reconstitution guide. Exact math, plain-English explanations, and premium supplies in one place.",
+      "BACwater.ai is an unmonetized BAC water and reconstitution calculator. Exact math on the numbers you enter, plain-English explanations, and every value labeled by source. Nothing is for sale.",
     url: "/about",
     type: "website",
     siteName: "BACwater.ai",
@@ -23,7 +23,7 @@ export default function AboutPage() {
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="About BACwater.ai"
-        description="BACwater.ai is the most beginner-friendly BAC water calculator and reconstitution guide. Exact math, plain-English explanations, and premium supplies in one place."
+        description="BACwater.ai is an unmonetized BAC water and reconstitution calculator. Exact math on the numbers you enter, plain-English explanations, and every value labeled by source. Nothing is for sale."
         url="/about"
         breadcrumb={[
           { name: "Home", url: "/" },

@@ -6,11 +6,11 @@ export const metadata = {
   alternates: { canonical: "/plan/new" },
   title: "Step-by-Step Reconstitution Planner",
   description:
-    "Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math.",
+    "Guided peptide reconstitution planner. One question at a time. We'll do all the math.",
   openGraph: {
     title: "Step-by-Step Reconstitution Planner",
     description:
-      "Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math.",
+      "Guided peptide reconstitution planner. One question at a time. We'll do all the math.",
     url: "/plan/new",
     type: "website",
     siteName: "BACwater.ai",
@@ -22,7 +22,7 @@ export default function PlanNewPage() {
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-6 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Step-by-Step Reconstitution Planner"
-        description="Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math."
+        description="Guided peptide reconstitution planner. One question at a time. We'll do all the math."
         url="/plan/new"
         breadcrumb={[
           { name: "Home", url: "/" },
@@ -95,8 +95,8 @@ export default function PlanNewPage() {
           We&apos;ll walk you through it.
         </h1>
         <p className="mt-3 text-muted-foreground leading-relaxed">
-          One question at a time, perfect for your first reconstitution. We
-          handle all the math and explain every step in plain English.
+          One question at a time. We handle all the math and explain every step
+          in plain English.
         </p>
       </div>
       <PlanForm mode="beginner" />

@@ -42,7 +42,6 @@ import { References } from "@/components/common/references";
 import { AdSlot } from "@/components/common/ad-slot";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
-import { findVialSizePage } from "@/lib/peptides/vial-sizes";
 
 const CATEGORY_LABEL: Record<string, string> = {
   metabolic: "Metabolic signaling research",
@@ -269,25 +268,13 @@ export default async function PeptidePage({
               </thead>
               <tbody>
                 {rows.map((r) => {
-                  const sizePage = findVialSizePage(p.slug, `${r.vialMg}mg`);
                   return (
                   <tr
                     key={r.vialMg}
                     id={`bac-water-${r.vialMg}mg`}
                     className="border-t border-border scroll-mt-24"
                   >
-                    <td className="px-4 py-3 font-medium">
-                      {sizePage ? (
-                        <Link
-                          href={`/peptides/${p.slug}/${sizePage.sizeParam}`}
-                          className="underline underline-offset-2 decoration-border hover:decoration-foreground"
-                        >
-                          {r.vialMg} mg
-                        </Link>
-                      ) : (
-                        <>{r.vialMg} mg</>
-                      )}
-                    </td>
+                    <td className="px-4 py-3 font-medium">{r.vialMg} mg</td>
                     <td className="px-4 py-3 tabular-nums">{r.bacMl} mL</td>
                     <td className="px-4 py-3 tabular-nums">
                       {r.concentrationMgPerMl} mg/mL
@@ -455,7 +442,7 @@ export default async function PeptidePage({
               .
             </p>
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-              <Link href="/buy" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Buy bac water</Link>
+              <Link href="/tools/bac-water" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Bac water calculator</Link>
               <Link href="/faq" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
               <Link href="/learn/vs/sterile-water" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Bac water vs sterile water</Link>
               <Link href="/learn/bac-water-shelf-life" className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Shelf life and storage</Link>

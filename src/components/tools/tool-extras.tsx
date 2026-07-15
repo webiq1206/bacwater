@@ -87,7 +87,7 @@ export function ToolExtras({ app, quickRef, faqs }: ToolExtrasProps) {
         <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
           <li><Link href="/peptides" className={LINK}>Peptide guides</Link></li>
           <li><Link href="/faq" className={LINK}>BAC water FAQ</Link></li>
-          <li><Link href="/buy" className={LINK}>Buy bac water</Link></li>
+          <li><Link href="/tools/bac-water" className={LINK}>Bac water calculator</Link></li>
           <li><Link href="/tools" className={LINK}>All calculators</Link></li>
         </ul>
       </section>

@@ -252,7 +252,7 @@ export default async function ComparisonPage({
             </Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/buy">Buy bac water</Link>
+            <Link href="/tools/bac-water">Bac water calculator</Link>
           </Button>
         </div>
       </section>

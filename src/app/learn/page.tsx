@@ -84,12 +84,12 @@ export async function generateMetadata({
     return {
       title: "Peptide Reconstitution Guides & BAC Water Learning Center",
       description:
-        "Filter beginner guides, comparisons, and FAQs on bac water, reconstitution, syringes, storage, and dosing. Written for first-timers.",
+        "Plain-language guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
       alternates: { canonical: "/learn" },
       openGraph: {
         title: "Peptide Reconstitution Guides & BAC Water Learning Center",
         description:
-          "Filter beginner guides, comparisons, and FAQs on bac water, reconstitution, syringes, storage, and dosing. Written for first-timers.",
+          "Plain-language guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
         url: "/learn",
         type: "website",
         siteName: "BACwater.ai",
@@ -117,11 +117,11 @@ export async function generateMetadata({
       const canonical = hrefWith({}, { [single]: f[single] } as ActiveFilters);
       return {
         title: `${label} guides · BAC Water Learning Center`,
-        description: `Bac water and reconstitution content filtered to ${label}. Guides, comparisons, and FAQs written for beginners.`,
+        description: `Bac water and reconstitution content filtered to ${label}. Plain-language guides, comparisons, and FAQs.`,
         alternates: { canonical },
         openGraph: {
           title: `${label} guides · BAC Water Learning Center`,
-          description: `Bac water and reconstitution content filtered to ${label}. Guides, comparisons, and FAQs written for beginners.`,
+          description: `Bac water and reconstitution content filtered to ${label}. Plain-language guides, comparisons, and FAQs.`,
           url: canonical,
           type: "website",
           siteName: "BACwater.ai",
@@ -133,7 +133,7 @@ export async function generateMetadata({
   return {
     title: "BAC Water Learning Center",
     description:
-      "Filter beginner guides, comparisons, and FAQs on bac water and peptide reconstitution.",
+      "Plain-language guides, comparisons, and FAQs on bac water and peptide reconstitution.",
     robots: { index: false, follow: true },
     alternates: { canonical: "/learn" },
   };
@@ -159,7 +159,7 @@ export default async function LearnPage({
   let schemaUrl = `${SITE_URL}/learn`;
   let schemaName = "BAC Water Learning Center";
   let schemaDescription =
-    "Filter beginner guides, comparisons, and FAQs on bac water and peptide reconstitution.";
+    "Plain-language guides, comparisons, and FAQs on bac water and peptide reconstitution.";
 
   if (isIndexableFilter) {
     const label =
@@ -173,7 +173,7 @@ export default async function LearnPage({
     const canonical = hrefWith({}, { [single!]: f[single!] } as ActiveFilters);
     schemaUrl = `${SITE_URL}${canonical}`;
     schemaName = `${label} guides · BAC Water Learning Center`;
-    schemaDescription = `Bac water and reconstitution content filtered to ${label}. Guides, comparisons, and FAQs written for beginners.`;
+    schemaDescription = `Bac water and reconstitution content filtered to ${label}. Plain-language guides, comparisons, and FAQs.`;
   }
 
   return (
@@ -221,8 +221,8 @@ export default async function LearnPage({
         </h1>
         <p className="mt-3 text-muted-foreground">
           Filter our BAC water and peptide reconstitution guides, comparisons,
-          and FAQs by topic, content type, or peptide. Short, honest, written
-          for beginners.
+          and FAQs by topic, content type, or peptide. Short, honest, and in
+          plain language.
         </p>
       </div>
 

@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "test": "tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts",
+    "prebuild": "npm run test",
     "build": "next build",
     "postbuild": "prisma db push --skip-generate && tsx prisma/seed.ts || true",
     "start": "next start",
