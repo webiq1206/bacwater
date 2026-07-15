@@ -114,21 +114,24 @@ function ChipButton({
 function StepBlock({
   n,
   total,
+  label,
   title,
   hint,
   children,
 }: {
   n: number;
   total: number;
+  /** Short section name, e.g. "Compound". Falls back to "Step n of total". */
+  label?: string;
   title: string;
   hint?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="border border-border bg-card p-5 sm:p-7">
+    <div className="border border-border bg-card rounded-2xl p-5 sm:p-7">
       <div className="flex items-center gap-3">
         <StepNumber n={n} filled />
-        <SectionLabel>Step {n} of {total}</SectionLabel>
+        <SectionLabel>{label ?? `Step ${n} of ${total}`}</SectionLabel>
       </div>
       <h3 className="mt-3 text-xl font-serif font-medium leading-tight">
         {title}
@@ -526,6 +529,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             <StepBlock
               n={1}
               total={6}
+              label="Compound"
               title="Which peptide are you mixing?"
               hint="Pick from the list, or choose &ldquo;Other&rdquo; if yours isn't shown."
             >
@@ -645,6 +649,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             <StepBlock
               n={2}
               total={6}
+              label="Vial size"
               title="What size is your vial?"
               hint={`Look at your label for a number like "5 mg." Common sizes for ${peptide.name}:`}
             >
@@ -702,6 +707,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             <StepBlock
               n={3}
               total={6}
+              label="Dose"
               title="How much per draw?"
               hint={`Typical studied range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
             >
@@ -760,6 +766,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             <StepBlock
               n={4}
               total={6}
+              label="Syringe"
               title="Which syringe are you using?"
               hint="Not sure? A 1 mL insulin syringe works for almost everyone."
             >
@@ -790,6 +797,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             <StepBlock
               n={5}
               total={6}
+              label="BAC water"
               title="How much BAC water to add?"
               hint="BAC water is the sterile liquid that dissolves the powder. More water = larger, easier-to-measure draws."
             >
@@ -837,6 +845,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             <StepBlock
               n={6}
               total={6}
+              label="Mixing date"
               title="When did you (or will you) mix it?"
               hint="Optional. Lets us calculate when the vial expires so you know when to discard it."
             >

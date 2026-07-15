@@ -32,6 +32,10 @@ import { formatDate } from "@/lib/utils";
 
 // Brand palette (see brand-system): Bone / Charcoal / Sage / Mist / Line.
 // `teal` keys are kept for naming compatibility but now carry the sage accent.
+// Bump when the guide's layout/contents change, so a printed copy can be
+// matched to the template that produced it.
+const GUIDE_VERSION = "1.0";
+
 const C = {
   ink: "#2c302f", // charcoal — primary text + hero number
   teal: "#5d6561", // sage — accent (eyebrow, table header, syringe marker)
@@ -385,7 +389,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
                 : "Research compound"}
             </Text>
             <Text style={s.metaLine}>
-              Plan {plan.publicId} · Prepared {formatDate(plan.createdAt)}
+              Plan {plan.publicId} · Generated {formatDate(plan.createdAt)} · Guide v{GUIDE_VERSION}
             </Text>
           </View>
           <View style={{ alignItems: "center", marginLeft: 12 }}>
