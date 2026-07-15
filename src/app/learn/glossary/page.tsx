@@ -234,7 +234,7 @@ export default function GlossaryPage() {
 
       <References references={CORE_BACWATER_REFERENCES} />
 
-      <div className="mt-14 border border-border bg-surface p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+      <div className="mt-14 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
           <div className="font-medium text-foreground">
             Ready to put the terms to work?

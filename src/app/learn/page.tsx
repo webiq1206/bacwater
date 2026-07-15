@@ -380,7 +380,7 @@ export default async function LearnPage({
         </div>
       )}
 
-      <div className="mt-12 border border-border bg-surface p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+      <div className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
           <div className="font-medium text-foreground">Done reading?</div>
           <p className="mt-1 text-sm text-muted-foreground">

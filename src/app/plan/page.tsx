@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function PlanPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 sm:pt-24 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-6 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Build My Plan"
         description="Enter your peptide, vial strength, dose, and syringe. Get an exact reconstitution plan with plain-English explanations and a printable PDF."
@@ -29,13 +29,15 @@ export default function PlanPage() {
           { name: "Build My Plan", url: "/plan" },
         ]}
       />
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Build My Plan", href: "/plan" },
-        ]}
-      />
-      <div className="max-w-3xl mb-6 sm:mb-14">
+      <div className="hidden sm:block">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Build My Plan", href: "/plan" },
+          ]}
+        />
+      </div>
+      <div className="hidden sm:block max-w-3xl mb-6 sm:mb-14">
         <div className="eyebrow">Plan builder</div>
         <h1 className="mt-2 sm:mt-3 text-3xl sm:text-5xl font-serif font-medium tracking-tight">
           Build your reconstitution plan

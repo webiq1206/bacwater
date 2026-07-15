@@ -236,7 +236,7 @@ export default async function ComparisonPage({
       <References references={refs} />
 
       {/* CTA */}
-      <section className="mt-12 border border-border bg-surface p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+      <section className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
           <div className="font-medium text-foreground">
             Ready to reconstitute?

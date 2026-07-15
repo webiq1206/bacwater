@@ -243,7 +243,7 @@ export default async function FaqPage() {
         ) : null}
       </div>
 
-      <div className="mt-10 border border-border bg-surface p-6 sm:p-8">
+      <div className="section-dark mt-10 rounded-2xl p-6 sm:p-8">
         <div className="font-medium text-foreground">Still not sure?</div>
         <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
           The Plan Builder walks you through everything step by step. Just pick your peptide,

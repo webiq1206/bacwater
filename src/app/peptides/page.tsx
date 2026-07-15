@@ -129,12 +129,10 @@ export default function PeptidesHubPage() {
         })}
       </div>
 
-      <div className="mt-14 border border-border bg-surface p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+      <div className="section-dark mt-14 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
-          <div className="font-medium text-foreground">
-            Not sure which peptide you have?
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Not sure which peptide you have?</div>
+          <p className="mt-2 text-sm text-muted-foreground">
             The Plan Builder walks you through it and does all the math for you.
           </p>
         </div>

@@ -418,7 +418,7 @@ export default async function PeptidePage({
       <References references={CORE_BACWATER_REFERENCES} />
 
       {/* Keep learning / internal links */}
-      <section className="mt-14 border border-border bg-surface p-6 sm:p-8">
+      <section className="section-dark mt-14 rounded-2xl p-6 sm:p-8">
         <div className="flex items-start gap-3">
           <Package className="h-5 w-5 accent-check mt-0.5 shrink-0" />
           <div>
