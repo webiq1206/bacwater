@@ -16,6 +16,33 @@ export type PeptideCategory =
   | "longevity"
   | "other";
 
+/**
+ * Research-framed category labels (PRD v3 §9.1.1). Used for display only; the
+ * underlying category keys are unchanged.
+ */
+export const CATEGORY_LABELS: Record<PeptideCategory, string> = {
+  metabolic: "Metabolic signaling research",
+  healing: "Tissue and repair research",
+  growth: "Growth hormone signaling research",
+  cosmetic: "Dermatology and pigmentation research",
+  cognitive: "Neurological research",
+  reproductive: "Reproductive signaling research",
+  longevity: "Mitochondrial and aging research",
+  other: "Research compound",
+};
+
+/**
+ * Evidence class (PRD v3 §9.1.2). Kept to two defensible buckets we can stand
+ * behind without per-compound literature review: the FDA-approved molecules,
+ * and everything else (research use, with limited or no human safety data).
+ * Finer classification would require sourcing each compound directly.
+ */
+export type EvidenceClass = "fda-approved" | "research";
+
+export function evidenceOf(p: { evidence?: EvidenceClass }): EvidenceClass {
+  return p.evidence ?? "research";
+}
+
 export interface PeptideRef {
   slug: string;
   name: string;
@@ -33,6 +60,8 @@ export interface PeptideRef {
   storageNote: string;
   /** Assumption / caution note */
   note?: string;
+  /** Evidence class (§9.1.2). Defaults to "research" when omitted. */
+  evidence?: EvidenceClass;
 }
 
 export const PEPTIDES: PeptideRef[] = [
@@ -117,9 +146,9 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [250, 2400],
     suggestedDoseMcg: 250,
     refrigeratedShelfDays: 56,
-    storageNote:
-      "Keep in the fridge. Typical protocols start very low and titrate upward.",
-    note: "Research chemical dose ranges vary widely. Confirm the exact strength printed on your vial.",
+    storageNote: "Keep in the fridge, following your product's instructions.",
+    note: "This is an FDA-approved molecule; the approved product's labeling is the reference for amounts. The unapproved powder is a different thing and carries no assurance of identity, purity, or strength.",
+    evidence: "fda-approved",
   },
   {
     slug: "tirzepatide",
@@ -129,9 +158,9 @@ export const PEPTIDES: PeptideRef[] = [
     typicalDoseMcgRange: [2500, 15000],
     suggestedDoseMcg: 2500,
     refrigeratedShelfDays: 42,
-    storageNote:
-      "Keep in the fridge. Never freeze the mixed solution.",
-    note: "Research chemical dose ranges vary. Verify vial strength before mixing.",
+    storageNote: "Keep in the fridge, following your product's instructions.",
+    note: "This is an FDA-approved molecule; the approved product's labeling is the reference for amounts. The unapproved powder is a different thing and carries no assurance of identity, purity, or strength.",
+    evidence: "fda-approved",
   },
   {
     slug: "retatrutide",

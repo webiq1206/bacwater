@@ -13,6 +13,8 @@ import {
 } from "@/lib/peptides/page-data";
 import { PeptideCalc } from "@/components/peptides/peptide-calc";
 import { VialIdentityWarning } from "@/components/peptides/vial-identity-warning";
+import { EvidenceBadge, WhatNobodyKnows } from "@/components/peptides/evidence";
+import { evidenceOf } from "@/lib/calc/peptides";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import {
@@ -40,14 +42,14 @@ import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
 import { findVialSizePage } from "@/lib/peptides/vial-sizes";
 
 const CATEGORY_LABEL: Record<string, string> = {
-  healing: "Healing & recovery",
-  growth: "Growth hormone secretagogue",
-  metabolic: "Metabolic",
-  cognitive: "Cognitive",
-  cosmetic: "Cosmetic & skin",
-  reproductive: "Reproductive",
-  longevity: "Longevity",
-  other: "Reconstitution",
+  metabolic: "Metabolic signaling research",
+  healing: "Tissue and repair research",
+  growth: "Growth hormone signaling research",
+  cosmetic: "Dermatology and pigmentation research",
+  cognitive: "Neurological research",
+  reproductive: "Reproductive signaling research",
+  longevity: "Mitochondrial and aging research",
+  other: "Research compound",
 };
 
 export function generateStaticParams() {
@@ -179,8 +181,13 @@ export default async function PeptidePage({
 
       <div className="eyebrow">{CATEGORY_LABEL[p.category]}</div>
       <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-        {short} bac water calculator and reconstitution guide
+        {short} reconstitution calculator and reference
       </h1>
+      {!isCustom && (
+        <div className="mt-3">
+          <EvidenceBadge evidence={evidenceOf(p)} />
+        </div>
+      )}
       {content?.aka && (
         <p className="mt-3 text-sm text-muted-foreground">{content.aka}</p>
       )}
@@ -190,7 +197,7 @@ export default async function PeptidePage({
         <div className="mt-5 border-l-2 border-foreground/30 bg-surface px-4 py-3">
           <p className="text-base leading-relaxed text-foreground/90">
             <strong>Short answer:</strong> add {rows[0].bacMl} mL of bac water to
-            a {rows[0].vialMg} mg {short} vial. A {rows[0].doseLabel} dose then
+            a {rows[0].vialMg} mg {short} vial. A {rows[0].doseLabel} amount then
             measures about {rows[0].units} units on a 1 mL (U-100) insulin
             syringe.
           </p>
@@ -199,6 +206,8 @@ export default async function PeptidePage({
 
       {/* Direct answer */}
       <p className="mt-5 text-lg leading-relaxed text-foreground/90">{lead}</p>
+
+      {!isCustom && <WhatNobodyKnows compound={short} evidence={evidenceOf(p)} />}
 
       <ReviewedBy className="mt-2" />
 
@@ -286,8 +295,11 @@ export default async function PeptidePage({
             </table>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
+            The amount in the &ldquo;Amount to measure&rdquo; column is an
+            example chosen so the math is easy to follow &mdash; it is not a
+            recommended amount, and this site does not recommend how much to use.
             Units assume a U-100 insulin syringe (100 units = 1 mL). Always
-            confirm the strength printed on your own vial.
+            confirm the amount printed on your own vial.
           </p>
           {chartSvg && (
             <div className="mt-6">
