@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const bac = row ? row.bacMl : "";
   return {
     title: `How to Reconstitute ${v.sizeMg} mg ${short} (BAC Water Amount)`,
-    description: `How much bac water for a ${v.sizeMg} mg ${short} vial? Add about ${bac} mL, get the concentration, syringe units for a typical dose, and doses per vial.`,
+    description: `How much bacteriostatic water for a ${v.sizeMg} mg ${short} vial? Work out the concentration and your measurement in syringe units. Every step is shown.`,
     alternates: { canonical: `/peptides/${slug}/${size}` },
     openGraph: {
       title: `How to Reconstitute ${v.sizeMg} mg ${short} · BACwater.ai`,
@@ -172,9 +172,9 @@ export default async function VialSizePage({ params }: Props) {
           <div className="mt-4 space-y-3 text-foreground/90 leading-relaxed">
             <p>{content.what}</p>
             <p className="text-muted-foreground">
-              A {v.sizeMg} mg vial is one of the common strengths for {short}. The
+              A {v.sizeMg} mg vial is one of the common amounts for {short}. The
               amount of bac water you add sets the concentration, and the numbers
-              above put a typical dose at a clean syringe mark. {CATEGORY_CONTEXT[p.category]}
+              above put your measurement at a clean syringe mark. {CATEGORY_CONTEXT[p.category]}
             </p>
           </div>
         </section>

@@ -88,7 +88,7 @@ export default function BacWaterCalculatorPage() {
               </SelectContent>
             </Select>
             <div className="mt-3 bg-surface px-3 py-2 text-xs text-muted-foreground">
-              We&apos;ll pre-fill your vial size and dose with common starting values for {peptide.name}.
+              We&apos;ll fill in a vial amount and an amount to measure so you can see the math. Change them to match your own numbers.
             </div>
           </StepCard>
 
@@ -209,7 +209,7 @@ export default function BacWaterCalculatorPage() {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/shop">Shop supplies</Link>
+                <Link href="/learn">Learn the basics</Link>
               </Button>
             </div>
 

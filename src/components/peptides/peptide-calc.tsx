@@ -160,7 +160,7 @@ export function PeptideCalc({
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/shop">Shop supplies</Link>
+            <Link href="/learn">Learn the basics</Link>
           </Button>
         </div>
 

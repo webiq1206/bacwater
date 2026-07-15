@@ -144,8 +144,8 @@ export const COMPARISONS: ComparisonTopic[] = [
     ],
     body: [
       {
-        h2: "Clean is not the same as germ-free",
-        p: "Distilled and deionized water are cleaned to take out minerals. But clean is not the same as germ-free. They can still hold germs. They are not made for injection. Mixing a peptide with them can put germs in the whole vial.",
+        h2: "Clean is not the same as sterile",
+        p: "Distilled and deionized water are cleaned to take out minerals. But clean is not the same as sterile. They can still hold germs. They are not made for injection. Mixing a peptide with them can put germs in the whole vial.",
       },
     ],
     faqs: [

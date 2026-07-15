@@ -6,7 +6,7 @@
  */
 export const GLOSS: Record<string, string> = {
   "bac-water":
-    "Clean water with a tiny bit of a safe preservative added. The preservative stops germs from growing, so you can use the same bottle again and again.",
+    "Sterile water with a preservative (benzyl alcohol) in it. Sterile means it had no germs in it when it was made. The preservative slows germs from growing, so you can use the same vial more than once. It is not safe for newborn babies.",
   reconstitute:
     "To mix dried powder with liquid so you can use it. You add BAC water to the peptide.",
   diluent:
@@ -16,13 +16,13 @@ export const GLOSS: Record<string, string> = {
   concentration:
     "How much peptide is in each 1 mL of liquid. More water makes it weaker; less makes it stronger.",
   "benzyl-alcohol":
-    "The safe preservative inside BAC water that keeps germs from growing.",
+    "The preservative in BAC water. It slows germs from growing. It is not safe for newborn babies.",
   preservative:
-    "An ingredient that stops germs from growing so the liquid stays safe for longer.",
+    "An ingredient that slows germs from growing. It does not stop all germs.",
   "u-100":
     "The marks on an insulin syringe. 100 units equal 1 mL, so 10 units is a tenth of a mL.",
   subcutaneous: "Just under the skin, in the soft fatty layer.",
   secretagogue:
     "A peptide studied for nudging the body's own growth-hormone signals.",
-  sterile: "Germ-free.",
+  sterile: "It had no germs in it when it was made.",
 };

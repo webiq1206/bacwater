@@ -11,12 +11,12 @@ import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { storageSvg, storageAlt } from "@/lib/infographics/static";
 
 export const metadata = {
-  title: "BAC Water FAQ: Storage, Dosing, Prescription & Uses",
+  title: "BAC Water FAQ: Storage, Prescription & Uses",
   description:
     "Direct answers on BAC water: what it is, how much to add, whether it needs refrigerating, how long it lasts, ingredients and pH, prescription status, and safety.",
   alternates: { canonical: "/faq" },
   openGraph: {
-    title: "BAC Water FAQ: Storage, Dosing, Prescription & Uses",
+    title: "BAC Water FAQ: Storage, Prescription & Uses",
     description:
       "Direct answers on BAC water: what it is, how much to add, whether it needs refrigerating, how long it lasts, ingredients and pH, prescription status, and safety.",
     url: "/faq",
@@ -143,7 +143,7 @@ export default async function FaqPage() {
       />
       <WebPageJsonLd
         name="Frequently Asked Questions"
-        description="Answers to the most common questions about BAC water, peptide reconstitution, dosing, storage, and shopping with BACwater.ai."
+        description="Answers to common questions about bacteriostatic water, peptide reconstitution, storage, and how the calculators work."
         url="/faq"
         breadcrumb={[
           { name: "Home", url: "/" },

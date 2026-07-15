@@ -50,7 +50,7 @@ export const HOWTO_SCHEMAS: Record<string, HowToSchema> = {
       },
       {
         name: "Swirl gently",
-        text: "Roll the vial between your palms. Never shake. Shaking can denature the peptide.",
+        text: "Roll or swirl the vial between your palms. Roll it, do not shake it, if your product's instructions say so.",
       },
       {
         name: "Confirm clarity",

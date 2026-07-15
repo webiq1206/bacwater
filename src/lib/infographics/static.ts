@@ -9,10 +9,10 @@ import { PALETTE, esc, svgDoc } from "@/lib/infographics/svg";
 /* ---------- Storage & shelf life (FAQ hub) ---------- */
 
 const STORAGE_CARDS = [
-  { big: "Fridge", sub: "Store at 36-46 F (2-8 C)" },
-  { big: "~28 days", sub: "Typical shelf life once mixed" },
+  { big: "Fridge", sub: "Keep mixed vials cold, per your product's instructions" },
+  { big: "Discard date", sub: "Follow the instructions that came with your product" },
   { big: "Dark", sub: "Keep in the box or foil" },
-  { big: "Never freeze", sub: "Freezing destroys peptides" },
+  { big: "Freezing", sub: "Can damage many peptides — check your instructions" },
 ];
 
 export function storageAlt(): string {

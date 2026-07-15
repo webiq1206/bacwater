@@ -968,7 +968,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           ) : (
             <div className="mt-4 bg-surface px-4 py-3 text-sm text-muted-foreground">
               <strong className="text-foreground">{peptide.name}</strong>
-              {". "}Typical dose: {peptide.typicalDoseMcgRange[0] / 1000} to {peptide.typicalDoseMcgRange[1] / 1000} mg ({peptide.typicalDoseMcgRange[0].toLocaleString()} to {peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).
+              {". "}Amounts studied here: {peptide.typicalDoseMcgRange[0] / 1000} to {peptide.typicalDoseMcgRange[1] / 1000} mg ({peptide.typicalDoseMcgRange[0].toLocaleString()} to {peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). These are study details, not instructions.
               Common vial sizes: {peptide.commonVialStrengthsMg.join(", ")} mg.
             </div>
           )}

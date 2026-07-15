@@ -97,7 +97,7 @@ export function reconstitutionSteps(
     },
     {
       name: "Swirl gently",
-      text: "Roll the vial between your palms until the powder fully dissolves. Never shake, since shaking can damage the peptide. The solution should look clear.",
+      text: "Roll or swirl the vial between your palms until the powder fully dissolves. Roll it, do not shake it, if your product's instructions say so. The solution should look clear.",
     },
     {
       name: "Label and refrigerate",

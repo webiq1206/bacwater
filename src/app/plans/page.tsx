@@ -175,9 +175,9 @@ function EmptyState() {
           </p>
         </div>
         <div className="text-sm">
-          <div className="font-medium text-foreground">Know what you need?</div>
+          <div className="font-medium text-foreground">Know your numbers?</div>
           <p className="mt-1 text-muted-foreground text-xs">
-            <Link href="/shop" className="underline">Shop supplies</Link> directly if you already have a plan in mind.
+            Use the <Link href="/tools" className="underline">calculators</Link> directly for a quick one-off answer.
           </p>
         </div>
         <div className="text-sm">

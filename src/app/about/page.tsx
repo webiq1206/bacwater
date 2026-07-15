@@ -82,23 +82,22 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">Our supplies</h2>
+      <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">What we do not do</h2>
       <div className="mt-3 space-y-4 text-foreground/90 leading-relaxed">
         <p>
-          We sell the supplies you need: <Link href="/shop" className="font-medium underline">BAC water, syringes, and alcohol prep pads</Link>.
-          When your plan says you need three of something, we would rather help you
-          get them in one click than send you somewhere else. Everything ships from
-          US-licensed vendors within 1 to 2 business days.
+          We don&apos;t sell peptides or supplies, and we recommend no vendor.
+          When your plan works out that you need three of something, we show you
+          the count so you can source it yourself. We do not select compounds,
+          recommend quantities, or provide dosing guidance.
         </p>
       </div>
 
       <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">Important notice</h2>
       <div className="mt-3 space-y-4 text-foreground/90 leading-relaxed">
         <p>
-          We do <b>not</b> provide medical advice. We do not diagnose, prescribe,
-          or recommend treatment. Our products are sold for research and
-          educational purposes only. Always consult a qualified professional for
-          medical guidance.
+          This is a calculation and reference tool for research and educational
+          use only. We do <b>not</b> provide medical advice, and we do not
+          diagnose, prescribe, or recommend treatment.
         </p>
       </div>
 
@@ -115,7 +114,7 @@ export default function AboutPage() {
 
       <div className="mt-8 flex gap-3">
         <Button asChild variant="brand"><Link href="/plan">Build a plan</Link></Button>
-        <Button asChild variant="outline"><Link href="/shop">Shop supplies</Link></Button>
+        <Button asChild variant="outline"><Link href="/tools">Open calculators</Link></Button>
       </div>
     </div>
   );

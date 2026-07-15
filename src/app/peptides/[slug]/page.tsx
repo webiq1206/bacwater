@@ -65,11 +65,11 @@ export async function generateMetadata({
   const isCustom = p.slug === "custom";
   const strengths = p.commonVialStrengthsMg.join(", ");
   const title = isCustom
-    ? "BAC Water Calculator for Any Peptide"
-    : `${short} BAC Water Calculator & Dosing`;
+    ? "Reconstitution Calculator for Any Compound"
+    : `${short} Reconstitution Calculator & Reference`;
   const description = isCustom
-    ? "Reconstitute any peptide with exact bac water math. Enter your vial strength and dose to get the water amount, concentration, syringe units, and doses per vial."
-    : `How much bac water for ${short}? Exact amounts for ${strengths} mg vials, syringe units for a typical dose, storage, and about ${p.refrigeratedShelfDays}-day shelf life.`;
+    ? "Work out how much bacteriostatic water to add to a vial and what your measurement is in syringe units. Enter your vial amount and how much you want to measure."
+    : `Work out how much bacteriostatic water to add to a ${short} vial and what your measurement is in syringe units. What research looked at, and what nobody knows.`;
   const chart = hasChart(p) ? peptideChartDims(p) : null;
   return {
     title,
@@ -88,7 +88,7 @@ export async function generateMetadata({
                 url: `/peptides/${p.slug}/chart.svg`,
                 width: chart.width,
                 height: chart.height,
-                alt: `${short} bac water dosage chart`,
+                alt: `${short} concentration reference`,
               },
             ],
           }
@@ -242,10 +242,10 @@ export default async function PeptidePage({
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-surface text-left">
-                  <th className="px-4 py-3 font-medium">Vial strength</th>
+                  <th className="px-4 py-3 font-medium">Vial amount</th>
                   <th className="px-4 py-3 font-medium">Bac water to add</th>
                   <th className="px-4 py-3 font-medium">Concentration</th>
-                  <th className="px-4 py-3 font-medium">Typical dose</th>
+                  <th className="px-4 py-3 font-medium">Amount to measure</th>
                   <th className="px-4 py-3 font-medium">Syringe units</th>
                 </tr>
               </thead>

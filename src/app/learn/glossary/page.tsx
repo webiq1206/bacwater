@@ -102,7 +102,7 @@ const TERMS: Term[] = [
     term: "Sterile water",
     anchor: "sterile-water",
     definition:
-      "This is water for injection that has been cleaned and made germ-free. But it has no preservative. Without a germ-fighting ingredient, an opened vial is for a single use only. That is the main difference from BAC water, which you can draw from many times because of its preservative.",
+      "This is sterile water for injection. Sterile means it had no germs in it when it was made. But it has no preservative. Without one, an opened vial is for a single use only. That is the main difference from BAC water, which you can draw from more than once because of its preservative.",
     related: { label: "Sterile water vs BAC water", href: "/learn/vs/sterile-water" },
   },
 ];

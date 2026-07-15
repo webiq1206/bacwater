@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <WebPageJsonLd
         name="mg to mcg Converter"
-        description="Convert between milligrams and micrograms for peptide dosing. Vial labels use mg, dose protocols use mcg - this makes switching instant."
+        description="Convert between milligrams and micrograms. Vial amounts are often in mg and measurements in mcg — this makes switching instant."
         url="/tools/mg-to-mcg"
         breadcrumb={[
           { name: "Home", url: "/" },

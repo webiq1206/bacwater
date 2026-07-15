@@ -9,7 +9,7 @@ export const metadata = {
 const LINKS = [
   { href: "/", label: "Homepage" },
   { href: "/plan", label: "Build My Plan" },
-  { href: "/shop", label: "Shop Supplies" },
+  { href: "/peptides", label: "Compound Reference" },
   { href: "/learn", label: "Learning Center" },
   { href: "/tools", label: "Calculators & Tools" },
 ];

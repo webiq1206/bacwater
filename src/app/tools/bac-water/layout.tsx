@@ -66,7 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               ["15 mg", "3 mL", "500 mcg", "10 units"],
             ],
             caption:
-              "Starting points that put a typical dose at a clean syringe mark. Use the calculator above for your exact vial and dose.",
+              "Examples that put a measurement at a clean syringe mark. Use the calculator above for your exact vial and amount.",
           }}
           faqs={[
             {

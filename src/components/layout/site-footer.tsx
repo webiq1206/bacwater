@@ -43,9 +43,9 @@ export function SiteFooter() {
               </span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              The complete guide to peptide reconstitution. Build a plan,
-              get exact syringe units, download a PDF, and buy the supplies you
-              need.
+              A concentration and measurement calculator for peptide
+              reconstitution. Enter your vial&apos;s numbers, see every step, and
+              download a PDF.
             </p>
           </div>
           {Object.entries(FOOTER).map(([title, links]) => (

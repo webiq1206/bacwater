@@ -46,7 +46,7 @@ export const CATEGORY_CONTEXT: Record<PeptideCategory, string> = {
 export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
   "bpc-157": {
     what: "BPC-157 is a synthetic peptide derived from a protein found in gastric juice, studied in research settings for tissue repair and recovery.",
-    uses: "In research it is most associated with connective tissue, gut, and general recovery models. It is one of the most commonly reconstituted peptides, which is why it is a good first mixing project.",
+    uses: "In research it is most associated with connective tissue, gut, and general recovery models. It is one of the most commonly reconstituted peptides.",
     caveat: "BPC-157 is light-sensitive once mixed. Keep the reconstituted vial in its box or wrapped in foil in the refrigerator.",
   },
   "tb-500": {

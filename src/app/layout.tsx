@@ -40,27 +40,19 @@ const CLARITY_ID = "xgb3ipxhf6";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "BAC Water Calculator & Reconstitution | BACwater.ai",
+    default: "BAC Water Concentration Calculator | BACwater.ai",
     template: "%s · BACwater.ai",
   },
   description:
-    "Build a personalized peptide reconstitution plan in minutes. Get exact BAC water amounts, syringe units, storage guidance, printable labels, and the supplies you need.",
-  keywords: [
-    "BAC water",
-    "bacteriostatic water",
-    "peptide reconstitution",
-    "reconstitution calculator",
-    "insulin syringe units",
-    "peptide dosing",
-  ],
+    "Work out concentration, how much to measure, and syringe units from the numbers on your vial. Every step is shown.",
   applicationName: "BACwater.ai",
   authors: [{ name: "BACwater.ai" }],
   openGraph: {
     type: "website",
     siteName: "BACwater.ai",
-    title: "BAC Water Calculator & Reconstitution | BACwater.ai",
+    title: "BAC Water Concentration Calculator | BACwater.ai",
     description:
-      "Build a plan, get exact syringe units, download a PDF, and buy the supplies you need. Simple, accurate, trustworthy.",
+      "Work out concentration, how much to measure, and syringe units from the numbers on your vial. Every step is shown.",
     url: siteUrl,
   },
   twitter: {

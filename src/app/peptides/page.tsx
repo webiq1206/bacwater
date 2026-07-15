@@ -82,9 +82,9 @@ export default function PeptidesHubPage() {
           Bac water calculators for every peptide
         </h1>
         <p className="mt-3 text-muted-foreground leading-relaxed">
-          Pick your peptide for an exact bac water amount, the syringe units for
-          a typical dose, storage guidance, and shelf life. Every calculator
-          uses the same deterministic, tested math as our{" "}
+          Pick your compound to work out the bac water amount, the concentration,
+          and your measurement in syringe units. Every calculator uses the same
+          deterministic, tested math as our{" "}
           <Link href="/plan" className="text-foreground font-medium underline">
             Plan Builder
           </Link>

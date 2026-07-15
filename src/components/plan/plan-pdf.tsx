@@ -507,7 +507,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
           <View style={s.bullet}>
             <Text style={s.bulletDot}>›</Text>
             <Text style={s.bulletText}>
-              Swirl slowly. Never shake — shaking creates foam and can damage the peptide.
+              Roll or swirl it. Do not shake it, if your product&apos;s instructions say so.
             </Text>
           </View>
           <View style={s.bullet}>
