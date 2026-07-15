@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ShieldCheck, FlaskConical } from "lucide-react";
+import { POSITIONING_STATEMENT } from "@/lib/positioning";
 
 const COOKIE = "bacwater_age_ok";
 
@@ -84,11 +85,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
               Are you 21 or older?
             </h2>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-              You must be at least 21 to enter. BACwater.ai provides calculators
-              and supplies for{" "}
-              <strong className="text-foreground">laboratory research use only</strong>
-              . Nothing here is for human or veterinary use, and nothing here is
-              medical advice.
+              {POSITIONING_STATEMENT}
             </p>
 
             <div className="mt-6 grid gap-2.5">
@@ -111,9 +108,9 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
             <div className="mt-6 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
               <FlaskConical className="h-3.5 w-3.5 mt-px shrink-0" />
               <span>
-                By entering you confirm you are 21+ and understand all content
-                and products are strictly for laboratory research and
-                educational purposes.
+                By entering you confirm you are 21 or older and understand this
+                site is a calculation and reference tool for research and
+                educational use.
               </span>
             </div>
           </>

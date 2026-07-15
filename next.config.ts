@@ -28,6 +28,15 @@ const nextConfig: NextConfig = {
         destination: "/tools/syringe-units",
         permanent: true,
       },
+      // Store removed (PRD v3 §5/§14.1). 301 the commerce URLs to the closest
+      // reference or calculator rather than 404ing them.
+      { source: "/shop", destination: "/tools", permanent: true },
+      { source: "/shop/:path*", destination: "/tools", permanent: true },
+      { source: "/buy", destination: "/tools/bac-water", permanent: true },
+      { source: "/cart", destination: "/plan", permanent: true },
+      { source: "/checkout", destination: "/plan", permanent: true },
+      { source: "/checkout/:path*", destination: "/plan", permanent: true },
+      { source: "/shipping-returns", destination: "/", permanent: true },
     ];
   },
   async headers() {

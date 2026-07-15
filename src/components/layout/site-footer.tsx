@@ -1,11 +1,10 @@
 import Link from "next/link";
+import { POSITIONING_STATEMENT } from "@/lib/positioning";
 
 const FOOTER = {
   Product: [
     { href: "/plan", label: "Build My Plan" },
-    { href: "/peptides", label: "Peptide Guides" },
-    { href: "/buy", label: "Buy Bac Water" },
-    { href: "/shop", label: "Shop Supplies" },
+    { href: "/peptides", label: "Compound Reference" },
     { href: "/tools", label: "Calculators" },
     { href: "/tools/reverse-bac", label: "Reverse Calculator" },
     { href: "/tools/vial-labels", label: "Vial Labels" },
@@ -23,7 +22,6 @@ const FOOTER = {
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/editorial-policy", label: "Editorial & Sourcing Policy" },
-    { href: "/shipping-returns", label: "Shipping & Returns" },
     { href: "/terms", label: "Terms" },
     { href: "/privacy", label: "Privacy" },
     { href: "/disclaimer", label: "Disclaimer" },
@@ -73,12 +71,7 @@ export function SiteFooter() {
             © {new Date().getFullYear()} BACwater.ai. All rights reserved.
           </div>
           <div className="max-w-2xl md:text-right">
-            The content and products on this site are for research and
-            educational purposes only. BACwater.ai is not a medical company.
-            Nothing here is intended to diagnose, treat, cure, or prevent any
-            disease, and nothing here is medical advice or creates a
-            doctor-patient relationship. Always verify anything health-related
-            with your doctor before acting on it.{" "}
+            {POSITIONING_STATEMENT}{" "}
             <Link href="/disclaimer" className="underline hover:text-foreground">
               Full disclaimer
             </Link>

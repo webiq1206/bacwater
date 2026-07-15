@@ -2,26 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, ShoppingBag, User, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { useState } from "react";
-import { useCart, cartCount } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/plan", label: "Build My Plan" },
-  { href: "/peptides", label: "Peptides" },
-  { href: "/shop", label: "Shop" },
-  { href: "/learn", label: "Learn" },
-  { href: "/tools", label: "Tools" },
-  { href: "/buy", label: "Buy Bac Water" },
+  { href: "/peptides", label: "Compound Reference" },
+  { href: "/tools", label: "Calculators" },
+  { href: "/learn", label: "Learning Center" },
 ];
 
 export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const pathname = usePathname();
-  const items = useCart((s) => s.items);
-  const hydrated = useCart((s) => s.hydrated);
   const [open, setOpen] = useState(false);
-  const count = cartCount(items);
 
   const isAdmin = pathname?.startsWith("/admin");
 
@@ -75,19 +69,6 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
               <User className="h-4 w-4" />
             </Link>
           )}
-          <Link
-            href="/cart"
-            className="relative inline-flex items-center gap-2 border border-border bg-white px-3 h-10 text-sm font-medium hover:bg-muted transition-colors"
-            aria-label="Cart"
-          >
-            <ShoppingBag className="h-4 w-4" />
-            <span className="hidden sm:inline">Cart</span>
-            {hydrated && count > 0 ? (
-              <span className="absolute -top-1 -right-1 rounded-full bg-foreground text-white text-[10px] font-bold h-5 min-w-5 px-1 grid place-items-center">
-                {count}
-              </span>
-            ) : null}
-          </Link>
           <button
             type="button"
             aria-label="Menu"

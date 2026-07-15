@@ -84,6 +84,44 @@ if (!d.expiration.date || !d.expiration.date.startsWith("2026-07-31")) {
   console.log("OK   expiration date = mix + 30 days for BPC-157");
 }
 
+// ---- Validation guards (PRD §9.4) ----
+function warns(res: { warnings: string[] }, needle: RegExp, label: string) {
+  if (res.warnings.some((w) => needle.test(w))) {
+    console.log(`OK   ${label}`);
+  } else {
+    console.error(`FAIL ${label}\n  no warning matched ${needle}\n  got ${JSON.stringify(res.warnings)}`);
+    process.exitCode = 1;
+  }
+}
+function noWarn(res: { warnings: string[] }, needle: RegExp, label: string) {
+  if (res.warnings.some((w) => needle.test(w))) {
+    console.error(`FAIL ${label}\n  unexpected warning matched ${needle}\n  got ${JSON.stringify(res.warnings)}`);
+    process.exitCode = 1;
+  } else {
+    console.log(`OK   ${label}`);
+  }
+}
+
+// V-02: the live 7.5-unit defect. 10 mg vial, 250 mcg, 3 mL, 1 mL syringe
+// (marks every 2 units) => 7.5 units, between two marks.
+const v02 = calculate({ peptideSlug: "bpc-157", vialStrengthMg: 10, doseMcg: 250, bacWaterMl: 3, syringeType: "insulin-1ml" });
+near(v02.syringeUnits, 7.5, 0.001, "V-02 fixture computes 7.5 units");
+warns(v02, /between two marks/, "V-02 flags 7.5 units as unmeasurable");
+
+// A clean 10 units must NOT trip V-02.
+noWarn(a, /between two marks/, "V-02 quiet when the amount lands on a mark");
+
+// V-05: 250 mg dose (mg picked where mcg meant) => ~1,000x.
+const v05 = calculate({ peptideSlug: "bpc-157", vialStrengthMg: 500, doseMcg: 250000, bacWaterMl: 2, syringeType: "insulin-1ml" });
+warns(v05, /1,000 times/, "V-05 flags the mg/mcg unit swap");
+
+// V-13: 5 mg dose (10x the studied high of 500 mcg).
+const v13 = calculate({ peptideSlug: "bpc-157", vialStrengthMg: 50, doseMcg: 5000, bacWaterMl: 2, syringeType: "insulin-1ml" });
+warns(v13, /10 times bigger/, "V-13 flags the order-of-magnitude outlier");
+
+// Normal dose stays quiet on the magnitude guards.
+noWarn(a, /times (bigger|smaller)|1,000 times/, "magnitude guards quiet on a normal dose");
+
 if (process.exitCode !== 1) {
   console.log("\nAll calculation tests passed.");
 }

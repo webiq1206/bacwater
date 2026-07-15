@@ -5,7 +5,6 @@ import { Montserrat, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { CartHydrator } from "@/components/shop/cart-hydrator";
 import { Toaster } from "@/components/ui/toaster";
 import { OrgJsonLd } from "@/components/common/org-json-ld";
 import { AgeGate } from "@/components/common/age-gate";
@@ -122,7 +121,6 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         >
           Skip to content
         </a>
-        <CartHydrator />
         <SiteHeader isAuthenticated={isAuthenticated} />
         <main id="main" className="flex-1">{children}</main>
         <SiteFooter />

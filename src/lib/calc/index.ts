@@ -284,12 +284,29 @@ export function calculate(input: CalcInput): CalcResult {
     warnings.push(
       "Your dose is larger than the vial contains. Verify your dose and vial strength."
     );
+  // Unit-error and outlier guards (PRD §9.4 V-05/V-06/V-13). These catch the
+  // dominant failure mode in this category: a 10x or 1,000x mistake from
+  // confusing mg and mcg. Measured against what the studies on the page used.
   if (peptideRef) {
     const [lo, hi] = peptideRef.typicalDoseMcgRange;
-    if (doseMcg < lo * 0.25 || doseMcg > hi * 4)
+    if (doseMcg >= hi * 100) {
+      // ~1,000x too big — almost always mg picked where mcg was meant.
       warnings.push(
-        `Doses of ${peptideRef.name} typically fall between ${lo} mcg and ${hi} mcg. Please confirm.`
+        `That amount is about 1,000 times the amounts in the studies here. Vial amounts like this are usually measured in mcg. Did you pick "mg" by mistake? Check your label.`
       );
+    } else if (doseMcg >= hi * 10) {
+      warnings.push(
+        `This is about 10 times bigger than the amounts in the studies on this page. Check what you typed.`
+      );
+    } else if (doseMcg > 0 && doseMcg <= lo / 100) {
+      warnings.push(
+        `That amount is far smaller than the amounts in the studies here. Did you mean mg instead of mcg? Check your label.`
+      );
+    } else if (doseMcg <= lo / 10) {
+      warnings.push(
+        `This is about 10 times smaller than the amounts in the studies on this page. Check what you typed.`
+      );
+    }
   }
 
   const recommendedBacMl = recommendBacWaterMl(vialStrengthMg, doseMcg);
@@ -319,11 +336,26 @@ export function calculate(input: CalcInput): CalcResult {
       `The calculated dose (${round(doseVolumeMl, 2)} mL) exceeds the capacity of the selected ${syringe.label}. Consider a larger syringe or less BAC water.`
     );
 
+  // V-02 (PRD §9.4): the amount must land on a mark you can actually read.
+  // U-100 barrels are marked every 1 unit (0.3 / 0.5 mL) or every 2 units
+  // (1 mL). A value between marks — like the live 7.5-unit defect — cannot be
+  // measured, so we flag it instead of silently returning an unusable number.
+  const smallestMarkUnits = syringe.id === "insulin-1ml" ? 2 : 1;
+  if (syringe.scale === "u100" && syringeUnits > 0) {
+    const marks = syringeUnits / smallestMarkUnits;
+    const onMark = Math.abs(marks - Math.round(marks)) < 0.02;
+    if (!onMark) {
+      warnings.push(
+        `Your syringe has a mark every ${smallestMarkUnits} unit${smallestMarkUnits === 1 ? "" : "s"}. Your amount is ${round(syringeUnits, 1)} units. That is between two marks, so you cannot measure it exactly. Change your water amount so the amount lands on a line.`
+      );
+    }
+  }
+
   // Guardrail: a draw this small is very hard to measure accurately on a
   // standard insulin syringe. Flag it instead of silently returning a number.
   if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < 2)
     warnings.push(
-      `This dose works out to only ${round(syringeUnits, 1)} units, which is very hard to draw accurately. Use less BAC water so the dose lands at a larger, easier-to-read mark, or switch to a 0.3 mL syringe.`
+      `This amount works out to only ${round(syringeUnits, 1)} units, which is very hard to measure accurately. Use less BAC water so it lands at a larger, easier-to-read mark, or switch to a 0.3 mL syringe.`
     );
 
   const syringeReadout = {
