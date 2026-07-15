@@ -128,13 +128,23 @@ export default function ToolsPage() {
         </p>
       </div>
 
-      <div className="mt-4 callout-panel max-w-3xl">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          <b className="text-foreground">New to peptides?</b> Start with the{" "}
-          <Link href="/plan" className="underline font-medium" style={{ color: "var(--color-accent-guide)" }}>Plan Builder</Link> instead. It walks
-          you through everything step by step and gives you a complete,
-          printable reconstitution plan.
-        </p>
+      <div className="section-dark mt-6 max-w-3xl rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+        <div className="flex-1">
+          <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>New to peptides?</div>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Skip the single calculators and start with the{" "}
+            <span className="text-foreground font-medium">Plan Builder</span> — it
+            walks you through everything step by step and gives you a complete,
+            printable reconstitution plan.
+          </p>
+        </div>
+        <Link
+          href="/plan"
+          className="shrink-0 inline-flex items-center justify-center gap-2 rounded-lg px-5 h-12 text-sm font-medium whitespace-nowrap"
+          style={{ background: "var(--color-primary)", color: "var(--color-primary-foreground)" }}
+        >
+          Open the Plan Builder <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
 
       <div className="mt-6 max-w-3xl flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">

@@ -711,7 +711,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               title="How much per draw?"
               hint={`Typical studied range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
             >
-              <div className="grid gap-2">
+              <div className="grid gap-1.5 sm:gap-2">
                 {dosePresets.map((d) => (
                   <ChipButton
                     key={d.mcg}
@@ -801,7 +801,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               title="How much BAC water to add?"
               hint="BAC water is the sterile liquid that dissolves the powder. More water = larger, easier-to-measure draws."
             >
-              <div className="grid gap-2">
+              <div className="grid gap-1.5 sm:gap-2">
                 <ChipButton
                   active={useRecommendedBac}
                   onClick={() => setUseRecommendedBac(true)}
@@ -923,7 +923,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   // ---------- BEGINNER: one question at a time ----------
   return (
     <div className="mx-auto max-w-2xl pb-24 sm:pb-0" ref={stepContainerRef}>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
         {hasMounted && (
           <ModeToggle mode={mode} onChange={setMode} />
         )}
@@ -1049,7 +1049,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           onBack={() => goToStep(1)}
           stepNum={3}
         >
-          <div className="grid gap-2">
+          <div className="grid gap-1.5 sm:gap-2">
             {dosePresets.map((d) => (
               <ChipButton
                 key={d.mcg}
@@ -1101,12 +1101,12 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
       {step === 3 && (
         <StepPanel
           title="How much water should we add?"
-          hint="This is the liquid that dissolves the powder. More water makes a bigger, easier-to-read amount on the syringe; less water makes a smaller one. We picked an amount that lands on a clean number — change it if you like."
+          hint="The liquid that dissolves the powder. More water gives a bigger, easier-to-read number on the syringe. We picked a clean one — change it below."
           onNext={() => goToStep(4)}
           onBack={() => goToStep(2)}
           stepNum={4}
         >
-          <div className="grid gap-2">
+          <div className="grid gap-1.5 sm:gap-2">
             <ChipButton
               active={useRecommendedBac}
               onClick={() => setUseRecommendedBac(true)}
@@ -1135,7 +1135,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             ) : null}
           </div>
           {/* Live reasoning: show the consequence of this choice */}
-          <div className="mt-4 rounded-xl border border-border bg-surface p-4 text-sm leading-relaxed">
+          <div className="mt-3 sm:mt-4 rounded-xl border border-border bg-surface p-3 sm:p-4 text-sm leading-relaxed">
             <span className="text-muted-foreground">With </span>
             <strong>{useRecommendedBac ? recommendedBac : customBacMl || 0} mL</strong>
             <span className="text-muted-foreground"> of BAC water, each amount you measure is </span>
@@ -1254,7 +1254,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
                 editing={editingSyringe}
                 onToggle={() => setEditingSyringe(!editingSyringe)}
               >
-                <div className="grid gap-2">
+                <div className="grid gap-1.5 sm:gap-2">
                   {SYRINGES.map((s) => (
                     <ChipButton
                       key={s.id}
@@ -1343,20 +1343,20 @@ function StepPanel({
 }) {
   return (
     <div className="border border-border bg-card rounded-2xl">
-      <div className="p-6 sm:p-8">
-        <div className="flex items-center gap-3 mb-3">
+      <div className="p-5 sm:p-8">
+        <div className="flex items-center gap-3 mb-2 sm:mb-3">
           <StepNumber n={stepNum} filled />
           <SectionLabel>Question {stepNum}</SectionLabel>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
+        <h2 className="text-xl sm:text-3xl font-serif font-medium tracking-tight">
           {title}
         </h2>
         {hint ? (
-          <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-2 sm:mt-3 text-sm text-muted-foreground leading-relaxed">
             {hint}
           </p>
         ) : null}
-        <div className="mt-6">{children}</div>
+        <div className="mt-4 sm:mt-6">{children}</div>
       </div>
 
       {/* Desktop: footer nav inside the card. */}
@@ -1399,7 +1399,7 @@ function StepPanel({
 
 function StepBar({ step, total }: { step: number; total: number }) {
   return (
-    <div className="mb-8">
+    <div className="mb-5 sm:mb-8">
       <div className="flex items-center gap-1">
         {Array.from({ length: total }, (_, i) => (
           <div
@@ -1483,7 +1483,7 @@ function WizardContext({
     });
   if (items.length === 0) return null;
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm mb-6 px-1">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm mb-4 sm:mb-6 px-1">
       {items.map((item, i) => (
         <span key={item.label} className="inline-flex items-center gap-1.5">
           {i > 0 && (

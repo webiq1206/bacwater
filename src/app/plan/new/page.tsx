@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function PlanNewPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-6 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Step-by-Step Reconstitution Planner"
         description="Guided peptide reconstitution planner. One question at a time, perfect for beginners. We'll do all the math."
@@ -74,14 +74,22 @@ export default function PlanNewPage() {
           }),
         }}
       />
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Build My Plan", href: "/plan" },
-          { label: "New Plan", href: "/plan/new" },
-        ]}
-      />
-      <div className="mb-10 sm:mb-14">
+      {/* Breadcrumb is desktop-only in the wizard — on mobile it's nav clutter
+          that pushes the first question toward the fold. Stays in the DOM for
+          its BreadcrumbList structured data. */}
+      <div className="hidden sm:block">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Build My Plan", href: "/plan" },
+            { label: "New Plan", href: "/plan/new" },
+          ]}
+        />
+      </div>
+      {/* Marketing intro is desktop-only: on mobile it costs ~220px and pushes
+          the first question below the fold. The mode toggle + step bar + card
+          give enough context, so the wizard opens straight into the question. */}
+      <div className="hidden sm:block mb-10 sm:mb-14">
         <div className="eyebrow">Guided planner</div>
         <h1 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
           We&apos;ll walk you through it.

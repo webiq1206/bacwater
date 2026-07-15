@@ -77,6 +77,61 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* --- Editorial-contrast color system -------------------------------------
+   The palette is deployed with each tone doing ONE job:
+     Bone      page ground              Charcoal  ink + full-bleed dark bands
+     Sage      the true accent          Mist      meta / decorative text
+     Line      hairlines
+   Structure is read by color, not just by hairline rules: pages alternate a
+   bone ground with warm `.section-muted` bands and are punctuated by charcoal
+   `.section-dark` bands (hero, CTA, footer).
+   ------------------------------------------------------------------------- */
+
+/* Warm tonal band — one step down from bone, lifts white cards inside it. */
+.section-muted {
+  background: var(--color-muted);
+}
+
+/* Charcoal band. Re-declares the token variables in-scope so every child that
+   uses token-based utilities (text-muted-foreground, border-border, bg-card,
+   accent-guide, …) adapts to the dark ground automatically — no per-component
+   dark styling needed. Sage is brightened here so it reads as a real accent
+   against charcoal; mist carries secondary text. */
+.section-dark {
+  --color-background: #2c302f;
+  --color-foreground: #f7f5f3; /* bone */
+  --color-muted: #363b3a;
+  --color-muted-foreground: #b3b8b0; /* lightened mist — readable on charcoal */
+  --color-border: rgba(247, 245, 243, 0.14);
+  --color-border-strong: rgba(247, 245, 243, 0.26);
+  --color-input: rgba(247, 245, 243, 0.18);
+  --color-card: #363b3a;
+  --color-card-foreground: #f7f5f3;
+  --color-surface: #33383700;
+  --color-surface-raised: #363b3a;
+  --color-secondary: #363b3a;
+  --color-secondary-foreground: #f7f5f3;
+  /* Primary/brand buttons invert on dark: bone fill, charcoal label, so they
+     stay the high-contrast action rather than vanishing into the ground. */
+  --color-primary: #f7f5f3;
+  --color-primary-foreground: #2c302f;
+  --color-brand: #f7f5f3;
+  --color-brand-foreground: #2c302f;
+  /* Sage, brightened for contrast on charcoal — the accent moment. */
+  --color-accent-guide: #97a389;
+  --color-accent-guide-soft: rgba(151, 163, 137, 0.16);
+  --color-mist: #9aa09b;
+  --color-ring: #97a389;
+
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+/* On charcoal, the eyebrow uses mist rather than the (now-light) muted token
+   so it stays a quiet meta line, not full-strength body text. */
+.section-dark .eyebrow {
+  color: var(--color-mist);
+}
+
 * {
   border-color: var(--color-border);
 }
@@ -188,11 +243,13 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--color-accent-guide);
 }
 
-/* Selection chip - stronger active state */
+/* Selection chip - stronger active state. Padding is tighter on mobile so
+   multi-option steps (e.g. the dose step's 5 chips) fit the viewport without
+   scrolling; it opens back up at the sm breakpoint. */
 .chip {
   text-align: left;
   border: 1px solid var(--color-border);
-  padding: 0.875rem 1rem;
+  padding: 0.625rem 0.875rem;
   transition: all 150ms;
 }
 .chip:hover {
@@ -203,7 +260,15 @@ h1, h2, h3, h4, h5, h6 {
   border-width: 2px;
   border-color: var(--color-accent-guide);
   background: var(--color-accent-guide-soft);
-  padding: 0.8125rem 0.9375rem; /* compensate for 2px border */
+  padding: calc(0.625rem - 1px) calc(0.875rem - 1px); /* compensate for 2px border */
+}
+@media (min-width: 640px) {
+  .chip {
+    padding: 0.875rem 1rem;
+  }
+  .chip--active {
+    padding: 0.8125rem 0.9375rem;
+  }
 }
 
 /* Warning strip - left-bordered warning */

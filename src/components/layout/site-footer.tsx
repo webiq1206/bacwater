@@ -29,16 +29,16 @@ const FOOTER = {
 
 export function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-border">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-14">
+    <footer className="section-dark mt-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="max-w-sm">
             <Link href="/" className="flex items-baseline gap-2">
               <span className="font-serif text-2xl font-medium tracking-tight leading-none">
                 BACwater
               </span>
-              <span className="text-[10px] text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
-.ai
+              <span className="font-accent text-sm leading-none pb-0.5" style={{ color: "var(--color-accent-guide)" }}>
+                .ai
               </span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
@@ -49,7 +49,7 @@ export function SiteFooter() {
           </div>
           {Object.entries(FOOTER).map(([title, links]) => (
             <div key={title}>
-              <div className="text-sm font-semibold">{title}</div>
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>{title}</div>
               <ul className="mt-3 space-y-2 text-sm">
                 {links.map((l) => (
                   <li key={l.href}>

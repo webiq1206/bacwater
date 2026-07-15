@@ -114,10 +114,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="rule mx-auto max-w-5xl" />
-
-      {/* Definition + quick reference (AEO answer block) */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
+      {/* Definition + quick reference (AEO answer block) — warm tonal band */}
+      <section className="section-muted">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-3xl">
           <div className="eyebrow">The basics</div>
           <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
@@ -171,11 +170,10 @@ export default async function HomePage() {
           <Link href="/learn/what-is-bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">What is bac water?</Link>
           <Link href="/faq" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
         </div>
+        </div>
       </section>
 
-      <div className="rule mx-auto max-w-5xl" />
-
-      {/* Three paths */}
+      {/* Three paths (bone) */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="grid gap-0 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
           {PATHS.map((p) => {
@@ -198,10 +196,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="rule mx-auto max-w-5xl" />
-
-      {/* How it works */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
+      {/* How it works — charcoal band, the page's dark punctuation */}
+      <section className="section-dark">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16">
           <div>
             <div className="eyebrow">How it works</div>
@@ -249,7 +246,7 @@ export default async function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="border border-border rounded-2xl p-6 sm:p-8" style={{ background: "var(--color-accent-guide-soft)" }}>
+          <div className="border border-border rounded-2xl p-6 sm:p-8" style={{ background: "var(--color-surface-raised)" }}>
             <div className="eyebrow">Example</div>
             <div className="mt-2 text-xl font-serif font-medium">BPC-157</div>
             <div className="rule my-5" />
@@ -285,12 +282,12 @@ export default async function HomePage() {
             </p>
           </div>
         </div>
+        </div>
       </section>
 
-      <div className="rule mx-auto max-w-5xl" />
-
-      {/* Popular peptides + comparisons (hub-and-spoke linking) */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
+      {/* Popular peptides + comparisons (hub-and-spoke) — warm tonal band */}
+      <section className="section-muted">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="eyebrow">Explore</div>
         <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
           Compounds and guides
@@ -335,11 +332,10 @@ export default async function HomePage() {
           <Link href="/learn" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Learning center</Link>
           <Link href="/tools/reverse-bac" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Reverse bac water calculator</Link>
         </div>
+        </div>
       </section>
 
-      <div className="rule mx-auto max-w-5xl" />
-
-      {/* How the math works (trust, honest) */}
+      {/* How the math works (trust, honest) — bone, keeps the closing calm */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-2xl">
           <div className="eyebrow">How the math works</div>
