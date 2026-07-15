@@ -111,6 +111,11 @@ warns(v02, /between two marks/, "V-02 flags 7.5 units as unmeasurable");
 // A clean 10 units must NOT trip V-02.
 noWarn(a, /between two marks/, "V-02 quiet when the amount lands on a mark");
 
+// 15 units on a 1 mL barrel (marked every 1 unit) is ON a line — must NOT warn.
+const v02clean = calculate({ vialStrengthMg: 5, doseMcg: 375, bacWaterMl: 2, syringeType: "insulin-1ml" });
+near(v02clean.syringeUnits, 15, 0.001, "V-02 fixture computes 15 units");
+noWarn(v02clean, /between two marks/, "V-02 quiet at 15 units on a 1 mL barrel (every-1-unit marks)");
+
 // V-05: 250 mg dose (mg picked where mcg meant) => ~1,000x.
 const v05 = calculate({ peptideSlug: "bpc-157", vialStrengthMg: 500, doseMcg: 250000, bacWaterMl: 2, syringeType: "insulin-1ml" });
 warns(v05, /1,000 times/, "V-05 flags the mg/mcg unit swap");
@@ -130,8 +135,8 @@ function hasAssumption(res: { assumptions: string[] }, needle: RegExp, label: st
   }
 }
 
-// V-04: 1 unit on a 1 mL barrel (marks every 2 units) is below the smallest mark.
-const v04 = calculate({ vialStrengthMg: 5, doseMcg: 25, bacWaterMl: 2, syringeType: "insulin-1ml" });
+// V-04: 0.5 units on a 1 mL barrel (marks every 1 unit) is below the smallest mark.
+const v04 = calculate({ vialStrengthMg: 5, doseMcg: 12.5, bacWaterMl: 2, syringeType: "insulin-1ml" });
 warns(v04, /too small to measure/, "V-04 flags an amount below the smallest mark");
 
 // V-07: 500 mg in 2 mL = 250 mg/mL, implausibly strong.

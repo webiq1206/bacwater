@@ -215,99 +215,96 @@ function Footer() {
   );
 }
 
-/** A horizontal syringe with graduation marks and a "draw to here" fill line. */
+/**
+ * The syringe illustration for the PDF. Deliberately drawn to match the
+ * results-page SyringeVisual exactly — same orientation (needle left, plunger
+ * right), same barrel/flange/plunger shapes, the same graduation marks, and the
+ * same "measure to here" marker above the fill line — so what a user sees online
+ * and what they download are identical (PRD §9.6).
+ */
 function SyringeGraphic({
   fillPercent,
-  readout,
+  scale,
   maxValue,
-  maxLabel,
 }: {
   fillPercent: number;
-  readout: string;
-  /** Numeric capacity of the syringe in its own scale (units or mL). */
+  scale: "u100" | "ml";
+  /** Numeric capacity in the syringe's own scale (100 units, or 1 mL). */
   maxValue: number;
-  /** Human label for the full scale, e.g. "100 units" or "1 mL". */
-  maxLabel: string;
 }) {
-  const W = 468;
-  const H = 96;
-  const barrelX = 30;
-  const barrelW = 372;
-  const barrelY = 30;
-  const barrelH = 30;
-  const frac = Math.max(0, Math.min(1, fillPercent / 100));
-  const fillW = barrelW * frac;
-  const fillEnd = barrelX + fillW;
-  const ticks = 10; // 0..max in 10 steps
-  const tickLabel = (i: number) => {
-    const v = (maxValue * i) / ticks;
-    return Number.isInteger(v) ? `${v}` : v.toFixed(1);
-  };
+  const clamped = Math.max(0, Math.min(100, fillPercent));
+  const marks = scale === "u100" ? [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] : [0, 25, 50, 75, 100];
+  const labelForMark = (m: number) =>
+    scale === "u100" ? `${(maxValue * m) / 100}` : `${((maxValue * m) / 100).toFixed(2)}`;
+
+  // Geometry mirrors SyringeVisual's viewBox (0 0 520 140).
+  const needleTipX = 12;
+  const needleBaseX = 80;
+  const cY = 70;
+  const nH = 3;
+  const barrelX = 80;
+  const barrelEndX = 430;
+  const barrelY = 38;
+  const barrelH = 64;
+  const barrelR = 6;
+  const innerX = barrelX + 4;
+  const innerW = barrelEndX - 4 - innerX;
+  const fillW = (clamped / 100) * innerW;
+  const fillEndX = innerX + fillW;
+  const rodEndX = 510;
+
+  const ink = C.ink;
+  const accent = C.teal;
+  const tickTop = barrelY + barrelH + 3;
 
   return (
-    <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-      {/* plunger */}
-      <Rect x={8} y={barrelY + 8} width={22} height={barrelH - 16} fill={C.muted} />
-      <Line x1={2} y1={barrelY + barrelH / 2} x2={8} y2={barrelY + barrelH / 2} stroke={C.muted} strokeWidth={4} />
-      {/* barrel outline */}
-      <Rect
-        x={barrelX}
-        y={barrelY}
-        width={barrelW}
-        height={barrelH}
-        rx={4}
-        fill="#ffffff"
-        stroke={C.ink}
-        strokeWidth={1.2}
+    <Svg width={468} height={126} viewBox="0 0 520 140">
+      {/* needle hub + tapered shaft (left) */}
+      <Rect x={needleBaseX - 12} y={cY - 10} width={16} height={20} rx={2} fill={ink} opacity={0.2} />
+      <Path
+        d={`M ${needleTipX} ${cY} L ${needleBaseX - 12} ${cY - nH} L ${needleBaseX - 12} ${cY + nH} Z`}
+        fill={ink}
+        opacity={0.35}
       />
+      {/* barrel */}
+      <Rect x={barrelX} y={barrelY} width={barrelEndX - barrelX} height={barrelH} rx={barrelR} fill="#f5f3f0" stroke={ink} strokeWidth={1.5} strokeOpacity={0.25} />
+      {/* flange at barrel end */}
+      <Rect x={barrelEndX - 3} y={barrelY - 8} width={6} height={barrelH + 16} rx={2} fill={ink} opacity={0.12} />
       {/* liquid fill */}
-      {fillW > 0.5 ? (
-        <Rect x={barrelX} y={barrelY} width={fillW} height={barrelH} rx={4} fill={C.tealSoft} />
+      {clamped > 0 ? (
+        <Rect x={innerX} y={barrelY + 4} width={Math.max(0, fillW)} height={barrelH - 8} rx={3} fill={C.tealSoft} />
       ) : null}
-      {/* needle */}
-      <Rect x={barrelX + barrelW} y={barrelY + barrelH / 2 - 2} width={18} height={4} fill={C.muted} />
-      <Line
-        x1={barrelX + barrelW + 18}
-        y1={barrelY + barrelH / 2}
-        x2={barrelX + barrelW + 40}
-        y2={barrelY + barrelH / 2}
-        stroke={C.muted}
-        strokeWidth={1.2}
-      />
-      {/* graduation ticks + labels */}
-      {Array.from({ length: ticks + 1 }).map((_, i) => {
-        const x = barrelX + (barrelW * i) / ticks;
-        const major = i % 5 === 0;
+      {/* plunger head at fill boundary */}
+      <Rect x={fillEndX - 2} y={barrelY + 2} width={10} height={barrelH - 4} rx={2} fill={ink} opacity={0.18} />
+      {/* plunger rod + thumb rest (right) */}
+      <Rect x={barrelEndX} y={cY - 3} width={rodEndX - barrelEndX} height={6} rx={2} fill={ink} opacity={0.12} />
+      <Rect x={rodEndX - 4} y={cY - 14} width={8} height={28} rx={3} fill={ink} opacity={0.12} />
+      {/* major graduation marks + labels */}
+      {marks.map((m) => {
+        const x = innerX + (m / 100) * innerW;
         return (
-          <React.Fragment key={i}>
-            <Line
-              x1={x}
-              y1={barrelY}
-              x2={x}
-              y2={barrelY + (major ? 10 : 6)}
-              stroke={C.muted}
-              strokeWidth={major ? 1 : 0.5}
-            />
-            {major ? (
-              <Text x={x - 4} y={barrelY - 4} style={{ fontSize: 6.5, fill: C.muted }}>
-                {tickLabel(i)}
-              </Text>
-            ) : null}
+          <React.Fragment key={m}>
+            <Line x1={x} y1={tickTop} x2={x} y2={tickTop + 10} stroke={ink} strokeWidth={1.2} strokeOpacity={0.5} />
+            <Text x={x} y={tickTop + 22} textAnchor="middle" style={{ fontSize: 8, fill: C.muted }}>
+              {labelForMark(m)}
+            </Text>
           </React.Fragment>
         );
       })}
-      {/* draw-to-here marker */}
-      <Line x1={fillEnd} y1={barrelY - 2} x2={fillEnd} y2={barrelY + barrelH + 10} stroke={C.teal} strokeWidth={1.4} />
-      <Path
-        d={`M ${fillEnd - 4} ${barrelY + barrelH + 10} L ${fillEnd + 4} ${barrelY + barrelH + 10} L ${fillEnd} ${barrelY + barrelH + 5} Z`}
-        fill={C.teal}
-      />
-      <Text x={Math.min(fillEnd + 4, W - 120)} y={barrelY + barrelH + 20} style={{ fontSize: 7.5, fill: C.teal }}>
-        {`Draw to here — ${readout}`}
-      </Text>
-      <Text x={barrelX} y={barrelY - 16} style={{ fontSize: 7, fill: C.faint }}>
-        {`Scale: 0 to ${maxLabel}`}
-      </Text>
+      {/* minor ticks (u100, every 5) */}
+      {scale === "u100"
+        ? [5, 15, 25, 35, 45, 55, 65, 75, 85, 95].map((m) => {
+            const x = innerX + (m / 100) * innerW;
+            return <Line key={`mi${m}`} x1={x} y1={tickTop} x2={x} y2={tickTop + 4} stroke={ink} strokeWidth={0.6} strokeOpacity={0.25} />;
+          })
+        : null}
+      {/* measure-to-here marker above the fill line */}
+      {clamped > 0 && clamped < 100 ? (
+        <React.Fragment>
+          <Path d={`M ${fillEndX} ${barrelY - 2} L ${fillEndX - 5} ${barrelY - 10} L ${fillEndX + 5} ${barrelY - 10} Z`} fill={accent} />
+          <Line x1={fillEndX} y1={barrelY - 10} x2={fillEndX} y2={barrelY - 18} stroke={accent} strokeWidth={1.5} />
+        </React.Fragment>
+      ) : null}
     </Svg>
   );
 }
@@ -367,9 +364,9 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
       value: `${formatConcentration(conc)} mg/mL`,
       sub: `${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`,
     },
-    { label: "DOSE", value: formatDose(result.input.doseMcg) },
-    { label: "DOSE VOLUME", value: `${result.doseVolumeMl.toFixed(3)} mL` },
-    { label: "DOSES PER VIAL", value: `${result.dosesPerVial}` },
+    { label: "AMOUNT", value: formatDose(result.input.doseMcg) },
+    { label: "VOLUME TO MEASURE", value: `${result.doseVolumeMl.toFixed(3)} mL` },
+    { label: "MEASUREMENTS PER VIAL", value: `${result.dosesPerVial}` },
   ];
 
   return (
@@ -403,7 +400,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
         {/* Hero */}
         <View style={s.heroWrap}>
           <View>
-            <Text style={s.heroLabel}>DRAW THIS MUCH PER DOSE</Text>
+            <Text style={s.heroLabel}>MEASURE THIS MUCH EACH TIME</Text>
             <Text style={s.heroNumber}>{formatSyringeReading(result.syringeReadout)}</Text>
             <Text style={s.heroSub}>
               {`= ${result.doseVolumeMl.toFixed(3)} mL  ·  ${formatDose(result.input.doseMcg)}`}
@@ -436,15 +433,34 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
           ))}
         </View>
 
-        {/* Syringe graphic */}
-        <Text style={s.sectionTitle}>Where to draw on the syringe</Text>
-        <View style={[s.card, { alignItems: "center", paddingVertical: 18 }]}>
-          <SyringeGraphic
-            fillPercent={result.syringeReadout.fillPercent}
-            readout={formatSyringeReading(result.syringeReadout)}
-            maxValue={isU100 ? maxUnits : syringe.maxVolumeMl}
-            maxLabel={isU100 ? `${maxUnits} units` : `${syringe.maxVolumeMl} mL`}
-          />
+        {/* Syringe graphic — mirrors the results page exactly */}
+        <View wrap={false}>
+          <Text style={s.sectionTitle}>Where to measure on the syringe</Text>
+          <View style={[s.card, { paddingVertical: 16 }]}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+              <View>
+                <Text style={{ fontSize: 8, letterSpacing: 1, color: C.teal, fontFamily: "Helvetica-Bold" }}>
+                  MEASURE TO HERE
+                </Text>
+                <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", marginTop: 1 }}>
+                  {result.syringeReadout.displayLabel}
+                </Text>
+              </View>
+              <Text style={{ fontSize: 8.5, color: C.muted }}>
+                Syringe: {isU100 ? `${maxUnits} units` : `${syringe.maxVolumeMl} mL`}
+              </Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <SyringeGraphic
+                fillPercent={result.syringeReadout.fillPercent}
+                scale={isU100 ? "u100" : "ml"}
+                maxValue={isU100 ? maxUnits : syringe.maxVolumeMl}
+              />
+            </View>
+            <Text style={{ fontSize: 7.5, letterSpacing: 1, color: C.muted, textAlign: "center", marginTop: 2 }}>
+              {isU100 ? "UNITS" : "ML"}
+            </Text>
+          </View>
         </View>
 
         {/* Blend companion */}
@@ -495,26 +511,28 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
           </View>
         ) : null}
 
-        <Text style={s.sectionTitle}>Mixing tips</Text>
-        <View style={s.card}>
-          <View style={s.bullet}>
-            <Text style={s.bulletDot}>›</Text>
-            <Text style={s.bulletText}>
-              Aim the BAC water at the glass wall, not directly onto the powder. A gentle
-              stream protects the peptide.
-            </Text>
-          </View>
-          <View style={s.bullet}>
-            <Text style={s.bulletDot}>›</Text>
-            <Text style={s.bulletText}>
-              Roll or swirl it. Do not shake it, if your product&apos;s instructions say so.
-            </Text>
-          </View>
-          <View style={s.bullet}>
-            <Text style={s.bulletDot}>›</Text>
-            <Text style={s.bulletText}>
-              Wait until the solution is completely clear before drawing your first dose.
-            </Text>
+        <View wrap={false}>
+          <Text style={s.sectionTitle}>Mixing tips</Text>
+          <View style={s.card}>
+            <View style={s.bullet}>
+              <Text style={s.bulletDot}>›</Text>
+              <Text style={s.bulletText}>
+                Aim the BAC water at the glass wall, not directly onto the powder. A gentle
+                stream protects the peptide.
+              </Text>
+            </View>
+            <View style={s.bullet}>
+              <Text style={s.bulletDot}>›</Text>
+              <Text style={s.bulletText}>
+                Roll or swirl it. Do not shake it, if your product&apos;s instructions say so.
+              </Text>
+            </View>
+            <View style={s.bullet}>
+              <Text style={s.bulletDot}>›</Text>
+              <Text style={s.bulletText}>
+                Wait until the solution is completely clear before measuring your first amount.
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -532,78 +550,84 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
 
       {/* ---------------- PAGE 3 — Reference & storage ---------------- */}
       <Page size="LETTER" style={s.page}>
-        <Text style={s.sectionTitleFirst}>Dosage reference table</Text>
-        <Text style={{ fontSize: 9.5, color: C.muted, marginBottom: 8 }}>
-          At {formatConcentration(conc)} mg/mL, here is how much peptide each draw delivers.
-          Your plan&apos;s dose is highlighted.
-        </Text>
-        <View>
-          <View style={s.tHead}>
-            <Text style={s.tHeadCell}>Draw on syringe</Text>
-            <Text style={s.tHeadCell}>Volume</Text>
-            <Text style={s.tHeadCell}>Peptide delivered</Text>
-          </View>
-          {rows.map((r, i) => (
-            <View
-              key={i}
-              style={[
-                s.tRow,
-                r.highlight ? s.tRowHi : i % 2 === 1 ? s.tRowAlt : {},
-              ]}
-            >
-              <Text style={[s.tCell, r.highlight ? s.tCellHi : {}]}>{r.draw}</Text>
-              <Text style={[s.tCell, r.highlight ? s.tCellHi : {}]}>{r.volume}</Text>
-              <Text style={[s.tCell, r.highlight ? s.tCellHi : {}]}>{r.amount}</Text>
+        <View wrap={false}>
+          <Text style={s.sectionTitleFirst}>Dosage reference table</Text>
+          <Text style={{ fontSize: 9.5, color: C.muted, marginBottom: 8 }}>
+            At {formatConcentration(conc)} mg/mL, here is how much peptide each amount delivers.
+            Your plan&apos;s amount is highlighted.
+          </Text>
+          <View>
+            <View style={s.tHead}>
+              <Text style={s.tHeadCell}>Measure on syringe</Text>
+              <Text style={s.tHeadCell}>Volume</Text>
+              <Text style={s.tHeadCell}>Peptide delivered</Text>
             </View>
-          ))}
+            {rows.map((r, i) => (
+              <View
+                key={i}
+                style={[
+                  s.tRow,
+                  r.highlight ? s.tRowHi : i % 2 === 1 ? s.tRowAlt : {},
+                ]}
+              >
+                <Text style={[s.tCell, r.highlight ? s.tCellHi : {}]}>{r.draw}</Text>
+                <Text style={[s.tCell, r.highlight ? s.tCellHi : {}]}>{r.volume}</Text>
+                <Text style={[s.tCell, r.highlight ? s.tCellHi : {}]}>{r.amount}</Text>
+              </View>
+            ))}
+          </View>
         </View>
 
-        <Text style={s.sectionTitle}>Storage & stability</Text>
-        <View style={s.card}>
-          <View style={s.kv}>
-            <Text style={s.kvLabel}>Shelf life (refrigerated)</Text>
-            <Text style={s.kvValue}>{result.expiration.days} days</Text>
-          </View>
-          {result.expiration.date ? (
+        <View wrap={false}>
+          <Text style={s.sectionTitle}>Storage & stability</Text>
+          <View style={s.card}>
             <View style={s.kv}>
-              <Text style={s.kvLabel}>Discard on</Text>
-              <Text style={s.kvValue}>{formatDate(result.expiration.date)}</Text>
+              <Text style={s.kvLabel}>Shelf life (refrigerated)</Text>
+              <Text style={s.kvValue}>{result.expiration.days} days</Text>
             </View>
-          ) : null}
-          <View style={[s.kv, { marginTop: 4 }]}>
-            <Text style={{ color: C.muted, flex: 1 }}>{result.expiration.note}</Text>
-          </View>
-          <View style={{ marginTop: 6 }}>
-            <View style={s.bullet}>
-              <Text style={s.bulletDot}>›</Text>
-              <Text style={s.bulletText}>Keep it cold — refrigerate as soon as it is mixed.</Text>
+            {result.expiration.date ? (
+              <View style={s.kv}>
+                <Text style={s.kvLabel}>Discard on</Text>
+                <Text style={s.kvValue}>{formatDate(result.expiration.date)}</Text>
+              </View>
+            ) : null}
+            <View style={[s.kv, { marginTop: 4 }]}>
+              <Text style={{ color: C.muted, flex: 1 }}>{result.expiration.note}</Text>
             </View>
-            <View style={s.bullet}>
-              <Text style={s.bulletDot}>›</Text>
-              <Text style={s.bulletText}>Keep it dark — store in the box or wrap the vial in foil.</Text>
-            </View>
-            <View style={s.bullet}>
-              <Text style={s.bulletDot}>›</Text>
-              <Text style={s.bulletText}>Never freeze — freezing and thawing destroys the peptide.</Text>
+            <View style={{ marginTop: 6 }}>
+              <View style={s.bullet}>
+                <Text style={s.bulletDot}>›</Text>
+                <Text style={s.bulletText}>Keep it cold — refrigerate as soon as it is mixed.</Text>
+              </View>
+              <View style={s.bullet}>
+                <Text style={s.bulletDot}>›</Text>
+                <Text style={s.bulletText}>Keep it dark — store in the box or wrap the vial in foil.</Text>
+              </View>
+              <View style={s.bullet}>
+                <Text style={s.bulletDot}>›</Text>
+                <Text style={s.bulletText}>Freezing can damage many peptides — check your product&apos;s instructions.</Text>
+              </View>
             </View>
           </View>
         </View>
 
-        <Text style={s.sectionTitle}>Supplies for this plan</Text>
-        <View style={s.card}>
-          {result.supplies.map((sup) => (
-            <View key={sup.sku} style={s.step}>
-              <Text style={[s.stepNum, { backgroundColor: C.ink }]}>{sup.quantity}</Text>
-              <Text style={s.stepText}>
-                <Text style={{ fontFamily: "Helvetica-Bold" }}>{sup.name}</Text>
-                {`  —  ${sup.reason}`}
-              </Text>
-            </View>
-          ))}
+        <View wrap={false}>
+          <Text style={s.sectionTitle}>Supplies for this plan</Text>
+          <View style={s.card}>
+            {result.supplies.map((sup) => (
+              <View key={sup.sku} style={s.step}>
+                <Text style={[s.stepNum, { backgroundColor: C.ink }]}>{sup.quantity}</Text>
+                <Text style={s.stepText}>
+                  <Text style={{ fontFamily: "Helvetica-Bold" }}>{sup.name}</Text>
+                  {`  —  ${sup.reason}`}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
 
         {result.assumptions.length > 0 ? (
-          <>
+          <View wrap={false}>
             <Text style={s.sectionTitle}>How we calculated this</Text>
             <View style={s.panel}>
               {result.assumptions.map((a, i) => (
@@ -613,24 +637,24 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
                 </View>
               ))}
             </View>
-          </>
+          </View>
         ) : null}
 
         {/* Full legal disclaimer */}
-        <View style={s.disclaimerBox}>
+        <View style={s.disclaimerBox} wrap={false}>
           <Text style={{ fontSize: 9, fontFamily: "Helvetica-Bold", marginBottom: 4 }}>
             Important — research use only
           </Text>
           <Text style={s.disclaimerText}>
-            BACwater.ai provides reconstitution calculators and research supplies. All
-            products, information, and calculations are provided strictly for laboratory
-            research and educational purposes. Nothing on this platform is intended for human
-            or veterinary use, for diagnosis or treatment of any condition, or as a substitute
-            for professional medical advice. The calculations in this guide are general
-            reconstitution math based on the values you entered — always verify every number
-            against your vial&apos;s own label and documentation before use. Handle all
-            materials according to accepted laboratory safety practices and dispose of sharps
-            in an approved sharps container.
+            BACwater.ai calculates concentration and measurement values from the numbers you
+            enter. It sells nothing and recommends no vendor. All information and calculations
+            are provided strictly for laboratory research and educational purposes. Nothing here
+            is intended for human or veterinary use, for diagnosis or treatment of any condition,
+            or as a substitute for professional medical advice. The calculations in this guide
+            are general reconstitution math based on the values you entered — always verify every
+            number against your vial&apos;s own label and documentation before use. Handle all
+            materials according to accepted laboratory safety practices and dispose of sharps in
+            an approved sharps container.
           </Text>
         </View>
 

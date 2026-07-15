@@ -23,57 +23,65 @@ const TOOLS = [
   {
     href: "/tools/reconstitution",
     icon: Beaker,
-    title: "Reconstitution Calculator",
-    body: "The full calculator. Enter your peptide, vial size, dose, and syringe to get BAC water amount, syringe units, doses per vial, and step-by-step instructions.",
+    title: "Work out my whole plan",
+    body: "The full calculator. Enter your compound, vial amount, how much you want to measure, and your syringe to get the BAC water amount, syringe units, and step-by-step instructions.",
+    bestFor: "Best for: doing everything in one place.",
     tag: "Most popular",
   },
   {
     href: "/tools/bac-water",
     icon: Droplets,
-    title: "BAC Water Calculator",
-    body: "Just need to know how much BAC water to add? Enter your vial size and dose. We'll give you the right amount for easy syringe math.",
+    title: "How much water should I add?",
+    body: "Enter your vial amount and the amount you want to measure. We'll give you the water amount that makes the syringe math clean.",
+    bestFor: "Best for: you have the vial and need the water amount.",
     tag: null,
   },
   {
     href: "/tools/dose",
     icon: FlaskConical,
-    title: "Dose Calculator",
-    body: "Already mixed your vial? Enter your concentration and how much you're drawing to find out your exact dose in mg and mcg.",
+    title: "How much am I measuring?",
+    body: "Already mixed your vial? Enter the concentration and how much you're drawing to find the amount you're measuring in mg and mcg.",
+    bestFor: "Best for: checking a measurement from a mixed vial.",
     tag: null,
   },
   {
     href: "/tools/supplies",
     icon: ShoppingCart,
-    title: "Supply Calculator",
-    body: "Planning a cycle? Tell us what you're running, how often, and for how long. We'll build your full shopping list with quantities and reasons.",
+    title: "How many supplies will I need?",
+    body: "Tell us what you're running, how often, and for how long. We'll count the syringes, pads, and vials — counts only, nothing for sale.",
+    bestFor: "Best for: planning how much to source.",
     tag: null,
   },
   {
     href: "/tools/syringe-units",
     icon: Ruler,
-    title: "Syringe Unit Converter",
-    body: "Convert between milliliters (mL) and insulin syringe units. Simple two-way converter with a quick-reference table.",
+    title: "How many syringe units is this?",
+    body: "Convert between milliliters (mL) and U-100 insulin syringe units, either way, with a quick-reference table.",
+    bestFor: "Best for: a fast mL ↔ units conversion.",
     tag: null,
   },
   {
     href: "/tools/mg-to-mcg",
     icon: Scale,
-    title: "mg to mcg Converter",
-    body: "Convert between milligrams and micrograms. Vial labels use mg, doses use mcg. This makes switching between them easy.",
+    title: "Convert mg and mcg",
+    body: "Switch between milligrams and micrograms. Vial amounts are often in mg and measurements in mcg — this makes switching easy.",
+    bestFor: "Best for: a quick unit conversion.",
     tag: null,
   },
   {
     href: "/tools/reverse-bac",
     icon: Repeat,
-    title: "Reverse BAC Water Calculator",
-    body: "Want your dose to read at exact units? Pick the dose and the units you want to draw, and get the precise bac water to add.",
+    title: "How much water gets me a specific mark?",
+    body: "Want your amount to land on exact units? Pick the amount and the units you want to draw, and get the precise BAC water to add.",
+    bestFor: "Best for: landing on a clean, readable syringe mark.",
     tag: "New",
   },
   {
     href: "/tools/vial-labels",
     icon: Tag,
-    title: "Free Printable Vial Labels",
-    body: "Generate printable peptide vial labels with a QR code, showing strength, concentration, dose, mix date, and discard date.",
+    title: "Printable vial labels",
+    body: "Generate printable vial labels with a QR code, showing the vial amount, concentration, the amount to measure, mix date, and discard date.",
+    bestFor: "Best for: labeling a mixed vial.",
     tag: null,
   },
 ];
@@ -154,6 +162,7 @@ export default function ToolsPage() {
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">
                 {t.body}
               </p>
+              <p className="mt-2 text-xs font-medium text-foreground/80">{t.bestFor}</p>
               <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all" style={{ color: "var(--color-accent-guide)" }}>
                 Open <ArrowRight className="h-4 w-4" />
               </div>

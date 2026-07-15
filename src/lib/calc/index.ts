@@ -345,28 +345,30 @@ export function calculate(input: CalcInput): CalcResult {
     );
 
   // V-02 (PRD §9.4): the amount must land on a mark you can actually read.
-  // U-100 barrels are marked every 1 unit (0.3 / 0.5 mL) or every 2 units
-  // (1 mL). A value between marks — like the live 7.5-unit defect — cannot be
-  // measured, so we flag it instead of silently returning an unusable number.
-  const smallestMarkUnits = syringe.id === "insulin-1ml" ? 2 : 1;
-  if (syringe.scale === "u100" && syringeUnits > 0) {
-    const marks = syringeUnits / smallestMarkUnits;
+  // The smallest mark comes from the syringe's own graduation (incrementMl):
+  // 1 mL and 0.5 mL U-100 barrels are marked every 1 unit; 0.3 mL barrels every
+  // 0.5 unit. A value between marks — like the live 7.5-unit defect — cannot be
+  // measured, so we flag it instead of returning an unusable number.
+  const markUnits = round(syringe.incrementMl * 100, 3);
+  const markLabel = markUnits === 1 ? "1 unit" : `${markUnits} units`;
+  if (syringe.scale === "u100" && syringeUnits > 0 && markUnits > 0) {
+    const marks = syringeUnits / markUnits;
     const onMark = Math.abs(marks - Math.round(marks)) < 0.02;
     if (!onMark) {
       warnings.push(
-        `Your syringe has a mark every ${smallestMarkUnits} unit${smallestMarkUnits === 1 ? "" : "s"}. Your amount is ${round(syringeUnits, 1)} units. That is between two marks, so you cannot measure it exactly. Change your water amount so the amount lands on a line.`
+        `Your syringe has a mark every ${markLabel}. Your amount is ${round(syringeUnits, 1)} units. That is between two marks, so you cannot measure it exactly. Change your water amount so the amount lands on a line.`
       );
     }
   }
 
   // V-04 (PRD §9.4): an amount smaller than the smallest mark cannot be
   // measured at all. Below that, flag it rather than return an unusable number.
-  if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < smallestMarkUnits)
+  if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < markUnits)
     warnings.push(
-      `This is ${round(syringeUnits, 1)} units. The smallest mark on your syringe is ${smallestMarkUnits} unit${smallestMarkUnits === 1 ? "" : "s"}, so it is too small to measure. Use less BAC water, or switch to a 0.3 mL syringe.`
+      `This is ${round(syringeUnits, 1)} units. The smallest mark on your syringe is ${markLabel}, so it is too small to measure. Use less BAC water, or switch to a 0.3 mL syringe.`
     );
   // Still measurable, but small enough to be hard to read accurately.
-  else if (syringe.scale === "u100" && syringeUnits >= smallestMarkUnits && syringeUnits < 4)
+  else if (syringe.scale === "u100" && syringeUnits >= markUnits && syringeUnits < 4)
     warnings.push(
       `This amount is only ${round(syringeUnits, 1)} units, which is hard to measure accurately. Using less BAC water lands it at a larger, easier-to-read mark.`
     );

@@ -61,6 +61,7 @@ const STEPS = [
   "peptide",
   "vial",
   "dose",
+  "water",
   "date",
   "review",
 ] as const;
@@ -358,7 +359,6 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
   const [saving, setSaving] = useState(false);
   const [editingSyringe, setEditingSyringe] = useState(false);
-  const [editingBac, setEditingBac] = useState(false);
 
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
   const secondaryPeptide =
@@ -1100,11 +1100,60 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
       {step === 3 && (
         <StepPanel
-          title="When did you mix it?"
-          hint="Pick the day you added BAC water, or the day you plan to. This sets your discard date. We won't guess this one for you."
+          title="How much water should we add?"
+          hint="This is the liquid that dissolves the powder. More water makes a bigger, easier-to-read amount on the syringe; less water makes a smaller one. We picked an amount that lands on a clean number — change it if you like."
           onNext={() => goToStep(4)}
           onBack={() => goToStep(2)}
           stepNum={4}
+        >
+          <div className="grid gap-2">
+            <ChipButton
+              active={useRecommendedBac}
+              onClick={() => setUseRecommendedBac(true)}
+              hint="Chosen so your amount lands on a clean, easy-to-read number."
+            >
+              {recommendedBac} mL (recommended)
+            </ChipButton>
+            <ChipButton
+              active={!useRecommendedBac}
+              onClick={() => setUseRecommendedBac(false)}
+              hint="Enter your own amount instead."
+            >
+              Custom amount
+            </ChipButton>
+            {!useRecommendedBac ? (
+              <div className="mt-2 flex items-center gap-2">
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={customBacMl}
+                  onChange={(e) => setCustomBacMl(parseFloat(e.target.value) || 0)}
+                  className="flex-1 h-14 text-base"
+                />
+                <span className="text-sm text-muted-foreground font-medium">mL</span>
+              </div>
+            ) : null}
+          </div>
+          {/* Live reasoning: show the consequence of this choice */}
+          <div className="mt-4 rounded-xl border border-border bg-surface p-4 text-sm leading-relaxed">
+            <span className="text-muted-foreground">With </span>
+            <strong>{useRecommendedBac ? recommendedBac : customBacMl || 0} mL</strong>
+            <span className="text-muted-foreground"> of BAC water, each amount you measure is </span>
+            <strong style={{ color: "var(--color-accent-guide)" }}>
+              {result.syringeReadout.displayLabel}
+            </strong>
+            <span className="text-muted-foreground">.</span>
+          </div>
+        </StepPanel>
+      )}
+
+      {step === 4 && (
+        <StepPanel
+          title="When did you mix it?"
+          hint="Pick the day you added BAC water, or the day you plan to. This sets your discard date. We won't guess this one for you."
+          onNext={() => goToStep(5)}
+          onBack={() => goToStep(3)}
+          stepNum={5}
           nextDisabled={!dateMixed}
         >
           <div className="flex flex-col sm:flex-row items-stretch gap-2">
@@ -1146,7 +1195,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
         </StepPanel>
       )}
 
-      {step === 4 && (
+      {step === 5 && (
         <div className="space-y-8">
           {/* Review header */}
           <div className="text-center">
@@ -1190,8 +1239,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               <h4 className="text-sm font-semibold">We handled these for you</h4>
             </div>
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-              Based on your inputs, we automatically set these values. Already
-              have syringes or BAC water on hand? Tap{" "}
+              Based on your inputs, we picked this for you. Already have a
+              different syringe on hand? Tap{" "}
               <span className="font-medium" style={{ color: "var(--color-accent-guide)" }}>
                 Change
               </span>{" "}
@@ -1216,42 +1265,6 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
                       {s.label}
                     </ChipButton>
                   ))}
-                </div>
-              </SmartDefault>
-              <SmartDefault
-                label="BAC water"
-                value={useRecommendedBac ? `${recommendedBac} mL (recommended)` : `${customBacMl} mL (custom)`}
-                reason="Chosen to give clean, easy-to-read syringe numbers."
-                editing={editingBac}
-                onToggle={() => setEditingBac(!editingBac)}
-              >
-                <div className="grid gap-2">
-                  <ChipButton
-                    active={useRecommendedBac}
-                    onClick={() => { setUseRecommendedBac(true); setEditingBac(false); }}
-                    hint="Gives you clean, round syringe numbers."
-                  >
-                    {recommendedBac} mL (recommended)
-                  </ChipButton>
-                  <ChipButton
-                    active={!useRecommendedBac}
-                    onClick={() => setUseRecommendedBac(false)}
-                    hint="Pick your own amount."
-                  >
-                    Custom amount
-                  </ChipButton>
-                  {!useRecommendedBac && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <Input
-                        type="number"
-                        step="0.1"
-                        value={customBacMl}
-                        onChange={(e) => setCustomBacMl(parseFloat(e.target.value) || 0)}
-                        className="flex-1"
-                      />
-                      <span className="text-sm text-muted-foreground font-medium">mL</span>
-                    </div>
-                  )}
                 </div>
               </SmartDefault>
             </div>

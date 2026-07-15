@@ -15,6 +15,8 @@ import { PeptideCalc } from "@/components/peptides/peptide-calc";
 import { VialIdentityWarning } from "@/components/peptides/vial-identity-warning";
 import { EvidenceBadge, WhatNobodyKnows } from "@/components/peptides/evidence";
 import { evidenceOf } from "@/lib/calc/peptides";
+import { StudyTable } from "@/components/peptides/study-table";
+import { studiesFor } from "@/lib/peptides/studies";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import {
@@ -114,6 +116,7 @@ export default async function PeptidePage({
   const content = PEPTIDE_CONTENT[p.slug];
   const isCustom = p.slug === "custom";
   const rows = isCustom ? [] : dosageRows(p);
+  const studies = isCustom ? null : studiesFor(p.slug);
   const steps = reconstitutionSteps(p);
   const faqs = buildFaqs(p, content?.faqs ?? []);
   const lead = directAnswer(p);
@@ -239,6 +242,8 @@ export default async function PeptidePage({
           </div>
         </section>
       )}
+
+      {studies && <StudyTable data={studies} />}
 
       {/* Dosage table */}
       {!isCustom && rows.length > 0 && (

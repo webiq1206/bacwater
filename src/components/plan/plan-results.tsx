@@ -47,7 +47,7 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-6 rounded-xl bg-accent-guide-soft p-5 sm:p-6">
           <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
-            Draw this much for each dose
+            Measure this much each time
           </div>
           <div className="mt-1 result-hero">
             {syringeReadout.kind === "u100"
@@ -72,7 +72,7 @@ export function PlanResults({ result }: Props) {
             value={`${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL`}
             sub={`${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`}
           />
-          <Stat label="Doses / vial" value={`${result.dosesPerVial}`} />
+          <Stat label="Measures / vial" value={`${result.dosesPerVial}`} />
         </div>
 
         <div className="mt-6">
@@ -114,10 +114,10 @@ export function PlanResults({ result }: Props) {
             swirl gently until it&apos;s clear.
           </p>
           <p>
-            Every draw of{" "}
-            <strong>{result.syringeReadout.displayLabel}</strong> gives you a{" "}
-            <strong>{doseLabel}</strong> dose. You&apos;ll get about{" "}
-            <strong>{result.dosesPerVial} doses</strong> from the vial.
+            Measuring{" "}
+            <strong>{result.syringeReadout.displayLabel}</strong> each time gives
+            you <strong>{doseLabel}</strong>. You&apos;ll get about{" "}
+            <strong>{result.dosesPerVial} measurements</strong> from the vial.
           </p>
           {result.secondary && (
             <p>
@@ -228,7 +228,7 @@ export function PlanResults({ result }: Props) {
                   ["Save your plan", "get a permanent link, PDF, and printable vial labels."],
                   ["Gather your supplies", "the list above tells you exactly what to order."],
                   ["Follow the instructions", "the step-by-step guide walks you through mixing."],
-                  ["Draw to the mark", "the syringe diagram shows exactly where to draw."],
+                  ["Measure to the mark", "the syringe diagram shows exactly where to measure."],
                 ].map(([title, rest], i) => (
                   <li key={i} className="flex gap-3">
                     <span className="step-number step-number--filled shrink-0 mt-0.5 h-5 w-5 text-[9px]">
@@ -290,13 +290,13 @@ function DosageReference({ result }: { result: CalcResult }) {
       <h3 className="text-lg font-serif tracking-tight">Dosage reference</h3>
       <p className="mt-1 text-sm text-muted-foreground">
         At {formatConcentration(result.finalConcentrationMgPerMl)} mg/mL, here&apos;s
-        what each draw delivers. Your dose is highlighted.
+        what each amount delivers. Your amount is highlighted.
       </p>
       <div className="mt-4 overflow-hidden rounded-xl border border-border">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-muted text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <th className="px-4 py-2.5 font-medium">Draw</th>
+              <th className="px-4 py-2.5 font-medium">Measure</th>
               <th className="px-4 py-2.5 font-medium">Volume</th>
               <th className="px-4 py-2.5 font-medium text-right">Delivers</th>
             </tr>
@@ -315,7 +315,7 @@ function DosageReference({ result }: { result: CalcResult }) {
                   {r.draw}
                   {r.active && (
                     <span className="ml-2 text-[10px] uppercase tracking-wide accent-check">
-                      your dose
+                      your amount
                     </span>
                   )}
                 </td>

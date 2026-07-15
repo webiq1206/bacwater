@@ -3,11 +3,12 @@ import { LAST_REVIEWED } from "@/lib/content-meta";
 
 /**
  * Company-level accountability line. We deliberately do not use individual
- * bylines (peptides are research-use-only, and implying medical credentials
- * would be worse than none). Instead we state a described, verifiable
- * team-level review process plus a last-reviewed date, which answer engines can
- * lift as a self-contained trust statement. Pairs with `reviewedBy` +
- * `lastReviewed` in the page schema.
+ * bylines or imply medical credentials — peptides here are research-use-only,
+ * and a fabricated "clinician-reviewed" claim would be worse than none. We only
+ * assert what is actually true and verifiable: the page is compiled by the site
+ * team and checked against the sources cited on it, and it is explicitly not a
+ * medical review. Pairs with an organization-level `reviewedBy` in the page
+ * schema (an Organization, never a named/credentialed person).
  */
 export function ReviewedBy({
   className = "",
@@ -20,15 +21,16 @@ export function ReviewedBy({
 }) {
   return (
     <div className={`text-xs text-muted-foreground ${className}`}>
-      Reviewed and maintained by the{" "}
+      Compiled and maintained by the{" "}
       <Link
         href="/editorial-policy"
         className="underline decoration-border underline-offset-2 hover:decoration-foreground"
       >
         BACwater.ai editorial team
       </Link>{" "}
-      against cited sources.{" "}
-      {updated ? `Last updated ${updated}.` : `Last reviewed ${LAST_REVIEWED}.`}
+      and checked against the sources cited on this page. This is general
+      research information, not a medical review.{" "}
+      {updated ? `Last updated ${updated}.` : `Last updated ${LAST_REVIEWED}.`}
     </div>
   );
 }

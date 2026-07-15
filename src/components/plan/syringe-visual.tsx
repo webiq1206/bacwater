@@ -69,7 +69,7 @@ export function SyringeVisual({
             className="text-xs uppercase tracking-wide font-semibold"
             style={{ color: "var(--color-accent-guide)" }}
           >
-            Draw to here
+            Measure to here
           </div>
           <div className="text-lg font-bold mt-0.5" style={{ color: "var(--color-foreground)" }}>
             {readoutLabel}
