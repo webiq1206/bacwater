@@ -9,6 +9,7 @@ import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynami
 import { Infographic } from "@/components/common/infographic";
 import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { storageSvg, storageAlt } from "@/lib/infographics/static";
+import { AdSlot } from "@/components/common/ad-slot";
 
 export const metadata = {
   title: "BAC Water FAQ: Storage, Prescription & Uses",
@@ -190,6 +191,8 @@ export default async function FaqPage() {
           caption="Storage at a glance: refrigerate a mixed vial, keep it dark, and follow the discard date in your product's instructions."
         />
       </div>
+
+      <AdSlot />
 
       {/* Contextual panel: appears only after the user has shown interest in a
           specific peptide. The full generic FAQ set stays below, unchanged. */}

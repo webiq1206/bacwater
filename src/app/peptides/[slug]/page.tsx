@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { References } from "@/components/common/references";
+import { AdSlot } from "@/components/common/ad-slot";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
 import { findVialSizePage } from "@/lib/peptides/vial-sizes";
@@ -375,6 +376,8 @@ export default async function PeptidePage({
           ))}
         </Accordion>
       </section>
+
+      <AdSlot />
 
       {/* Related reading (tag-driven) */}
       {relatedReading.length > 0 && (

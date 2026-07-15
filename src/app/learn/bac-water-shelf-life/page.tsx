@@ -9,6 +9,7 @@ import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
+import { AdSlot } from "@/components/common/ad-slot";
 import { SHELF_LIFE_REFERENCES } from "@/lib/content/references";
 import { Button } from "@/components/ui/button";
 import {
@@ -268,6 +269,8 @@ export default function ShelfLifePage() {
           ))}
         </Accordion>
       </section>
+
+      <AdSlot />
 
       {/* Keep reading */}
       <section className="mt-14">

@@ -4,6 +4,7 @@ import { AlertTriangle, ArrowRight } from "lucide-react";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { AdSlot } from "@/components/common/ad-slot";
 import { Button } from "@/components/ui/button";
 
 const TITLE = "What you cannot know about your vial";
@@ -146,6 +147,8 @@ export default function WhatYouCannotKnowPage() {
           the honest answer is that nobody knows.
         </p>
       </Q>
+
+      <AdSlot />
 
       <div className="mt-12 rounded-2xl border border-border bg-surface p-6 sm:p-8">
         <h2 className="text-xl font-serif tracking-tight">The one thing to take away</h2>
