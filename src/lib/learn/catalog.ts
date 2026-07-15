@@ -187,17 +187,6 @@ const STATIC_ENTRIES: LearnEntry[] = [
     source: "page",
   },
   {
-    id: "page-where-to-buy",
-    url: "/learn/where-to-buy-bacteriostatic-water",
-    title: "Where to buy bacteriostatic water (2026 buyer's guide)",
-    excerpt:
-      "What to check before you buy bac water: sealed, sterile, preservative stated, US shipping, and clear returns.",
-    contentType: "buying-guide",
-    peptideTags: [],
-    topicTags: ["where-to-buy"],
-    source: "page",
-  },
-  {
     id: "page-shelf-life",
     url: "/learn/bac-water-shelf-life",
     title: "BAC water and peptide shelf life",

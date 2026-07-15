@@ -15,7 +15,6 @@ const FOOTER = {
     { href: "/learn/how-peptide-reconstitution-works", label: "How reconstitution works" },
     { href: "/learn/bac-water-shelf-life", label: "Shelf life & storage" },
     { href: "/learn/glossary", label: "Glossary" },
-    { href: "/learn/where-to-buy-bacteriostatic-water", label: "Where to buy bac water" },
     { href: "/faq", label: "FAQ" },
   ],
   Company: [

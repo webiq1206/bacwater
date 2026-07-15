@@ -62,7 +62,7 @@ const CORE: {
   },
   {
     q: "Does BAC water need to be refrigerated, and how long does it last?",
-    a: "Put BAC water in the fridge after you first open it. An opened 30 mL bottle is usually good for about 28 days in the fridge. An unopened bottle is fine at room temperature until the printed expiration date. Mixed peptides also go in the fridge. They usually last about 28 to 30 days.",
+    a: "Put BAC water in the fridge after you first open it. An opened multi-dose bottle is commonly dated and discarded within about 28 days, which is the standard multi-dose vial guidance. An unopened bottle is fine at room temperature until the printed expiration date. Mixed peptides also go in the fridge. How long a mixed peptide lasts depends on the compound, so follow the instructions that came with your product rather than a general figure.",
     cta: {
       href: "/plan",
       text: "plan builder",
@@ -187,7 +187,7 @@ export default async function FaqPage() {
       <div className="mt-8">
         <Infographic
           svg={storageSvg()}
-          caption="Storage and shelf life at a glance: refrigerate, use within about 28 days, keep it dark, and never freeze."
+          caption="Storage at a glance: refrigerate a mixed vial, keep it dark, and follow the discard date in your product's instructions."
         />
       </div>
 

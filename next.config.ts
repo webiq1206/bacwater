@@ -37,6 +37,13 @@ const nextConfig: NextConfig = {
       { source: "/checkout", destination: "/plan", permanent: true },
       { source: "/checkout/:path*", destination: "/plan", permanent: true },
       { source: "/shipping-returns", destination: "/", permanent: true },
+      // The "where to buy" page was a store funnel and recommended vendors,
+      // which the site no longer does. Consolidate into the bac-water reference.
+      {
+        source: "/learn/where-to-buy-bacteriostatic-water",
+        destination: "/learn/what-is-bac-water",
+        permanent: true,
+      },
     ];
   },
   async headers() {

@@ -38,9 +38,9 @@ export const COMPARISONS: ComparisonTopic[] = [
       "If you will use a vial more than once, pick BAC water. It has a preservative (a germ-fighting ingredient) that stops germs from growing, so the vial stays good for weeks. Sterile water has no preservative. Once you open it, use it one time and throw it away. That one preservative is the whole difference.",
     table: [
       { dimension: "Preservative", bac: "0.9% benzyl alcohol", other: "None" },
-      { dimension: "Multi-dose safe", bac: "Yes, about 28 days refrigerated", other: "No, single use" },
+      { dimension: "Multi-dose", bac: "Yes, commonly dated ~28 days after opening", other: "No, single use" },
       { dimension: "Best for", bac: "Reconstituting peptides drawn over days or weeks", other: "One-time single-draw use" },
-      { dimension: "Shelf life after opening", bac: "About 28 days refrigerated", other: "Discard after one use" },
+      { dimension: "Opened-vial guidance", bac: "~28 days (standard multi-dose vial guidance)", other: "Discard after one use" },
     ],
     body: [
       {

@@ -30,18 +30,16 @@ export function GET() {
 
   const body = `# BACwater.ai
 
-> The complete BAC water (bacteriostatic water) calculator and peptide reconstitution guide. Build a personalized plan with exact BAC water amounts, syringe units, storage guidance, printable vial labels, and research supplies. All math is deterministic and verified, never AI-generated.
+> A BAC water (bacteriostatic water) concentration and measurement calculator for peptide reconstitution. Enter the numbers on your vial to get exact BAC water amounts, concentration, syringe units, and printable vial labels. All math is deterministic and verified, never AI-generated. Nothing is sold; no vendor is recommended.
 
 ## Key pages
 
 - [Homepage](${u("/")}): The complete BAC water calculator and reconstitution guide
 - [Plan Builder](${u("/plan")}): Enter your peptide, vial strength, dose, and syringe to get an exact reconstitution plan with PDF export and printable vial labels
 - [Guided planner](${u("/plan/new")}): Beginner planner, one question at a time
-- [Buy BAC water](${u("/buy")}): Buy sealed, research-grade bacteriostatic water and reconstitution supplies with fast US shipping
-- [Shop supplies](${u("/shop")}): BAC water, insulin syringes, and alcohol prep pads
-- [Peptide guides](${u("/peptides")}): Per-peptide BAC water calculators and reconstitution guides
+- [Compound reference](${u("/peptides")}): Per-compound BAC water calculators and reconstitution references
 - [Learning Center](${u("/learn")}): Filterable guides, comparisons, and FAQs on BAC water and reconstitution
-- [FAQ](${u("/faq")}): Direct answers on BAC water storage, dosing, ingredients, prescription status, and safety
+- [FAQ](${u("/faq")}): Direct answers on BAC water storage, ingredients, prescription status, and safety
 
 ## Calculators
 
@@ -56,8 +54,7 @@ export function GET() {
 
 ## Guides and reference
 
-- [Where to buy bacteriostatic water (2026)](${u("/learn/where-to-buy-bacteriostatic-water")}): Buyer's guide covering what to check before you buy, red flags, and where people buy bac water
-- [BAC water and peptide shelf life](${u("/learn/bac-water-shelf-life")}): How long reconstituted peptides and opened bac water last, refrigeration guidance, and when to discard a vial
+- [BAC water and peptide shelf life](${u("/learn/bac-water-shelf-life")}): How long an opened bac water vial can be used, and why compound-specific stability depends on your product's instructions
 - [Peptide reconstitution glossary](${u("/learn/glossary")}): Plain-English definitions of BAC water, benzyl alcohol, reconstitution, lyophilization, U-100, and subcutaneous
 
 ## Peptide reconstitution guides
@@ -75,8 +72,8 @@ ${comparisonLines.join("\n")}
 - On a U-100 insulin syringe, 100 units = 1 mL and 10 units = 0.1 mL
 - 1 mg = 1,000 mcg
 - Reconstituted peptides should be refrigerated (about 36 to 46 F, or 2 to 8 C) and protected from light
-- Most reconstituted peptides are stable for about 28 to 30 days refrigerated
-- An opened BAC water vial is generally good for about 28 days when refrigerated
+- How long a reconstituted peptide lasts depends on the compound and formulation; follow the instructions that came with your product rather than a general figure
+- An opened multi-dose BAC water vial is commonly dated and discarded within about 28 days (the standard multi-dose vial guidance), unless the manufacturer states otherwise
 - All calculations use deterministic, tested formulas, never AI-generated math
 - Products are sold for laboratory research and educational purposes only, and nothing on the site is medical advice
 
@@ -89,7 +86,7 @@ ${comparisonLines.join("\n")}
 
 ## About
 
-BACwater.ai provides deterministic peptide reconstitution calculations, printable vial labels with QR codes, PDF plan exports, and premium reconstitution supplies. Every calculation shows the exact formula used so the work can be verified. Built for beginners doing peptide reconstitution for the first time. For research and educational use only. Not medical advice.
+BACwater.ai provides deterministic peptide reconstitution calculations, printable vial labels with QR codes, and PDF plan exports. Every calculation shows the exact formula used so the work can be verified. For research and educational use only. Not medical advice.
 `;
 
   return new Response(body, {
