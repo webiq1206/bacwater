@@ -46,9 +46,11 @@ const nextConfig: NextConfig = {
       },
       // Per-vial-size pages (e.g. /peptides/bpc-157/5mg) were keyword-swapped
       // doorway variants that also asserted a "typical dose" (PRD §9.1.5).
-      // Consolidate them into the compound page and redirect (PRD §9.11).
+      // Consolidate them into the compound page and redirect (PRD §9.11). The
+      // param is constrained to size-like slugs (e.g. "5mg", "2.5mg") so it does
+      // not swallow sibling routes like /peptides/:slug/chart.svg.
       {
-        source: "/peptides/:slug/:size",
+        source: "/peptides/:slug/:size([\\d.]+mg)",
         destination: "/peptides/:slug",
         permanent: true,
       },

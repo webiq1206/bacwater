@@ -11,15 +11,18 @@
  * render identically to the inline version. They mirror the site palette.
  */
 
+// Mirrors the site's editorial palette (Bone / Charcoal / Sage / Mist / Line)
+// so generated images read as the same brand. Literal hex, not CSS variables,
+// so the standalone .svg routes render identically to the inline version.
 export const PALETTE = {
-  accent: "#2d6a4f",
-  accentSoft: "#f0f7f2",
-  foreground: "#1a1a1a",
-  muted: "#6b7280",
-  border: "#e5e7eb",
-  surface: "#f8f8f7",
+  accent: "#5d6561", // Sage
+  accentSoft: "#eef0ec",
+  foreground: "#2c302f", // Charcoal
+  muted: "#6f756f",
+  border: "#e4e1dd", // Line
+  surface: "#f1efec",
   white: "#ffffff",
-  amber: "#b45309",
+  amber: "#8a6a2f",
 };
 
 export function svgResponse(svg: string): Response {
