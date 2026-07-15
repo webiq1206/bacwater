@@ -176,14 +176,14 @@ function excerptFrom(body: string): string {
 /** Static (non-DB) pages that belong in the catalog for surfacing. */
 const STATIC_ENTRIES: LearnEntry[] = [
   {
-    id: "page-buy",
-    url: "/buy",
-    title: "Where to buy bacteriostatic water",
+    id: "page-what-you-cannot-know",
+    url: "/learn/what-you-cannot-know",
+    title: "What you cannot know about your vial",
     excerpt:
-      "Buy sealed, research-grade bac water and reconstitution supplies with fast US shipping.",
-    contentType: "buying-guide",
+      "The math is exact for the numbers you type, but it cannot tell you what is really in the powder. What no calculation can verify.",
+    contentType: "guide",
     peptideTags: [],
-    topicTags: ["where-to-buy", "injection-supplies"],
+    topicTags: ["safety", "storage"],
     source: "page",
   },
   {

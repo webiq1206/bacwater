@@ -12,6 +12,7 @@ import {
   shortName,
 } from "@/lib/peptides/page-data";
 import { PeptideCalc } from "@/components/peptides/peptide-calc";
+import { VialIdentityWarning } from "@/components/peptides/vial-identity-warning";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import {
@@ -211,6 +212,8 @@ export default async function PeptidePage({
         />
       </div>
 
+      <VialIdentityWarning compound={short} />
+
       {/* What it is */}
       {content && (
         <section className="mt-14">
@@ -234,9 +237,9 @@ export default async function PeptidePage({
             How much bac water for {short}?
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            These are starting points that make a typical {rows[0].doseLabel}{" "}
-            dose land at a clean number on a 1 mL insulin syringe. Use the
-            calculator above for your exact vial and dose.
+            These examples put a {rows[0].doseLabel} measurement at a clean
+            number on a 1 mL insulin syringe. Use the calculator above for your
+            exact vial and the amount you want to measure.
           </p>
           <div className="mt-5 overflow-x-auto border border-border">
             <table className="w-full text-sm">
