@@ -230,7 +230,7 @@ export default async function GuidePage({ params }: Props) {
 
       <References references={refs} />
 
-      <div className="mt-10 border border-border bg-surface p-6 flex flex-wrap items-center gap-3 justify-between">
+      <div className="section-dark mt-10 rounded-2xl p-6 sm:p-8 flex flex-wrap items-center gap-3 justify-between">
         <div>
           <div className="font-medium">Ready to build a plan?</div>
           <div className="text-sm text-muted-foreground">
