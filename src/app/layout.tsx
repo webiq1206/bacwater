@@ -67,6 +67,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   robots: { index: true, follow: true },
+  other: {
+    "google-adsense-account": "ca-pub-3192081478482854",
+  },
 };
 
 export default async function RootLayout({
@@ -113,6 +116,13 @@ t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";
 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 })(window, document, "clarity", "script", "${CLARITY_ID}");`}
             </Script>
+            <Script
+              id="adsbygoogle-init"
+              strategy="afterInteractive"
+              async
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3192081478482854"
+              crossOrigin="anonymous"
+            />
           </>
         )}
         <a

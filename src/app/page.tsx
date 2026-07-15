@@ -76,8 +76,8 @@ export default async function HomePage() {
         </h1>
         <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
           Enter the numbers on your vial. We work out the concentration, how much
-          to measure, and how many syringe units that is. We show every step. We
-          sell nothing and recommend no vendor.
+          to measure, and how many syringe units that is. We show every step, and
+          label every number by where it came from.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="xl" variant="brand">
@@ -97,7 +97,7 @@ export default async function HomePage() {
             <Check className="h-3.5 w-3.5 accent-check" /> Nothing is guessed
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5 accent-check" /> Nothing for sale
+            <Check className="h-3.5 w-3.5 accent-check" /> Every number labeled
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Check className="h-3.5 w-3.5 accent-check" /> Research use only
