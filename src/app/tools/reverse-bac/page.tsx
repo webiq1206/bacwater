@@ -190,8 +190,8 @@ export default function ReverseBacCalculatorPage() {
 
         {/* Result */}
         <div className="space-y-4">
-          <div className="border border-border bg-card p-6 sm:p-8">
-            <div className="eyebrow">Bac water to add</div>
+          <div className="section-dark rounded-2xl p-6 sm:p-8">
+            <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Bac water to add</div>
             <div className="mt-4 flex items-baseline gap-2">
               <span className="result-hero">{result ? bac : "--"}</span>
               <span className="text-2xl text-muted-foreground font-serif">mL</span>

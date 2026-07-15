@@ -241,8 +241,8 @@ export default function SupplyCalculatorPage() {
 
         {/* Results */}
         <div className="space-y-4">
-          <div className="border border-border bg-card p-6 sm:p-8">
-              <div className="eyebrow">Your shopping list</div>
+          <div className="section-dark rounded-2xl p-6 sm:p-8">
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your shopping list</div>
               <h2 className="mt-2 text-2xl sm:text-3xl font-serif font-medium tracking-tight">
                 {results.totalDoses} draws over {durationWeeks} weeks
               </h2>

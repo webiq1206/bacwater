@@ -153,8 +153,8 @@ export default function DoseCalculatorPage() {
 
         {/* Result + Teaching (right column) */}
         <div className="space-y-4">
-          <div className="border border-border bg-card p-6 sm:p-8">
-              <div className="eyebrow">Your dose</div>
+          <div className="section-dark rounded-2xl p-6 sm:p-8">
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your dose</div>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="result-hero tabular-nums">
                   {valid ? result.doseMg.toFixed(result.doseMg >= 1 ? 1 : 3) : "--"}

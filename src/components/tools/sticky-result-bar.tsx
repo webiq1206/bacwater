@@ -22,13 +22,13 @@ export function StickyResultBar({
     <div
       role="status"
       aria-live="polite"
-      className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur-sm px-4 py-2.5 flex items-center justify-between gap-3 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]"
+      className="section-dark lg:hidden fixed inset-x-0 bottom-14 z-40 border-t border-border backdrop-blur-sm px-4 py-2.5 flex items-center justify-between gap-3 shadow-[0_-2px_12px_rgba(0,0,0,0.18)]"
     >
       <div className="min-w-0">
-        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+        <div className="text-[10px] uppercase tracking-wide" style={{ color: "var(--color-accent-guide)" }}>
           {label}
         </div>
-        <div className="text-lg font-semibold tabular-nums leading-tight truncate">
+        <div className="text-lg font-semibold tabular-nums leading-tight truncate text-foreground">
           {value}
           {sub ? (
             <span className="text-sm font-normal text-muted-foreground"> · {sub}</span>
