@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeftRight } from "lucide-react";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import type { PeptideCategory } from "@/lib/calc/peptides";
 import { PEPTIDE_CONTENT } from "@/lib/peptides/content";
@@ -91,6 +91,23 @@ export default function PeptidesHubPage() {
           .
         </p>
       </div>
+
+      <Link
+        href="/peptides/compare"
+        className="group mt-6 flex items-center justify-between gap-4 border border-border bg-surface p-5 hover:bg-muted transition-colors"
+      >
+        <div>
+          <div className="flex items-center gap-2">
+            <ArrowLeftRight className="h-4 w-4 accent-check" />
+            <span className="font-medium">Compare two peptides side by side</span>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            See what each compound is, how it is stored, what research studied,
+            and what no one can tell you, in one table.
+          </p>
+        </div>
+        <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+      </Link>
 
       <div className="mt-10 space-y-12">
         {CATEGORY_ORDER.map(({ key, label }) => {

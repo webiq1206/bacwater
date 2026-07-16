@@ -423,6 +423,13 @@ export default async function PeptidePage({
               </Link>
             ))}
           </div>
+          <Link
+            href={`/peptides/compare?a=${p.slug}&b=${related[0].slug}`}
+            className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4 decoration-border hover:decoration-foreground"
+          >
+            Compare {short} with {shortName(related[0].name)} side by side
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </section>
       )}
 
