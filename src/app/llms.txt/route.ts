@@ -44,7 +44,7 @@ export function GET() {
 ## Calculators
 
 - [BAC water calculator](${u("/tools/bac-water")}): How much BAC water to add based on vial strength and target dose
-- [Reconstitution calculator](${u("/tools/reconstitution")}): BAC water amount, syringe units, doses per vial, and step-by-step instructions
+- [Peptide calculator](${u("/peptide-calculator")}): all-in-one reconstitution calculator, BAC water amount, concentration, syringe units, measurements per vial, and step-by-step instructions
 - [Dose calculator](${u("/tools/dose")}): Convert concentration and draw volume to an exact dose in mcg, mg, and syringe units
 - [Supply calculator](${u("/tools/supplies")}): Supplies needed for a full peptide cycle
 - [Syringe unit converter](${u("/tools/syringe-units")}): Convert between mL and U-100 insulin syringe units (100 units = 1 mL)

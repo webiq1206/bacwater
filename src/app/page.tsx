@@ -109,7 +109,7 @@ export default async function HomePage() {
             </Link>
           </Button>
           <Button asChild size="xl" variant="outline">
-            <Link href="/tools/reconstitution">Enter everything at once</Link>
+            <Link href="/peptide-calculator">Enter everything at once</Link>
           </Button>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">

@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
         destination: "/tools/syringe-units",
         permanent: true,
       },
+      // The all-in-one calculator was promoted to the keyword-exact flagship
+      // /peptide-calculator (targets the "peptide calculator" head term). Done
+      // pre-indexation, so no equity is lost. 301 the old path to consolidate.
+      {
+        source: "/tools/reconstitution",
+        destination: "/peptide-calculator",
+        permanent: true,
+      },
       // Store removed (PRD v3 §5/§14.1). 301 the commerce URLs to the closest
       // reference or calculator rather than 404ing them.
       { source: "/shop", destination: "/tools", permanent: true },

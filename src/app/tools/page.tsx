@@ -21,9 +21,9 @@ export const metadata = {
 
 const TOOLS = [
   {
-    href: "/tools/reconstitution",
+    href: "/peptide-calculator",
     icon: Beaker,
-    title: "Work out my whole plan",
+    title: "Peptide calculator (everything at once)",
     body: "The full calculator. Enter your compound, vial amount, how much you want to measure, and your syringe to get the BAC water amount, syringe units, and step-by-step instructions.",
     bestFor: "Best for: doing everything in one place.",
     tag: "Most popular",
