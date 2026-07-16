@@ -202,7 +202,7 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
   // Report the number you actually USE (one per measurement, plus one to draw
   // the water), not a purchase box. Showing "1 (100 pack)" next to "13
   // measurements per vial" reads as a mismatch. Pack size is context, in the
-  // reason. Counts only — the site sells nothing (§9.3.6).
+  // reason. Counts only, the site sells nothing (§9.3.6).
   const syringesUsed = injectionSyringes + 1;
   supplies.push({
     sku:
@@ -221,7 +221,7 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
     sku: "ALC-200",
     name: "Alcohol prep pads",
     quantity: padsUsed,
-    reason: "About two per measurement — the vial top and, if you inject, the site. Commonly sold in boxes of 200.",
+    reason: "About two per measurement: the vial top and, if you inject, the site. Commonly sold in boxes of 200.",
   });
 
   return supplies;
@@ -290,7 +290,7 @@ export function calculate(input: CalcInput): CalcResult {
   if (peptideRef) {
     const [lo, hi] = peptideRef.typicalDoseMcgRange;
     if (doseMcg >= hi * 100) {
-      // ~1,000x too big — almost always mg picked where mcg was meant.
+      // ~1,000x too big, almost always mg picked where mcg was meant.
       warnings.push(
         `That amount is about 1,000 times the amounts in the studies here. Vial amounts like this are usually measured in mcg. Did you pick "mg" by mistake? Check your label.`
       );
@@ -326,7 +326,7 @@ export function calculate(input: CalcInput): CalcResult {
   const finalConcentrationMgPerMl = vialStrengthMg / usedBacMl;
   const finalConcentrationMcgPerMl = finalConcentrationMgPerMl * 1000;
 
-  // V-07 (PRD §9.4): flag an implausibly strong solution — usually a sign the
+  // V-07 (PRD §9.4): flag an implausibly strong solution, usually a sign the
   // vial amount or the water amount was mistyped.
   if (finalConcentrationMgPerMl > 100)
     warnings.push(
@@ -347,7 +347,7 @@ export function calculate(input: CalcInput): CalcResult {
   // V-02 (PRD §9.4): the amount must land on a mark you can actually read.
   // The smallest mark comes from the syringe's own graduation (incrementMl):
   // 1 mL and 0.5 mL U-100 barrels are marked every 1 unit; 0.3 mL barrels every
-  // 0.5 unit. A value between marks — like the live 7.5-unit defect — cannot be
+  // 0.5 unit. A value between marks, like the live 7.5-unit defect, cannot be
   // measured, so we flag it instead of returning an unusable number.
   const markUnits = round(syringe.incrementMl * 100, 3);
   const markLabel = markUnits === 1 ? "1 unit" : `${markUnits} units`;

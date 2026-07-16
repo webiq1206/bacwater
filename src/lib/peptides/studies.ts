@@ -2,7 +2,7 @@
  * "What published research looked at" (PRD v3 §9.1.3 / §9.1.5).
  *
  * Every row here comes from a real, fetched primary source, with the source URL
- * attached. These are STUDY DETAILS, not instructions — an amount given to
+ * attached. These are STUDY DETAILS, not instructions, an amount given to
  * animals cannot be turned into a safe amount for a person. Only compounds with
  * verified sources appear; the rest render no table (honest by omission).
  *
@@ -81,8 +81,8 @@ export const STUDIES: Record<string, CompoundStudies> = {
         frequency: "Once weekly",
         duration: "Ongoing chronic use",
         route: "Subcutaneous",
-        gloss: "The approved product's labeling — the reference for amounts, not this site.",
-        sourceTitle: "DailyMed — OZEMPIC (semaglutide) Prescribing Information.",
+        gloss: "The approved product's labeling: the reference for amounts, not this site.",
+        sourceTitle: "DailyMed: OZEMPIC (semaglutide) Prescribing Information.",
         sourceUrl:
           "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=adec4fd2-6858-4c99-91d4-531f5f2a2d79",
       },
@@ -98,8 +98,8 @@ export const STUDIES: Record<string, CompoundStudies> = {
         frequency: "Once weekly",
         duration: "Ongoing chronic use",
         route: "Subcutaneous",
-        gloss: "The approved product's labeling — the reference for amounts, not this site.",
-        sourceTitle: "DailyMed — MOUNJARO (tirzepatide) Prescribing Information.",
+        gloss: "The approved product's labeling: the reference for amounts, not this site.",
+        sourceTitle: "DailyMed, MOUNJARO (tirzepatide) Prescribing Information.",
         sourceUrl:
           "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d2d7da5d-ad07-4228-955f-cf7e355c8cc0",
       },
@@ -180,8 +180,8 @@ export const STUDIES: Record<string, CompoundStudies> = {
         frequency: "As needed (max 1/24h, 8/month)",
         duration: "As-needed use",
         route: "Subcutaneous",
-        gloss: "The approved product's labeling — the reference for amounts, not this site.",
-        sourceTitle: "DailyMed — VYLEESI (bremelanotide) Prescribing Information.",
+        gloss: "The approved product's labeling: the reference for amounts, not this site.",
+        sourceTitle: "DailyMed, VYLEESI (bremelanotide) Prescribing Information.",
         sourceUrl:
           "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=8c9607a2-5b57-4a59-b159-cf196deebdd9",
       },

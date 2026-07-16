@@ -262,7 +262,7 @@ export default function VialLabelsPage() {
           >
             supply calculator
           </Link>{" "}
-          counts it for you — nothing is for sale.
+          counts it for you. Nothing is for sale.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild variant="brand">

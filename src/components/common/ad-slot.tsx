@@ -14,7 +14,7 @@ export const DEFAULT_AD_SLOT = "0000000000";
 
 /**
  * A single responsive AdSense display unit, used only inside long-form content
- * (never on the calculators, wizard, or results — a tool page should not carry
+ * (never on the calculators, wizard, or results, a tool page should not carry
  * ads). Renders the real unit in production; in development it shows a labeled
  * placeholder so ad positions are visible while building.
  */

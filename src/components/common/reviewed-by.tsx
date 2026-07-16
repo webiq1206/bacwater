@@ -3,7 +3,7 @@ import { LAST_REVIEWED } from "@/lib/content-meta";
 
 /**
  * Company-level accountability line. We deliberately do not use individual
- * bylines or imply medical credentials — peptides here are research-use-only,
+ * bylines or imply medical credentials, peptides here are research-use-only,
  * and a fabricated "clinician-reviewed" claim would be worse than none. We only
  * assert what is actually true and verifiable: the page is compiled by the site
  * team and checked against the sources cited on it, and it is explicitly not a

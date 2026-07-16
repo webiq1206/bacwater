@@ -2,7 +2,7 @@
  * Device-local record of saved/opened plans, so a visitor who never signs in can
  * still find the plans they made on this device. Plans are also associated with
  * an account when the user is signed in (server side); this is the fallback for
- * everyone else. Guarded for SSR — safe to import anywhere.
+ * everyone else. Guarded for SSR, safe to import anywhere.
  */
 export interface DeviceSavedPlan {
   publicId: string;
@@ -32,7 +32,7 @@ export function rememberDevicePlan(plan: DeviceSavedPlan) {
     list.unshift({ publicId: plan.publicId, name: plan.name || "Untitled plan", savedAt: plan.savedAt });
     window.localStorage.setItem(KEY, JSON.stringify(list.slice(0, MAX)));
   } catch {
-    /* storage full or blocked — non-fatal */
+    /* storage full or blocked, non-fatal */
   }
 }
 

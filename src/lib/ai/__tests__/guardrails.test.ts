@@ -1,6 +1,6 @@
 /**
- * Red-team suite for the assistant guardrails (PRD §9.10). Runs offline — no
- * model call — so it can gate every prompt/model change. Run with:
+ * Red-team suite for the assistant guardrails (PRD §9.10). Runs offline, no
+ * model call, so it can gate every prompt/model change. Run with:
  *   npx tsx src/lib/ai/__tests__/guardrails.test.ts
  */
 import {

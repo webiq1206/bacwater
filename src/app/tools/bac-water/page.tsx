@@ -166,7 +166,7 @@ export default function BacWaterCalculatorPage() {
 
         {/* Result + Teaching (right column) */}
         <div className="space-y-4">
-          {/* Main result — dark instrument readout so the answer anchors the page */}
+          {/* Main result, dark instrument readout so the answer anchors the page */}
           <div className="section-dark rounded-2xl p-6 sm:p-8">
             <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your answer</div>
             <div className="mt-4 flex items-baseline gap-2">

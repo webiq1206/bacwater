@@ -44,7 +44,7 @@
   --color-warning-foreground: #fbf7ee;
   --color-success: #4a7a5c;
 
-  /* Guide accents (callouts, step markers, checks) use sage — quiet and warm,
+  /* Guide accents (callouts, step markers, checks) use sage, quiet and warm,
      distinct from the charcoal used for primary actions. */
   --color-accent-guide: #5d6561;
   --color-accent-guide-soft: #eef0ec;
@@ -87,21 +87,21 @@ body {
    `.section-dark` bands (hero, CTA, footer).
    ------------------------------------------------------------------------- */
 
-/* Warm tonal band — one step down from bone, lifts white cards inside it. */
+/* Warm tonal band, one step down from bone, lifts white cards inside it. */
 .section-muted {
   background: var(--color-muted);
 }
 
 /* Charcoal band. Re-declares the token variables in-scope so every child that
    uses token-based utilities (text-muted-foreground, border-border, bg-card,
-   accent-guide, …) adapts to the dark ground automatically — no per-component
+   accent-guide, …) adapts to the dark ground automatically, no per-component
    dark styling needed. Sage is brightened here so it reads as a real accent
    against charcoal; mist carries secondary text. */
 .section-dark {
   --color-background: #2c302f;
   --color-foreground: #f7f5f3; /* bone */
   --color-muted: #363b3a;
-  --color-muted-foreground: #b3b8b0; /* lightened mist — readable on charcoal */
+  --color-muted-foreground: #b3b8b0; /* lightened mist, readable on charcoal */
   --color-border: rgba(247, 245, 243, 0.14);
   --color-border-strong: rgba(247, 245, 243, 0.26);
   --color-input: rgba(247, 245, 243, 0.18);
@@ -117,7 +117,7 @@ body {
   --color-primary-foreground: #2c302f;
   --color-brand: #f7f5f3;
   --color-brand-foreground: #2c302f;
-  /* Sage, brightened for contrast on charcoal — the accent moment. */
+  /* Sage, brightened for contrast on charcoal, the accent moment. */
   --color-accent-guide: #97a389;
   --color-accent-guide-soft: rgba(151, 163, 137, 0.16);
   --color-mist: #9aa09b;
@@ -160,7 +160,7 @@ body {
   font-weight: 300;
 }
 
-/* Fraunces italic — the accent, used sparingly for a single word or the "Co." */
+/* Fraunces italic, the accent, used sparingly for a single word or the "Co." */
 .font-accent {
   font-family: var(--font-serif);
   font-style: italic;

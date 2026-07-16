@@ -7,7 +7,7 @@ interface Props {
 
 /**
  * Supply COUNTS (PRD v3 §9.3.6 / §9.5). How many of each item this plan works
- * out to — counts only. The site sells nothing and points to no seller, so
+ * out to, counts only. The site sells nothing and points to no seller, so
  * there are no prices, no cart, and no links here.
  */
 export function SupplyRecommender({ supplies }: Props) {
@@ -19,7 +19,7 @@ export function SupplyRecommender({ supplies }: Props) {
       </div>
       <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
         How many of each item your plan works out to. These are counts so you
-        can plan — we don&apos;t sell these and don&apos;t point you to a seller.
+        can plan. We don&apos;t sell these and don&apos;t point you to a seller.
       </p>
       <ul className="mt-4 divide-y divide-border rounded-xl border border-border overflow-hidden">
         {supplies.map((s) => (

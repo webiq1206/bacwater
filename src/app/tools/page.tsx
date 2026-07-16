@@ -48,7 +48,7 @@ const TOOLS = [
     href: "/tools/supplies",
     icon: ShoppingCart,
     title: "How many supplies will I need?",
-    body: "Tell us what you're running, how often, and for how long. We'll count the syringes, pads, and vials — counts only, nothing for sale.",
+    body: "Tell us what you're running, how often, and for how long. We'll count the syringes, pads, and vials. Counts only, nothing for sale.",
     bestFor: "Best for: planning how much to source.",
     tag: null,
   },
@@ -64,7 +64,7 @@ const TOOLS = [
     href: "/tools/mg-to-mcg",
     icon: Scale,
     title: "Convert mg and mcg",
-    body: "Switch between milligrams and micrograms. Vial amounts are often in mg and measurements in mcg — this makes switching easy.",
+    body: "Switch between milligrams and micrograms. Vial amounts are often in mg and measurements in mcg. This makes switching easy.",
     bestFor: "Best for: a quick unit conversion.",
     tag: null,
   },
@@ -133,7 +133,7 @@ export default function ToolsPage() {
           <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>New to peptides?</div>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
             Skip the single calculators and start with the{" "}
-            <span className="text-foreground font-medium">Plan Builder</span> — it
+            <span className="text-foreground font-medium">Plan Builder</span> that
             walks you through everything step by step and gives you a complete,
             printable reconstitution plan.
           </p>

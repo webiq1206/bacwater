@@ -114,7 +114,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Definition + quick reference (AEO answer block) — warm tonal band */}
+      {/* Definition + quick reference (AEO answer block), warm tonal band */}
       <section className="section-muted">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-3xl">
@@ -196,7 +196,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* How it works — charcoal band, the page's dark punctuation */}
+      {/* How it works, charcoal band, the page's dark punctuation */}
       <section className="section-dark">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16">
@@ -215,7 +215,7 @@ export default async function HomePage() {
                 {
                   icon: FileText,
                   t: "See every step",
-                  b: "Concentration, how much to measure, syringe units, and how many measurements per vial — with the formula shown.",
+                  b: "Concentration, how much to measure, syringe units, and how many measurements per vial, with the formula shown.",
                 },
                 {
                   icon: Timer,
@@ -285,7 +285,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Popular peptides + comparisons (hub-and-spoke) — warm tonal band */}
+      {/* Popular peptides + comparisons (hub-and-spoke), warm tonal band */}
       <section className="section-muted">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="eyebrow">Explore</div>
@@ -335,7 +335,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* How the math works (trust, honest) — bone, keeps the closing calm */}
+      {/* How the math works (trust, honest), bone, keeps the closing calm */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-2xl">
           <div className="eyebrow">How the math works</div>
@@ -347,7 +347,7 @@ export default async function HomePage() {
             by the water you add. We keep full precision inside and round only
             when we show a number. If an amount lands between the marks on your
             syringe, we tell you, because you cannot measure it. The AI helper
-            explains the result in plain words — it never does the math itself.
+            explains the result in plain words. It never does the math itself.
           </p>
           <div className="mt-8 flex gap-3">
             <Button asChild variant="brand">

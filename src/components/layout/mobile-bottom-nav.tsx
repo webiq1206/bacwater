@@ -30,8 +30,7 @@ const ITEMS = [
 
 /**
  * Native-style bottom navigation on mobile (§8). Hidden on large screens (the
- * header nav covers those), in admin, and during the wizard / results pages —
- * those have their own bottom sticky action bars and would otherwise collide.
+ * header nav covers those), in admin, and during the wizard / results pages,  * those have their own bottom sticky action bars and would otherwise collide.
  */
 export function MobileBottomNav() {
   const pathname = usePathname() || "/";

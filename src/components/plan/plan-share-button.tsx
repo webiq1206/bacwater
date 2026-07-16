@@ -35,7 +35,7 @@ export function PlanShareButton({ url, title, text, className, compact }: Props)
         await navigator.share({ title, text, url: absolute });
         return;
       } catch {
-        // User dismissed the sheet, or share failed — fall through to copy.
+        // User dismissed the sheet, or share failed, fall through to copy.
       }
     }
 

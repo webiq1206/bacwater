@@ -1,8 +1,8 @@
 /**
  * Canonical display formatters for calculation values.
  *
- * Every surface — the results page, the PDF, the plans list, the vial label,
- * and the standalone tools — must format the same underlying number
+ * Every surface, the results page, the PDF, the plans list, the vial label,
+ * and the standalone tools, must format the same underlying number
  * identically. Import these helpers instead of calling `.toFixed()` inline so
  * a value can never show as "12.4 units" in one place and "12.35 units" in
  * another.

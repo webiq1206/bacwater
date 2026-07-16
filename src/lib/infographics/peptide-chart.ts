@@ -2,8 +2,7 @@
  * Per-compound reconstitution infographic: a horizontal bar chart of the
  * CONCENTRATION (mg/mL) produced at each common vial strength for a given bac
  * water amount. This is pure arithmetic on the numbers shown (concentration =
- * vial amount ÷ water) and asserts no dose or quantity (PRD §9.1.5, §9.11 —
- * the old "syringe units per typical dose" chart was rebuilt for exactly this
+ * vial amount ÷ water) and asserts no dose or quantity (PRD §9.1.5, §9.11,  * the old "syringe units per typical dose" chart was rebuilt for exactly this
  * reason). Doubles as the page's featured, liftable image and social card, and
  * carries the BACwater.ai wordmark.
  */

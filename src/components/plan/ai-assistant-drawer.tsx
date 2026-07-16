@@ -13,7 +13,7 @@ interface Msg {
 const REPLACE = "[[REPLACE]]";
 
 /* ---- tiny, safe Markdown renderer (bold / italic / code / lists) ------------
-   Builds React nodes directly — no dangerouslySetInnerHTML, no HTML injection.
+   Builds React nodes directly, no dangerouslySetInnerHTML, no HTML injection.
    The assistant only emits this small subset. */
 function Inline({ text }: { text: string }) {
   const nodes: React.ReactNode[] = [];

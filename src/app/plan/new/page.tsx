@@ -74,7 +74,7 @@ export default function PlanNewPage() {
           }),
         }}
       />
-      {/* Breadcrumb is desktop-only in the wizard — on mobile it's nav clutter
+      {/* Breadcrumb is desktop-only in the wizard, on mobile it's nav clutter
           that pushes the first question toward the fold. Stays in the DOM for
           its BreadcrumbList structured data. */}
       <div className="hidden sm:block">

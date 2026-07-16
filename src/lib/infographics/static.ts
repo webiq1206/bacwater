@@ -12,7 +12,7 @@ const STORAGE_CARDS = [
   { big: "Fridge", sub: "Keep mixed vials cold, per your product's instructions" },
   { big: "Discard date", sub: "Follow the instructions that came with your product" },
   { big: "Dark", sub: "Keep in the box or foil" },
-  { big: "Freezing", sub: "Can damage many peptides — check your instructions" },
+  { big: "Freezing", sub: "Can damage many peptides. Check your instructions" },
 ];
 
 export function storageAlt(): string {

@@ -37,12 +37,12 @@ import { formatDate } from "@/lib/utils";
 const GUIDE_VERSION = "1.0";
 
 const C = {
-  ink: "#2c302f", // charcoal — primary text + hero number
-  teal: "#5d6561", // sage — accent (eyebrow, table header, syringe marker)
+  ink: "#2c302f", // charcoal, primary text + hero number
+  teal: "#5d6561", // sage, accent (eyebrow, table header, syringe marker)
   tealSoft: "#cfd4cf", // sage hairline
   tealBg: "#eef0ec", // light sage tint
   muted: "#6a706b", // secondary text
-  faint: "#9aa09b", // mist — captions
+  faint: "#9aa09b", // mist, captions
   border: "#e4e1dd", // line
   panel: "#f5f3f0", // warm panel
   warnInk: "#6f5324",
@@ -204,7 +204,7 @@ function Footer() {
       <View style={s.footerRule} />
       <View style={s.footerRow}>
         <Text style={s.footerText}>
-          BACwater.ai · For laboratory research use only — not for human or veterinary use.
+          BACwater.ai · For laboratory research use only, not for human or veterinary use.
         </Text>
         <Text
           style={s.footerText}
@@ -217,9 +217,9 @@ function Footer() {
 
 /**
  * The syringe illustration for the PDF. Deliberately drawn to match the
- * results-page SyringeVisual exactly — same orientation (needle left, plunger
+ * results-page SyringeVisual exactly, same orientation (needle left, plunger
  * right), same barrel/flange/plunger shapes, the same graduation marks, and the
- * same "measure to here" marker above the fill line — so what a user sees online
+ * same "measure to here" marker above the fill line, so what a user sees online
  * and what they download are identical (PRD §9.6).
  */
 function SyringeGraphic({
@@ -371,10 +371,10 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
 
   return (
     <Document
-      title={`BACwater.ai — ${peptideName} reconstitution guide`}
+      title={`BACwater.ai, ${peptideName} reconstitution guide`}
       author="BACwater.ai"
     >
-      {/* ---------------- PAGE 1 — Summary ---------------- */}
+      {/* ---------------- PAGE 1, Summary ---------------- */}
       <Page size="LETTER" style={s.page}>
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
           <View style={{ flex: 1 }}>
@@ -433,7 +433,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
           ))}
         </View>
 
-        {/* Syringe graphic — mirrors the results page exactly */}
+        {/* Syringe graphic, mirrors the results page exactly */}
         <View wrap={false}>
           <Text style={s.sectionTitle}>Where to measure on the syringe</Text>
           <View style={[s.card, { paddingVertical: 16 }]}>
@@ -487,11 +487,11 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
         <Footer />
       </Page>
 
-      {/* ---------------- PAGE 2 — Preparation ---------------- */}
+      {/* ---------------- PAGE 2, Preparation ---------------- */}
       <Page size="LETTER" style={s.page}>
         <Text style={s.sectionTitleFirst}>Step-by-step laboratory preparation</Text>
         <Text style={{ fontSize: 9.5, color: C.muted, marginBottom: 6 }}>
-          Work on a clean surface. Do each step in order — there is no rush.
+          Work on a clean surface. Do each step in order. There is no rush.
         </Text>
         {result.instructions.map((step, i) => (
           <View key={i} style={s.step}>
@@ -502,7 +502,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
 
         {result.warnings.length > 0 ? (
           <View style={s.calloutWarn}>
-            <Text style={s.calloutTitle}>Before you mix — double-check these</Text>
+            <Text style={s.calloutTitle}>Before you mix, double-check these</Text>
             {result.warnings.map((w, i) => (
               <Text key={i} style={s.calloutItem}>
                 • {w}
@@ -548,7 +548,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
         <Footer />
       </Page>
 
-      {/* ---------------- PAGE 3 — Reference & storage ---------------- */}
+      {/* ---------------- PAGE 3, Reference & storage ---------------- */}
       <Page size="LETTER" style={s.page}>
         <View wrap={false}>
           <Text style={s.sectionTitleFirst}>Dosage reference table</Text>
@@ -597,15 +597,15 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
             <View style={{ marginTop: 6 }}>
               <View style={s.bullet}>
                 <Text style={s.bulletDot}>›</Text>
-                <Text style={s.bulletText}>Keep it cold — refrigerate as soon as it is mixed.</Text>
+                <Text style={s.bulletText}>Keep it cold. Refrigerate as soon as it is mixed.</Text>
               </View>
               <View style={s.bullet}>
                 <Text style={s.bulletDot}>›</Text>
-                <Text style={s.bulletText}>Keep it dark — store in the box or wrap the vial in foil.</Text>
+                <Text style={s.bulletText}>Keep it dark. Store in the box or wrap the vial in foil.</Text>
               </View>
               <View style={s.bullet}>
                 <Text style={s.bulletDot}>›</Text>
-                <Text style={s.bulletText}>Freezing can damage many peptides — check your product&apos;s instructions.</Text>
+                <Text style={s.bulletText}>Freezing can damage many peptides. Check your product&apos;s instructions.</Text>
               </View>
             </View>
           </View>
@@ -619,7 +619,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
                 <Text style={[s.stepNum, { backgroundColor: C.ink }]}>{sup.quantity}</Text>
                 <Text style={s.stepText}>
                   <Text style={{ fontFamily: "Helvetica-Bold" }}>{sup.name}</Text>
-                  {`  —  ${sup.reason}`}
+                  {`: ${sup.reason}`}
                 </Text>
               </View>
             ))}
@@ -643,7 +643,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
         {/* Full legal disclaimer */}
         <View style={s.disclaimerBox} wrap={false}>
           <Text style={{ fontSize: 9, fontFamily: "Helvetica-Bold", marginBottom: 4 }}>
-            Important — research use only
+            Important: research use only
           </Text>
           <Text style={s.disclaimerText}>
             BACwater.ai calculates concentration and measurement values from the numbers you
@@ -651,7 +651,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
             are provided strictly for laboratory research and educational purposes. Nothing here
             is intended for human or veterinary use, for diagnosis or treatment of any condition,
             or as a substitute for professional medical advice. The calculations in this guide
-            are general reconstitution math based on the values you entered — always verify every
+            are general reconstitution math based on the values you entered. Always verify every
             number against your vial&apos;s own label and documentation before use. Handle all
             materials according to accepted laboratory safety practices and dispose of sharps in
             an approved sharps container.

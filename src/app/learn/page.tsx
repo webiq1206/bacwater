@@ -349,7 +349,7 @@ export default async function LearnPage({
                 <div className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
                   {CONTENT_TYPE_LABEL[e.contentType] ?? e.contentType}
                 </div>
-                <h2 className="mt-1 text-lg font-semibold tracking-tight group-hover:underline">
+                <h2 className="mt-1 text-base font-medium group-hover:underline">
                   {e.title}
                 </h2>
                 {e.excerpt && (

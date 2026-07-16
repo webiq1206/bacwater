@@ -111,7 +111,7 @@ warns(v02, /between two marks/, "V-02 flags 7.5 units as unmeasurable");
 // A clean 10 units must NOT trip V-02.
 noWarn(a, /between two marks/, "V-02 quiet when the amount lands on a mark");
 
-// 15 units on a 1 mL barrel (marked every 1 unit) is ON a line — must NOT warn.
+// 15 units on a 1 mL barrel (marked every 1 unit) is ON a line, must NOT warn.
 const v02clean = calculate({ vialStrengthMg: 5, doseMcg: 375, bacWaterMl: 2, syringeType: "insulin-1ml" });
 near(v02clean.syringeUnits, 15, 0.001, "V-02 fixture computes 15 units");
 noWarn(v02clean, /between two marks/, "V-02 quiet at 15 units on a 1 mL barrel (every-1-unit marks)");

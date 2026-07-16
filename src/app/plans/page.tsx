@@ -20,7 +20,7 @@ export const metadata = {
 export default async function PlansPage() {
   const session = await auth();
 
-  // Signed-out visitors still get their plans — the ones saved on this device,
+  // Signed-out visitors still get their plans, the ones saved on this device,
   // read client-side from localStorage. No forced sign-in.
   if (!session?.user) {
     return (

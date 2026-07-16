@@ -1133,7 +1133,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
       {step === 3 && (
         <StepPanel
           title="How much water should we add?"
-          hint="The liquid that dissolves the powder. More water gives a bigger, easier-to-read number on the syringe. We picked a clean one — change it below."
+          hint="The liquid that dissolves the powder. More water gives a bigger, easier-to-read number on the syringe. We picked a clean one. Change it below."
           onNext={() => goToStep(4)}
           onBack={() => goToStep(2)}
           stepNum={4}

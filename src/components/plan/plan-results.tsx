@@ -38,7 +38,7 @@ export function PlanResults({ result }: Props) {
 
   return (
     <div className="space-y-5">
-      {/* 1 — PLAN SUMMARY (hero) ------------------------------------------- */}
+      {/* 1, PLAN SUMMARY (hero) ------------------------------------------- */}
       <section className="border border-border bg-card rounded-2xl p-6 sm:p-8">
         <div className="eyebrow">Your plan</div>
         <h2 className="mt-1 text-2xl sm:text-3xl font-serif tracking-tight">
@@ -97,7 +97,7 @@ export function PlanResults({ result }: Props) {
         <ResearchDisclaimer className="mt-6" />
       </section>
 
-      {/* 2 — PLAIN ENGLISH (supporting) ----------------------------------- */}
+      {/* 2, PLAIN ENGLISH (supporting) ----------------------------------- */}
       <section className="callout-panel rounded-2xl">
         <div className="flex items-center gap-2.5 mb-3">
           <MessageCircle className="h-5 w-5 accent-check" />
@@ -131,13 +131,13 @@ export function PlanResults({ result }: Props) {
         </div>
       </section>
 
-      {/* 3 — RECOMMENDED SUPPLIES / SHOP ---------------------------------- */}
+      {/* 3, RECOMMENDED SUPPLIES / SHOP ---------------------------------- */}
       <SupplyRecommender supplies={result.supplies} />
 
-      {/* 4 — DOSAGE REFERENCE (visual) ------------------------------------ */}
+      {/* 4, DOSAGE REFERENCE (visual) ------------------------------------ */}
       <DosageReference result={result} />
 
-      {/* 5 — SECONDARY INFO (collapsed by default) ------------------------ */}
+      {/* 5, SECONDARY INFO (collapsed by default) ------------------------ */}
       <section className="border border-border bg-card rounded-2xl px-6 sm:px-8">
         <Accordion type="multiple">
           <AccordionItem value="steps" className="border-b-0 border-t border-border first:border-t-0">
@@ -149,7 +149,7 @@ export function PlanResults({ result }: Props) {
             </AccordionTrigger>
             <AccordionContent>
               <p className="text-muted-foreground mb-4">
-                Follow these in order. Take your time — there&apos;s no rush.
+                Follow these in order. Take your time. There&apos;s no rush.
               </p>
               <ol className="space-y-4">
                 {result.instructions.map((s, i) => (

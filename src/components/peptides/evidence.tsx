@@ -18,7 +18,7 @@ export function EvidenceBadge({ evidence }: { evidence: EvidenceClass }) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-3 py-1 text-xs font-medium">
       <HelpCircle className="h-3.5 w-3.5" style={{ color: "var(--color-warning)" }} />
-      Research use — limited or no human data
+      Research use: limited or no human data
     </span>
   );
 }
@@ -39,7 +39,7 @@ export function WhatNobodyKnows({
       {evidence === "fda-approved" ? (
         <p className="mt-3 text-sm sm:text-[15px] leading-relaxed text-foreground/90">
           {compound} is an approved molecule, so its approved product has
-          official labeling — that labeling, not this site, is the reference for
+          official labeling. That labeling, not this site, is the reference for
           amounts. But an unapproved research powder sold under the same name is
           a different thing. There is no assurance it is actually {compound},
           that it is pure, or that the amount matches the label.
@@ -48,7 +48,7 @@ export function WhatNobodyKnows({
         <ul className="mt-3 space-y-2 text-sm sm:text-[15px] leading-relaxed text-foreground/90">
           <li>How much, if any, is safe for a person.</li>
           <li>Whether it does anything in people, and what it does over the long term.</li>
-          <li>What is actually in your vial — the powder&apos;s identity, purity, and strength.</li>
+          <li>What is actually in your vial: the powder&apos;s identity, purity, and strength.</li>
         </ul>
       )}
     </div>

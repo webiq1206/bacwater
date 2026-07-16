@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/accordion";
 
 const DIRECT_ANSWER =
-  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles — follow the instructions that came with yours.";
+  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles, follow the instructions that came with yours.";
 
 const FAQS: { q: string; a: string }[] = [
   {
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
 };
 
 const SHELF_LIFE_BODY =
-  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles — follow the instructions that came with yours. The benzyl alcohol preservative lets you draw from the vial repeatedly. Refrigeration slows peptide breakdown but does not replace clean, aseptic handling. Wipe the rubber top before each draw, use a fresh needle each time, and respect the discard date. If the liquid turns cloudy, changes color, or has floating bits, set it aside regardless of the date.";
+  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles, follow the instructions that came with yours. The benzyl alcohol preservative lets you draw from the vial repeatedly. Refrigeration slows peptide breakdown but does not replace clean, aseptic handling. Wipe the rubber top before each draw, use a fresh needle each time, and respect the discard date. If the liquid turns cloudy, changes color, or has floating bits, set it aside regardless of the date.";
 
 export default function ShelfLifePage() {
   const storageRows = STORAGE_SLUGS.map((slug) =>

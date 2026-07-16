@@ -36,7 +36,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
     try {
       localStorage.setItem(COOKIE, "1");
     } catch {
-      /* private mode — cookie still covers it */
+      /* private mode, cookie still covers it */
     }
     setVerified(true);
   }

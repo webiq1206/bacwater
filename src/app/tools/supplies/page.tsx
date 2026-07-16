@@ -106,7 +106,7 @@ export default function SupplyCalculatorPage() {
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Tell us your peptide, how much you measure, and cycle length and this supply
           calculator will figure out exactly how many peptide vials, BAC water
-          bottles, syringes, and alcohol pads you&apos;ll need — counts only,
+          bottles, syringes, and alcohol pads you&apos;ll need. Counts only,
           nothing for sale.
         </p>
       </div>
@@ -283,7 +283,7 @@ export default function SupplyCalculatorPage() {
                 <SupplyRow
                   qty={results.padsNeeded}
                   label="Alcohol prep pads"
-                  why="About two per measurement — the vial top and, if you inject, the site. Commonly sold in boxes of 200."
+                  why="About two per measurement: the vial top and, if you inject, the site. Commonly sold in boxes of 200."
                   buyable="ALC-200"
                 />
               </div>
