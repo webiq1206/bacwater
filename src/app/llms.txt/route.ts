@@ -55,6 +55,7 @@ export function GET() {
 ## Guides and reference
 
 - [BAC water and peptide shelf life](${u("/learn/bac-water-shelf-life")}): How long an opened bac water vial can be used, and why compound-specific stability depends on your product's instructions
+- [What you cannot know about your vial](${u("/learn/what-you-cannot-know")}): What no calculation can verify, what "research-grade" means legally, how a milligram/microgram mix-up becomes a 1,000-times error, and which compounds have human data
 - [Peptide reconstitution glossary](${u("/learn/glossary")}): Plain-English definitions of BAC water, benzyl alcohol, reconstitution, lyophilization, U-100, and subcutaneous
 
 ## Peptide reconstitution guides
@@ -75,12 +76,11 @@ ${comparisonLines.join("\n")}
 - How long a reconstituted peptide lasts depends on the compound and formulation; follow the instructions that came with your product rather than a general figure
 - An opened multi-dose BAC water vial is commonly dated and discarded within about 28 days (the standard multi-dose vial guidance), unless the manufacturer states otherwise
 - All calculations use deterministic, tested formulas, never AI-generated math
-- Products are sold for laboratory research and educational purposes only, and nothing on the site is medical advice
+- This site is for laboratory research and educational purposes only, and nothing on it is medical advice. It sells nothing and recommends no vendor
 
 ## Policies
 
 - [Editorial and sourcing policy](${u("/editorial-policy")}): How content is researched, fact-checked, and kept current
-- [Shipping and returns](${u("/shipping-returns")}): Shipping times and returns policy
 - [Disclaimer](${u("/disclaimer")}): Research use and not-medical-advice disclaimer
 - [Privacy](${u("/privacy")}) and [Terms](${u("/terms")})
 

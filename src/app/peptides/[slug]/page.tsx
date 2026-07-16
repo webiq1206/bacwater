@@ -26,6 +26,7 @@ import {
   hasChart,
 } from "@/lib/infographics/peptide-chart";
 import { Infographic } from "@/components/common/infographic";
+import { AtAGlance } from "@/components/common/at-a-glance";
 import { ImageJsonLd } from "@/components/common/image-json-ld";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
@@ -193,6 +194,29 @@ export default async function PeptidePage({
       )}
       {content?.aka && (
         <p className="mt-3 text-sm text-muted-foreground">{content.aka}</p>
+      )}
+
+      {/* At a glance: the handful of facts a reader wants before the calculator. */}
+      {!isCustom && (
+        <AtAGlance
+          className="mt-5"
+          columns={3}
+          items={[
+            {
+              label: "Category",
+              value: `${p.category.charAt(0).toUpperCase()}${p.category.slice(1)}`,
+            },
+            {
+              label: "Common vial sizes",
+              value: `${p.commonVialStrengthsMg.join(", ")} mg`,
+            },
+            {
+              label: "Shelf life",
+              value: `${p.refrigeratedShelfDays} days`,
+              sub: "refrigerated, mixed",
+            },
+          ]}
+        />
       )}
 
       {/* Labeled TL;DR: a tight, extractable one-liner for AI Overviews. */}

@@ -80,7 +80,7 @@ const CORE: {
   },
   {
     q: "Is BACwater.ai a medical service?",
-    a: "No. BACwater.ai gives you a BAC water calculator, mixing guides, and research supplies. We do not diagnose, prescribe, or give medical advice. Talk to a licensed healthcare professional for any medical questions.",
+    a: "No. BACwater.ai gives you a BAC water calculator, mixing guides, and plain-language references. It sells nothing and recommends no vendor. We do not diagnose, prescribe, or give medical advice. Talk to a licensed healthcare professional for any medical questions.",
   },
 ];
 
@@ -164,8 +164,8 @@ export default async function FaqPage() {
       </h1>
       <p className="mt-3 text-muted-foreground leading-relaxed">
         Quick answers to the most common questions about BAC water, peptide
-        reconstitution, and shopping with us. Can&apos;t find what you&apos;re
-        looking for?{" "}
+        reconstitution, and how the calculators work. Can&apos;t find what
+        you&apos;re looking for?{" "}
         <Link href="/contact" className="text-foreground font-medium underline">
           Contact us
         </Link>
