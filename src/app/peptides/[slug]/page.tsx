@@ -75,7 +75,7 @@ export async function generateMetadata({
     : `${short} Reconstitution Calculator & Reference`;
   const description = isCustom
     ? "Work out how much bacteriostatic water to add to a vial and what your measurement is in syringe units. Enter your vial amount and how much you want to measure."
-    : `Work out how much bacteriostatic water to add to a ${short} vial and what your measurement is in syringe units. What research looked at, and what nobody knows.`;
+    : `${short} reconstitution calculator and chart: how much bacteriostatic water to add by vial size, the concentration, and what your measurement is in syringe units. What research looked at, and what nobody knows.`;
   const chart = hasChart(p) ? peptideChartDims(p) : null;
   return {
     title,
@@ -268,16 +268,17 @@ export default async function PeptidePage({
 
       {studies && <StudyTable data={studies} />}
 
-      {/* Dosage table */}
+      {/* Dosage / reconstitution chart */}
       {!isCustom && rows.length > 0 && (
-        <section className="mt-14">
+        <section id="reconstitution-chart" className="mt-14 scroll-mt-24">
           <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
             How much bac water for {short}?
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            These examples put a {rows[0].doseLabel} measurement at a clean
-            number on a 1 mL insulin syringe. Use the calculator above for your
-            exact vial and the amount you want to measure.
+            The chart below is a {short} reconstitution chart: each common vial
+            size, the bac water to add, and where a {rows[0].doseLabel}
+            measurement lands on a 1 mL insulin syringe. Use the calculator above
+            for your exact vial and the amount you want to measure.
           </p>
           <div className="mt-5 overflow-x-auto border border-border">
             <table className="w-full text-sm">
