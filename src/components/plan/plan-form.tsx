@@ -905,6 +905,19 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             </StepBlock>
 
             <div className="pt-2">
+              <div className="mb-3">
+                <Label htmlFor="plan-name-advanced" className="text-xs text-muted-foreground">
+                  Plan name
+                </Label>
+                <Input
+                  id="plan-name-advanced"
+                  value={nameValue}
+                  onChange={(e) => setPlanName(e.target.value)}
+                  maxLength={120}
+                  placeholder="Name this plan"
+                  className="mt-1 h-11"
+                />
+              </div>
               <Button
                 onClick={handleSave}
                 disabled={saving}
