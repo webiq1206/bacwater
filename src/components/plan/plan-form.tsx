@@ -313,41 +313,31 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
     setStep(n);
   }
 
-  const [peptideSlug, setPeptideSlug] = useState<string>(init?.slug ?? "bpc-157");
+  // Nothing is pre-populated for a new visitor (PRD: no example plan on first
+  // load). Values come from the user's own device cache (see the hydrate/save
+  // effects below) or from `init` when editing an existing plan.
+  const [peptideSlug, setPeptideSlug] = useState<string>(init?.slug ?? "");
   const [customPeptideName, setCustomPeptideName] = useState(init?.customName ?? "");
   // Picking a peptide is an interest signal used to personalize panels
-  // elsewhere on the site (homepage, buy page, FAQ).
+  // elsewhere on the site. It does NOT pre-fill vial/dose — the user enters
+  // those (or picks a suggestion chip) so nothing is silently pre-populated.
   const selectPeptide = useCallback((slug: string) => {
     setPeptideSlug(slug);
-    if (slug !== "custom") {
-      setInterestPeptide(slug);
-      // Reset vial strength and dose to this peptide's typical defaults so the
-      // preset chips stay in sync and stale numbers from the previous peptide
-      // don't silently carry over.
-      const p = PEPTIDES.find((x) => x.slug === slug);
-      if (p) {
-        setVialInput(p.commonVialStrengthsMg[0] ?? 5);
-        setVialUnit("mg");
-        setShowCustomVial(false);
-        setDoseInput(p.suggestedDoseMcg);
-        setDoseUnit("mcg");
-        setShowCustomDose(false);
-      }
-    }
+    if (slug !== "custom") setInterestPeptide(slug);
   }, []);
 
-  const [vialInput, setVialInput] = useState<number>(init?.vialMg ?? 5);
+  const [vialInput, setVialInput] = useState<number>(init?.vialMg ?? 0);
   const [vialUnit, setVialUnit] = useState<Unit>("mg");
   const [showCustomVial, setShowCustomVial] = useState(init?.showCustomVial ?? false);
 
-  const [doseInput, setDoseInput] = useState<number>(init?.doseMcg ?? 250);
-  const [doseUnit, setDoseUnit] = useState<Unit>("mcg");
+  const [doseInput, setDoseInput] = useState<number>(init?.doseMcg ?? 0);
+  const [doseUnit, setDoseUnit] = useState<Unit>(init ? "mcg" : "mg");
   const [showCustomDose, setShowCustomDose] = useState(init?.showCustomDose ?? false);
 
   const [syringeType, setSyringeType] = useState<SyringeType>(init?.syringeType ?? "insulin-1ml");
 
   const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(init?.useRecommendedBac ?? true);
-  const [customBacMl, setCustomBacMl] = useState<number>(init?.customBacMl ?? 2);
+  const [customBacMl, setCustomBacMl] = useState<number>(init?.customBacMl ?? 0);
 
   const [dateMixed, setDateMixed] = useState<string>(init?.dateMixed ?? "");
   const [showDate, setShowDate] = useState<boolean>(init?.showDate ?? false);
@@ -373,6 +363,63 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
   const secondaryVialMg =
     secondaryVialUnit === "mg" ? secondaryVialInput : secondaryVialInput / 1000;
+
+  const hasPeptide =
+    peptideSlug === "custom" ? customPeptideName.trim().length > 0 : peptideSlug !== "";
+  const hasValidInputs = hasPeptide && vialStrengthMg > 0 && doseMcg > 0;
+
+  // Per-user draft cache: nothing is pre-populated for a new visitor, but their
+  // own in-progress inputs persist on this device so returning resumes where
+  // they left off. Only for new plans (edits are driven by `init`).
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    if (init) {
+      setHydrated(true);
+      return;
+    }
+    try {
+      const raw = localStorage.getItem("bacwater.planDraft");
+      if (raw) {
+        const d = JSON.parse(raw) as Record<string, unknown>;
+        if (typeof d.peptideSlug === "string") setPeptideSlug(d.peptideSlug);
+        if (typeof d.customPeptideName === "string") setCustomPeptideName(d.customPeptideName);
+        if (typeof d.vialInput === "number") setVialInput(d.vialInput);
+        if (d.vialUnit === "mg" || d.vialUnit === "mcg") setVialUnit(d.vialUnit);
+        if (typeof d.doseInput === "number") setDoseInput(d.doseInput);
+        if (d.doseUnit === "mg" || d.doseUnit === "mcg") setDoseUnit(d.doseUnit);
+        if (typeof d.syringeType === "string") setSyringeType(d.syringeType as SyringeType);
+        if (typeof d.useRecommendedBac === "boolean") setUseRecommendedBac(d.useRecommendedBac);
+        if (typeof d.customBacMl === "number") setCustomBacMl(d.customBacMl);
+        if (typeof d.dateMixed === "string") setDateMixed(d.dateMixed);
+      }
+    } catch {
+      /* ignore corrupt/blocked storage */
+    }
+    setHydrated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    if (!hydrated || init) return;
+    try {
+      localStorage.setItem(
+        "bacwater.planDraft",
+        JSON.stringify({
+          peptideSlug,
+          customPeptideName,
+          vialInput,
+          vialUnit,
+          doseInput,
+          doseUnit,
+          syringeType,
+          useRecommendedBac,
+          customBacMl,
+          dateMixed,
+        })
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [hydrated, init, peptideSlug, customPeptideName, vialInput, vialUnit, doseInput, doseUnit, syringeType, useRecommendedBac, customBacMl, dateMixed]);
 
   const recommendedBac = useMemo(
     () => recommendBacWaterMl(vialStrengthMg, doseMcg),
@@ -479,6 +526,13 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
       };
       const res = await savePlanAction(payload, undefined);
       if (res.ok) {
+        // The plan is saved; clear the in-progress draft so the builder starts
+        // blank next time (the saved plan lives under My Plans).
+        try {
+          localStorage.removeItem("bacwater.planDraft");
+        } catch {
+          /* ignore */
+        }
         toast({
           title: "Plan saved",
           description: "You can share the link or print the PDF.",
@@ -546,7 +600,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             >
               <Select value={peptideSlug} onValueChange={selectPeptide}>
                 <SelectTrigger className="h-12">
-                  <SelectValue />
+                  <SelectValue placeholder="Choose a peptide" />
                 </SelectTrigger>
                 <SelectContent>
                   {PEPTIDES.map((p) => (
@@ -662,10 +716,10 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               total={6}
               label="Vial size"
               title="What size is your vial?"
-              hint={`Look at your label for a number like "5 mg." Common sizes for ${peptide.name}:`}
+              hint={'Look at your label for a number like "5 mg."'}
             >
               <div className="flex flex-wrap gap-2">
-                {peptide.commonVialStrengthsMg.map((mg) => (
+                {hasPeptide && peptide.commonVialStrengthsMg.map((mg) => (
                   <ChipButton
                     key={mg}
                     active={!showCustomVial && vialStrengthMg === mg}
@@ -720,10 +774,10 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               total={6}
               label="Amount"
               title="How much do you measure each time?"
-              hint={`Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
+              hint={hasPeptide ? `Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).` : "Type the amount you measure each time, in mg or mcg."}
             >
               <div className="grid gap-1.5 sm:gap-2">
-                {dosePresets.map((d) => (
+                {hasPeptide && dosePresets.map((d) => (
                   <ChipButton
                     key={d.mcg}
                     active={!showCustomDose && doseMcg === d.mcg}
@@ -841,7 +895,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
                     <Input
                       type="number"
                       step="0.1"
-                      value={customBacMl}
+                      value={customBacMl || ""}
                       onChange={(e) =>
                         setCustomBacMl(parseFloat(e.target.value) || 0)
                       }
@@ -939,9 +993,17 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             </div>
           </div>
 
-          {/* Live results */}
+          {/* Live results (only once the inputs are complete — nothing is
+              shown for an empty, un-started plan). */}
           <div>
-            <PlanResults result={result} />
+            {hasValidInputs ? (
+              <PlanResults result={result} />
+            ) : (
+              <div className="border border-border rounded-2xl p-10 text-center text-sm text-muted-foreground">
+                Choose your peptide, vial amount, and the amount you measure to see
+                your plan here.
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -972,10 +1034,11 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           onNext={() => goToStep(1)}
           onBack={null}
           stepNum={1}
+          nextDisabled={!hasPeptide}
         >
           <Select value={peptideSlug} onValueChange={selectPeptide}>
             <SelectTrigger className="h-14 text-base">
-              <SelectValue />
+              <SelectValue placeholder="Choose a peptide" />
             </SelectTrigger>
             <SelectContent>
               {PEPTIDES.map((p) => (
@@ -993,13 +1056,13 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               value={customPeptideName}
               onChange={(e) => setCustomPeptideName(e.target.value)}
             />
-          ) : (
+          ) : peptideSlug ? (
             <div className="mt-4 bg-surface px-4 py-3 text-sm text-muted-foreground">
               <strong className="text-foreground">{peptide.name}</strong>
               {". "}Amounts studied here: {peptide.typicalDoseMcgRange[0] / 1000} to {peptide.typicalDoseMcgRange[1] / 1000} mg ({peptide.typicalDoseMcgRange[0].toLocaleString()} to {peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). These are study details, not instructions.
               Common vial sizes: {peptide.commonVialStrengthsMg.join(", ")} mg.
             </div>
-          )}
+          ) : null}
         </StepPanel>
       )}
 
@@ -1010,6 +1073,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           onNext={() => goToStep(2)}
           onBack={() => goToStep(0)}
           stepNum={2}
+          nextDisabled={!(vialStrengthMg > 0)}
         >
           <div className="flex flex-wrap gap-2">
             {peptide.commonVialStrengthsMg.map((mg) => (
@@ -1076,6 +1140,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           onNext={() => goToStep(3)}
           onBack={() => goToStep(1)}
           stepNum={3}
+          nextDisabled={!(doseMcg > 0)}
         >
           <div className="grid gap-1.5 sm:gap-2">
             {dosePresets.map((d) => (
@@ -1112,7 +1177,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
                 <Input
                   type="number"
                   step="0.05"
-                  value={doseInput}
+                  value={doseInput || ""}
                   onChange={(e) =>
                     setDoseInput(parseFloat(e.target.value) || 0)
                   }
