@@ -166,9 +166,9 @@ export default function ToolsPage() {
                   </span>
                 ) : null}
               </div>
-              <h2 className="mt-3 text-base font-medium group-hover:underline">
+              <span className="mt-3 block text-base font-medium group-hover:underline">
                 {t.title}
-              </h2>
+              </span>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">
                 {t.body}
               </p>

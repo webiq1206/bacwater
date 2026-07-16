@@ -349,9 +349,9 @@ export default async function LearnPage({
                 <div className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
                   {CONTENT_TYPE_LABEL[e.contentType] ?? e.contentType}
                 </div>
-                <h2 className="mt-1 text-base font-medium group-hover:underline">
+                <span className="mt-1 block text-base font-medium group-hover:underline">
                   {e.title}
-                </h2>
+                </span>
                 {e.excerpt && (
                   <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
                     {e.excerpt}
