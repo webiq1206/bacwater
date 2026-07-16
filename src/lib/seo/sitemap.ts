@@ -75,14 +75,12 @@ export function xmlResponse(xml: string): Response {
 /** Static, hand-maintained pages (everything not driven by the database). */
 export const STATIC_PAGES: SitemapUrl[] = [
   { path: "", changeFrequency: "weekly", priority: 1 },
+  { path: "/peptide-calculator", changeFrequency: "weekly", priority: 1.0 },
   { path: "/plan", changeFrequency: "weekly", priority: 0.9 },
   { path: "/plan/new", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/shop", changeFrequency: "weekly", priority: 0.8 },
-  { path: "/buy", changeFrequency: "weekly", priority: 0.9 },
   { path: "/peptides", changeFrequency: "weekly", priority: 0.9 },
   { path: "/learn", changeFrequency: "weekly", priority: 0.8 },
   { path: "/faq", changeFrequency: "weekly", priority: 0.7 },
-  { path: "/peptide-calculator", changeFrequency: "weekly", priority: 1.0 },
   { path: "/tools", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tools/bac-water", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tools/dose", changeFrequency: "weekly", priority: 0.9 },

@@ -35,6 +35,7 @@ export function GET() {
 ## Key pages
 
 - [Homepage](${u("/")}): The complete BAC water calculator and reconstitution guide
+- [Peptide calculator](${u("/peptide-calculator")}): The all-in-one reconstitution calculator, enter your vial amount and the amount to measure to get the exact BAC water, concentration, syringe units, and measurements per vial, with every step shown
 - [Plan Builder](${u("/plan")}): Enter your peptide, vial strength, dose, and syringe to get an exact reconstitution plan with PDF export and printable vial labels
 - [Guided planner](${u("/plan/new")}): Guided planner, one question at a time
 - [Compound reference](${u("/peptides")}): Per-compound BAC water calculators and reconstitution references
@@ -44,7 +45,6 @@ export function GET() {
 ## Calculators
 
 - [BAC water calculator](${u("/tools/bac-water")}): How much BAC water to add based on vial strength and target dose
-- [Peptide calculator](${u("/peptide-calculator")}): all-in-one reconstitution calculator, BAC water amount, concentration, syringe units, measurements per vial, and step-by-step instructions
 - [Dose calculator](${u("/tools/dose")}): Convert concentration and draw volume to an exact dose in mcg, mg, and syringe units
 - [Supply calculator](${u("/tools/supplies")}): Supplies needed for a full peptide cycle
 - [Syringe unit converter](${u("/tools/syringe-units")}): Convert between mL and U-100 insulin syringe units (100 units = 1 mL)
@@ -54,6 +54,7 @@ export function GET() {
 
 ## Guides and reference
 
+- [BAC water for peptides](${u("/learn/bac-water-for-peptides")}): Why bacteriostatic water is the standard reconstitution solution for peptides, how much to add, and what to use instead of sterile water or saline
 - [BAC water and peptide shelf life](${u("/learn/bac-water-shelf-life")}): How long an opened bac water vial can be used, and why compound-specific stability depends on your product's instructions
 - [What you cannot know about your vial](${u("/learn/what-you-cannot-know")}): What no calculation can verify, what "research-grade" means legally, how a milligram/microgram mix-up becomes a 1,000-times error, and which compounds have human data
 - [Peptide reconstitution glossary](${u("/learn/glossary")}): Plain-English definitions of BAC water, benzyl alcohol, reconstitution, lyophilization, U-100, and subcutaneous
