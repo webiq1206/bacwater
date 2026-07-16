@@ -34,7 +34,16 @@ import { formatDate } from "@/lib/utils";
 // `teal` keys are kept for naming compatibility but now carry the sage accent.
 // Bump when the guide's layout/contents change, so a printed copy can be
 // matched to the template that produced it.
-const GUIDE_VERSION = "1.0";
+const GUIDE_VERSION = "1.1";
+
+// Provenance of each printed number, mirroring the results page's chips: what
+// the user typed, what the calculator derived, and what comes from research.
+type Provenance = "user" | "calculated" | "research";
+const SRC_LABEL: Record<Provenance, string> = {
+  user: "YOU ENTERED",
+  calculated: "WE CALCULATED",
+  research: "FROM RESEARCH",
+};
 
 const C = {
   ink: "#2c302f", // charcoal, primary text + hero number
@@ -122,6 +131,7 @@ const s = StyleSheet.create({
   cellLabel: { fontSize: 7.5, letterSpacing: 0.6, color: C.muted, fontFamily: "Helvetica-Bold" },
   cellValue: { fontSize: 13, fontFamily: "Helvetica-Bold", marginTop: 3 },
   cellSub: { fontSize: 7.5, color: C.faint, marginTop: 1 },
+  cellSrc: { fontSize: 6.5, letterSpacing: 0.5, fontFamily: "Helvetica-Bold", marginTop: 3 },
 
   step: { flexDirection: "row", marginTop: 7 },
   stepNum: {
@@ -356,17 +366,26 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
     }
   }
 
-  const figures: { label: string; value: string; sub?: string }[] = [
-    { label: "VIAL STRENGTH", value: `${result.input.vialStrengthMg} mg` },
-    { label: "BAC WATER ADDED", value: `${formatMl(result.usedBacMl)} mL` },
+  const bacSource: Provenance =
+    Math.abs(result.usedBacMl - result.recommendedBacMl) < 0.01 ? "calculated" : "user";
+  const srcColor: Record<Provenance, string> = {
+    user: C.muted,
+    calculated: C.teal,
+    research: C.warnInk,
+  };
+
+  const figures: { label: string; value: string; sub?: string; src: Provenance }[] = [
+    { label: "VIAL STRENGTH", value: `${result.input.vialStrengthMg} mg`, src: "user" },
+    { label: "BAC WATER ADDED", value: `${formatMl(result.usedBacMl)} mL`, src: bacSource },
     {
       label: "CONCENTRATION",
       value: `${formatConcentration(conc)} mg/mL`,
       sub: `${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`,
+      src: "calculated",
     },
-    { label: "AMOUNT", value: formatDose(result.input.doseMcg) },
-    { label: "VOLUME TO MEASURE", value: `${result.doseVolumeMl.toFixed(3)} mL` },
-    { label: "MEASUREMENTS PER VIAL", value: `${result.dosesPerVial}` },
+    { label: "AMOUNT", value: formatDose(result.input.doseMcg), src: "user" },
+    { label: "VOLUME TO MEASURE", value: `${result.doseVolumeMl.toFixed(3)} mL`, src: "calculated" },
+    { label: "MEASUREMENTS PER VIAL", value: `${result.dosesPerVial}`, src: "calculated" },
   ];
 
   return (
@@ -420,6 +439,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
               <Text style={s.cellLabel}>{f.label}</Text>
               <Text style={s.cellValue}>{f.value}</Text>
               {f.sub ? <Text style={s.cellSub}>{f.sub}</Text> : null}
+              <Text style={[s.cellSrc, { color: srcColor[f.src] }]}>{SRC_LABEL[f.src]}</Text>
             </View>
           ))}
         </View>
@@ -429,6 +449,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
               <Text style={s.cellLabel}>{f.label}</Text>
               <Text style={s.cellValue}>{f.value}</Text>
               {f.sub ? <Text style={s.cellSub}>{f.sub}</Text> : null}
+              <Text style={[s.cellSrc, { color: srcColor[f.src] }]}>{SRC_LABEL[f.src]}</Text>
             </View>
           ))}
         </View>
@@ -639,6 +660,19 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
             </View>
           </View>
         ) : null}
+
+        {/* What this plan does not decide, mirrors the results self-check */}
+        <View wrap={false}>
+          <Text style={s.sectionTitle}>What this plan does not decide</Text>
+          <View style={s.panel}>
+            <Text style={{ fontSize: 9, color: C.muted }}>
+              You entered the vial amount, how much to measure, and your syringe. The site
+              worked out the concentration, the syringe units, and the measurements per vial,
+              and the shelf life comes from research. This plan does not decide how much to use,
+              how often, or whether a compound is safe or right for anyone. Those are not math.
+            </Text>
+          </View>
+        </View>
 
         {/* Full legal disclaimer */}
         <View style={s.disclaimerBox} wrap={false}>

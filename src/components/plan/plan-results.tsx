@@ -21,6 +21,8 @@ import {
 } from "@/lib/calc/format";
 import { SupplyRecommender } from "@/components/plan/supply-recommender";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
+import { ProvenanceChip, type Provenance } from "@/components/common/provenance-chip";
+import { Callout } from "@/components/common/callout";
 import {
   Accordion,
   AccordionContent,
@@ -35,6 +37,14 @@ interface Props {
 export function PlanResults({ result }: Props) {
   const { syringeReadout } = result;
   const doseLabel = formatDose(result.input.doseMcg);
+  // BAC water is a user input to the concentration math, but the builder offers
+  // a recommended amount most people accept. Label it "we calculated" when it
+  // matches that recommendation, "you entered" when it was overridden, so the
+  // provenance chip stays honest either way.
+  const bacSource: Provenance =
+    Math.abs(result.usedBacMl - result.recommendedBacMl) < 0.01
+      ? "calculated"
+      : "user";
 
   return (
     <div className="space-y-5">
@@ -65,14 +75,15 @@ export function PlanResults({ result }: Props) {
         </div>
 
         <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden">
-          <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} />
-          <Stat label="BAC water" value={`${formatMl(result.usedBacMl)} mL`} />
+          <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} source="user" />
+          <Stat label="BAC water" value={`${formatMl(result.usedBacMl)} mL`} source={bacSource} />
           <Stat
             label="Concentration"
             value={`${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL`}
             sub={`${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`}
+            source="calculated"
           />
-          <Stat label="Measures / vial" value={`${result.dosesPerVial}`} />
+          <Stat label="Measures / vial" value={`${result.dosesPerVial}`} source="calculated" />
         </div>
 
         <div className="mt-6">
@@ -131,6 +142,9 @@ export function PlanResults({ result }: Props) {
         </div>
       </section>
 
+      {/* 2b, UNDERSTAND YOUR PLAN (the §15 clarity self-check) ----------- */}
+      <PlanSelfCheck result={result} bacSource={bacSource} doseLabel={doseLabel} />
+
       {/* 3, RECOMMENDED SUPPLIES / SHOP ---------------------------------- */}
       <SupplyRecommender supplies={result.supplies} />
 
@@ -181,6 +195,9 @@ export function PlanResults({ result }: Props) {
                     {result.expiration.days} days
                   </div>
                   <div className="text-xs text-muted-foreground">refrigerated</div>
+                  <div className="mt-1.5 flex justify-end">
+                    <ProvenanceChip source="research" />
+                  </div>
                   {result.expiration.date && (
                     <div className="mt-1 text-sm font-medium text-foreground">
                       Discard {formatDate(result.expiration.date)}
@@ -246,6 +263,102 @@ export function PlanResults({ result }: Props) {
         </Accordion>
       </section>
     </div>
+  );
+}
+
+/**
+ * The §15 clarity self-check. The PRD's bar for a good result is that a user can
+ * answer a short set of questions about their own plan unaided: how much water,
+ * how strong, how much they measure, where it lands, how many measurements, how
+ * long it lasts, and which numbers came from them versus the calculator. This
+ * section answers each with the plan's own values and a provenance chip, then
+ * states plainly what the plan did NOT decide.
+ */
+function PlanSelfCheck({
+  result,
+  bacSource,
+  doseLabel,
+}: {
+  result: CalcResult;
+  bacSource: Provenance;
+  doseLabel: string;
+}) {
+  const { syringeReadout } = result;
+  const syringeName = result.input.syringeType
+    .replace("insulin-", "")
+    .replace("ml", " mL");
+
+  const rows: {
+    q: string;
+    a: React.ReactNode;
+    source?: Provenance;
+  }[] = [
+    {
+      q: "How much water do I add?",
+      a: `${formatMl(result.usedBacMl)} mL of BAC water`,
+      source: bacSource,
+    },
+    {
+      q: "How strong is the mixed vial?",
+      a: `${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL (${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL)`,
+      source: "calculated",
+    },
+    {
+      q: "How much do I measure each time?",
+      a: `${doseLabel}, which is ${result.doseVolumeMl.toFixed(3)} mL`,
+      source: "user",
+    },
+    {
+      q: "Where does that land on my syringe?",
+      a: `${syringeReadout.displayLabel} on your ${syringeName} syringe`,
+      source: "calculated",
+    },
+    {
+      q: "How many measurements will the vial give?",
+      a: `About ${result.dosesPerVial}`,
+      source: "calculated",
+    },
+    {
+      q: "How long does it last once mixed?",
+      a: `${result.expiration.days} days refrigerated`,
+      source: "research",
+    },
+  ];
+
+  return (
+    <section className="border border-border bg-card rounded-2xl p-6 sm:p-8">
+      <h3 className="text-lg font-serif tracking-tight">Can you answer these?</h3>
+      <p className="mt-1 text-sm text-muted-foreground">
+        A good plan is one you understand. Here is every number it depends on, and
+        where each came from.
+      </p>
+
+      <dl className="mt-5 grid sm:grid-cols-2 gap-x-8 gap-y-4">
+        {rows.map((row) => (
+          <div key={row.q} className="flex flex-col">
+            <dt className="text-sm font-medium text-foreground">{row.q}</dt>
+            <dd className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              <span className="tabular-nums">{row.a}</span>
+              {row.source && <ProvenanceChip source={row.source} />}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="mt-5 pt-5 border-t border-border text-sm text-muted-foreground leading-relaxed">
+        <span className="font-medium text-foreground">Which numbers are mine?</span>{" "}
+        You entered the vial amount, how much to measure, and your syringe. The
+        site worked out the concentration, the syringe units, and the measurements
+        per vial. The shelf life comes from published research.
+      </div>
+
+      <Callout variant="note" className="mt-5" title="What this plan does not decide">
+        This plan turns the numbers on your vial into a concentration and a
+        syringe measurement. It does not decide how much to use, how often, or
+        whether a compound is safe or right for anyone. Those are not math, and
+        this site does not answer them.
+      </Callout>
+    </section>
   );
 }
 
@@ -334,10 +447,12 @@ function Stat({
   label,
   value,
   sub,
+  source,
 }: {
   label: string;
   value: string;
   sub?: string;
+  source?: Provenance;
 }) {
   return (
     <div className="bg-card px-4 py-4">
@@ -346,6 +461,11 @@ function Stat({
       </div>
       <div className="mt-1.5 text-lg tabular-nums text-foreground">{value}</div>
       {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
+      {source && (
+        <div className="mt-1.5">
+          <ProvenanceChip source={source} />
+        </div>
+      )}
     </div>
   );
 }
