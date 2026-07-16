@@ -33,6 +33,29 @@ const COMMON_COMPARISONS = [
   { slug: "saline", label: "BAC water vs saline" },
 ];
 
+const BASICS_QA = [
+  {
+    q: "What is bac water?",
+    a: "Sterile water plus 0.9% benzyl alcohol preservative.",
+  },
+  {
+    q: "How much water for a 5 mg vial?",
+    a: "It depends on how strong you want the liquid. Use the calculator instead of guessing.",
+  },
+  {
+    q: "How long can an opened vial be used?",
+    a: "Follow the instructions that came with your product. General advice does not tell you how long yours lasts.",
+  },
+  {
+    q: "Units to mL",
+    a: "100 units = 1 mL on a U-100 syringe.",
+  },
+  {
+    q: "mg to mcg",
+    a: "1 mg = 1,000 mcg.",
+  },
+];
+
 const PATHS = [
   {
     href: "/plan",
@@ -114,61 +137,50 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Definition + quick reference (AEO answer block), warm tonal band */}
+      {/* Definition + quick reference (AEO answer block), warm tonal band.
+         Two columns, mirroring the "How it works" band: the definition prose on
+         the left, the quick reference as a card that lifts off the warm band on
+         the right, so the section fills its width rather than trailing off. */}
       <section className="section-muted">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
-        <div className="max-w-3xl">
-          <div className="eyebrow">The basics</div>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
-            What is bacteriostatic water?
-          </h2>
-          <p className="mt-4 text-lg text-foreground/90 leading-relaxed">
-            Bacteriostatic water is sterile water with 0.9% benzyl alcohol in it.
-            Sterile means it had no germs in it when it was made. The benzyl
-            alcohol, a{" "}
-            <Term id="preservative">preservative</Term>, slows germs from growing
-            after you open the vial, so you can use the same vial more than once.
-            It is not safe for newborn babies. People use it to turn dried peptide
-            powder into a liquid they can measure. The calculators here work out
-            how much to add.
-          </p>
-        </div>
-        <div className="mt-8 max-w-3xl overflow-x-auto border border-border rounded-xl">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-surface text-left">
-                <th className="px-4 py-3 font-medium">Question</th>
-                <th className="px-4 py-3 font-medium">Quick answer</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">What is bac water?</td>
-                <td className="px-4 py-3">Sterile water plus 0.9% benzyl alcohol preservative</td>
-              </tr>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">How much water for a 5 mg vial?</td>
-                <td className="px-4 py-3">It depends on how strong you want the liquid. Use the calculator instead of guessing.</td>
-              </tr>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">How long can an opened vial be used?</td>
-                <td className="px-4 py-3">Follow the instructions that came with your product. General advice does not tell you how long yours lasts.</td>
-              </tr>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">Units to mL</td>
-                <td className="px-4 py-3">100 units = 1 mL on a U-100 syringe</td>
-              </tr>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">mg to mcg</td>
-                <td className="px-4 py-3">1 mg = 1,000 mcg</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-4 max-w-3xl flex flex-wrap gap-x-6 gap-y-2 text-sm">
-          <Link href="/tools/bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Bac water calculator</Link>
-          <Link href="/learn/what-is-bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">What is bac water?</Link>
-          <Link href="/faq" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 md:items-center">
+          {/* Left: plain-language definition */}
+          <div>
+            <div className="eyebrow">The basics</div>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
+              What is bacteriostatic water?
+            </h2>
+            <p className="mt-4 text-lg text-foreground/90 leading-relaxed">
+              Bacteriostatic water is sterile water with 0.9% benzyl alcohol in
+              it. Sterile means it had no germs in it when it was made. The benzyl
+              alcohol, a{" "}
+              <Term id="preservative">preservative</Term>, slows germs from
+              growing after you open the vial, so you can use the same vial more
+              than once. It is not safe for newborn babies. People use it to turn
+              dried peptide powder into a liquid they can measure. The calculators
+              here work out how much to add.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+              <Link href="/tools/bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Bac water calculator</Link>
+              <Link href="/learn/what-is-bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">What is bac water?</Link>
+              <Link href="/faq" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
+            </div>
+          </div>
+
+          {/* Right: quick reference card */}
+          <div className="border border-border rounded-2xl p-6 sm:p-8">
+            <div className="eyebrow">Quick reference</div>
+            <dl className="mt-4 divide-y divide-border">
+              {BASICS_QA.map((item) => (
+                <div key={item.q} className="py-3.5 first:pt-0 last:pb-0">
+                  <dt className="text-sm font-medium text-foreground">{item.q}</dt>
+                  <dd className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                    {item.a}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
         </div>
       </section>
