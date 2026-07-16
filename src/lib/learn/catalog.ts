@@ -176,6 +176,17 @@ function excerptFrom(body: string): string {
 /** Static (non-DB) pages that belong in the catalog for surfacing. */
 const STATIC_ENTRIES: LearnEntry[] = [
   {
+    id: "page-bac-water-for-peptides",
+    url: "/learn/bac-water-for-peptides",
+    title: "BAC water for peptides",
+    excerpt:
+      "Why bacteriostatic water is the standard solution for reconstituting peptides, how much to add, and what to use instead of sterile water or saline.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["reconstitution-method", "ingredients"],
+    source: "page",
+  },
+  {
     id: "page-what-you-cannot-know",
     url: "/learn/what-you-cannot-know",
     title: "What you cannot know about your vial",

@@ -93,6 +93,7 @@ export const STATIC_PAGES: SitemapUrl[] = [
   { path: "/tools/vial-labels", changeFrequency: "monthly", priority: 0.7 },
   { path: "/learn/glossary", changeFrequency: "monthly", priority: 0.6 },
   { path: "/learn/bac-water-shelf-life", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/learn/bac-water-for-peptides", changeFrequency: "monthly", priority: 0.8 },
   { path: "/learn/what-you-cannot-know", changeFrequency: "monthly", priority: 0.8 },
   { path: "/about", changeFrequency: "monthly", priority: 0.7 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
