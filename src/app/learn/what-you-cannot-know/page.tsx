@@ -104,7 +104,7 @@ export default function WhatYouCannotKnowPage() {
         </p>
         <p>
           A measurement that is ten or a hundred times off does not look
-          dramatic on a syringe &mdash; it is still a small amount of liquid.
+          dramatic on a syringe. It is still a small amount of liquid.
           That is exactly why it slips through. Our calculators flag amounts that
           are far outside what the studies on a page used, and amounts that would
           only make sense if the unit were wrong. Read the warning when it
@@ -116,7 +116,7 @@ export default function WhatYouCannotKnowPage() {
         <p>
           A U-100 insulin syringe is marked every 1 unit on the small barrels and
           every 2 units on the 1 mL barrel. If your amount lands between two
-          marks &mdash; say 7.5 units on a barrel marked every 2 &mdash; you
+          marks, say 7.5 units on a barrel marked every 2, you
           cannot measure it. People round, or guess, and a guess is where a small
           error becomes a big one.
         </p>
@@ -138,7 +138,7 @@ export default function WhatYouCannotKnowPage() {
           These are not all the same. A few are FDA-approved medicines with large
           human trials behind them. Some have small or early human studies. Many
           have only animal studies. Some have no published safety data in people
-          at all &mdash; only stories.
+          at all, only stories.
         </p>
         <p>
           An amount that was given to rats cannot be turned into a safe amount for

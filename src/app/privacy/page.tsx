@@ -72,8 +72,8 @@ export default function PrivacyPage() {
           to operate BACwater.ai:
         </p>
         <ul>
-          <li><b>Stripe</b> &mdash; payment processing (see above).</li>
-          <li><b>Resend</b> &mdash; transactional email delivery (order confirmations, password resets). Resend receives your email address solely to deliver messages on our behalf.</li>
+          <li><b>Stripe</b>: payment processing (see above).</li>
+          <li><b>Resend</b>: transactional email delivery (order confirmations, password resets). Resend receives your email address solely to deliver messages on our behalf.</li>
         </ul>
         <p>We do not sell, rent, or trade your data with any other party.</p>
 

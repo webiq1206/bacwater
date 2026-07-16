@@ -289,7 +289,7 @@ export default async function PeptidePage({
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
             The amount in the &ldquo;Amount to measure&rdquo; column is an
-            example chosen so the math is easy to follow &mdash; it is not a
+            example chosen so the math is easy to follow. It is not a
             recommended amount, and this site does not recommend how much to use.
             Units assume a U-100 insulin syringe (100 units = 1 mL). Always
             confirm the amount printed on your own vial.

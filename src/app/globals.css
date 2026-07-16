@@ -285,6 +285,92 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-accent-guide);
 }
 
+/* --- Shared content primitives (Phase 0) ---------------------------------
+   One vocabulary reused across compound pages, learn articles, tools, and the
+   results view, so the same idea always looks the same. All read tokens, so
+   they adapt automatically inside .section-dark / .section-muted bands. */
+
+/* AnswerBox: the TL;DR / direct-answer block that leads a page or section.
+   A quiet left rule and a warm ground make it the first thing the eye lands on
+   without shouting. */
+.answer-box {
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-foreground);
+  background: var(--color-surface);
+  padding: 1rem 1.25rem;
+}
+@media (min-width: 640px) {
+  .answer-box {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+/* Callout: note / warning / tip. One structure, three accents. The accent color
+   is set per-variant on --callout-accent so the border, icon, and soft ground
+   all track a single value. */
+.callout {
+  --callout-accent: var(--color-accent-guide);
+  --callout-soft: var(--color-accent-guide-soft);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--callout-accent);
+  background: var(--callout-soft);
+  padding: 1rem 1.25rem;
+}
+@media (min-width: 640px) {
+  .callout {
+    padding: 1.25rem 1.5rem;
+  }
+}
+.callout--note {
+  --callout-accent: var(--color-accent-guide);
+  --callout-soft: var(--color-accent-guide-soft);
+}
+.callout--tip {
+  --callout-accent: var(--color-success);
+  --callout-soft: color-mix(in srgb, var(--color-success) 10%, transparent);
+}
+.callout--warning {
+  --callout-accent: var(--color-warning);
+  --callout-soft: color-mix(in srgb, var(--color-warning) 9%, transparent);
+}
+.callout__icon {
+  color: var(--callout-accent);
+}
+
+/* Provenance chip: labels a number by where it came from. Three sources, three
+   quiet tones. Kept small and uppercase so it reads as a tag, not a badge. */
+.provenance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+/* USER: what the visitor typed. Neutral ink. */
+.provenance--user {
+  color: var(--color-foreground);
+  background: var(--color-muted);
+  border-color: var(--color-border-strong);
+}
+/* CALCULATED: what the engine derived. Sage, the accent. */
+.provenance--calculated {
+  color: var(--color-accent-guide);
+  background: var(--color-accent-guide-soft);
+  border-color: color-mix(in srgb, var(--color-accent-guide) 25%, transparent);
+}
+/* RESEARCH: a value or default that comes from the reference layer. Warm. */
+.provenance--research {
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  border-color: color-mix(in srgb, var(--color-warning) 25%, transparent);
+}
+
 /* Badge for product recommendations */
 .badge-match {
   display: inline-flex;
