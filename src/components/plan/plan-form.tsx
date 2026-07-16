@@ -34,6 +34,7 @@ import {
   type SyringeType,
 } from "@/lib/calc";
 import { savePlanAction } from "@/lib/plan-actions";
+import { defaultPlanName } from "@/lib/plan-name";
 import { PlanResults } from "@/components/plan/plan-results";
 import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
 import { toast } from "@/components/ui/toaster";
@@ -359,6 +360,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   const [secondaryVialUnit, setSecondaryVialUnit] = useState<Unit>("mg");
 
   const [saving, setSaving] = useState(false);
+  // null = untouched, so the editable field shows the generated default name.
+  const [planName, setPlanName] = useState<string | null>(null);
   const [editingSyringe, setEditingSyringe] = useState(false);
 
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
@@ -366,7 +369,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
     PEPTIDES.find((p) => p.slug === secondarySlug) ?? PEPTIDES[0];
 
   const vialStrengthMg = vialUnit === "mg" ? vialInput : vialInput / 1000;
-  const doseMcg = doseUnit === "mcg" ? doseInput : doseInput * 1000;
+  // Round the mg→mcg conversion so 0.3 mg doesn't become 300.00000000000006.
+  const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
   const secondaryVialMg =
     secondaryVialUnit === "mg" ? secondaryVialInput : secondaryVialInput / 1000;
 
@@ -452,14 +456,20 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
   const syringe = SYRINGES.find((s) => s.id === syringeType) ?? SYRINGES[2];
 
+  const peptideNameForPlan = showBlend
+    ? `${primaryName} + ${secondaryName}`
+    : primaryName;
+  const nameValue =
+    planName ??
+    defaultPlanName({ peptideName: peptideNameForPlan, vialStrengthMg, dateMixed });
+
   async function handleSave() {
     setSaving(true);
     try {
       const payload = {
+        name: nameValue,
         peptideSlug,
-        peptideName: showBlend
-          ? `${primaryName} + ${secondaryName}`
-          : primaryName,
+        peptideName: peptideNameForPlan,
         vialStrengthMg,
         doseMcg,
         bacWaterMl: useRecommendedBac ? recommendedBac : customBacMl,
@@ -708,9 +718,9 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             <StepBlock
               n={3}
               total={6}
-              label="Dose"
-              title="How much per draw?"
-              hint={`Typical studied range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
+              label="Amount"
+              title="How much do you measure each time?"
+              hint={`Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
             >
               <div className="grid gap-1.5 sm:gap-2">
                 {dosePresets.map((d) => (
@@ -729,9 +739,13 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
                 ))}
                 <ChipButton
                   active={showCustomDose}
-                  onClick={() => setShowCustomDose(true)}
+                  onClick={() => {
+                    setShowCustomDose(true);
+                    setDoseUnit("mg");
+                    setDoseInput(doseMcg / 1000);
+                  }}
                 >
-                  Custom dose...
+                  Custom amount...
                 </ChipButton>
               </div>
               {showCustomDose ? (
@@ -1044,8 +1058,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
       {step === 2 && (
         <StepPanel
-          title="How much per draw?"
-          hint={`Typical studied range for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). Not sure? Pick the most commonly studied amount.`}
+          title="How much do you measure each time?"
+          hint={`Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). Not sure? Pick the most commonly studied amount.`}
           onNext={() => goToStep(3)}
           onBack={() => goToStep(1)}
           stepNum={3}
@@ -1067,20 +1081,24 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             ))}
             <ChipButton
               active={showCustomDose}
-              onClick={() => setShowCustomDose(true)}
+              onClick={() => {
+                setShowCustomDose(true);
+                setDoseUnit("mg");
+                setDoseInput(doseMcg / 1000);
+              }}
             >
-              Custom dose
+              Custom amount
             </ChipButton>
           </div>
           {showCustomDose ? (
             <div className="mt-4">
               <Label className="text-xs text-muted-foreground">
-                Enter your dose
+                Enter the amount you measure
               </Label>
               <div className="mt-1 flex items-center gap-2">
                 <Input
                   type="number"
-                  step="10"
+                  step="0.05"
                   value={doseInput}
                   onChange={(e) =>
                     setDoseInput(parseFloat(e.target.value) || 0)
@@ -1276,6 +1294,20 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           <AiAssistantDrawer plan={result} />
 
           <div className="flex flex-col gap-3 pt-2">
+            {/* Name your plan (a relevant default is pre-filled; editable). */}
+            <div>
+              <Label htmlFor="plan-name" className="text-xs text-muted-foreground">
+                Plan name
+              </Label>
+              <Input
+                id="plan-name"
+                value={nameValue}
+                onChange={(e) => setPlanName(e.target.value)}
+                maxLength={120}
+                placeholder="Name this plan"
+                className="mt-1 h-12"
+              />
+            </div>
             {/* Desktop: inline save. On mobile this lives in the sticky bar below. */}
             <Button
               variant="brand"

@@ -186,42 +186,42 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
   const bacVials = Math.ceil(totalBacNeededMl / 30);
   supplies.push({
     sku: "BAC-30ML",
-    name: "Bacteriostatic Water, 30 mL vial",
+    name: "Bacteriostatic water, 30 mL vial",
     quantity: bacVials,
-    reason: "Diluent used to reconstitute the peptide.",
+    reason: `You'll use about ${round(bac, 2)} mL for this vial. Bac water is commonly sold in 30 mL vials, so one covers this plan.`,
   });
 
   // Syringes: at least dosesPerVial, plus 1 extra for reconstitution draw
   const injectionSyringes = Math.max(1, Math.ceil(dosesPerVial));
   const syringeName =
     syringe.id === "insulin-0.3ml"
-      ? "Insulin syringes, 0.3 mL / 30 units (100 pack)"
+      ? "Insulin syringes, 0.3 mL / 30 units"
       : syringe.id === "insulin-0.5ml"
-        ? "Insulin syringes, 0.5 mL / 50 units (100 pack)"
-        : syringe.id === "insulin-1ml"
-          ? "Insulin syringes, 1 mL / 100 units (100 pack)"
-          // Non-insulin syringe types are not stocked; recommend the closest
-          // purchasable option we carry (the 1 mL insulin syringe).
-          : "Insulin syringes, 1 mL / 100 units (100 pack)";
+        ? "Insulin syringes, 0.5 mL / 50 units"
+        : "Insulin syringes, 1 mL / 100 units";
+  // Report the number you actually USE (one per measurement, plus one to draw
+  // the water), not a purchase box. Showing "1 (100 pack)" next to "13
+  // measurements per vial" reads as a mismatch. Pack size is context, in the
+  // reason. Counts only — the site sells nothing (§9.3.6).
+  const syringesUsed = injectionSyringes + 1;
   supplies.push({
     sku:
       syringe.id === "insulin-0.3ml"
         ? "SYR-INS-03"
         : syringe.id === "insulin-0.5ml"
           ? "SYR-INS-05"
-          : syringe.id === "insulin-1ml"
-            ? "SYR-INS-10"
-            : "SYR-INS-10",
+          : "SYR-INS-10",
     name: syringeName,
-    quantity: Math.max(1, Math.ceil(injectionSyringes / 100)),
-    reason: `Enough for approximately ${injectionSyringes} injections.`,
+    quantity: syringesUsed,
+    reason: `One per measurement (this vial gives about ${injectionSyringes}), plus one to draw the water. Commonly sold in boxes of 100.`,
   });
 
+  const padsUsed = injectionSyringes * 2 + 1;
   supplies.push({
     sku: "ALC-200",
-    name: "Alcohol prep pads (200 pack)",
-    quantity: 1,
-    reason: "For sanitizing vial tops and injection site.",
+    name: "Alcohol prep pads",
+    quantity: padsUsed,
+    reason: "About two per measurement — the vial top and, if you inject, the site. Commonly sold in boxes of 200.",
   });
 
   return supplies;

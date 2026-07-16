@@ -7,8 +7,10 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { calculate, type CalcInput, type SyringeType } from "@/lib/calc";
+import { defaultPlanName } from "@/lib/plan-name";
 
 const inputSchema = z.object({
+  name: z.string().max(120).optional().nullable(),
   peptideSlug: z.string().optional().nullable(),
   peptideName: z.string().optional().nullable(),
   vialStrengthMg: z.number().positive(),
@@ -59,9 +61,17 @@ export async function savePlanAction(raw: unknown, notes?: string) {
   const result = calculate(input);
 
   const publicId = nanoid(10);
+  const name =
+    (parsed.data.name && parsed.data.name.trim()) ||
+    defaultPlanName({
+      peptideName: result.input.peptideName,
+      vialStrengthMg: result.input.vialStrengthMg,
+      dateMixed: result.input.dateMixed ?? null,
+    });
   const plan = await prisma.plan.create({
     data: {
       publicId,
+      name,
       userId: (session?.user as { id?: string } | undefined)?.id ?? null,
       peptideSlug: result.input.peptideSlug,
       peptideName: result.input.peptideName,
@@ -95,6 +105,30 @@ export async function updatePlanNotesAction(publicId: string, notes: string) {
   return { ok: true as const };
 }
 
+export async function updatePlanNameAction(publicId: string, name: string) {
+  const session = await auth();
+  const plan = await prisma.plan.findUnique({ where: { publicId } });
+  if (!plan) return { ok: false as const };
+  if (plan.userId && plan.userId !== (session?.user as { id?: string } | undefined)?.id)
+    return { ok: false as const, error: "Not authorized." };
+  const trimmed = name.trim().slice(0, 120);
+  await prisma.plan.update({
+    where: { id: plan.id },
+    data: {
+      name:
+        trimmed ||
+        defaultPlanName({
+          peptideName: plan.peptideName,
+          vialStrengthMg: plan.vialStrengthMg,
+          dateMixed: plan.dateMixed ? plan.dateMixed.toISOString().slice(0, 10) : null,
+        }),
+    },
+  });
+  revalidatePath(`/plan/${publicId}`);
+  revalidatePath("/plans");
+  return { ok: true as const };
+}
+
 export async function togglePlanArchivedAction(publicId: string) {
   const session = await auth();
   const plan = await prisma.plan.findUnique({ where: { publicId } });
@@ -125,6 +159,7 @@ export async function duplicatePlanAction(publicId: string) {
   const created = await prisma.plan.create({
     data: {
       publicId: newPublicId,
+      name: plan.name ? `${plan.name} (copy)`.slice(0, 120) : null,
       userId: (session?.user as { id?: string } | undefined)?.id ?? plan.userId,
       peptideSlug: plan.peptideSlug,
       peptideName: plan.peptideName,

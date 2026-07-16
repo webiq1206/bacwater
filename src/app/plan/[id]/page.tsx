@@ -9,6 +9,7 @@ import { formatDate } from "@/lib/utils";
 import { PlanNotesForm } from "@/components/plan/plan-notes-form";
 import { PlanQr } from "@/components/plan/plan-qr";
 import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
+import { PlanNameEditor } from "@/components/plan/plan-name-editor";
 import { CopyLinkClient } from "@/components/plan/copy-link";
 import { PlanShareButton } from "@/components/plan/plan-share-button";
 import { PlanActionBar } from "@/components/plan/plan-action-bar";
@@ -42,9 +43,10 @@ export default async function PublicPlanPage({ params }: Props) {
           <div className="eyebrow">
             Plan · {plan.publicId}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight mt-1">
-            {plan.peptideName || "Reconstitution plan"}
-          </h1>
+          <PlanNameEditor
+            publicId={plan.publicId}
+            initialName={plan.name || plan.peptideName || "Reconstitution plan"}
+          />
           <p className="text-sm text-muted-foreground mt-1">
             Saved {formatDate(plan.createdAt)}
           </p>

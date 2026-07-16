@@ -76,7 +76,7 @@ export default async function PlansPage() {
   );
 }
 
-function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; peptideName: string | null; vialStrengthMg: number; doseMcg: number; syringeUnits: number; dosesPerVial: number; dateMixed: Date | null; expirationDate: Date | null; createdAt: Date; archived: boolean; data: string }> }) {
+function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; name: string | null; peptideName: string | null; vialStrengthMg: number; doseMcg: number; syringeUnits: number; dosesPerVial: number; dateMixed: Date | null; expirationDate: Date | null; createdAt: Date; archived: boolean; data: string }> }) {
   return (
     <ul className="mt-4 grid gap-3 md:grid-cols-2">
       {plans.map((p) => {
@@ -99,7 +99,7 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
                     href={`/plan/${p.publicId}`}
                     className="font-semibold text-lg tracking-tight hover:underline"
                   >
-                    {p.peptideName || "Untitled plan"}
+                    {p.name || p.peptideName || "Untitled plan"}
                   </Link>
                   <div className="text-xs text-muted-foreground mt-0.5">
                     Saved {formatDate(p.createdAt)}
@@ -115,11 +115,11 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; pept
               <dl className="mt-4 grid grid-cols-2 gap-y-1 text-sm">
                 <dt className="text-muted-foreground">Vial</dt>
                 <dd className="text-right">{p.vialStrengthMg} mg</dd>
-                <dt className="text-muted-foreground">Dose</dt>
+                <dt className="text-muted-foreground">Amount</dt>
                 <dd className="text-right">{formatDose(p.doseMcg)}</dd>
-                <dt className="text-muted-foreground">Draw per dose</dt>
+                <dt className="text-muted-foreground">Measure</dt>
                 <dd className="text-right font-medium text-foreground">{readout}</dd>
-                <dt className="text-muted-foreground">Doses/vial</dt>
+                <dt className="text-muted-foreground">Measures/vial</dt>
                 <dd className="text-right">{p.dosesPerVial}</dd>
               </dl>
 

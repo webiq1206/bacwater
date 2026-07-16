@@ -119,10 +119,10 @@ export function PeptideCalc({
               className="mt-2"
               value={doseMcg || ""}
               onChange={(e) => setDoseMcg(parseFloat(e.target.value) || 0)}
-              aria-label="Dose per injection in micrograms"
+              aria-label="Amount you measure, in micrograms"
             />
             <p className="mt-1.5 text-xs text-muted-foreground">
-              = {(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg per dose
+              = {(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg
             </p>
           </div>
         </div>

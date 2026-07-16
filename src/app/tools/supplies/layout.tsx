@@ -34,8 +34,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24">
         <section className="max-w-3xl mb-10 border border-border p-5 sm:p-6">
           <p className="text-base leading-relaxed text-foreground/90">
-            <strong>The supplies you need depend on your peptide, amount per draw, draw frequency, and cycle length.</strong>{" "}
-            A 4-week daily schedule uses 1 peptide vial, 1 vial of BAC water, 28 insulin syringes, and 56 alcohol prep pads (2 per draw). Enter your details below for an exact shopping list with quantities and reasons.
+            <strong>The supplies you need depend on your peptide, amount you measure, how often you measure, and cycle length.</strong>{" "}
+            A 4-week daily schedule uses 1 peptide vial, 1 vial of BAC water, 28 insulin syringes, and 56 alcohol prep pads (2 per measurement). Enter your details below for an exact shopping list with quantities and reasons.
           </p>
         </section>
       </div>
@@ -61,16 +61,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             rows: [
               ["Peptide vial", "1"],
               ["Bac water", "1 vial"],
-              ["Insulin syringes", "28 (1 per draw)"],
-              ["Alcohol prep pads", "56 (2 per draw)"],
+              ["Insulin syringes", "28 (1 per measurement)"],
+              ["Alcohol prep pads", "56 (2 per measurement)"],
             ],
             caption:
-              "Quantities scale with your amount per draw, draw frequency, and cycle length.",
+              "Quantities scale with your amount you measure, how often you measure, and cycle length.",
           }}
           faqs={[
             {
               q: "How many syringes do I need for a peptide cycle?",
-              a: "Usually one insulin syringe per draw. A 4-week daily schedule is about 28 syringes. Multiply your draws per day by the number of days in your cycle.",
+              a: "Usually one insulin syringe per measurement. A 4-week daily schedule is about 28 syringes. Multiply your measurements per day by the number of days in your cycle.",
             },
             {
               q: "How much bac water do I need for a cycle?",
@@ -78,7 +78,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             },
             {
               q: "Do I need alcohol prep pads?",
-              a: "Yes. Wipe the vial stopper with an alcohol prep pad before each draw to keep the surface clean. Two pads per draw is a common plan.",
+              a: "Yes. Wipe the vial stopper with an alcohol prep pad before each measurement to keep the surface clean. Two pads per measurement is a common plan.",
             },
           ]}
         />

@@ -298,7 +298,7 @@ export default async function PeptidePage({
             <div className="mt-6">
               <Infographic
                 svg={chartSvg}
-                caption={`${short}: syringe units to draw per dose at each vial strength. Longer bar means more units. Verify your own vial.`}
+                caption={peptideChartAlt(p)}
               />
             </div>
           )}

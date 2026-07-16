@@ -21,7 +21,7 @@ export default async function AdminPlansPage() {
                 <th className="p-3">User</th>
                 <th className="p-3">Vial</th>
                 <th className="p-3">Dose</th>
-                <th className="p-3">Doses/vial</th>
+                <th className="p-3">Measures/vial</th>
                 <th className="p-3">Created</th>
                 <th className="p-3">Link</th>
               </tr>

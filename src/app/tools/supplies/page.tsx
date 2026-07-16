@@ -35,7 +35,7 @@ export default function SupplyCalculatorPage() {
   // Dose (default to peptide's suggested, shown in mg)
   const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg / 1000);
   const [doseUnit, setDoseUnit] = useState<Unit>("mg");
-  const doseMcg = doseUnit === "mcg" ? doseInput : doseInput * 1000;
+  const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
 
   // Vial size: user picks from common options
   const [vialMg, setVialMg] = useState<number>(peptide.commonVialStrengthsMg[0]);
@@ -106,8 +106,8 @@ export default function SupplyCalculatorPage() {
         <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
           Tell us your peptide, how much you measure, and cycle length and this supply
           calculator will figure out exactly how many peptide vials, BAC water
-          bottles, syringes, and alcohol pads you&apos;ll need, with a
-          one-click cart.
+          bottles, syringes, and alcohol pads you&apos;ll need — counts only,
+          nothing for sale.
         </p>
       </div>
 
@@ -127,24 +127,32 @@ export default function SupplyCalculatorPage() {
             </Select>
           </Section>
 
-          {/* 2. Amount per draw */}
+          {/* 2. Amount you measure */}
           <Section
             n={2}
             total={5}
-            title="How much per draw?"
-            hint={`Typical studied range: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the most commonly studied amount.`}
+            title="How much do you measure each time?"
+            hint={`Amounts studied: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the most commonly studied amount.`}
           >
             <div className="flex items-center gap-2">
               <Input
                 type="number"
                 inputMode="decimal"
-                step="0.01"
+                step="0.05"
                 value={doseInput}
                 onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
               />
               <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mg", "mcg"]} />
             </div>
+            {doseInput > 0 ? (
+              <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
+                <Check className="h-3 w-3 inline mr-1" />
+                {doseUnit === "mg"
+                  ? `${doseInput.toLocaleString()} mg = ${Math.round(doseInput * 1000).toLocaleString()} mcg`
+                  : `${doseInput.toLocaleString()} mcg = ${(doseInput / 1000).toLocaleString(undefined, { maximumFractionDigits: 4 })} mg`}
+              </div>
+            ) : null}
           </Section>
 
           {/* 3. Vial size to order */}
@@ -258,24 +266,24 @@ export default function SupplyCalculatorPage() {
                 <SupplyRow
                   qty={results.peptideVialsNeeded}
                   label={`${peptide.name}, ${vialMg} mg vial${results.peptideVialsNeeded === 1 ? "" : "s"}`}
-                  why={`Each vial gives you about ${results.dosesPerVial} doses at ${doseMcg / 1000} mg (${doseMcg.toLocaleString()} mcg). Rounded up so you don't run out.`}
+                  why={`Each vial gives about ${results.dosesPerVial} measurements at ${doseMcg / 1000} mg (${doseMcg.toLocaleString()} mcg). Rounded up so you don't run out.`}
                 />
                 <SupplyRow
                   qty={results.bacVialsNeeded}
-                  label={`Bacteriostatic Water, 30 mL bottle${results.bacVialsNeeded === 1 ? "" : "s"}`}
-                  why={`You'll use ~${Math.round(results.totalBacMl * 10) / 10} mL total to reconstitute your ${results.peptideVialsNeeded} peptide vial${results.peptideVialsNeeded === 1 ? "" : "s"}.`}
+                  label={`Bacteriostatic water, 30 mL vial${results.bacVialsNeeded === 1 ? "" : "s"}`}
+                  why={`You'll use about ${Math.round(results.totalBacMl * 10) / 10} mL total. Bac water is commonly sold in 30 mL vials.`}
                   buyable="BAC-30ML"
                 />
                 <SupplyRow
-                  qty={results.syringeBoxes}
-                  label={`Insulin Syringes, box of 100${results.syringeBoxes === 1 ? "" : ""} (${results.syringesNeeded} draws)`}
-                  why="One fresh syringe per draw. Never reuse."
+                  qty={results.syringesNeeded}
+                  label="Insulin syringes"
+                  why={`One fresh syringe per measurement (about ${results.syringesNeeded}). Never reuse. Commonly sold in boxes of 100.`}
                   buyable="SYR-INS-10"
                 />
                 <SupplyRow
-                  qty={results.padBoxes}
-                  label={`Alcohol Prep Pads, box of 200${results.padBoxes === 1 ? "" : ""} (${results.padsNeeded} pads)`}
-                  why="Two pads per draw to keep the vial top and your work surface clean."
+                  qty={results.padsNeeded}
+                  label="Alcohol prep pads"
+                  why="About two per measurement — the vial top and, if you inject, the site. Commonly sold in boxes of 200."
                   buyable="ALC-200"
                 />
               </div>

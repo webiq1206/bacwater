@@ -29,7 +29,7 @@ export default function BacWaterCalculatorPage() {
 
   const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg / 1000);
   const [doseUnit, setDoseUnit] = useState<Unit>("mg");
-  const doseMcg = doseUnit === "mcg" ? doseInput : doseInput * 1000;
+  const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
 
   function handlePeptideChange(slug: string) {
     const p = PEPTIDES.find((x) => x.slug === slug) ?? PEPTIDES[0];
@@ -153,10 +153,12 @@ export default function BacWaterCalculatorPage() {
               />
               <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mg", "mcg"]} />
             </div>
-            {doseUnit === "mcg" && doseInput > 0 ? (
+            {doseInput > 0 ? (
               <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
                 <Check className="h-3 w-3 inline mr-1" />
-                {doseInput.toLocaleString()} mcg = {(doseInput / 1000)} mg
+                {doseUnit === "mg"
+                  ? `${doseInput.toLocaleString()} mg = ${Math.round(doseInput * 1000).toLocaleString()} mcg`
+                  : `${doseInput.toLocaleString()} mcg = ${(doseInput / 1000).toLocaleString(undefined, { maximumFractionDigits: 4 })} mg`}
               </div>
             ) : null}
           </StepCard>

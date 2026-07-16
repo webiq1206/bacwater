@@ -69,6 +69,7 @@ model VerificationToken {
 model Plan {
   id                        String    @id @default(cuid())
   publicId                  String    @unique
+  name                      String?
   userId                    String?
   user                      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
 
