@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ArrowRight, BookOpen, Download, ExternalLink, FileText, Lightbulb, Plus, ShoppingBag } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -10,6 +9,7 @@ import { formatDose, formatSyringeReading, formatUnits } from "@/lib/calc/format
 import type { CalcResult } from "@/lib/calc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PlansRowActions } from "@/components/plan/plans-row-actions";
+import { DevicePlansList } from "@/components/plan/device-plans-list";
 
 export const metadata = {
   title: "My Plans",
@@ -19,7 +19,30 @@ export const metadata = {
 
 export default async function PlansPage() {
   const session = await auth();
-  if (!session?.user) redirect("/signin?next=/plans");
+
+  // Signed-out visitors still get their plans — the ones saved on this device,
+  // read client-side from localStorage. No forced sign-in.
+  if (!session?.user) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="eyebrow">Dashboard</div>
+            <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight">My Plans</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Your saved reconstitution plans. Open, rename, or print anytime.
+            </p>
+          </div>
+          <Button asChild variant="brand">
+            <Link href="/plan">
+              <Plus className="h-4 w-4" /> New plan
+            </Link>
+          </Button>
+        </div>
+        <DevicePlansList />
+      </div>
+    );
+  }
 
   const userId = (session.user as { id?: string }).id!;
   const [active, archived] = await Promise.all([

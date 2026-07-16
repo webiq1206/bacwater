@@ -10,6 +10,7 @@ import { PlanNotesForm } from "@/components/plan/plan-notes-form";
 import { PlanQr } from "@/components/plan/plan-qr";
 import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
 import { PlanNameEditor } from "@/components/plan/plan-name-editor";
+import { RecordPlanView } from "@/components/plan/record-plan-view";
 import { CopyLinkClient } from "@/components/plan/copy-link";
 import { PlanShareButton } from "@/components/plan/plan-share-button";
 import { PlanActionBar } from "@/components/plan/plan-action-bar";
@@ -38,6 +39,7 @@ export default async function PublicPlanPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
+      <RecordPlanView publicId={plan.publicId} name={plan.name || plan.peptideName || "Reconstitution plan"} />
       <div className="flex flex-wrap items-center justify-between gap-4 no-print">
         <div>
           <div className="eyebrow">
