@@ -7,6 +7,7 @@ import {
   Info,
   ListChecks,
   MessageCircle,
+  SlidersHorizontal,
   Snowflake,
 } from "lucide-react";
 import type { CalcResult } from "@/lib/calc";
@@ -23,6 +24,7 @@ import { SupplyRecommender } from "@/components/plan/supply-recommender";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { ProvenanceChip, type Provenance } from "@/components/common/provenance-chip";
 import { Callout } from "@/components/common/callout";
+import { WhatIfExplorer } from "@/components/plan/what-if-explorer";
 import {
   Accordion,
   AccordionContent,
@@ -209,6 +211,22 @@ export function PlanResults({ result }: Props) {
                 peptideName={result.input.peptideName}
                 shelfDays={result.expiration.days}
                 dateMixed={result.input.dateMixed}
+              />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="whatif" className="border-b-0 border-t border-border">
+            <AccordionTrigger>
+              <span className="flex items-center gap-2.5">
+                <SlidersHorizontal className="h-4 w-4 accent-check" />
+                What if I used more or less water?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <WhatIfExplorer
+                vialStrengthMg={result.input.vialStrengthMg}
+                doseMcg={result.input.doseMcg}
+                actualBacMl={result.usedBacMl}
               />
             </AccordionContent>
           </AccordionItem>
