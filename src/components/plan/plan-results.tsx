@@ -356,7 +356,13 @@ function PlanSelfCheck({
         This plan turns the numbers on your vial into a concentration and a
         syringe measurement. It does not decide how much to use, how often, or
         whether a compound is safe or right for anyone. Those are not math, and
-        this site does not answer them.
+        this site does not answer them.{" "}
+        <a
+          href="/learn/what-you-cannot-know"
+          className="font-medium underline underline-offset-4"
+        >
+          Read what no calculation can verify about your vial.
+        </a>
       </Callout>
     </section>
   );

@@ -263,6 +263,32 @@ export default async function LearnPage({
         </div>
       )}
 
+      {activeCount === 0 && (
+        <Link
+          href="/learn/what-you-cannot-know"
+          className="section-dark group mt-6 block rounded-2xl p-6 sm:p-8 transition-opacity hover:opacity-95"
+        >
+          <div className="flex items-start justify-between gap-6">
+            <div>
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>
+                The honest part
+              </div>
+              <div className="mt-2 text-xl sm:text-2xl font-serif tracking-tight text-foreground">
+                What you cannot know about your vial
+              </div>
+              <p className="mt-2 max-w-2xl text-sm text-muted-foreground leading-relaxed">
+                The math here is exact for the numbers you type. It cannot tell
+                you what is actually in the powder. This is the honest part that a
+                site with something to sell will not put in front of you.
+              </p>
+              <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-foreground group-hover:gap-2.5 transition-all">
+                Read it <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </div>
+        </Link>
+      )}
+
       {/* Filter bar */}
       <div className="mt-8 space-y-5 border border-border bg-surface p-5 sm:p-6">
         <FilterRow label="Type">
