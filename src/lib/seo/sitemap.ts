@@ -2,9 +2,9 @@
  * Shared helpers for the segmented XML sitemaps.
  *
  * The site publishes a sitemap index at /sitemap.xml that points at
- * per-type segment files (/sitemap-pages.xml, /sitemap-learn.xml,
- * /sitemap-products.xml, and later /sitemap-peptides.xml). Segmenting makes
- * indexing problems in one content type easy to spot in Search Console.
+ * per-type segment files (/sitemap-pages.xml, /sitemap-peptides.xml,
+ * /sitemap-learn.xml). Segmenting makes indexing problems in one content
+ * type easy to spot in Search Console.
  */
 
 export const SITE_URL =
@@ -107,5 +107,4 @@ export const SITEMAP_SEGMENTS = [
   "/sitemap-pages.xml",
   "/sitemap-peptides.xml",
   "/sitemap-learn.xml",
-  "/sitemap-products.xml",
 ];
