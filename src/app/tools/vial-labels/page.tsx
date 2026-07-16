@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { SoftwareAppJsonLd } from "@/components/common/software-app-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import {
@@ -66,6 +67,11 @@ export default function VialLabelsPage() {
           { name: "Vial Labels", url: "/tools/vial-labels" },
         ]}
         reviewed
+      />
+      <SoftwareAppJsonLd
+        name="Peptide Vial Label Generator"
+        description="Generate printable peptide vial labels with a QR code showing the compound, vial strength, concentration, dose in units, mix date, and discard date."
+        url="/tools/vial-labels"
       />
       <Breadcrumbs
         items={[
