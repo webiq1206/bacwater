@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, HelpCircle, Ruler, Syringe } from "lucide-react";
 
@@ -8,10 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { mlToU100, u100ToMl } from "@/lib/calc/converters";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { usePersistentState } from "@/lib/use-persistent-state";
 
 export default function SyringeUnitConverterPage() {
-  const [ml, setMl] = useState(0.1);
-  const [units, setUnits] = useState(10);
+  const [ml, setMl] = usePersistentState("bacwater.tool.syringe.ml", 0);
+  const [units, setUnits] = usePersistentState("bacwater.tool.syringe.units", 0);
+  const hasValue = ml > 0 || units > 0;
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
@@ -39,7 +40,8 @@ export default function SyringeUnitConverterPage() {
                 type="number"
                 inputMode="decimal"
                 step="1"
-                value={units}
+                value={units || ""}
+                placeholder="0"
                 onChange={(e) => {
                   const v = parseFloat(e.target.value) || 0;
                   setUnits(v);
@@ -55,7 +57,8 @@ export default function SyringeUnitConverterPage() {
                 type="number"
                 inputMode="decimal"
                 step="0.01"
-                value={ml}
+                value={ml || ""}
+                placeholder="0"
                 onChange={(e) => {
                   const v = parseFloat(e.target.value) || 0;
                   setMl(v);
@@ -67,9 +70,13 @@ export default function SyringeUnitConverterPage() {
           </div>
 
           <div className="mt-6 callout-panel text-center">
-            <div className="text-xl font-semibold">
-              {units} units = {ml} mL
-            </div>
+            {hasValue ? (
+              <div className="text-xl font-semibold">
+                {units} units = {ml} mL
+              </div>
+            ) : (
+              <div className="text-xl font-semibold text-muted-foreground">Type a number in either box</div>
+            )}
             <p className="mt-1 text-sm text-muted-foreground">
               On a U-100 insulin syringe, 100 units always equals 1 mL.
             </p>

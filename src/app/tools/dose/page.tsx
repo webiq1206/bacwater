@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, FlaskConical, HelpCircle, Lightbulb, Ruler } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -11,17 +11,18 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
 import { CopyButton } from "@/components/common/copy-button";
 import { StickyResultBar } from "@/components/tools/sticky-result-bar";
+import { usePersistentState } from "@/lib/use-persistent-state";
 
 type Unit = "mg" | "mcg";
 
 export default function DoseCalculatorPage() {
-  const [concInput, setConcInput] = useState(2.5);
-  const [concUnit, setConcUnit] = useState<Unit>("mg");
+  const [concInput, setConcInput] = usePersistentState("bacwater.tool.dose.conc", 0);
+  const [concUnit, setConcUnit] = usePersistentState<Unit>("bacwater.tool.dose.concUnit", "mg");
   const concMgPerMl = concUnit === "mg" ? concInput : concInput / 1000;
 
-  const [volMl, setVolMl] = useState(0.1);
-  const [volMode, setVolMode] = useState<"ml" | "units">("units");
-  const [volUnits, setVolUnits] = useState(10);
+  const [volMl, setVolMl] = usePersistentState("bacwater.tool.dose.volMl", 0);
+  const [volMode, setVolMode] = usePersistentState<"ml" | "units">("bacwater.tool.dose.volMode", "units");
+  const [volUnits, setVolUnits] = usePersistentState("bacwater.tool.dose.volUnits", 0);
 
   const actualMl = volMode === "ml" ? volMl : volUnits / 100;
 
@@ -71,7 +72,8 @@ export default function DoseCalculatorPage() {
                 type="number"
                 inputMode="decimal"
                 step="0.1"
-                value={concInput}
+                value={concInput || ""}
+                placeholder="e.g. 2.5"
                 onChange={(e) => setConcInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
               />
@@ -129,11 +131,13 @@ export default function DoseCalculatorPage() {
                   type="number"
                   inputMode="decimal"
                   step="1"
-                  value={volUnits}
+                  value={volUnits || ""}
                   onChange={(e) => setVolUnits(parseFloat(e.target.value) || 0)}
                   placeholder="e.g. 10"
                 />
-                <ConversionHint>{volUnits} units = {(volUnits / 100).toFixed(3)} mL</ConversionHint>
+                {volUnits > 0 ? (
+                  <ConversionHint>{volUnits} units = {(volUnits / 100).toFixed(3)} mL</ConversionHint>
+                ) : null}
               </>
             ) : (
               <>
@@ -141,11 +145,13 @@ export default function DoseCalculatorPage() {
                   type="number"
                   inputMode="decimal"
                   step="0.01"
-                  value={volMl}
+                  value={volMl || ""}
                   onChange={(e) => setVolMl(parseFloat(e.target.value) || 0)}
                   placeholder="e.g. 0.1"
                 />
-                <ConversionHint>{volMl} mL = {(volMl * 100).toFixed(1)} units</ConversionHint>
+                {volMl > 0 ? (
+                  <ConversionHint>{volMl} mL = {(volMl * 100).toFixed(1)} units</ConversionHint>
+                ) : null}
               </>
             )}
           </StepCard>
@@ -202,7 +208,8 @@ export default function DoseCalculatorPage() {
               <ResearchDisclaimer className="mt-6" />
           </div>
 
-          <div className="callout-panel">
+          {valid && (
+            <div className="callout-panel">
               <div className="flex items-start gap-2.5">
                 <Lightbulb className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -211,7 +218,8 @@ export default function DoseCalculatorPage() {
                   = {result.doseMg.toFixed(3)} mg = {result.doseMcg.toFixed(1)} mcg.
                 </p>
               </div>
-          </div>
+            </div>
+          )}
 
           {/* Teaching sections */}
           <div className="mt-6 space-y-8">

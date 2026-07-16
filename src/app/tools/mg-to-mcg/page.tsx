@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, HelpCircle, Lightbulb, Scale } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { mgToMcg, mcgToMg } from "@/lib/calc/converters";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { usePersistentState } from "@/lib/use-persistent-state";
 
 export default function MgMcgConverterPage() {
-  const [mg, setMg] = useState(1);
-  const [mcg, setMcg] = useState(1000);
+  const [mg, setMg] = usePersistentState("bacwater.tool.mgmcg.mg", 0);
+  const [mcg, setMcg] = usePersistentState("bacwater.tool.mgmcg.mcg", 0);
+  const hasValue = mg > 0 || mcg > 0;
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
@@ -39,7 +40,8 @@ export default function MgMcgConverterPage() {
                 type="number"
                 inputMode="decimal"
                 step="0.1"
-                value={mg}
+                value={mg || ""}
+                placeholder="0"
                 onChange={(e) => {
                   const v = parseFloat(e.target.value) || 0;
                   setMg(v);
@@ -55,7 +57,8 @@ export default function MgMcgConverterPage() {
                 type="number"
                 inputMode="decimal"
                 step="10"
-                value={mcg}
+                value={mcg || ""}
+                placeholder="0"
                 onChange={(e) => {
                   const v = parseFloat(e.target.value) || 0;
                   setMcg(v);
@@ -67,7 +70,11 @@ export default function MgMcgConverterPage() {
           </div>
 
           <div className="mt-6 callout-panel text-center">
-            <div className="text-xl font-semibold">{mg} mg = {mcg.toLocaleString()} mcg</div>
+            {hasValue ? (
+              <div className="text-xl font-semibold">{mg} mg = {mcg.toLocaleString()} mcg</div>
+            ) : (
+              <div className="text-xl font-semibold text-muted-foreground">Type a number in either box</div>
+            )}
             <p className="mt-1 text-sm text-muted-foreground">1 milligram always equals 1,000 micrograms.</p>
           </div>
 

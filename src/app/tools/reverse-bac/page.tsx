@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Lightbulb, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -16,33 +16,32 @@ import { CopyButton } from "@/components/common/copy-button";
 import { StickyResultBar } from "@/components/tools/sticky-result-bar";
 import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 import { setInterestPeptide } from "@/lib/learn/interest";
+import { usePersistentState } from "@/lib/use-persistent-state";
 
 type Unit = "mg" | "mcg";
 
 const TARGET_PRESETS = [10, 15, 20, 25, 50];
 
 export default function ReverseBacCalculatorPage() {
-  const [peptideSlug, setPeptideSlug] = useState("bpc-157");
-  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
+  const [peptideSlug, setPeptideSlug] = usePersistentState("bacwater.tool.reverse.peptide", "");
+  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
+  const hasPeptide = !!peptide;
 
-  const [vialInput, setVialInput] = useState<number>(peptide.commonVialStrengthsMg[0]);
-  const [vialUnit, setVialUnit] = useState<Unit>("mg");
+  const [vialInput, setVialInput] = usePersistentState("bacwater.tool.reverse.vial", 0);
+  const [vialUnit, setVialUnit] = usePersistentState<Unit>("bacwater.tool.reverse.vialUnit", "mg");
   const vialMg = vialUnit === "mg" ? vialInput : vialInput / 1000;
 
-  const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg / 1000);
-  const [doseUnit, setDoseUnit] = useState<Unit>("mg");
+  const [doseInput, setDoseInput] = usePersistentState("bacwater.tool.reverse.dose", 0);
+  const [doseUnit, setDoseUnit] = usePersistentState<Unit>("bacwater.tool.reverse.doseUnit", "mg");
   const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
 
-  const [targetUnits, setTargetUnits] = useState<number>(20);
+  const [targetUnits, setTargetUnits] = usePersistentState("bacwater.tool.reverse.targetUnits", 0);
 
+  // Selecting a peptide records the choice and drives the hints; it never
+  // pre-fills a vial amount or an amount to measure.
   function handlePeptideChange(slug: string) {
-    const p = PEPTIDES.find((x) => x.slug === slug) ?? PEPTIDES[0];
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
-    setVialInput(p.commonVialStrengthsMg[0]);
-    setVialUnit("mg");
-    setDoseInput(p.suggestedDoseMcg / 1000);
-    setDoseUnit("mg");
   }
 
   const result = useMemo(() => {
@@ -98,7 +97,7 @@ export default function ReverseBacCalculatorPage() {
           <StepCard n={1} total={4} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
               <SelectTrigger className="h-12">
-                <SelectValue />
+                <SelectValue placeholder="Choose a peptide" />
               </SelectTrigger>
               <SelectContent>
                 {PEPTIDES.map((p) => (
@@ -109,30 +108,32 @@ export default function ReverseBacCalculatorPage() {
           </StepCard>
 
           <StepCard n={2} total={4} title="What size is your vial?">
-            <div className="flex flex-wrap gap-2">
-              {peptide.commonVialStrengthsMg.map((mg) => (
-                <button
-                  key={mg}
-                  type="button"
-                  onClick={() => { setVialInput(mg); setVialUnit("mg"); }}
-                  className={cn("chip", vialUnit === "mg" && vialInput === mg && "chip--active")}
-                >
-                  <div className="flex items-center gap-2 font-medium">
-                    {vialUnit === "mg" && vialInput === mg && <Check className="h-4 w-4" />}
-                    {mg} mg
-                  </div>
-                </button>
-              ))}
-            </div>
+            {hasPeptide && (
+              <div className="flex flex-wrap gap-2">
+                {peptide.commonVialStrengthsMg.map((mg) => (
+                  <button
+                    key={mg}
+                    type="button"
+                    onClick={() => { setVialInput(mg); setVialUnit("mg"); }}
+                    className={cn("chip", vialUnit === "mg" && vialInput === mg && "chip--active")}
+                  >
+                    <div className="flex items-center gap-2 font-medium">
+                      {vialUnit === "mg" && vialInput === mg && <Check className="h-4 w-4" />}
+                      {mg} mg
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="mt-3 flex items-center gap-2">
               <Input
                 type="number"
                 inputMode="decimal"
                 step="0.5"
-                value={vialInput}
+                value={vialInput || ""}
                 onChange={(e) => setVialInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
-                placeholder="Or type a custom value"
+                placeholder="Type your vial amount"
               />
               <UnitToggle value={vialUnit} onChange={setVialUnit} options={["mg", "mcg"]} />
             </div>
@@ -144,7 +145,8 @@ export default function ReverseBacCalculatorPage() {
                 type="number"
                 inputMode="decimal"
                 step="0.05"
-                value={doseInput}
+                value={doseInput || ""}
+                placeholder="Type the amount"
                 onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
               />
@@ -181,10 +183,10 @@ export default function ReverseBacCalculatorPage() {
                 type="number"
                 inputMode="numeric"
                 step="1"
-                value={targetUnits}
+                value={targetUnits || ""}
                 onChange={(e) => setTargetUnits(parseFloat(e.target.value) || 0)}
                 className="w-full"
-                placeholder="Or type target units"
+                placeholder="Type target units"
               />
             </div>
           </StepCard>
@@ -287,12 +289,14 @@ export default function ReverseBacCalculatorPage() {
             </div>
           </div>
 
-          <RelatedReadingDynamic
-            peptide={peptideSlug === "custom" ? undefined : peptideSlug}
-            topics={["dosage", "reconstitution-method", "safety"]}
-            title={`Related reading for ${peptide.name}`}
-            limit={4}
-          />
+          {hasPeptide && peptideSlug !== "custom" && (
+            <RelatedReadingDynamic
+              peptide={peptideSlug}
+              topics={["dosage", "reconstitution-method", "safety"]}
+              title={`Related reading for ${peptide.name}`}
+              limit={4}
+            />
+          )}
         </div>
       </div>
     </div>

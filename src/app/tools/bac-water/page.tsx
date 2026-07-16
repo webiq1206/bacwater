@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight, Beaker, Check, Droplets, HelpCircle, Lightbulb } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -16,29 +16,28 @@ import { setInterestPeptide } from "@/lib/learn/interest";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { CopyButton } from "@/components/common/copy-button";
 import { StickyResultBar } from "@/components/tools/sticky-result-bar";
+import { usePersistentState } from "@/lib/use-persistent-state";
 
 type Unit = "mg" | "mcg";
 
 export default function BacWaterCalculatorPage() {
-  const [peptideSlug, setPeptideSlug] = useState("bpc-157");
-  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
+  const [peptideSlug, setPeptideSlug] = usePersistentState("bacwater.tool.bacwater.peptide", "");
+  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
+  const hasPeptide = !!peptide;
 
-  const [vialInput, setVialInput] = useState<number>(peptide.commonVialStrengthsMg[0]);
-  const [vialUnit, setVialUnit] = useState<Unit>("mg");
+  const [vialInput, setVialInput] = usePersistentState("bacwater.tool.bacwater.vial", 0);
+  const [vialUnit, setVialUnit] = usePersistentState<Unit>("bacwater.tool.bacwater.vialUnit", "mg");
   const vialMg = vialUnit === "mg" ? vialInput : vialInput / 1000;
 
-  const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg / 1000);
-  const [doseUnit, setDoseUnit] = useState<Unit>("mg");
+  const [doseInput, setDoseInput] = usePersistentState("bacwater.tool.bacwater.dose", 0);
+  const [doseUnit, setDoseUnit] = usePersistentState<Unit>("bacwater.tool.bacwater.doseUnit", "mg");
   const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
 
+  // Selecting a peptide only records the choice (and drives the hints); it does
+  // not pre-fill a vial amount or an amount to measure. The user enters those.
   function handlePeptideChange(slug: string) {
-    const p = PEPTIDES.find((x) => x.slug === slug) ?? PEPTIDES[0];
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
-    setVialInput(p.commonVialStrengthsMg[0]);
-    setVialUnit("mg");
-    setDoseInput(p.suggestedDoseMcg / 1000);
-    setDoseUnit("mg");
   }
 
   const rec = useMemo(() => recommendBacWaterMl(vialMg, doseMcg), [vialMg, doseMcg]);
@@ -79,7 +78,7 @@ export default function BacWaterCalculatorPage() {
           <StepCard n={1} total={3} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
               <SelectTrigger className="h-12">
-                <SelectValue />
+                <SelectValue placeholder="Choose a peptide" />
               </SelectTrigger>
               <SelectContent>
                 {PEPTIDES.map((p) => (
@@ -88,7 +87,8 @@ export default function BacWaterCalculatorPage() {
               </SelectContent>
             </Select>
             <div className="mt-3 bg-surface px-3 py-2 text-xs text-muted-foreground">
-              We&apos;ll fill in a vial amount and an amount to measure so you can see the math. Change them to match your own numbers.
+              Pick your compound, then enter your own vial amount and how much you
+              want to measure. Nothing is filled in for you.
             </div>
           </StepCard>
 
@@ -98,33 +98,35 @@ export default function BacWaterCalculatorPage() {
             title="What size is your vial?"
             hint="Look at the number printed on your vial label. It tells you how much peptide powder is inside."
           >
-            <div className="flex flex-wrap gap-2">
-              {peptide.commonVialStrengthsMg.map((mg) => (
-                <button
-                  key={mg}
-                  type="button"
-                  onClick={() => { setVialInput(mg); setVialUnit("mg"); }}
-                  className={cn(
-                    "chip",
-                    vialUnit === "mg" && vialInput === mg && "chip--active"
-                  )}
-                >
-                  <div className="flex items-center gap-2 font-medium">
-                    {vialUnit === "mg" && vialInput === mg && <Check className="h-4 w-4" />}
-                    {mg} mg
-                  </div>
-                </button>
-              ))}
-            </div>
+            {hasPeptide && (
+              <div className="flex flex-wrap gap-2">
+                {peptide.commonVialStrengthsMg.map((mg) => (
+                  <button
+                    key={mg}
+                    type="button"
+                    onClick={() => { setVialInput(mg); setVialUnit("mg"); }}
+                    className={cn(
+                      "chip",
+                      vialUnit === "mg" && vialInput === mg && "chip--active"
+                    )}
+                  >
+                    <div className="flex items-center gap-2 font-medium">
+                      {vialUnit === "mg" && vialInput === mg && <Check className="h-4 w-4" />}
+                      {mg} mg
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="mt-3 flex items-center gap-2">
               <Input
                 type="number"
                 inputMode="decimal"
                 step="0.5"
-                value={vialInput}
+                value={vialInput || ""}
                 onChange={(e) => setVialInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
-                placeholder="Or type a custom value"
+                placeholder="Type your vial amount"
               />
               <UnitToggle value={vialUnit} onChange={setVialUnit} options={["mg", "mcg"]} />
             </div>
@@ -140,14 +142,19 @@ export default function BacWaterCalculatorPage() {
             n={3}
             total={3}
             title="How much do you measure each time?"
-            hint={`Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`}
+            hint={
+              hasPeptide
+                ? `Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`
+                : "Enter how much you want to measure each time, in mg or mcg."
+            }
           >
             <div className="flex items-center gap-2">
               <Input
                 type="number"
                 inputMode="decimal"
                 step="0.01"
-                value={doseInput}
+                value={doseInput || ""}
+                placeholder="Type the amount"
                 onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
               />
@@ -229,28 +236,32 @@ export default function BacWaterCalculatorPage() {
           )}
 
           {/* Why this number */}
-          <div className="callout-panel">
-            <div className="flex items-start gap-2.5">
-              <Lightbulb className="h-5 w-5 shrink-0 mt-0.5" />
-              <div>
-                <div className="font-medium text-sm mb-1">Why this number?</div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  We aim for about <strong className="text-foreground">10 units per measurement</strong> on
-                  a U-100 insulin syringe. That makes it easy to measure accurately
-                  without squinting at tiny markings. The math:
-                  (10 &times; {vialMg}) &divide; (100 &times; {(doseMcg / 1000).toFixed(3)}) = {rec} mL.
-                </p>
+          {valid && (
+            <div className="callout-panel">
+              <div className="flex items-start gap-2.5">
+                <Lightbulb className="h-5 w-5 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-medium text-sm mb-1">Why this number?</div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    We aim for about <strong className="text-foreground">10 units per measurement</strong> on
+                    a U-100 insulin syringe. That makes it easy to measure accurately
+                    without squinting at tiny markings. The math:
+                    (10 &times; {vialMg}) &divide; (100 &times; {(doseMcg / 1000).toFixed(3)}) = {rec} mL.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Contextual related reading for the selected peptide */}
-          <RelatedReadingDynamic
-            peptide={peptideSlug === "custom" ? undefined : peptideSlug}
-            topics={["storage", "safety", "reconstitution-method"]}
-            title={`Related reading for ${peptide.name}`}
-            limit={4}
-          />
+          {hasPeptide && peptideSlug !== "custom" && (
+            <RelatedReadingDynamic
+              peptide={peptideSlug}
+              topics={["storage", "safety", "reconstitution-method"]}
+              title={`Related reading for ${peptide.name}`}
+              limit={4}
+            />
+          )}
 
           {/* Teaching sections */}
           <div className="mt-6 space-y-8">

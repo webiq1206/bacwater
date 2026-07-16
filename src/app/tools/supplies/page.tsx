@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { setInterestPeptide } from "@/lib/learn/interest";
+import { usePersistentState } from "@/lib/use-persistent-state";
 
 type Frequency = "daily" | "twice-daily" | "every-other-day" | "weekly";
 type Unit = "mg" | "mcg";
@@ -29,32 +30,32 @@ const DURATIONS = [
 ];
 
 export default function SupplyCalculatorPage() {
-  const [peptideSlug, setPeptideSlug] = useState("bpc-157");
-  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
+  const [peptideSlug, setPeptideSlug] = usePersistentState("bacwater.tool.supplies.peptide", "");
+  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
+  const hasPeptide = !!peptide;
 
-  // Dose (default to peptide's suggested, shown in mg)
-  const [doseInput, setDoseInput] = useState<number>(peptide.suggestedDoseMcg / 1000);
-  const [doseUnit, setDoseUnit] = useState<Unit>("mg");
+  const [doseInput, setDoseInput] = usePersistentState("bacwater.tool.supplies.dose", 0);
+  const [doseUnit, setDoseUnit] = usePersistentState<Unit>("bacwater.tool.supplies.doseUnit", "mg");
   const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
 
   // Vial size: user picks from common options
-  const [vialMg, setVialMg] = useState<number>(peptide.commonVialStrengthsMg[0]);
+  const [vialMg, setVialMg] = usePersistentState("bacwater.tool.supplies.vial", 0);
 
-  const [frequency, setFrequency] = useState<Frequency>("daily");
-  const [durationWeeks, setDurationWeeks] = useState<number>(8);
-  const [showCustomDuration, setShowCustomDuration] = useState(false);
+  const [frequency, setFrequency] = usePersistentState<Frequency | "">("bacwater.tool.supplies.frequency", "");
+  const [durationWeeks, setDurationWeeks] = usePersistentState("bacwater.tool.supplies.duration", 0);
+  const [showCustomDuration, setShowCustomDuration] = usePersistentState("bacwater.tool.supplies.customDur", false);
 
-  // Whenever peptide changes, reset dose + vial to that peptide's defaults
+  // Selecting a peptide records the choice and drives the hints; it never
+  // pre-fills a dose or a vial size.
   function handlePeptideChange(slug: string) {
-    const p = PEPTIDES.find((x) => x.slug === slug) ?? PEPTIDES[0];
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
-    setDoseInput(p.suggestedDoseMcg / 1000);
-    setDoseUnit("mg");
-    setVialMg(p.commonVialStrengthsMg[0]);
   }
 
+  const valid = doseMcg > 0 && vialMg > 0 && durationWeeks > 0 && frequency !== "";
+
   const results = useMemo(() => {
+    if (doseMcg <= 0 || vialMg <= 0 || durationWeeks <= 0 || frequency === "") return null;
     const freq = FREQUENCIES.find((f) => f.id === frequency) ?? FREQUENCIES[0];
     const totalDoses = Math.ceil(freq.perWeek * durationWeeks);
 
@@ -117,7 +118,7 @@ export default function SupplyCalculatorPage() {
           <Section n={1} total={5} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
               <SelectTrigger className="h-12">
-                <SelectValue />
+                <SelectValue placeholder="Choose a peptide" />
               </SelectTrigger>
               <SelectContent>
                 {PEPTIDES.map((p) => (
@@ -132,14 +133,19 @@ export default function SupplyCalculatorPage() {
             n={2}
             total={5}
             title="How much do you measure each time?"
-            hint={`Amounts studied: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). We pre-filled the most commonly studied amount.`}
+            hint={
+              hasPeptide
+                ? `Amounts studied: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`
+                : "Enter how much you measure each time, in mg or mcg."
+            }
           >
             <div className="flex items-center gap-2">
               <Input
                 type="number"
                 inputMode="decimal"
                 step="0.05"
-                value={doseInput}
+                value={doseInput || ""}
+                placeholder="Type the amount"
                 onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
                 className="flex-1"
               />
@@ -162,20 +168,34 @@ export default function SupplyCalculatorPage() {
             title="What size vial will you order?"
             hint="Bigger vials = more doses per vial, but slightly less flexibility."
           >
-            <div className="flex flex-wrap gap-2">
-              {peptide.commonVialStrengthsMg.map((mg) => (
-                <button
-                  key={mg}
-                  type="button"
-                  onClick={() => setVialMg(mg)}
-                  className={cn("chip", vialMg === mg && "chip--active")}
-                >
-                  <div className="flex items-center gap-2 font-medium">
-                    {vialMg === mg && <Check className="h-4 w-4" />}
-                    {mg} mg
-                  </div>
-                </button>
-              ))}
+            {hasPeptide ? (
+              <div className="flex flex-wrap gap-2">
+                {peptide.commonVialStrengthsMg.map((mg) => (
+                  <button
+                    key={mg}
+                    type="button"
+                    onClick={() => setVialMg(mg)}
+                    className={cn("chip", vialMg === mg && "chip--active")}
+                  >
+                    <div className="flex items-center gap-2 font-medium">
+                      {vialMg === mg && <Check className="h-4 w-4" />}
+                      {mg} mg
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+            <div className={cn("flex items-center gap-2", hasPeptide && "mt-3")}>
+              <Input
+                type="number"
+                inputMode="decimal"
+                step="0.5"
+                value={vialMg || ""}
+                placeholder="Vial size in mg"
+                onChange={(e) => setVialMg(parseFloat(e.target.value) || 0)}
+                className="flex-1"
+              />
+              <span className="text-sm text-muted-foreground">mg</span>
             </div>
           </Section>
 
@@ -236,8 +256,9 @@ export default function SupplyCalculatorPage() {
                 <Input
                   type="number"
                   min="1"
-                  value={durationWeeks}
-                  onChange={(e) => setDurationWeeks(Math.max(1, parseInt(e.target.value) || 1))}
+                  value={durationWeeks || ""}
+                  placeholder="Number of weeks"
+                  onChange={(e) => setDurationWeeks(Math.max(0, parseInt(e.target.value) || 0))}
                   className="flex-1"
                   autoFocus
                 />
@@ -249,6 +270,17 @@ export default function SupplyCalculatorPage() {
 
         {/* Results */}
         <div className="space-y-4">
+          {!results ? (
+            <div className="section-dark rounded-2xl p-6 sm:p-8">
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your supply list</div>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                Enter how much you measure, the vial size you will order, and your
+                cycle length to see exactly how many vials, bac water bottles,
+                syringes, and pads you will need.
+              </p>
+            </div>
+          ) : (
+          <>
           <div className="section-dark rounded-2xl p-6 sm:p-8">
               <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your supply list</div>
               <h2 className="mt-2 text-2xl sm:text-3xl font-serif font-medium tracking-tight">
@@ -265,7 +297,7 @@ export default function SupplyCalculatorPage() {
               <div className="space-y-4">
                 <SupplyRow
                   qty={results.peptideVialsNeeded}
-                  label={`${peptide.name}, ${vialMg} mg vial${results.peptideVialsNeeded === 1 ? "" : "s"}`}
+                  label={`${peptide?.name ?? "Peptide"}, ${vialMg} mg vial${results.peptideVialsNeeded === 1 ? "" : "s"}`}
                   why={`Each vial gives about ${results.dosesPerVial} measurements at ${doseMcg / 1000} mg (${doseMcg.toLocaleString()} mcg). Rounded up so you don't run out.`}
                 />
                 <SupplyRow
@@ -313,6 +345,8 @@ export default function SupplyCalculatorPage() {
                 </p>
               </div>
           </div>
+          </>
+          )}
         </div>
       </div>
     </div>
