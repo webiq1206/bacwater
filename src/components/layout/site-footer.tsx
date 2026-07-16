@@ -3,6 +3,7 @@ import { POSITIONING_STATEMENT } from "@/lib/positioning";
 
 const FOOTER = {
   Product: [
+    { href: "/peptide-calculator", label: "Peptide Calculator" },
     { href: "/plan", label: "Build My Plan" },
     { href: "/peptides", label: "Compound Reference" },
     { href: "/tools", label: "Calculators" },
@@ -12,6 +13,7 @@ const FOOTER = {
   Learn: [
     { href: "/learn", label: "Learning Center" },
     { href: "/learn/what-is-bac-water", label: "What is BAC Water?" },
+    { href: "/learn/bac-water-for-peptides", label: "BAC Water for Peptides" },
     { href: "/learn/how-peptide-reconstitution-works", label: "How reconstitution works" },
     { href: "/learn/bac-water-shelf-life", label: "Shelf life & storage" },
     { href: "/learn/glossary", label: "Glossary" },
