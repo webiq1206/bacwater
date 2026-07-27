@@ -16,11 +16,15 @@ Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Prisma, NextAut
 
 ## Local dev
 
+Postgres is required (the Prisma datasource is `postgresql`; a SQLite URL will
+not validate).
+
 ```bash
 npm install
-cp .env.example .env         # fill in values
-npx prisma db push
-npx tsx prisma/seed.ts
+cp .env.example .env         # fill in values, incl. a Postgres DATABASE_URL
+createdb bacwater_dev
+npm run db:push
+npm run db:seed
 npm run dev
 ```
 
@@ -44,9 +48,16 @@ The first user whose email matches `ADMIN_EMAILS` (comma-separated) is auto-prom
 1. Import this repo into Replit.
 2. Replit's Next.js template should be picked up automatically. **Do not let Replit rewrite this to Vite**. Next.js is required for SSR, Prisma, and app router. If it offers to convert, decline and reset.
 3. Add the environment variables from `.env.example` in the Replit Secrets panel.
-4. Set `DATABASE_URL` to your production database (Neon/Supabase Postgres recommended; SQLite is fine for smoke test).
-5. If using Postgres, change `datasource db { provider = "postgresql" }` in `prisma/schema.prisma`, then run `npx prisma db push`.
-6. `.replit` run command: `npm run build && npm start`.
+4. Set `DATABASE_URL` to your production database. On Neon, use the **pooled**
+   endpoint (`-pooler` in the hostname). The direct endpoint gets terminated
+   when Neon's compute auto-suspends (`57P01`), causing intermittent 500s.
+5. The deploy build runs `prisma db push` **without** `--accept-data-loss`, so a
+   destructive schema change fails the deploy instead of dropping prod data.
+   Resolve it deliberately rather than re-adding the flag.
+6. Seeding is **not** part of the deploy. `prisma/seed.ts` upserts and force-sets
+   `published: true`, so running it against prod reverts content edited in the
+   admin panel and re-publishes unpublished guides. Run `npm run db:seed`
+   manually, and only when you intend to reset content.
 7. Deploy.
 
 ## Calculation library

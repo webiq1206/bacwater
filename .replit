@@ -7,7 +7,12 @@ run = "npm run dev"
 channel = "stable-24_05"
 
 [deployment]
-build = ["sh", "-c", "npm install --include=dev && npx prisma generate && npx prisma db push --skip-generate --accept-data-loss && npm run build"]
+# Schema is synced without --accept-data-loss: if a change would drop a column
+# or table, the deploy fails loudly instead of silently destroying prod data.
+# Seeding is NOT run here -- prisma/seed.ts upserts and force-sets
+# published: true, so running it on deploy reverts admin content edits and
+# re-publishes anything unpublished. Seed manually with `npm run db:seed`.
+build = ["sh", "-c", "npm install --include=dev && npx prisma generate && npx prisma db push --skip-generate && npm run build"]
 run = ["sh", "-c", "npm start"]
 deploymentTarget = "autoscale"
 
