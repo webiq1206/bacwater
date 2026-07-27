@@ -54,6 +54,16 @@ export interface PeptideRef {
   typicalDoseMcgRange: [number, number];
   /** Typical single dose users search for in mcg */
   suggestedDoseMcg: number;
+  /** Approximate elimination half-life in hours (typical research reference) */
+  halfLifeHours: number;
+  /**
+   * Typical injections per week, driven by the half-life (7 = daily,
+   * 2 = twice weekly, 1 = once weekly). The calculator splits a weekly
+   * dose across this many draws by default; users can override it.
+   */
+  injectionsPerWeek: number;
+  /** Human-readable schedule note, e.g. "Twice weekly — e.g., Monday and Thursday". */
+  scheduleNote: string;
   /** Shelf life after reconstitution, refrigerated (days) */
   refrigeratedShelfDays: number;
   /** Human-readable storage note */
