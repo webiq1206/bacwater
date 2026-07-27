@@ -89,7 +89,13 @@ export interface CalcInput {
   peptideSlug?: string;
   peptideName?: string;
   vialStrengthMg: number;
+  /** The TOTAL weekly dose in mcg. It is split across `injectionsPerWeek` draws. */
   doseMcg: number;
+  /**
+   * How many injections the weekly dose is split across. Defaults to the
+   * peptide's typical frequency (driven by its half-life); 1 when unknown.
+   */
+  injectionsPerWeek?: number;
   bacWaterMl?: number;
   syringeType: SyringeType;
   dateMixed?: string | Date | null;
@@ -125,6 +131,18 @@ export interface CalcResult {
   finalConcentrationMcgPerMl: number;
   doseVolumeMl: number;
   syringeUnits: number;
+  /**
+   * The weekly-dose split. `doseVolumeMl` / `syringeUnits` above are PER
+   * INJECTION. Optional so plans saved before this existed still parse.
+   */
+  schedule?: {
+    injectionsPerWeek: number;
+    weeklyDoseMcg: number;
+    dosePerInjectionMcg: number;
+    /** e.g. "Twice weekly — e.g., Monday and Thursday" */
+    label: string;
+    halfLifeHours: number | null;
+  };
   syringeReadout: {
     kind: "u100" | "ml";
     valueRounded: number;
@@ -270,7 +288,16 @@ export function calculate(input: CalcInput): CalcResult {
     errors.push("Dose must be greater than 0 mcg.");
 
   const vialStrengthMg = Math.max(0.0001, input.vialStrengthMg || 0);
-  const doseMcg = Math.max(0.0001, input.doseMcg || 0);
+  // The entered dose is the WEEKLY total; it is split across the peptide's
+  // typical injections per week (user-overridable). All draw math below is
+  // per injection.
+  const weeklyDoseMcg = Math.max(0.0001, input.doseMcg || 0);
+  const rawPerWeek =
+    isFiniteNumber(input.injectionsPerWeek) && input.injectionsPerWeek! > 0
+      ? input.injectionsPerWeek!
+      : peptideRef?.injectionsPerWeek ?? 1;
+  const injectionsPerWeek = Math.min(28, Math.max(1, rawPerWeek));
+  const doseMcg = weeklyDoseMcg / injectionsPerWeek;
   const doseMg = doseMcg * MG_PER_MCG;
 
   // Sanity flags on unusual inputs
@@ -413,6 +440,11 @@ export function calculate(input: CalcInput): CalcResult {
   assumptions.push(
     "Syringe units use the U-100 insulin scale: 100 units = 1 mL."
   );
+  if (injectionsPerWeek > 1) {
+    assumptions.push(
+      `The dose you entered (${round(weeklyDoseMcg, 1)} mcg) is treated as a weekly total and split into ${injectionsPerWeek} injections of ${round(doseMcg, 1)} mcg each. You can change the injections per week.`
+    );
+  }
   // V-11 (PRD §9.4): compatibility is never assumed, and it is stated every time.
   assumptions.push(
     "We have not checked that this BAC water works with your specific compound. Follow the instructions that came with your product."
@@ -485,7 +517,10 @@ export function calculate(input: CalcInput): CalcResult {
 
   const summary =
     `Mix ${vialStrengthMg} mg of ${displayName} with ${round(usedBacMl, 2)} mL of BAC water. ` +
-    `Each ${doseMcg} mcg dose is ${round(doseVolumeMl, 3)} mL, ` +
+    (injectionsPerWeek > 1
+      ? `Your ${round(weeklyDoseMcg, 1)} mcg weekly total splits into ${injectionsPerWeek} injections. `
+      : "") +
+    `Each ${round(doseMcg, 1)} mcg dose is ${round(doseVolumeMl, 3)} mL, ` +
     (syringe.scale === "u100"
       ? `${round(syringeUnits, 1)} units on your ${syringe.label}.`
       : `${round(doseVolumeMl, 2)} mL on your ${syringe.label}.`) +
@@ -499,7 +534,8 @@ export function calculate(input: CalcInput): CalcResult {
       peptideSlug: peptideRef?.slug ?? input.peptideSlug ?? null,
       peptideName,
       vialStrengthMg,
-      doseMcg,
+      doseMcg: weeklyDoseMcg,
+      injectionsPerWeek,
       bacWaterMl: usedBacMl,
       syringeType: input.syringeType,
       dateMixed: input.dateMixed
@@ -512,6 +548,21 @@ export function calculate(input: CalcInput): CalcResult {
     finalConcentrationMcgPerMl: round(finalConcentrationMcgPerMl, 2),
     doseVolumeMl: round(doseVolumeMl, 4),
     syringeUnits: round(syringeUnits, 2),
+    schedule: {
+      injectionsPerWeek,
+      weeklyDoseMcg: round(weeklyDoseMcg, 2),
+      dosePerInjectionMcg: round(doseMcg, 2),
+      label:
+        input.injectionsPerWeek != null &&
+        peptideRef &&
+        input.injectionsPerWeek !== peptideRef.injectionsPerWeek
+          ? `${injectionsPerWeek}x per week (your schedule)`
+          : peptideRef?.scheduleNote ??
+            (injectionsPerWeek === 1
+              ? "Once weekly"
+              : `${injectionsPerWeek}x per week`),
+      halfLifeHours: peptideRef?.halfLifeHours ?? null,
+    },
     syringeReadout,
     dosesPerVial,
     expiration: {

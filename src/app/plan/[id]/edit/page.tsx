@@ -10,6 +10,21 @@ export default async function PlanEditPage({ params }: Props) {
   const { id } = await params;
   const plan = await prisma.plan.findUnique({ where: { publicId: id } });
   if (!plan) return notFound();
+  // Frequency lives in the CalcResult snapshot; plans saved before weekly
+  // splitting have none and default to 1 (no split) so their math is unchanged.
+  let injectionsPerWeek = 1;
+  try {
+    const snapshot = JSON.parse(plan.data) as {
+      schedule?: { injectionsPerWeek?: number };
+    };
+    if (
+      typeof snapshot.schedule?.injectionsPerWeek === "number" &&
+      snapshot.schedule.injectionsPerWeek >= 1
+    )
+      injectionsPerWeek = snapshot.schedule.injectionsPerWeek;
+  } catch {
+    /* keep default */
+  }
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
       <h1 className="text-2xl font-semibold tracking-tight">Edit plan</h1>
@@ -23,6 +38,7 @@ export default async function PlanEditPage({ params }: Props) {
             peptideName: plan.peptideName || "",
             vialStrengthMg: plan.vialStrengthMg,
             doseMcg: plan.doseMcg,
+            injectionsPerWeek,
             bacWaterMl: plan.bacWaterMl,
             syringeType: plan.syringeType as never,
             dateMixed: plan.dateMixed ? plan.dateMixed.toISOString().slice(0, 10) : "",

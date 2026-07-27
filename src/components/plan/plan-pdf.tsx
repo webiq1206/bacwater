@@ -383,7 +383,15 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
       sub: `${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`,
       src: "calculated",
     },
-    { label: "AMOUNT", value: formatDose(result.input.doseMcg), src: "user" },
+    {
+      label: result.schedule && result.schedule.injectionsPerWeek > 1 ? "AMOUNT PER INJECTION" : "AMOUNT",
+      value: formatDose(result.schedule?.dosePerInjectionMcg ?? result.input.doseMcg),
+      sub:
+        result.schedule && result.schedule.injectionsPerWeek > 1
+          ? `${result.schedule.injectionsPerWeek}x per week = ${formatDose(result.schedule.weeklyDoseMcg)} weekly`
+          : undefined,
+      src: "user",
+    },
     { label: "VOLUME TO MEASURE", value: `${result.doseVolumeMl.toFixed(3)} mL`, src: "calculated" },
     { label: "MEASUREMENTS PER VIAL", value: `${result.dosesPerVial}`, src: "calculated" },
   ];
@@ -422,7 +430,11 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
             <Text style={s.heroLabel}>MEASURE THIS MUCH EACH TIME</Text>
             <Text style={s.heroNumber}>{formatSyringeReading(result.syringeReadout)}</Text>
             <Text style={s.heroSub}>
-              {`= ${result.doseVolumeMl.toFixed(3)} mL  ·  ${formatDose(result.input.doseMcg)}`}
+              {`= ${result.doseVolumeMl.toFixed(3)} mL  ·  ${formatDose(result.schedule?.dosePerInjectionMcg ?? result.input.doseMcg)}${
+                result.schedule && result.schedule.injectionsPerWeek > 1
+                  ? `  ·  ${result.schedule.injectionsPerWeek}x per week`
+                  : ""
+              }`}
             </Text>
           </View>
           <View style={{ maxWidth: 150 }}>

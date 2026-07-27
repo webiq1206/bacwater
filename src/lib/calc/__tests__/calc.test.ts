@@ -28,6 +28,7 @@ function near(actual: number, expected: number, delta: number, label: string) {
 // 5 mg vial + 2 mL BAC + 250 mcg dose on 1mL insulin => 10 units, 25 doses
 const a = calculate({
   peptideSlug: "bpc-157",
+  injectionsPerWeek: 1,
   vialStrengthMg: 5,
   doseMcg: 250,
   bacWaterMl: 2,
@@ -71,6 +72,7 @@ if (!c.warnings.some((w) => w.includes("larger than the vial"))) {
 // Expiration date arithmetic
 const d = calculate({
   peptideSlug: "bpc-157",
+  injectionsPerWeek: 1,
   vialStrengthMg: 5,
   doseMcg: 250,
   bacWaterMl: 2,
@@ -104,7 +106,7 @@ function noWarn(res: { warnings: string[] }, needle: RegExp, label: string) {
 
 // V-02: the live 7.5-unit defect. 10 mg vial, 250 mcg, 3 mL, 1 mL syringe
 // (marks every 2 units) => 7.5 units, between two marks.
-const v02 = calculate({ peptideSlug: "bpc-157", vialStrengthMg: 10, doseMcg: 250, bacWaterMl: 3, syringeType: "insulin-1ml" });
+const v02 = calculate({ peptideSlug: "bpc-157", injectionsPerWeek: 1, vialStrengthMg: 10, doseMcg: 250, bacWaterMl: 3, syringeType: "insulin-1ml" });
 near(v02.syringeUnits, 7.5, 0.001, "V-02 fixture computes 7.5 units");
 warns(v02, /between two marks/, "V-02 flags 7.5 units as unmeasurable");
 
@@ -117,11 +119,11 @@ near(v02clean.syringeUnits, 15, 0.001, "V-02 fixture computes 15 units");
 noWarn(v02clean, /between two marks/, "V-02 quiet at 15 units on a 1 mL barrel (every-1-unit marks)");
 
 // V-05: 250 mg dose (mg picked where mcg meant) => ~1,000x.
-const v05 = calculate({ peptideSlug: "bpc-157", vialStrengthMg: 500, doseMcg: 250000, bacWaterMl: 2, syringeType: "insulin-1ml" });
+const v05 = calculate({ peptideSlug: "bpc-157", injectionsPerWeek: 1, vialStrengthMg: 500, doseMcg: 250000, bacWaterMl: 2, syringeType: "insulin-1ml" });
 warns(v05, /1,000 times/, "V-05 flags the mg/mcg unit swap");
 
 // V-13: 5 mg dose (10x the studied high of 500 mcg).
-const v13 = calculate({ peptideSlug: "bpc-157", vialStrengthMg: 50, doseMcg: 5000, bacWaterMl: 2, syringeType: "insulin-1ml" });
+const v13 = calculate({ peptideSlug: "bpc-157", injectionsPerWeek: 1, vialStrengthMg: 50, doseMcg: 5000, bacWaterMl: 2, syringeType: "insulin-1ml" });
 warns(v13, /10 times bigger/, "V-13 flags the order-of-magnitude outlier");
 
 // Normal dose stays quiet on the magnitude guards.
@@ -152,6 +154,58 @@ else { console.error("FAIL V-12 rounding note on an exact value", a.assumptions)
 
 // V-11: the compatibility caveat is always present.
 hasAssumption(a, /have not checked that this BAC water works/, "V-11 compatibility caveat always shown");
+
+// ---- Weekly-dose splitting (per-injection dosing) ----
+
+// Retatrutide defaults to 2x/week: 40 mg vial + 2 mL + 4 mg/week
+// => 2 mg per injection at 20 mg/mL = 0.1 mL = 10 units, 20 draws per vial.
+const w1 = calculate({
+  peptideSlug: "retatrutide",
+  vialStrengthMg: 40,
+  doseMcg: 4000,
+  bacWaterMl: 2,
+  syringeType: "insulin-1ml",
+});
+eq(w1.schedule?.injectionsPerWeek, 2, "retatrutide defaults to 2 injections/week");
+near(w1.schedule?.dosePerInjectionMcg ?? 0, 2000, 0.01, "4 mg/week ÷ 2 = 2 mg per injection");
+near(w1.doseVolumeMl, 0.1, 0.001, "2 mg at 20 mg/mL = 0.1 mL");
+near(w1.syringeUnits, 10, 0.001, "per-injection draw = 10 units");
+eq(w1.dosesPerVial, 20, "40 mg vial / 2 mg per injection = 20 draws");
+
+// User override: same plan at 4x/week halves the draw.
+const w2 = calculate({
+  peptideSlug: "retatrutide",
+  injectionsPerWeek: 4,
+  vialStrengthMg: 40,
+  doseMcg: 4000,
+  bacWaterMl: 2,
+  syringeType: "insulin-1ml",
+});
+near(w2.syringeUnits, 5, 0.001, "override to 4x/week = 5 units per draw");
+
+// Semaglutide defaults to once weekly: no split.
+const w3 = calculate({
+  peptideSlug: "semaglutide",
+  vialStrengthMg: 5,
+  doseMcg: 500,
+  bacWaterMl: 2,
+  syringeType: "insulin-1ml",
+});
+eq(w3.schedule?.injectionsPerWeek, 1, "semaglutide defaults to 1 injection/week");
+near(w3.syringeUnits, 20, 0.001, "weekly draw unchanged when no split");
+
+// BPC-157 defaults to daily: 1.75 mg/week ÷ 7 = 250 mcg per injection.
+const w4 = calculate({
+  peptideSlug: "bpc-157",
+  vialStrengthMg: 5,
+  doseMcg: 1750,
+  bacWaterMl: 2,
+  syringeType: "insulin-1ml",
+});
+eq(w4.schedule?.injectionsPerWeek, 7, "bpc-157 defaults to daily (7/week)");
+near(w4.syringeUnits, 10, 0.001, "1.75 mg/week daily = 10 units per draw");
+eq(w4.dosesPerVial, 20, "vial duration counts per-injection draws");
+hasAssumption(w4, /split into 7 injections/, "split is stated in the assumptions");
 
 if (process.exitCode !== 1) {
   console.log("\nAll calculation tests passed.");

@@ -23,6 +23,7 @@ const inputSchema = z.object({
     "tuberculin-1ml",
     "syringe-3ml",
   ]),
+  injectionsPerWeek: z.number().min(1).max(28).optional().nullable(),
   dateMixed: z.string().optional().nullable(),
   notes: z.string().max(2000).optional().nullable(),
 });
@@ -37,6 +38,7 @@ export async function computePlanAction(raw: unknown) {
     peptideName: parsed.data.peptideName ?? undefined,
     vialStrengthMg: parsed.data.vialStrengthMg,
     doseMcg: parsed.data.doseMcg,
+    injectionsPerWeek: parsed.data.injectionsPerWeek ?? undefined,
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,
@@ -54,6 +56,7 @@ export async function savePlanAction(raw: unknown, notes?: string) {
     peptideName: parsed.data.peptideName ?? undefined,
     vialStrengthMg: parsed.data.vialStrengthMg,
     doseMcg: parsed.data.doseMcg,
+    injectionsPerWeek: parsed.data.injectionsPerWeek ?? undefined,
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,

@@ -37,8 +37,11 @@ interface Props {
 }
 
 export function PlanResults({ result }: Props) {
-  const { syringeReadout } = result;
-  const doseLabel = formatDose(result.input.doseMcg);
+  const { syringeReadout, schedule } = result;
+  // Per-injection amount; older saved plans (no schedule) stored a
+  // single-draw dose in input.doseMcg.
+  const doseLabel = formatDose(schedule?.dosePerInjectionMcg ?? result.input.doseMcg);
+  const weeklyLabel = formatDose(schedule?.weeklyDoseMcg ?? result.input.doseMcg);
   // BAC water is a user input to the concentration math, but the builder offers
   // a recommended amount most people accept. Label it "we calculated" when it
   // matches that recommendation, "you entered" when it was overridden, so the
@@ -74,6 +77,19 @@ export function PlanResults({ result }: Props) {
             syringe · that&apos;s {doseLabel} ={" "}
             {result.doseVolumeMl.toFixed(3)} mL
           </div>
+          {schedule && schedule.injectionsPerWeek > 1 && (
+            <div className="mt-3 rounded-lg border border-border bg-card px-4 py-3 text-sm">
+              <span className="font-medium text-foreground">
+                {syringeReadout.kind === "u100"
+                  ? `${formatUnits(syringeReadout.valueRounded)} units`
+                  : `${formatMl(syringeReadout.valueRounded)} mL`}
+                , {schedule.injectionsPerWeek}x per week
+              </span>{" "}
+              <span className="text-muted-foreground">
+                = {weeklyLabel} weekly total · {schedule.label}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden">
@@ -225,7 +241,7 @@ export function PlanResults({ result }: Props) {
             <AccordionContent>
               <WhatIfExplorer
                 vialStrengthMg={result.input.vialStrengthMg}
-                doseMcg={result.input.doseMcg}
+                doseMcg={schedule?.dosePerInjectionMcg ?? result.input.doseMcg}
                 actualBacMl={result.usedBacMl}
               />
             </AccordionContent>

@@ -50,9 +50,68 @@ export interface PlanFormInitial {
   peptideName?: string | null;
   vialStrengthMg?: number;
   doseMcg?: number;
+  /** Plans saved before weekly splitting existed default to 1 (no split). */
+  injectionsPerWeek?: number | null;
   bacWaterMl?: number;
   syringeType?: SyringeType;
   dateMixed?: string | null;
+}
+
+/** Frequency choices offered alongside the peptide's own default. */
+const FREQUENCY_CHOICES: { perWeek: number; label: string }[] = [
+  { perWeek: 1, label: "Once a week" },
+  { perWeek: 2, label: "Twice a week" },
+  { perWeek: 3, label: "3x a week" },
+  { perWeek: 7, label: "Once a day" },
+  { perWeek: 14, label: "Twice a day" },
+];
+
+function FrequencyPicker({
+  value,
+  defaultPerWeek,
+  scheduleNote,
+  onChange,
+}: {
+  value: number;
+  defaultPerWeek: number;
+  scheduleNote?: string;
+  onChange: (n: number) => void;
+}) {
+  const choices = FREQUENCY_CHOICES.some((c) => c.perWeek === defaultPerWeek)
+    ? FREQUENCY_CHOICES
+    : [
+        { perWeek: defaultPerWeek, label: `${defaultPerWeek}x a week` },
+        ...FREQUENCY_CHOICES,
+      ].sort((a, b) => a.perWeek - b.perWeek);
+  return (
+    <div className="mt-5">
+      <Label className="text-xs text-muted-foreground">
+        How many injections per week?
+      </Label>
+      <div className="mt-1.5 flex flex-wrap gap-1.5">
+        {choices.map((c) => (
+          <button
+            key={c.perWeek}
+            type="button"
+            onClick={() => onChange(c.perWeek)}
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-sm transition-colors",
+              value === c.perWeek
+                ? "border-transparent bg-foreground text-background font-medium"
+                : "border-border bg-card hover:bg-surface"
+            )}
+            aria-pressed={value === c.perWeek}
+          >
+            {c.label}
+            {c.perWeek === defaultPerWeek ? " · typical" : ""}
+          </button>
+        ))}
+      </div>
+      {scheduleNote && value === defaultPerWeek && (
+        <p className="mt-1.5 text-xs text-muted-foreground">{scheduleNote}</p>
+      )}
+    </div>
+  );
 }
 
 interface Props {
@@ -258,7 +317,10 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
     const ref = known ?? PEPTIDES.find((p) => p.slug === slug);
     const vialMg = initial.vialStrengthMg ?? 5;
     const doseMcg = initial.doseMcg ?? 250;
-    const recommended = recommendBacWaterMl(vialMg, doseMcg);
+    // Plans saved before weekly splitting existed carry no frequency; treat
+    // them as one draw per week so their numbers don't silently change.
+    const injectionsPerWeek = initial.injectionsPerWeek ?? 1;
+    const recommended = recommendBacWaterMl(vialMg, doseMcg / injectionsPerWeek);
     const bac = initial.bacWaterMl;
     const dosePresetValues = ref
       ? [ref.typicalDoseMcgRange[0], ref.suggestedDoseMcg, ref.typicalDoseMcgRange[1]]
@@ -269,6 +331,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
       vialMg,
       showCustomVial: !(ref?.commonVialStrengthsMg ?? []).includes(vialMg),
       doseMcg,
+      injectionsPerWeek,
       showCustomDose: !dosePresetValues.includes(doseMcg),
       syringeType: initial.syringeType ?? "insulin-1ml",
       useRecommendedBac: bac == null || Math.abs(bac - recommended) < 1e-9,
@@ -326,6 +389,9 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   const selectPeptide = useCallback((slug: string) => {
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
+    // A frequency override belongs to the peptide it was chosen for; switching
+    // peptides re-aligns to the new peptide's typical schedule.
+    setFreqOverride(null);
   }, []);
 
   const [vialInput, setVialInput] = useState<number>(init?.vialMg ?? 0);
@@ -335,6 +401,10 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   const [doseInput, setDoseInput] = useState<number>(init?.doseMcg ?? 0);
   const [doseUnit, setDoseUnit] = useState<Unit>(init ? "mcg" : "mg");
   const [showCustomDose, setShowCustomDose] = useState(init?.showCustomDose ?? false);
+  // null = follow the selected peptide's typical frequency.
+  const [freqOverride, setFreqOverride] = useState<number | null>(
+    init ? init.injectionsPerWeek : null
+  );
 
   const [syringeType, setSyringeType] = useState<SyringeType>(init?.syringeType ?? "insulin-1ml");
 
@@ -392,6 +462,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
         if (d.vialUnit === "mg" || d.vialUnit === "mcg") setVialUnit(d.vialUnit);
         if (typeof d.doseInput === "number") setDoseInput(d.doseInput);
         if (d.doseUnit === "mg" || d.doseUnit === "mcg") setDoseUnit(d.doseUnit);
+        if (typeof d.injectionsPerWeek === "number" && d.injectionsPerWeek >= 1)
+          setFreqOverride(d.injectionsPerWeek);
         if (typeof d.syringeType === "string") setSyringeType(d.syringeType as SyringeType);
         if (typeof d.useRecommendedBac === "boolean") setUseRecommendedBac(d.useRecommendedBac);
         if (typeof d.customBacMl === "number") setCustomBacMl(d.customBacMl);
@@ -415,6 +487,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           vialUnit,
           doseInput,
           doseUnit,
+          injectionsPerWeek: freqOverride,
           syringeType,
           useRecommendedBac,
           customBacMl,
@@ -424,16 +497,28 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
     } catch {
       /* ignore */
     }
-  }, [hydrated, init, peptideSlug, customPeptideName, vialInput, vialUnit, doseInput, doseUnit, syringeType, useRecommendedBac, customBacMl, dateMixed]);
+  }, [hydrated, init, peptideSlug, customPeptideName, vialInput, vialUnit, doseInput, doseUnit, freqOverride, syringeType, useRecommendedBac, customBacMl, dateMixed]);
+
+  // Effective injections per week: user override, else the peptide's typical
+  // frequency (from its half-life). The entered dose is the WEEKLY total.
+  const injectionsPerWeek = freqOverride ?? peptide.injectionsPerWeek ?? 1;
+  const dosePerInjectionMcg = doseMcg / Math.max(1, injectionsPerWeek);
 
   const recommendedBac = useMemo(
-    () => recommendBacWaterMl(vialStrengthMg, doseMcg),
-    [vialStrengthMg, doseMcg]
+    () => recommendBacWaterMl(vialStrengthMg, doseMcg / Math.max(1, injectionsPerWeek)),
+    [vialStrengthMg, doseMcg, injectionsPerWeek]
   );
 
   const dosePresets = useMemo(() => {
-    const [lo, hi] = peptide.typicalDoseMcgRange;
-    const common = peptide.suggestedDoseMcg;
+    // The reference ranges are per-injection amounts; the wizard asks for a
+    // weekly total, so each preset is (typical per-injection) x (typical
+    // injections per week for this peptide).
+    const perWeek = peptide.injectionsPerWeek ?? 1;
+    const [lo, hi] = [
+      peptide.typicalDoseMcgRange[0] * perWeek,
+      peptide.typicalDoseMcgRange[1] * perWeek,
+    ];
+    const common = peptide.suggestedDoseMcg * perWeek;
     const fmtLabel = (mcg: number) => {
       const mg = mcg / 1000;
       const mgStr = mg >= 1 ? `${mg} mg` : `${mg.toFixed(mg % 0.1 === 0 ? 1 : 2)} mg`;
@@ -444,20 +529,28 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
       list.push({
         mcg: lo,
         label: fmtLabel(lo),
-        hint: "Lower end of the studied range",
+        hint: "Weekly total at the lower end of the studied range",
       });
     list.push({
       mcg: common,
       label: fmtLabel(common),
-      hint: "Most commonly studied amount",
+      hint: "Weekly total at the most commonly studied amount",
     });
     if (hi && hi !== common)
       list.push({
         mcg: hi,
         label: fmtLabel(hi),
-        hint: "Upper end of the studied range",
+        hint: "Weekly total at the upper end of the studied range",
       });
     return list;
+  }, [peptide]);
+
+  // Reference range hint, expressed as weekly totals to match the input.
+  const weeklyRangeHint = useMemo(() => {
+    const perWeek = peptide.injectionsPerWeek ?? 1;
+    const lo = peptide.typicalDoseMcgRange[0] * perWeek;
+    const hi = peptide.typicalDoseMcgRange[1] * perWeek;
+    return `Weekly totals studied for ${peptide.name}: ${lo / 1000} to ${hi / 1000} mg per week (${lo.toLocaleString()} to ${hi.toLocaleString()} mcg). We split it into ${perWeek === 1 ? "one draw" : `${perWeek} draws`} per week.`;
   }, [peptide]);
 
   const primaryName =
@@ -475,6 +568,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
     peptideName: primaryName,
     vialStrengthMg,
     doseMcg,
+    injectionsPerWeek,
     bacWaterMl: useRecommendedBac ? undefined : customBacMl,
     syringeType,
     dateMixed: dateMixed || null,
@@ -495,6 +589,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
       customPeptideName,
       vialStrengthMg,
       doseMcg,
+      injectionsPerWeek,
       syringeType,
       useRecommendedBac,
       customBacMl,
@@ -524,6 +619,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
         peptideName: peptideNameForPlan,
         vialStrengthMg,
         doseMcg,
+        injectionsPerWeek,
         bacWaterMl: useRecommendedBac ? recommendedBac : customBacMl,
         syringeType,
         dateMixed: dateMixed || null,
@@ -565,8 +661,15 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
     { label: "Peptide", value: primaryName },
     { label: "Vial", value: `${vialStrengthMg} mg` },
     {
-      label: "Dose",
+      label: "Weekly dose",
       value: `${(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg (${doseMcg.toLocaleString()} mcg)`,
+    },
+    {
+      label: "Schedule",
+      value:
+        injectionsPerWeek > 1
+          ? `${injectionsPerWeek}x per week — ${(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection`
+          : "One injection per week",
     },
     { label: "Syringe", value: syringe.label },
     {
@@ -782,8 +885,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               n={3}
               total={6}
               label="Amount"
-              title="How much do you measure each time?"
-              hint={hasPeptide ? `Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).` : "Type the amount you measure each time, in mg or mcg."}
+              title="How much per week in total?"
+              hint={hasPeptide ? weeklyRangeHint : "Type your total for the week, in mg or mcg. We'll split it across your injections."}
             >
               <div className="grid gap-1.5 sm:gap-2">
                 {hasPeptide && dosePresets.map((d) => (
@@ -838,6 +941,22 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
                   <ConversionHint value={doseInput} unit={doseUnit} />
                 </div>
               ) : null}
+              {hasPeptide && (
+                <FrequencyPicker
+                  value={injectionsPerWeek}
+                  defaultPerWeek={peptide.injectionsPerWeek ?? 1}
+                  scheduleNote={peptide.scheduleNote}
+                  onChange={(n) => setFreqOverride(n)}
+                />
+              )}
+              {doseMcg > 0 && injectionsPerWeek > 1 && (
+                <p className="mt-3 text-sm text-muted-foreground">
+                  {(doseMcg / 1000).toLocaleString()} mg per week ÷ {injectionsPerWeek} injections ={" "}
+                  <strong className="text-foreground">
+                    {(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection
+                  </strong>
+                </p>
+              )}
             </StepBlock>
 
             {/* 4. Syringe */}
@@ -1144,8 +1263,8 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
       {step === 2 && (
         <StepPanel
-          title="How much do you measure each time?"
-          hint={`Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). Not sure? Pick the most commonly studied amount.`}
+          title="How much per week in total?"
+          hint={`${weeklyRangeHint} Not sure? Pick the most commonly studied amount.`}
           onNext={() => goToStep(3)}
           onBack={() => goToStep(1)}
           stepNum={3}
@@ -1201,6 +1320,20 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               <ConversionHint value={doseInput} unit={doseUnit} />
             </div>
           ) : null}
+          <FrequencyPicker
+            value={injectionsPerWeek}
+            defaultPerWeek={peptide.injectionsPerWeek ?? 1}
+            scheduleNote={peptide.scheduleNote}
+            onChange={(n) => setFreqOverride(n)}
+          />
+          {doseMcg > 0 && injectionsPerWeek > 1 && (
+            <p className="mt-3 text-sm text-muted-foreground">
+              {(doseMcg / 1000).toLocaleString()} mg per week ÷ {injectionsPerWeek} injections ={" "}
+              <strong className="text-foreground">
+                {(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection
+              </strong>
+            </p>
+          )}
         </StepPanel>
       )}
 

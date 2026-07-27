@@ -13,15 +13,27 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { setInterestPeptide } from "@/lib/learn/interest";
 import { usePersistentState } from "@/lib/use-persistent-state";
 
-type Frequency = "daily" | "twice-daily" | "every-other-day" | "weekly";
+type Frequency = "daily" | "twice-daily" | "every-other-day" | "three-weekly" | "twice-weekly" | "weekly";
 type Unit = "mg" | "mcg";
 
 const FREQUENCIES: { id: Frequency; label: string; perWeek: number; hint: string }[] = [
   { id: "daily", label: "Once a day", perWeek: 7, hint: "Most common in research schedules." },
   { id: "twice-daily", label: "Twice a day", perWeek: 14, hint: "Morning and evening." },
   { id: "every-other-day", label: "Every other day", perWeek: 3.5, hint: "3-4 times a week." },
+  { id: "three-weekly", label: "3x a week", perWeek: 3, hint: "E.g., Monday, Wednesday, Friday." },
+  { id: "twice-weekly", label: "Twice a week", perWeek: 2, hint: "E.g., Monday and Thursday." },
   { id: "weekly", label: "Once a week", perWeek: 1, hint: "Some research schedules use weekly draws." },
 ];
+
+/** Map a peptide's typical injections/week to the closest frequency option. */
+function frequencyForPerWeek(perWeek: number): Frequency {
+  if (perWeek >= 14) return "twice-daily";
+  if (perWeek >= 7) return "daily";
+  if (perWeek >= 3.5) return "every-other-day";
+  if (perWeek >= 3) return "three-weekly";
+  if (perWeek >= 2) return "twice-weekly";
+  return "weekly";
+}
 
 const DURATIONS = [
   { weeks: 4, label: "4 weeks", hint: "Short trial cycle" },
@@ -50,6 +62,10 @@ export default function SupplyCalculatorPage() {
   function handlePeptideChange(slug: string) {
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
+    // Pre-select the peptide's typical schedule (same reference data the
+    // calculator uses to split weekly doses). Still user-changeable below.
+    const ref = PEPTIDES.find((p) => p.slug === slug);
+    if (ref && slug !== "custom") setFrequency(frequencyForPerWeek(ref.injectionsPerWeek));
   }
 
   const valid = doseMcg > 0 && vialMg > 0 && durationWeeks > 0 && frequency !== "";

@@ -8,6 +8,7 @@ interface Initial {
   peptideName: string;
   vialStrengthMg: number;
   doseMcg: number;
+  injectionsPerWeek?: number;
   bacWaterMl: number;
   syringeType: string;
   dateMixed: string;
@@ -21,6 +22,7 @@ export function PlanEditor({ initial }: { initial: Initial }) {
     peptideName: initial.peptideName,
     vialStrengthMg: initial.vialStrengthMg,
     doseMcg: initial.doseMcg,
+    injectionsPerWeek: initial.injectionsPerWeek ?? 1,
     bacWaterMl: initial.bacWaterMl,
     syringeType: initial.syringeType as SyringeType,
     dateMixed: initial.dateMixed || null,
