@@ -35,6 +35,8 @@ import {
 } from "@/lib/calc";
 import { savePlanAction } from "@/lib/plan-actions";
 import { defaultPlanName } from "@/lib/plan-name";
+import { rememberDevicePlan } from "@/lib/saved-plans";
+import { PostSaveDialog } from "@/components/plan/post-save-dialog";
 import { PlanResults } from "@/components/plan/plan-results";
 import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
 import { toast } from "@/components/ui/toaster";
@@ -350,6 +352,9 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   const [secondaryVialUnit, setSecondaryVialUnit] = useState<Unit>("mg");
 
   const [saving, setSaving] = useState(false);
+  // Set after a successful save; opens the post-save dialog (PDF download +
+  // auth-aware next step) instead of a blind redirect.
+  const [savedPlan, setSavedPlan] = useState<{ publicId: string; ownedByUser: boolean } | null>(null);
   // null = untouched, so the editable field shows the generated default name.
   const [planName, setPlanName] = useState<string | null>(null);
   const [editingSyringe, setEditingSyringe] = useState(false);
@@ -533,12 +538,16 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
         } catch {
           /* ignore */
         }
-        toast({
-          title: "Plan saved",
-          description: "You can share the link or print the PDF.",
-          variant: "success",
+        // Remember on this device right away so the plan shows under My Plans
+        // even if the visitor never opens the plan page or signs in. If they
+        // sign in later, the claim step attaches it to their account.
+        rememberDevicePlan({
+          publicId: res.publicId,
+          name: nameValue,
+          savedAt: new Date().toISOString(),
+          claimToken: res.claimToken ?? undefined,
         });
-        router.push(`/plan/${res.publicId}`);
+        setSavedPlan({ publicId: res.publicId, ownedByUser: res.ownedByUser });
       } else {
         toast({
           title: "Could not save plan",
@@ -1433,6 +1442,17 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           </div>
         </div>
       )}
+
+      {savedPlan ? (
+        <PostSaveDialog
+          publicId={savedPlan.publicId}
+          ownedByUser={savedPlan.ownedByUser}
+          open
+          onOpenChange={(open) => {
+            if (!open) setSavedPlan(null);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

@@ -61,6 +61,10 @@ export async function savePlanAction(raw: unknown, notes?: string) {
   const result = calculate(input);
 
   const publicId = nanoid(10);
+  const userId = (session?.user as { id?: string } | undefined)?.id ?? null;
+  // For anonymous saves, issue a secret the saving device keeps; presenting it
+  // later (after sign-in) proves this device created the plan and may claim it.
+  const claimToken = userId ? null : nanoid(24);
   const name =
     (parsed.data.name && parsed.data.name.trim()) ||
     defaultPlanName({
@@ -72,7 +76,8 @@ export async function savePlanAction(raw: unknown, notes?: string) {
     data: {
       publicId,
       name,
-      userId: (session?.user as { id?: string } | undefined)?.id ?? null,
+      userId,
+      claimToken,
       peptideSlug: result.input.peptideSlug,
       peptideName: result.input.peptideName,
       vialStrengthMg: result.input.vialStrengthMg,
@@ -91,7 +96,57 @@ export async function savePlanAction(raw: unknown, notes?: string) {
   });
 
   revalidatePath("/plans");
-  return { ok: true as const, publicId: plan.publicId, id: plan.id };
+  return {
+    ok: true as const,
+    publicId: plan.publicId,
+    id: plan.id,
+    // Lets the client route post-save: signed-in users go straight to My
+    // Plans; signed-out users get a sign-in/create-account prompt.
+    ownedByUser: Boolean(userId),
+    // Only returned to the device that created the plan (this response).
+    claimToken,
+  };
+}
+
+/**
+ * Attach plans that were saved on this device while signed out to the current
+ * user's account. Requires the per-plan claim token issued at save time as
+ * proof this device created the plan — knowing a shared plan URL is not
+ * enough. Atomic per plan: `claimed` reflects only rows actually updated.
+ */
+export async function claimDevicePlansAction(
+  claims: Array<{ publicId: string; claimToken: string }>
+) {
+  const session = await auth();
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) return { ok: false as const, error: "Not signed in.", claimed: [] as string[] };
+
+  const valid = Array.isArray(claims)
+    ? claims
+        .filter(
+          (c) =>
+            c &&
+            typeof c.publicId === "string" &&
+            c.publicId.length > 0 &&
+            typeof c.claimToken === "string" &&
+            c.claimToken.length > 0
+        )
+        .slice(0, 100)
+    : [];
+  if (valid.length === 0) return { ok: true as const, claimed: [] as string[] };
+
+  const claimed: string[] = [];
+  for (const c of valid) {
+    // updateMany's where clause makes the token check + ownership assignment a
+    // single atomic statement; count tells us whether we actually won the row.
+    const res = await prisma.plan.updateMany({
+      where: { publicId: c.publicId, userId: null, claimToken: c.claimToken },
+      data: { userId, claimToken: null },
+    });
+    if (res.count === 1) claimed.push(c.publicId);
+  }
+  if (claimed.length > 0) revalidatePath("/plans");
+  return { ok: true as const, claimed };
 }
 
 export async function updatePlanNotesAction(publicId: string, notes: string) {

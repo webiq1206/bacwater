@@ -8,6 +8,12 @@ export interface DeviceSavedPlan {
   publicId: string;
   name: string;
   savedAt: string; // ISO
+  /**
+   * Proof-of-possession secret issued when this device saved the plan while
+   * signed out. Presented on sign-in to claim the plan into the account.
+   * Absent for plans merely viewed (e.g. shared links) — those can't be claimed.
+   */
+  claimToken?: string;
 }
 
 const KEY = "bacwater.savedPlans";
@@ -28,8 +34,17 @@ export function getDevicePlans(): DeviceSavedPlan[] {
 export function rememberDevicePlan(plan: DeviceSavedPlan) {
   if (typeof window === "undefined") return;
   try {
-    const list = getDevicePlans().filter((p) => p.publicId !== plan.publicId);
-    list.unshift({ publicId: plan.publicId, name: plan.name || "Untitled plan", savedAt: plan.savedAt });
+    const existing = getDevicePlans();
+    const prior = existing.find((p) => p.publicId === plan.publicId);
+    const list = existing.filter((p) => p.publicId !== plan.publicId);
+    list.unshift({
+      publicId: plan.publicId,
+      name: plan.name || "Untitled plan",
+      savedAt: plan.savedAt,
+      // Keep a previously stored token if the new entry doesn't carry one
+      // (e.g. re-opening the plan page after saving).
+      claimToken: plan.claimToken ?? prior?.claimToken,
+    });
     window.localStorage.setItem(KEY, JSON.stringify(list.slice(0, MAX)));
   } catch {
     /* storage full or blocked, non-fatal */

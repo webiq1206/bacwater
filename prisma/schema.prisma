@@ -90,6 +90,10 @@ model Plan {
   notes                     String?
   archived                  Boolean   @default(false)
   data                      String    // full CalcResult snapshot as JSON
+  // Proof-of-possession secret for plans saved while signed out. The saving
+  // device keeps it locally; presenting it lets a later sign-in claim the
+  // plan. Cleared once claimed. Never expose in plan pages or APIs.
+  claimToken                String?
 
   createdAt                 DateTime  @default(now())
   updatedAt                 DateTime  @updatedAt

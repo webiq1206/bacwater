@@ -10,6 +10,7 @@ import type { CalcResult } from "@/lib/calc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PlansRowActions } from "@/components/plan/plans-row-actions";
 import { DevicePlansList } from "@/components/plan/device-plans-list";
+import { ClaimDevicePlans } from "@/components/plan/claim-device-plans";
 
 export const metadata = {
   title: "My Plans",
@@ -58,6 +59,7 @@ export default async function PlansPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <ClaimDevicePlans />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow">Dashboard</div>

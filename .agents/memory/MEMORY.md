@@ -1,0 +1,1 @@
+- [Dev server OOM on this repl](dev-server-memory.md) — workflow runs a production build; rebuild + restart after code changes, don't switch back to next dev.
