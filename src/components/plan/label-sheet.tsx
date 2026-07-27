@@ -13,6 +13,8 @@ interface Props {
   bacWaterMl: string;
   /** Pre-formatted syringe reading, e.g. "10 units" or "0.25 mL". */
   doseReading: string;
+  /** Injections per week from the plan's schedule; null for older plans without one. */
+  injectionsPerWeek?: number | null;
   shelfDays: number;
 }
 
@@ -32,6 +34,7 @@ export function LabelSheet({
   vialStrengthMg,
   bacWaterMl,
   doseReading,
+  injectionsPerWeek,
   shelfDays,
 }: Props) {
   const [count, setCount] = useState(6);
@@ -187,7 +190,7 @@ export function LabelSheet({
                     {peptideName || "Peptide"}
                   </div>
                   <div className="text-[8px] text-muted-foreground leading-tight mt-0.5">
-                    {`${vialStrengthMg} mg vial · ${bacWaterMl} mL BAC · ${doseReading}/dose`}
+                    {`${vialStrengthMg} mg vial · ${bacWaterMl} mL BAC · ${doseReading}/dose${injectionsPerWeek ? ` · ${injectionsPerWeek}x/week` : ""}`}
                   </div>
                 </div>
                 <div className="shrink-0">

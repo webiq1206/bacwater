@@ -29,9 +29,16 @@ export default async function LabelPage({ params }: Props) {
   // Use the stored result's syringe reading so the label matches the plan page
   // and PDF exactly (same rounding, correct units-vs-mL label).
   let doseReading: string;
+  let injectionsPerWeek: number | null = null;
   try {
     const parsed = JSON.parse(plan.data) as CalcResult;
     doseReading = formatSyringeReading(parsed.syringeReadout);
+    if (
+      typeof parsed.schedule?.injectionsPerWeek === "number" &&
+      parsed.schedule.injectionsPerWeek >= 1
+    ) {
+      injectionsPerWeek = parsed.schedule.injectionsPerWeek;
+    }
   } catch {
     doseReading = `${formatUnits(plan.syringeUnits)} units`;
   }
@@ -44,6 +51,7 @@ export default async function LabelPage({ params }: Props) {
         vialStrengthMg={plan.vialStrengthMg}
         bacWaterMl={formatMl(plan.bacWaterMl)}
         doseReading={doseReading}
+        injectionsPerWeek={injectionsPerWeek}
         shelfDays={shelfDays}
       />
     </div>

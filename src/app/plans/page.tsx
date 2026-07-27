@@ -109,9 +109,16 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; name
         // plan page and PDF exactly (same rounding, correct units/mL label).
         // Fall back to the denormalized column for older/corrupt rows.
         let readout: string;
+        let injectionsPerWeek: number | null = null;
         try {
           const parsed = JSON.parse(p.data) as CalcResult;
           readout = formatSyringeReading(parsed.syringeReadout);
+          if (
+            typeof parsed.schedule?.injectionsPerWeek === "number" &&
+            parsed.schedule.injectionsPerWeek >= 1
+          ) {
+            injectionsPerWeek = parsed.schedule.injectionsPerWeek;
+          }
         } catch {
           readout = `${formatUnits(p.syringeUnits)} units`;
         }
@@ -143,7 +150,14 @@ function PlanList({ plans }: { plans: Array<{ id: string; publicId: string; name
                 <dt className="text-muted-foreground">Amount</dt>
                 <dd className="text-right">{formatDose(p.doseMcg)}</dd>
                 <dt className="text-muted-foreground">Measure</dt>
-                <dd className="text-right font-medium text-foreground">{readout}</dd>
+                <dd className="text-right font-medium text-foreground">
+                  {readout}
+                  {injectionsPerWeek ? (
+                    <span className="font-normal text-muted-foreground">
+                      {" "}· {injectionsPerWeek}x/week
+                    </span>
+                  ) : null}
+                </dd>
                 <dt className="text-muted-foreground">Measures/vial</dt>
                 <dd className="text-right">{p.dosesPerVial}</dd>
               </dl>
