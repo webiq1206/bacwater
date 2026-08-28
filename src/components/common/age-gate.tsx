@@ -1,32 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ShieldCheck, FlaskConical } from "lucide-react";
 import { POSITIONING_STATEMENT } from "@/lib/positioning";
 
 const COOKIE = "bacwater_age_ok";
 
 /**
- * Full-screen 21+ age confirmation shown before a visitor can use the site.
+ * 21+ confirmation, shown as a non-blocking bottom banner.
  *
- * To avoid a flash of the page behind it, the server reads the confirmation
- * cookie and passes `initialVerified`, so the overlay is present in the very
- * first HTML when the visitor hasn't confirmed yet.
+ * This used to be a full-screen overlay that covered the page and locked body
+ * scroll until the visitor confirmed. Age verification is a permitted
+ * interstitial as far as Google is concerned, so it was not what kept pages
+ * out of the index, but it did mean every first-time visitor and every
+ * stricter renderer (Bing, several AI crawlers) met a covered page before any
+ * content. On a site whose entire job is answering a question on arrival, that
+ * is a lot of engagement to spend on a confirmation click.
+ *
+ * The banner keeps the same confirmation and the same cookie. It just lets the
+ * answer stay readable behind it. Declining still blanks the page, so an
+ * under-21 visitor does not simply get to dismiss their way in.
  */
 export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
   const [verified, setVerified] = useState(initialVerified);
   const [declined, setDeclined] = useState(false);
-
-  // Lock background scroll while the gate is up.
-  useEffect(() => {
-    if (!verified) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = prev;
-      };
-    }
-  }, [verified]);
 
   if (verified) return null;
 
@@ -41,80 +38,85 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
     setVerified(true);
   }
 
+  // Declining is the one case that still takes over the screen: someone who
+  // has said they are under 21 should not keep reading.
+  if (declined) {
+    return (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="age-gate-title"
+        className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-background"
+      >
+        <div className="w-full max-w-md text-center">
+          <h2
+            id="age-gate-title"
+            className="text-2xl font-serif font-medium tracking-tight"
+          >
+            Come back when you&apos;re 21
+          </h2>
+          <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+            You must be at least 21 years old to use BACwater.ai. This site is
+            for laboratory and research professionals only.
+          </p>
+          <button
+            type="button"
+            onClick={() => setDeclined(false)}
+            className="mt-6 text-sm font-medium underline underline-offset-4 text-muted-foreground hover:text-foreground"
+          >
+            Go back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
-      role="dialog"
-      aria-modal="true"
+      role="region"
       aria-labelledby="age-gate-title"
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-[200] border-t border-border bg-card/95 backdrop-blur-sm shadow-[0_-4px_24px_rgba(0,0,0,0.08)]"
     >
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-7 sm:p-8 shadow-xl">
-        {declined ? (
-          <div className="text-center">
-            <h2
+      <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <ShieldCheck className="h-4 w-4 shrink-0" />
+            <span
               id="age-gate-title"
-              className="text-2xl font-serif font-medium tracking-tight"
+              className="text-xs uppercase tracking-widest font-medium"
             >
-              Come back when you&apos;re 21
-            </h2>
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-              You must be at least 21 years old to use BACwater.ai. This site is
-              for laboratory and research professionals only.
-            </p>
-            <button
-              type="button"
-              onClick={() => setDeclined(false)}
-              className="mt-6 text-sm font-medium underline underline-offset-4 text-muted-foreground hover:text-foreground"
-            >
-              Go back
-            </button>
+              Age check &mdash; are you 21 or older?
+            </span>
           </div>
-        ) : (
-          <>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <ShieldCheck className="h-4 w-4" />
-              <span className="text-xs uppercase tracking-widest font-medium">
-                Age check
-              </span>
-            </div>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            {POSITIONING_STATEMENT}
+          </p>
+          <div className="mt-2 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
+            <FlaskConical className="h-3.5 w-3.5 mt-px shrink-0" />
+            <span>
+              By continuing you confirm you are 21 or older and understand this
+              site is a calculation and reference tool for research and
+              educational use.
+            </span>
+          </div>
+        </div>
 
-            <h2
-              id="age-gate-title"
-              className="mt-4 text-2xl sm:text-3xl font-serif font-medium tracking-tight"
-            >
-              Are you 21 or older?
-            </h2>
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-              {POSITIONING_STATEMENT}
-            </p>
-
-            <div className="mt-6 grid gap-2.5">
-              <button
-                type="button"
-                onClick={confirm}
-                className="h-12 w-full rounded-xl bg-foreground text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-              >
-                Yes, I am 21 or older
-              </button>
-              <button
-                type="button"
-                onClick={() => setDeclined(true)}
-                className="h-12 w-full rounded-xl border border-border bg-white text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
-              >
-                No, I am under 21
-              </button>
-            </div>
-
-            <div className="mt-6 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
-              <FlaskConical className="h-3.5 w-3.5 mt-px shrink-0" />
-              <span>
-                By entering you confirm you are 21 or older and understand this
-                site is a calculation and reference tool for research and
-                educational use.
-              </span>
-            </div>
-          </>
-        )}
+        <div className="flex shrink-0 flex-col gap-2.5 sm:flex-row lg:flex-col xl:flex-row">
+          <button
+            type="button"
+            onClick={confirm}
+            className="h-12 rounded-xl bg-foreground px-6 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+          >
+            Yes, I am 21 or older
+          </button>
+          <button
+            type="button"
+            onClick={() => setDeclined(true)}
+            className="h-12 rounded-xl border border-border bg-white px-6 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+          >
+            No, I am under 21
+          </button>
+        </div>
       </div>
     </div>
   );

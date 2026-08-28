@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { COMPARISONS } from "@/lib/comparisons/content";
-import { SITE_URL, STATIC_PAGES } from "@/lib/seo/sitemap";
+import { SITE_URL, STATIC_PAGES, STATIC_LEARN_SLUGS } from "@/lib/seo/sitemap";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,8 +19,12 @@ export const dynamic = "force-dynamic";
  */
 const INDEXNOW_KEY = "27a00f2a35ea4c5f9ccf890a624f8259";
 
-// Slugs that redirect and must not be submitted.
-const REDIRECTED = new Set(["bac-water-vs-sterile-water"]);
+// Learn slugs that 301 elsewhere and must not be submitted. Keep this in sync
+// with the same set in src/app/sitemap-learn.xml/route.ts.
+const REDIRECTED = new Set([
+  "bac-water-vs-sterile-water",
+  "how-long-bac-water-lasts",
+]);
 
 async function collectUrls(): Promise<string[]> {
   const paths: string[] = [];
@@ -35,13 +39,15 @@ async function collectUrls(): Promise<string[]> {
       select: { slug: true },
     })
     .catch(() => [] as { slug: string }[]);
+  // Skip redirecting slugs, and slugs already covered by a dedicated static
+  // route in STATIC_PAGES, so each URL is submitted exactly once.
   for (const g of guides)
-    if (!REDIRECTED.has(g.slug)) paths.push(`/learn/${g.slug}`);
+    if (!REDIRECTED.has(g.slug) && !STATIC_LEARN_SLUGS.has(g.slug))
+      paths.push(`/learn/${g.slug}`);
 
-  const products = await prisma.product
-    .findMany({ where: { active: true }, select: { slug: true } })
-    .catch(() => [] as { slug: string }[]);
-  for (const pr of products) paths.push(`/shop/${pr.slug}`);
+  // Product URLs are deliberately not submitted. The store was removed and
+  // every /shop/* path now 301s to /tools, so pushing them to IndexNow just
+  // spends crawl budget on redirects.
 
   const unique = Array.from(new Set(paths));
   return unique.map((p) => `${SITE_URL}${p}`);

@@ -45,13 +45,13 @@ const nextConfig: NextConfig = {
       { source: "/checkout", destination: "/plan", permanent: true },
       { source: "/checkout/:path*", destination: "/plan", permanent: true },
       { source: "/shipping-returns", destination: "/", permanent: true },
-      // The "where to buy" page was a store funnel and recommended vendors,
-      // which the site no longer does. Consolidate into the bac-water reference.
-      {
-        source: "/learn/where-to-buy-bacteriostatic-water",
-        destination: "/learn/what-is-bac-water",
-        permanent: true,
-      },
+      // NOTE: /learn/where-to-buy-bacteriostatic-water is deliberately NOT
+      // redirected. It was 301'd here on 2026-07-15 when the store was removed,
+      // which also threw away the site's second-strongest page (235 impressions
+      // in 21 days at ~position 35) and the whole buy-intent cluster behind it
+      // ("near me", "at Walgreens", "over the counter"). The store is still
+      // gone; the page is back as an editorial sourcing guide that names no
+      // vendor. See src/app/learn/where-to-buy-bacteriostatic-water/page.tsx.
       // Per-vial-size pages (e.g. /peptides/bpc-157/5mg) were keyword-swapped
       // doorway variants that also asserted a "typical dose" (PRD §9.1.5).
       // Consolidate them into the compound page and redirect (PRD §9.11). The

@@ -91,6 +91,11 @@ export const STATIC_PAGES: SitemapUrl[] = [
   { path: "/tools/vial-labels", changeFrequency: "monthly", priority: 0.7 },
   { path: "/learn/glossary", changeFrequency: "monthly", priority: 0.6 },
   { path: "/learn/bac-water-shelf-life", changeFrequency: "monthly", priority: 0.7 },
+  {
+    path: "/learn/where-to-buy-bacteriostatic-water",
+    changeFrequency: "monthly",
+    priority: 0.8,
+  },
   { path: "/learn/bac-water-for-peptides", changeFrequency: "monthly", priority: 0.8 },
   { path: "/learn/what-you-cannot-know", changeFrequency: "monthly", priority: 0.8 },
   { path: "/about", changeFrequency: "monthly", priority: 0.7 },
@@ -107,3 +112,16 @@ export const SITEMAP_SEGMENTS = [
   "/sitemap-peptides.xml",
   "/sitemap-learn.xml",
 ];
+
+/**
+ * Slugs under /learn that are served by their own hand-built route rather than
+ * the database-driven /learn/[slug] template. They are already listed in
+ * STATIC_PAGES, so the learn sitemap must skip them; otherwise the same URL is
+ * submitted from two different sitemap segments, which makes per-segment
+ * indexing counts meaningless and looks like duplication.
+ */
+export const STATIC_LEARN_SLUGS = new Set(
+  STATIC_PAGES.map((p) => p.path)
+    .filter((path) => path.startsWith("/learn/"))
+    .map((path) => path.slice("/learn/".length))
+);
