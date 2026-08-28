@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 
+import { ADS_ENABLED } from "@/lib/ads";
+
 const AD_CLIENT = "ca-pub-3192081478482854";
 
 /**
@@ -15,8 +17,9 @@ export const DEFAULT_AD_SLOT = "0000000000";
 /**
  * A single responsive AdSense display unit, used only inside long-form content
  * (never on the calculators, wizard, or results, a tool page should not carry
- * ads). Renders the real unit in production; in development it shows a labeled
- * placeholder so ad positions are visible while building.
+ * ads). Renders the real unit in production when ads are enabled; in
+ * development it shows a labeled placeholder so ad positions stay visible
+ * while building.
  */
 export function AdSlot({
   slot = DEFAULT_AD_SLOT,
@@ -26,6 +29,7 @@ export function AdSlot({
   className?: string;
 }) {
   useEffect(() => {
+    if (!ADS_ENABLED) return;
     if (process.env.NODE_ENV !== "production") return;
     try {
       const w = window as unknown as { adsbygoogle?: unknown[] };
@@ -35,6 +39,9 @@ export function AdSlot({
       /* loader not ready yet; the push queues on the array */
     }
   }, []);
+
+  // Ads paused: render nothing at all, so no reserved space and no layout gap.
+  if (!ADS_ENABLED) return null;
 
   if (process.env.NODE_ENV !== "production") {
     return (

@@ -9,6 +9,7 @@ import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { Toaster } from "@/components/ui/toaster";
 import { OrgJsonLd } from "@/components/common/org-json-ld";
 import { AgeGate } from "@/components/common/age-gate";
+import { ADS_ENABLED } from "@/lib/ads";
 import { auth } from "@/lib/auth";
 
 // Montserrat carries the voice (body, labels, and light-weight headings).
@@ -109,13 +110,17 @@ t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";
 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 })(window, document, "clarity", "script", "${CLARITY_ID}");`}
             </Script>
-            <Script
-              id="adsbygoogle-init"
-              strategy="afterInteractive"
-              async
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3192081478482854"
-              crossOrigin="anonymous"
-            />
+            {/* Only pulled in when ads are actually enabled; otherwise this is
+                a third-party script on every page for zero revenue. */}
+            {ADS_ENABLED && (
+              <Script
+                id="adsbygoogle-init"
+                strategy="afterInteractive"
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3192081478482854"
+                crossOrigin="anonymous"
+              />
+            )}
           </>
         )}
         <a

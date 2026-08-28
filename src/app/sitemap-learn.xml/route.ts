@@ -1,5 +1,10 @@
 import { prisma } from "@/lib/db";
-import { urlsetXml, xmlResponse, type SitemapUrl } from "@/lib/seo/sitemap";
+import {
+  urlsetXml,
+  xmlResponse,
+  STATIC_LEARN_SLUGS,
+  type SitemapUrl,
+} from "@/lib/seo/sitemap";
 import { COMPARISONS } from "@/lib/comparisons/content";
 import { getCatalog } from "@/lib/learn/catalog";
 import { CONTENT_TYPES, TOPICS } from "@/lib/learn/taxonomy";
@@ -18,7 +23,9 @@ export async function GET() {
     .catch(() => [] as { slug: string; updatedAt: Date }[]);
 
   const guideUrls: SitemapUrl[] = guides
-    .filter((g) => !REDIRECTED.has(g.slug))
+    // Skip slugs that 301 elsewhere, and slugs whose URL is already submitted
+    // from sitemap-pages.xml because a dedicated static route serves them.
+    .filter((g) => !REDIRECTED.has(g.slug) && !STATIC_LEARN_SLUGS.has(g.slug))
     .map((g) => ({
       path: `/learn/${g.slug}`,
       lastModified: g.updatedAt,
