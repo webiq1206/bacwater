@@ -145,11 +145,21 @@ Ordered by expected impact per unit of effort. Playbook references map to the Ed
 
 Nothing else matters until the calculator pages are indexed.
 
-1. **Manually request indexing** in Search Console for, in order: `/tools/bac-water`, `/tools`, `/learn`, `/faq`, `/tools/syringe-units`, `/tools/reverse-bac`, `/about`. This is a manual step — the API cannot do it.
-2. **Fire IndexNow** once deployed: `curl -X POST https://bacwater.ai/api/admin/indexnow -H "x-seed-secret: $AUTH_SECRET"`. Now that it no longer pushes redirects, this is a clean signal to Bing and Copilot.
-3. **Re-submit `/learn/where-to-buy-bacteriostatic-water`** specifically. It has history and an existing footprint, so it should re-index faster than a cold URL.
-4. **Verify Bing Webmaster Tools** is connected. Bing feeds Copilot and ChatGPT search; it is currently an unmeasured surface. *(Playbook §3, tool stack)*
-5. **Re-inspect all seven URLs at 7 and 14 days.** If `/tools/bac-water` is still "Discovered — not indexed" after two weeks, the problem is authority alone and Phase 3 becomes the whole job.
+**Sitemap resubmission is not the lever.** Worth stating, because it is the obvious first instinct. GSC reports `lastDownloaded` of 2026-08-28 for `sitemap.xml` and `sitemap-peptides.xml` — Google is already fetching all three sitemaps daily. Discovery is not the problem; these URLs are discovered. Google is choosing not to crawl them. The only two things that change that are a manual priority-crawl request and authority.
+
+**Do now — these do not depend on the deploy.** None of the following pages are changed by the recovery branch. They are already live and already correct; they just need crawling.
+
+1. **Request indexing manually** in Search Console → URL Inspection → paste URL → *Request Indexing*. In priority order: `/tools/bac-water`, `/tools`, `/learn`, `/faq`, `/about`, `/tools/syringe-units`, `/tools/reverse-bac`. Roughly 60 seconds each; the daily quota is about 10–12 URLs, so all seven fit in one sitting.
+2. **Verify Bing Webmaster Tools** is connected and the sitemap is submitted there. Bing feeds Copilot and ChatGPT search; it is currently an unmeasured surface. *(Playbook §3, tool stack)*
+
+**Do after merge and deploy — these need the new code live.**
+
+3. **Request indexing for `/learn/where-to-buy-bacteriostatic-water`.** Not before: until the branch ships, that URL still serves a 301, and requesting indexing on it today just makes Google re-confirm the redirect. It has history and an existing footprint, so once live it should re-index faster than a cold URL.
+4. **Fire IndexNow:** `curl -X POST https://bacwater.ai/api/admin/indexnow -H "x-seed-secret: $AUTH_SECRET"`. Also after deploy — the fix that stops it pushing dead `/shop/*` URLs has to be live first, or the run repeats the old mistake.
+
+**Then measure.**
+
+5. **Re-inspect all eight URLs at 7 and 14 days.** If `/tools/bac-water` is still "Discovered — not indexed" after two weeks, the problem is authority alone and Phase 3 becomes the whole job.
 
 ### Phase 2 — Convert the impressions already being served (weeks 1–3)
 
