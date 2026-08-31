@@ -238,3 +238,65 @@ export async function duplicatePlanAction(publicId: string) {
   revalidatePath("/plans");
   return { ok: true as const, publicId: created.publicId };
 }
+
+/**
+ * Load one plan's full stored snapshot for the My Plans workspace.
+ *
+ * The list ships summary rows only — a `CalcResult` blob per plan would make
+ * the page heavy for anyone with a lot of them — so the selected plan's detail
+ * is fetched here on demand.
+ *
+ * Owned plans are restricted to their owner. Unowned (guest) plans stay
+ * readable, which matches /plan/[id] already being link-accessible.
+ */
+export async function getPlanDetailAction(publicId: string) {
+  const session = await auth();
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  const plan = await prisma.plan.findUnique({ where: { publicId } });
+  if (!plan) return { ok: false as const, error: "Plan not found." };
+  if (plan.userId && plan.userId !== userId)
+    return { ok: false as const, error: "Not authorized." };
+
+  let result: unknown = null;
+  try {
+    result = JSON.parse(plan.data);
+  } catch {
+    // A corrupt snapshot shouldn't blank the pane; the caller falls back to
+    // the plan's own columns.
+    result = null;
+  }
+
+  return {
+    ok: true as const,
+    plan: {
+      publicId: plan.publicId,
+      name: plan.name,
+      peptideName: plan.peptideName,
+      notes: plan.notes ?? "",
+      archived: plan.archived,
+      vialStrengthMg: plan.vialStrengthMg,
+      doseMcg: plan.doseMcg,
+      dosesPerVial: plan.dosesPerVial,
+      dateMixed: plan.dateMixed?.toISOString() ?? null,
+      expirationDate: plan.expirationDate?.toISOString() ?? null,
+      createdAt: plan.createdAt.toISOString(),
+      result,
+    },
+  };
+}
+
+/**
+ * Same authorization as `deletePlanAction`, but returns instead of
+ * redirecting, so the workspace can drop the row and advance the selection
+ * without a full page navigation.
+ */
+export async function removePlanAction(publicId: string) {
+  const session = await auth();
+  const plan = await prisma.plan.findUnique({ where: { publicId } });
+  if (!plan) return { ok: false as const, error: "Plan not found." };
+  if (plan.userId && plan.userId !== (session?.user as { id?: string } | undefined)?.id)
+    return { ok: false as const, error: "Not authorized." };
+  await prisma.plan.delete({ where: { id: plan.id } });
+  revalidatePath("/plans");
+  return { ok: true as const };
+}

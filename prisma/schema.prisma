@@ -239,5 +239,15 @@ model ContactMessage {
   handled   Boolean  @default(false)
   createdAt DateTime @default(now())
 
+  // Triage state for the /admin/contact workspace. All nullable and additive,
+  // so `prisma db push` adds them without touching existing rows.
+  handledAt      DateTime?
+  handledByEmail String?
+  internalNotes  String?
+  repliedAt      DateTime?
+  replySubject   String?
+  replyBody      String?
+
   @@index([handled])
+  @@index([email])
 }
