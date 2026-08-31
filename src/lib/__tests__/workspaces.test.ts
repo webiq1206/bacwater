@@ -11,6 +11,7 @@ import {
   REPLY_TEMPLATES,
 } from "@/lib/contact-triage";
 import { contentChecks, extractMetaDescription } from "@/lib/content/checks";
+import { vialMgOf, doseMcgOf } from "@/lib/tools/vial-context";
 
 let failures = 0;
 function check(cond: boolean, label: string) {
@@ -179,6 +180,34 @@ check(
   "meta description skips headings and list items"
 );
 check(extractMetaDescription(GOOD_BODY).length <= 160, "meta description stays within 160 characters");
+
+// ---- Shared vial context: the unit math must not have moved -----------------
+//
+// The BAC water, reverse-BAC, and supplies calculators each did these two
+// conversions inline before they shared one record. If the shared versions
+// disagree by even a rounding step, every answer on three public calculators
+// shifts. These reproduce the original expressions verbatim.
+
+const legacyVialMg = (input: number, unit: "mg" | "mcg") =>
+  unit === "mg" ? input : input / 1000;
+const legacyDoseMcg = (input: number, unit: "mg" | "mcg") =>
+  unit === "mcg" ? input : Math.round(input * 100000) / 100;
+
+const UNIT_INPUTS = [0, 0.1, 0.25, 0.3, 1, 2.5, 5, 10, 15, 250, 1000, 5000];
+let unitMismatch = 0;
+for (const n of UNIT_INPUTS) {
+  for (const unit of ["mg", "mcg"] as const) {
+    if (vialMgOf({ vialInput: n, vialUnit: unit }) !== legacyVialMg(n, unit)) unitMismatch++;
+    if (doseMcgOf({ doseInput: n, doseUnit: unit }) !== legacyDoseMcg(n, unit)) unitMismatch++;
+  }
+}
+check(unitMismatch === 0, "shared vial/dose conversions match the per-tool originals exactly");
+
+// The 0.3 mg case is why the dose conversion rounds at all: a plain *1000
+// yields 300.00000000000006.
+check(doseMcgOf({ doseInput: 0.3, doseUnit: "mg" }) === 300, "0.3 mg converts to exactly 300 mcg");
+check(doseMcgOf({ doseInput: 250, doseUnit: "mcg" }) === 250, "mcg input passes through untouched");
+check(vialMgOf({ vialInput: 5, vialUnit: "mg" }) === 5, "mg vial input passes through untouched");
 
 if (failures > 0) {
   console.error(`\n${failures} workspace assertion(s) failed.`);

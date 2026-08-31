@@ -17,24 +17,35 @@ import { StickyResultBar } from "@/components/tools/sticky-result-bar";
 import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
 import { setInterestPeptide } from "@/lib/learn/interest";
 import { usePersistentState } from "@/lib/use-persistent-state";
+import { useVialContext } from "@/lib/tools/vial-context";
+import { CarriedOverNotice } from "@/components/tools/carried-over-notice";
 
 type Unit = "mg" | "mcg";
 
 const TARGET_PRESETS = [10, 15, 20, 25, 50];
 
 export default function ReverseBacCalculatorPage() {
-  const [peptideSlug, setPeptideSlug] = usePersistentState("bacwater.tool.reverse.peptide", "");
+  // Peptide, vial amount, and measured amount are shared with the BAC water
+  // and supplies calculators, so moving between them doesn't re-ask.
+  const vial = useVialContext();
+  const {
+    peptideSlug,
+    setPeptideSlug,
+    vialInput,
+    setVialInput,
+    vialUnit,
+    setVialUnit,
+    vialMg,
+    doseInput,
+    setDoseInput,
+    doseUnit,
+    setDoseUnit,
+    doseMcg,
+  } = vial;
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
   const hasPeptide = !!peptide;
 
-  const [vialInput, setVialInput] = usePersistentState("bacwater.tool.reverse.vial", 0);
-  const [vialUnit, setVialUnit] = usePersistentState<Unit>("bacwater.tool.reverse.vialUnit", "mg");
-  const vialMg = vialUnit === "mg" ? vialInput : vialInput / 1000;
-
-  const [doseInput, setDoseInput] = usePersistentState("bacwater.tool.reverse.dose", 0);
-  const [doseUnit, setDoseUnit] = usePersistentState<Unit>("bacwater.tool.reverse.doseUnit", "mg");
-  const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
-
+  // The target syringe reading is this tool's own question, so it stays local.
   const [targetUnits, setTargetUnits] = usePersistentState("bacwater.tool.reverse.targetUnits", 0);
 
   // Selecting a peptide records the choice and drives the hints; it never
@@ -94,6 +105,7 @@ export default function ReverseBacCalculatorPage() {
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
         {/* Inputs */}
         <div className="lg:sticky lg:top-24 space-y-4">
+          <CarriedOverNotice visible={vial.carriedOver} onClear={vial.clear} />
           <StepCard n={1} total={4} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
               <SelectTrigger className="h-12">

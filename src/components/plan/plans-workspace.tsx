@@ -29,7 +29,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toaster";
 import { formatDate } from "@/lib/utils";
-import { formatDose, formatUnits } from "@/lib/calc/format";
+import { formatDose, formatSyringeReading, formatUnits } from "@/lib/calc/format";
 import type { CalcResult } from "@/lib/calc";
 import { PlanResults } from "@/components/plan/plan-results";
 import { PlanQr } from "@/components/plan/plan-qr";
@@ -40,8 +40,14 @@ import {
   getPlanDetailAction,
   removePlanAction,
   togglePlanArchivedAction,
+  updatePlanAction,
   updatePlanNotesAction,
 } from "@/lib/plan-actions";
+import {
+  PlanInlineEditor,
+  type PlanEditableFields,
+} from "@/components/plan/plan-inline-editor";
+import type { SyringeType } from "@/lib/calc";
 
 export interface PlanSummary {
   publicId: string;
@@ -62,6 +68,16 @@ export interface PlanSummary {
 
 type Detail = NonNullable<Awaited<ReturnType<typeof getPlanDetailAction>>["plan"]>;
 type Tab = "active" | "archived";
+
+/**
+ * Pull the syringe reading out of a recalculated snapshot so the queue row
+ * matches the plan page and the PDF. Returns null when the snapshot is
+ * unreadable, and the caller keeps whatever it had.
+ */
+function readoutOf(result: unknown): string | null {
+  const readout = (result as CalcResult | null)?.syringeReadout;
+  return readout ? formatSyringeReading(readout) : null;
+}
 
 function expiryState(expirationDate: string | null) {
   if (!expirationDate) return null;
@@ -89,6 +105,11 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
   const [detail, setDetail] = useState<Detail | null>(null);
   const [loading, setLoading] = useState(false);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [editing, setEditing] = useState(false);
+  // Label-batching selection. Empty set = normal browsing; the checkboxes only
+  // appear once the mode is on, so the queue stays uncluttered the rest of the time.
+  const [labelMode, setLabelMode] = useState(false);
+  const [picked, setPicked] = useState<string[]>([]);
   const [pending, startTransition] = useTransition();
 
   const queue = useMemo(
@@ -99,6 +120,9 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
   const current = index >= 0 ? queue[index] : null;
 
   useEffect(() => {
+    // Switching plans always leaves edit mode, so an open form can never be
+    // showing one plan's numbers while the rails describe another.
+    setEditing(false);
     if (!selectedId) {
       setDetail(null);
       return;
@@ -160,6 +184,64 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
     });
   }
 
+  function togglePicked(publicId: string) {
+    setPicked((p) =>
+      p.includes(publicId) ? p.filter((id) => id !== publicId) : [...p, publicId]
+    );
+  }
+
+  function saveEdits(fields: PlanEditableFields) {
+    if (!current) return;
+    const id = current.publicId;
+    startTransition(async () => {
+      const res = await updatePlanAction(
+        id,
+        {
+          peptideSlug: fields.peptideSlug === "custom" ? null : fields.peptideSlug,
+          peptideName:
+            fields.peptideSlug === "custom" ? fields.peptideName || "Custom" : null,
+          vialStrengthMg: fields.vialStrengthMg,
+          doseMcg: fields.doseMcg,
+          injectionsPerWeek: fields.injectionsPerWeek,
+          bacWaterMl: fields.bacWaterMl,
+          syringeType: fields.syringeType,
+          dateMixed: fields.dateMixed || null,
+        },
+        { name: fields.name }
+      );
+      if (!res.ok) {
+        toast({ title: "Could not save", description: res.error, variant: "destructive" });
+        return;
+      }
+      // Re-read rather than patching locally: the recalculated readout,
+      // measures per vial, and expiry all come from the server's snapshot.
+      const fresh = await getPlanDetailAction(id);
+      if (fresh.ok) {
+        setDetail(fresh.plan);
+        setRows((rs) =>
+          rs.map((r) =>
+            r.publicId === id
+              ? {
+                  ...r,
+                  name: fresh.plan.name,
+                  peptideName: fresh.plan.peptideName,
+                  vialStrengthMg: fresh.plan.vialStrengthMg,
+                  doseMcg: fresh.plan.doseMcg,
+                  dosesPerVial: fresh.plan.dosesPerVial,
+                  dateMixed: fresh.plan.dateMixed,
+                  expirationDate: fresh.plan.expirationDate,
+                  injectionsPerWeek: fresh.plan.injectionsPerWeek,
+                  readout: readoutOf(fresh.plan.result) ?? r.readout,
+                }
+              : r
+          )
+        );
+      }
+      setEditing(false);
+      toast({ title: "Plan updated", variant: "success" });
+    });
+  }
+
   function toggleArchive() {
     if (!current) return;
     const id = current.publicId;
@@ -210,7 +292,9 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
     onPrev: () => move(-1),
     onSave: saveNotes,
     onEscape: () => setSelectedId(null),
-    enabled: !pending,
+    // Queue navigation is off while editing: a stray J outside a text field
+    // would jump to another plan and silently discard the open form.
+    enabled: !pending && !editing,
   });
 
   const activeCount = rows.filter((r) => !r.archived).length;
@@ -233,6 +317,9 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
                 onClick={() => {
                   setTab(t);
                   setSelectedId(null);
+                  // Otherwise a selection made for a label sheet would silently
+                  // keep plans that are no longer in the visible queue.
+                  setPicked([]);
                 }}
                 className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize ${tab === t ? "bg-muted" : "text-muted-foreground hover:text-foreground"}`}
               >
@@ -240,6 +327,16 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
               </button>
             ))}
           </div>
+          <Button
+            onClick={() => {
+              setLabelMode((m) => !m);
+              setPicked([]);
+            }}
+            variant={labelMode ? "brand" : "outline"}
+            size="sm"
+          >
+            <Printer className="h-4 w-4" /> {labelMode ? "Done" : "Label sheet"}
+          </Button>
           <Button asChild variant="brand" size="sm">
             <Link href="/plan">
               <Plus className="h-4 w-4" /> New plan
@@ -247,6 +344,49 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
           </Button>
         </div>
       </div>
+
+      {labelMode ? (
+        <div className="mb-3 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface px-4 py-2.5">
+          <span className="text-sm text-muted-foreground">
+            {picked.length === 0
+              ? "Tick the plans you want labels for."
+              : `${picked.length} plan${picked.length === 1 ? "" : "s"} selected.`}
+          </span>
+          <button
+            type="button"
+            onClick={() => setPicked(queue.map((p) => p.publicId))}
+            className="text-xs font-medium hover:underline"
+          >
+            Select all
+          </button>
+          {picked.length > 0 ? (
+            <button
+              type="button"
+              onClick={() => setPicked([])}
+              className="text-xs font-medium text-muted-foreground hover:underline"
+            >
+              Clear
+            </button>
+          ) : null}
+          <Button
+            asChild={picked.length > 0}
+            disabled={picked.length === 0}
+            variant="brand"
+            size="sm"
+            className="ml-auto"
+          >
+            {picked.length > 0 ? (
+              <Link href={`/plans/labels?ids=${picked.join(",")}`} target="_blank">
+                <Printer className="h-4 w-4" /> Build sheet for {picked.length}
+              </Link>
+            ) : (
+              <span>
+                <Printer className="h-4 w-4" /> Build sheet
+              </span>
+            )}
+          </Button>
+        </div>
+      ) : null}
 
       <WorkspaceShell
         className="h-[calc(100dvh-13rem)] min-h-[32rem]"
@@ -289,6 +429,8 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
                       onSelect={() => setSelectedId(p.publicId)}
                       title={p.name || p.peptideName || "Untitled plan"}
                       meta={`${p.readout}${p.injectionsPerWeek ? ` · ${p.injectionsPerWeek}x/week` : ""}`}
+                      selected={picked.includes(p.publicId)}
+                      onToggleSelect={labelMode ? () => togglePicked(p.publicId) : undefined}
                       trailing={
                         e ? (
                           <span
@@ -382,10 +524,18 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
                   <Download className="h-4 w-4" /> PDF
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link href={`/plan/${current.publicId}/edit`}>
-                  <Pencil className="h-4 w-4" /> Edit
-                </Link>
+              <Button
+                onClick={() => setEditing((e) => !e)}
+                disabled={pending || !detail?.result}
+                variant={editing ? "brand" : "outline"}
+                size="sm"
+                title={
+                  detail?.result
+                    ? undefined
+                    : "This plan's saved calculation can't be read, so it can't be edited here."
+                }
+              >
+                <Pencil className="h-4 w-4" /> {editing ? "Editing" : "Edit"}
               </Button>
               <Button onClick={duplicate} disabled={pending} variant="outline" size="sm">
                 <Copy className="h-4 w-4" /> Duplicate
@@ -419,6 +569,23 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
           <div className="flex h-full min-h-[16rem] items-center justify-center text-sm text-muted-foreground">
             <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Opening plan…
           </div>
+        ) : current && detail && editing && detail.result ? (
+          <PlanInlineEditor
+            saving={pending}
+            onCancel={() => setEditing(false)}
+            onSave={saveEdits}
+            initial={{
+              name: detail.name ?? "",
+              peptideSlug: detail.peptideSlug || "custom",
+              peptideName: detail.peptideName ?? "",
+              vialStrengthMg: detail.vialStrengthMg,
+              doseMcg: detail.doseMcg,
+              injectionsPerWeek: detail.injectionsPerWeek,
+              bacWaterMl: detail.bacWaterMl,
+              syringeType: detail.syringeType as SyringeType,
+              dateMixed: detail.dateMixed ? detail.dateMixed.slice(0, 10) : "",
+            }}
+          />
         ) : current && detail ? (
           <div className="p-4 sm:p-5">
             {expiry && expiry.tone !== "ok" ? (

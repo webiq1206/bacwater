@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { setInterestPeptide } from "@/lib/learn/interest";
 import { usePersistentState } from "@/lib/use-persistent-state";
+import { useVialContext } from "@/lib/tools/vial-context";
+import { CarriedOverNotice } from "@/components/tools/carried-over-notice";
 
 type Frequency = "daily" | "twice-daily" | "every-other-day" | "three-weekly" | "twice-weekly" | "weekly";
 type Unit = "mg" | "mcg";
@@ -42,17 +44,26 @@ const DURATIONS = [
 ];
 
 export default function SupplyCalculatorPage() {
-  const [peptideSlug, setPeptideSlug] = usePersistentState("bacwater.tool.supplies.peptide", "");
+  // Peptide, vial size, and measured amount are shared with the BAC water and
+  // reverse-BAC calculators, so moving between them doesn't re-ask. This tool
+  // asks for the vial in mg with no unit toggle, so it writes through the
+  // mg-normalising setter.
+  const vial = useVialContext();
+  const {
+    peptideSlug,
+    setPeptideSlug,
+    doseInput,
+    setDoseInput,
+    doseUnit,
+    setDoseUnit,
+    doseMcg,
+    vialMg,
+    setVialMg,
+  } = vial;
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
   const hasPeptide = !!peptide;
 
-  const [doseInput, setDoseInput] = usePersistentState("bacwater.tool.supplies.dose", 0);
-  const [doseUnit, setDoseUnit] = usePersistentState<Unit>("bacwater.tool.supplies.doseUnit", "mg");
-  const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
-
-  // Vial size: user picks from common options
-  const [vialMg, setVialMg] = usePersistentState("bacwater.tool.supplies.vial", 0);
-
+  // How often and for how long are this tool's own questions, so they stay local.
   const [frequency, setFrequency] = usePersistentState<Frequency | "">("bacwater.tool.supplies.frequency", "");
   const [durationWeeks, setDurationWeeks] = usePersistentState("bacwater.tool.supplies.duration", 0);
   const [showCustomDuration, setShowCustomDuration] = usePersistentState("bacwater.tool.supplies.customDur", false);
@@ -130,6 +141,7 @@ export default function SupplyCalculatorPage() {
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
         <div className="lg:sticky lg:top-24 space-y-4">
+          <CarriedOverNotice visible={vial.carriedOver} onClear={vial.clear} />
           {/* 1. Peptide */}
           <Section n={1} total={5} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
