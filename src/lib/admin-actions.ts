@@ -304,3 +304,258 @@ export async function setUserRole(userId: string, role: "user" | "admin") {
   await prisma.user.update({ where: { id: userId }, data: { role } });
   revalidatePath("/admin/users");
 }
+
+// ---------- Contact triage ----------
+
+/**
+ * Mark a message handled (or reopen it). Stamps who and when so the queue
+ * shows whether a teammate already dealt with something.
+ */
+export async function setContactHandled(id: string, handled: boolean) {
+  const session = await requireAdmin();
+  const updated = await prisma.contactMessage.update({
+    where: { id },
+    data: {
+      handled,
+      handledAt: handled ? new Date() : null,
+      handledByEmail: handled ? session.user?.email ?? null : null,
+    },
+  });
+  revalidatePath("/admin/contact");
+  revalidatePath("/admin");
+  return { ok: true as const, handled: updated.handled };
+}
+
+export async function saveContactNotes(id: string, notes: string) {
+  await requireAdmin();
+  await prisma.contactMessage.update({
+    where: { id },
+    data: { internalNotes: notes.slice(0, 4000) || null },
+  });
+  revalidatePath("/admin/contact");
+  return { ok: true as const };
+}
+
+/**
+ * Send a reply from the workspace and close the message in one action.
+ *
+ * Mirrors the vendor-email behaviour: with no RESEND_API_KEY the draft is
+ * still persisted and the message is NOT marked handled or replied, and the
+ * caller is told plainly that nothing was sent. A silent no-op here would
+ * look like a delivered reply.
+ */
+export async function replyToContact(id: string, subject: string, body: string) {
+  const session = await requireAdmin();
+  const message = await prisma.contactMessage.findUnique({ where: { id } });
+  if (!message) return { ok: false as const, error: "Message not found." };
+  if (!subject.trim() || !body.trim())
+    return { ok: false as const, error: "Subject and body are both required." };
+
+  const key = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM || "hello@bacwater.ai";
+
+  let sent = false;
+  let failure: string | undefined;
+  if (key) {
+    try {
+      const resend = new Resend(key);
+      await resend.emails.send({ from, to: message.email, subject, text: body });
+      sent = true;
+    } catch (e) {
+      console.error("Contact reply failed", e);
+      failure = "Resend rejected the message. Draft saved.";
+    }
+  } else {
+    failure = "RESEND_API_KEY is not set, so nothing was sent. Draft saved.";
+  }
+
+  await prisma.contactMessage.update({
+    where: { id },
+    data: {
+      replySubject: subject,
+      replyBody: body,
+      ...(sent
+        ? {
+            repliedAt: new Date(),
+            handled: true,
+            handledAt: new Date(),
+            handledByEmail: session.user?.email ?? null,
+          }
+        : {}),
+    },
+  });
+  revalidatePath("/admin/contact");
+  revalidatePath("/admin");
+  return sent ? { ok: true as const } : { ok: false as const, error: failure };
+}
+
+export async function deleteContactMessage(id: string) {
+  await requireAdmin();
+  await prisma.contactMessage.delete({ where: { id } });
+  revalidatePath("/admin/contact");
+  revalidatePath("/admin");
+  return { ok: true as const };
+}
+
+// ---------- Content workspace ----------
+
+const contentBlockSchema = z.object({
+  id: z.string().optional().nullable(),
+  slug: z.string().min(1).max(160),
+  kind: z.enum(["guide", "faq", "page"]),
+  title: z.string().min(1).max(200),
+  body: z.string().min(1),
+  published: z.boolean(),
+});
+
+export type ContentBlockInput = z.input<typeof contentBlockSchema>;
+
+/**
+ * Create-or-update that hands the saved row back.
+ *
+ * `upsertContent` above takes a FormData and returns only `{ ok }`, which
+ * forced the old editor to redirect to the list to see its own result. The
+ * workspace stays put instead, so it needs the persisted values (id, and the
+ * server-side updatedAt) to reconcile its local queue.
+ */
+export async function saveContentBlock(input: ContentBlockInput) {
+  await requireAdmin();
+  const parsed = contentBlockSchema.safeParse(input);
+  if (!parsed.success)
+    return { ok: false as const, error: parsed.error.issues[0]?.message ?? "Invalid content." };
+  const c = parsed.data;
+
+  // Slug is unique in the database; catching it here gives a usable message
+  // instead of an unhandled Prisma error in the action.
+  const clash = await prisma.contentBlock.findUnique({ where: { slug: c.slug } });
+  if (clash && clash.id !== c.id)
+    return { ok: false as const, error: `The slug "${c.slug}" is already used by "${clash.title}".` };
+
+  const data = {
+    slug: c.slug,
+    kind: c.kind,
+    title: c.title,
+    body: c.body,
+    published: c.published,
+  };
+  // Capture the old slug before writing: renaming a block leaves the previous
+  // /learn/<slug> route cached until it is revalidated too.
+  const previousSlug = c.id
+    ? (await prisma.contentBlock.findUnique({ where: { id: c.id }, select: { slug: true } }))?.slug
+    : undefined;
+
+  const saved = c.id
+    ? await prisma.contentBlock.update({ where: { id: c.id }, data })
+    : await prisma.contentBlock.create({ data });
+
+  revalidatePath("/admin/content");
+  revalidatePath("/admin");
+  revalidatePath("/learn");
+  revalidatePath(`/learn/${saved.slug}`);
+  if (previousSlug && previousSlug !== saved.slug) revalidatePath(`/learn/${previousSlug}`);
+
+  return {
+    ok: true as const,
+    block: {
+      id: saved.id,
+      slug: saved.slug,
+      kind: saved.kind,
+      title: saved.title,
+      body: saved.body,
+      published: saved.published,
+      updatedAt: saved.updatedAt.toISOString(),
+    },
+  };
+}
+
+export async function toggleContentPublished(id: string) {
+  await requireAdmin();
+  const block = await prisma.contentBlock.findUnique({ where: { id } });
+  if (!block) return { ok: false as const, error: "Not found." };
+  const updated = await prisma.contentBlock.update({
+    where: { id },
+    data: { published: !block.published },
+  });
+  revalidatePath("/admin/content");
+  revalidatePath("/admin");
+  revalidatePath("/learn");
+  revalidatePath(`/learn/${updated.slug}`);
+  return { ok: true as const, published: updated.published };
+}
+
+// ---------- Plans ----------
+
+/**
+ * Fetch one plan's full stored snapshot for the admin workspace.
+ *
+ * The queue only ships summary rows: a `CalcResult` blob per plan across 200
+ * plans would be megabytes of payload for data the admin will look at one row
+ * at a time. This loads the selected row on demand instead.
+ */
+export async function getAdminPlanDetail(publicId: string) {
+  await requireAdmin();
+  const plan = await prisma.plan.findUnique({
+    where: { publicId },
+    include: { user: { select: { id: true, email: true, name: true, role: true, createdAt: true } } },
+  });
+  if (!plan) return { ok: false as const, error: "Plan not found." };
+
+  let result: unknown = null;
+  let parseError: string | null = null;
+  try {
+    result = JSON.parse(plan.data);
+  } catch {
+    // Older or truncated rows exist; the workspace falls back to the
+    // denormalised columns rather than blowing up the pane.
+    parseError = "The stored calculation snapshot could not be parsed.";
+  }
+
+  return {
+    ok: true as const,
+    plan: {
+      publicId: plan.publicId,
+      name: plan.name,
+      notes: plan.notes,
+      archived: plan.archived,
+      createdAt: plan.createdAt.toISOString(),
+      updatedAt: plan.updatedAt.toISOString(),
+      peptideName: plan.peptideName,
+      vialStrengthMg: plan.vialStrengthMg,
+      doseMcg: plan.doseMcg,
+      bacWaterMl: plan.bacWaterMl,
+      syringeType: plan.syringeType,
+      syringeUnits: plan.syringeUnits,
+      dosesPerVial: plan.dosesPerVial,
+      dateMixed: plan.dateMixed?.toISOString() ?? null,
+      expirationDate: plan.expirationDate?.toISOString() ?? null,
+      owner: plan.user
+        ? {
+            id: plan.user.id,
+            email: plan.user.email,
+            name: plan.user.name,
+            role: plan.user.role,
+            createdAt: plan.user.createdAt.toISOString(),
+          }
+        : null,
+      result,
+      parseError,
+    },
+  };
+}
+
+export async function setPlanArchivedAsAdmin(publicId: string, archived: boolean) {
+  await requireAdmin();
+  await prisma.plan.update({ where: { publicId }, data: { archived } });
+  revalidatePath("/admin/plans");
+  revalidatePath("/plans");
+  return { ok: true as const, archived };
+}
+
+export async function deletePlanAsAdmin(publicId: string) {
+  await requireAdmin();
+  await prisma.plan.delete({ where: { publicId } });
+  revalidatePath("/admin/plans");
+  revalidatePath("/admin");
+  revalidatePath("/plans");
+  return { ok: true as const };
+}

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "test": "tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts",
+    "test": "tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts && tsx src/lib/__tests__/workspaces.test.ts",
     "prebuild": "npm run test",
     "build": "next build",
     "start": "next start",

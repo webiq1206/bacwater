@@ -1,5 +1,7 @@
-import Page from "@/app/admin/content/[id]/page";
+import { redirect } from "next/navigation";
+
 export const metadata = { title: "Admin · New content", robots: { index: false, follow: false } };
-export default async function NewContent() {
-  return <Page params={Promise.resolve({ id: "new" })} />;
+
+export default function NewContentRedirect() {
+  redirect("/admin/content?new=1");
 }

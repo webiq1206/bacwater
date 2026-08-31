@@ -1,47 +1,79 @@
 import { prisma } from "@/lib/db";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/lib/utils";
-import { UserRoleSwitcher } from "@/components/admin/user-role-switcher";
+import { UsersWorkspace, type UserRecord } from "@/components/admin/users-workspace";
 
 export const metadata = { title: "Admin · Users", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
-export default async function AdminUsersPage() {
-  const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" }, include: { _count: { select: { plans: true, orders: true } } } });
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Users</h1>
-      <Card className="mt-6">
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
-                <tr>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Role</th>
-                  <th className="p-3">Plans</th>
-                  <th className="p-3">Orders</th>
-                  <th className="p-3">Joined</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u) => (
-                  <tr key={u.id} className="border-t border-border">
-                    <td className="p-3 font-medium">{u.email}</td>
-                    <td className="p-3">{u.name || "-"}</td>
-                    <td className="p-3"><UserRoleSwitcher userId={u.id} role={u.role as "user" | "admin"} /></td>
-                    <td className="p-3">{u._count.plans}</td>
-                    <td className="p-3">{u._count.orders}</td>
-                    <td className="p-3 text-xs text-muted-foreground">{formatDate(u.createdAt)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+interface Props {
+  searchParams: Promise<{ email?: string }>;
+}
+
+export default async function AdminUsersPage({ searchParams }: Props) {
+  const { email } = await searchParams;
+  const users = await prisma.user.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 500,
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+      // Totals must not come from the capped `plans` list below.
+      _count: { select: { plans: true } },
+      plans: {
+        orderBy: { createdAt: "desc" },
+        take: 25,
+        select: {
+          publicId: true,
+          name: true,
+          peptideName: true,
+          vialStrengthMg: true,
+          doseMcg: true,
+          archived: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+
+  // One grouped query for message counts beats a per-user lookup.
+  const messageGroups = await prisma.contactMessage.groupBy({
+    by: ["email", "handled"],
+    _count: { _all: true },
+  });
+  const messageTotals = new Map<string, { total: number; open: number }>();
+  for (const g of messageGroups) {
+    const key = g.email.toLowerCase();
+    const entry = messageTotals.get(key) ?? { total: 0, open: 0 };
+    entry.total += g._count._all;
+    if (!g.handled) entry.open += g._count._all;
+    messageTotals.set(key, entry);
+  }
+
+  const records: UserRecord[] = users.map((u) => {
+    const messages = messageTotals.get(u.email.toLowerCase()) ?? { total: 0, open: 0 };
+    return {
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      role: u.role,
+      createdAt: u.createdAt.toISOString(),
+      planCount: u._count.plans,
+      archivedPlanCount: u.plans.filter((p) => p.archived).length,
+      messageCount: messages.total,
+      openMessageCount: messages.open,
+      plans: u.plans.map((p) => ({
+        publicId: p.publicId,
+        name: p.name,
+        peptideName: p.peptideName,
+        vialStrengthMg: p.vialStrengthMg,
+        doseMcg: p.doseMcg,
+        archived: p.archived,
+        createdAt: p.createdAt.toISOString(),
+      })),
+    };
+  });
+
+  return <UsersWorkspace users={records} initialEmail={email} />;
 }
