@@ -177,7 +177,7 @@ export default async function LearnPage({
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-12 sm:pt-16 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-12 sm:pt-16 pb-24 sm:pb-32 xl:max-w-6xl">
       <WebPageJsonLd
         name={schemaName}
         description={schemaDescription}
@@ -289,8 +289,15 @@ export default async function LearnPage({
         </Link>
       )}
 
-      {/* Filter bar */}
-      <div className="mt-8 space-y-5 border border-border bg-surface p-5 sm:p-6">
+      {/*
+        Catalog: filters on the left, results on the right. The filters used to
+        sit above the grid, so scrolling into the results left them off screen
+        and changing one meant scrolling back. Every chip is still a plain link
+        to a real ?type= / ?topic= URL, so the indexable filtered pages are
+        untouched — this is layout only.
+      */}
+      <div className="mt-8 grid gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start">
+      <div className="space-y-5 border border-border bg-surface p-5 lg:sticky lg:top-24">
         <FilterRow label="Type">
           {CONTENT_TYPES.map((c) => (
             <Chip
@@ -316,13 +323,13 @@ export default async function LearnPage({
         </FilterRow>
 
         {/* Peptide + search: a GET form so the resulting URLs are real. */}
-        <form method="get" action="/learn" className="flex flex-col sm:flex-row gap-3 pt-1">
+        <form method="get" action="/learn" className="flex flex-col gap-3 pt-1 sm:flex-row lg:flex-col">
           {f.type && <input type="hidden" name="type" value={f.type} />}
           {f.topic && <input type="hidden" name="topic" value={f.topic} />}
           <select
             name="peptide"
             defaultValue={f.peptide ?? ""}
-            className="h-11 border border-input bg-card px-3 text-sm sm:w-64"
+            className="h-11 border border-input bg-card px-3 text-sm sm:w-64 lg:w-full"
             aria-label="Filter by peptide"
           >
             <option value="">All peptides</option>
@@ -364,8 +371,9 @@ export default async function LearnPage({
       </div>
 
       {/* Results */}
+      <div>
       {results.length > 0 ? (
-        <ul className="mt-8 grid gap-4 md:grid-cols-2">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
           {results.map((e) => (
             <li key={e.id}>
               <Link
@@ -394,7 +402,7 @@ export default async function LearnPage({
           ))}
         </ul>
       ) : (
-        <div className="mt-8 border border-border bg-surface p-8 text-center">
+        <div className="border border-border bg-surface p-8 text-center">
           <div className="font-medium text-foreground">No matches</div>
           <p className="mt-1 text-sm text-muted-foreground">
             Try fewer filters or a different search.{" "}
@@ -405,6 +413,9 @@ export default async function LearnPage({
           </p>
         </div>
       )}
+
+      </div>
+      </div>
 
       <div className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>

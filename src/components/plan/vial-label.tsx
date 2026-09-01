@@ -56,6 +56,15 @@ export const LABEL_SHEET_STYLES = `
   }
   .print-only-inline { display: none; }
   @media print {
+    /*
+      The on-screen layout puts the controls in a column beside the sheet. On
+      paper the controls are hidden, so the wrapper has to stop being a grid or
+      the labels would print into the narrow second column. This lives here
+      rather than in a Tailwind print: utility because an inline <style> block
+      reliably wins over the responsive lg: grid rule regardless of how the
+      generated stylesheet happens to order those two variants.
+    */
+    .label-layout { display: block !important; }
     .label-sheet { gap: 0.1in; justify-content: flex-start; }
     .vial-label {
       height: 1.5in;

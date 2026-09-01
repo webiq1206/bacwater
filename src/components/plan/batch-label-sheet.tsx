@@ -81,7 +81,10 @@ export function BatchLabelSheet({ plans }: { plans: BatchLabelPlan[] }) {
     <div>
       <style>{LABEL_SHEET_STYLES}</style>
 
-      <div className="no-print">
+      {/* Controls beside the sheet, so the labels stay in view while the
+          per-plan counts and dates are set. */}
+      <div className="label-layout lg:grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start lg:gap-8">
+      <div className="no-print lg:sticky lg:top-24 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
         <Link
           href="/plans"
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
@@ -167,7 +170,7 @@ export function BatchLabelSheet({ plans }: { plans: BatchLabelPlan[] }) {
         </div>
       </div>
 
-      <div className="label-sheet mt-8">
+      <div className="label-sheet mt-8 lg:mt-0">
         {plans.flatMap((p) =>
           state[p.publicId].dates.map((mix, i) => (
             <VialLabel
@@ -179,6 +182,7 @@ export function BatchLabelSheet({ plans }: { plans: BatchLabelPlan[] }) {
             />
           ))
         )}
+      </div>
       </div>
     </div>
   );
