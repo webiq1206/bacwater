@@ -16,22 +16,31 @@ import { setInterestPeptide } from "@/lib/learn/interest";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { CopyButton } from "@/components/common/copy-button";
 import { StickyResultBar } from "@/components/tools/sticky-result-bar";
-import { usePersistentState } from "@/lib/use-persistent-state";
+import { useVialContext } from "@/lib/tools/vial-context";
+import { CarriedOverNotice } from "@/components/tools/carried-over-notice";
 
 type Unit = "mg" | "mcg";
 
 export default function BacWaterCalculatorPage() {
-  const [peptideSlug, setPeptideSlug] = usePersistentState("bacwater.tool.bacwater.peptide", "");
+  // Peptide, vial amount, and measured amount are shared with the reverse-BAC
+  // and supplies calculators, so moving between them doesn't re-ask.
+  const vial = useVialContext();
+  const {
+    peptideSlug,
+    setPeptideSlug,
+    vialInput,
+    setVialInput,
+    vialUnit,
+    setVialUnit,
+    vialMg,
+    doseInput,
+    setDoseInput,
+    doseUnit,
+    setDoseUnit,
+    doseMcg,
+  } = vial;
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
   const hasPeptide = !!peptide;
-
-  const [vialInput, setVialInput] = usePersistentState("bacwater.tool.bacwater.vial", 0);
-  const [vialUnit, setVialUnit] = usePersistentState<Unit>("bacwater.tool.bacwater.vialUnit", "mg");
-  const vialMg = vialUnit === "mg" ? vialInput : vialInput / 1000;
-
-  const [doseInput, setDoseInput] = usePersistentState("bacwater.tool.bacwater.dose", 0);
-  const [doseUnit, setDoseUnit] = usePersistentState<Unit>("bacwater.tool.bacwater.doseUnit", "mg");
-  const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
 
   // Selecting a peptide only records the choice (and drives the hints); it does
   // not pre-fill a vial amount or an amount to measure. The user enters those.
@@ -75,6 +84,7 @@ export default function BacWaterCalculatorPage() {
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
         {/* Inputs: sticky on desktop */}
         <div className="lg:sticky lg:top-24 space-y-4">
+          <CarriedOverNotice visible={vial.carriedOver} onClear={vial.clear} />
           <StepCard n={1} total={3} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
               <SelectTrigger className="h-12">

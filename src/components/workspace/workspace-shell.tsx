@@ -143,6 +143,8 @@ export function QueueRow({
   meta,
   trailing,
   muted,
+  selected,
+  onToggleSelect,
 }: {
   index: number;
   active: boolean;
@@ -151,6 +153,9 @@ export function QueueRow({
   meta?: React.ReactNode;
   trailing?: React.ReactNode;
   muted?: boolean;
+  /** Pass with `onToggleSelect` to put the row into multi-select mode. */
+  selected?: boolean;
+  onToggleSelect?: () => void;
 }) {
   const ref = React.useRef<HTMLButtonElement>(null);
 
@@ -160,17 +165,38 @@ export function QueueRow({
     if (active) ref.current?.scrollIntoView({ block: "nearest" });
   }, [active]);
 
+  const selecting = typeof onToggleSelect === "function";
+
   return (
-    <button
-      ref={ref}
-      type="button"
-      onClick={onSelect}
-      aria-current={active ? "true" : undefined}
+    <div
       className={cn(
-        "flex w-full items-center gap-2.5 px-3 py-2 text-left transition-colors",
+        "flex w-full items-center transition-colors",
         active ? "bg-muted" : "hover:bg-muted/50"
       )}
     >
+      {selecting ? (
+        // Its own control rather than a row click, so picking several rows for
+        // a batch action never fights with opening one to read it.
+        <label className="flex shrink-0 cursor-pointer items-center py-2 pl-3 pr-1">
+          <input
+            type="checkbox"
+            checked={Boolean(selected)}
+            onChange={onToggleSelect}
+            className="h-3.5 w-3.5 cursor-pointer"
+          />
+          <span className="sr-only">Select this row for a batch action</span>
+        </label>
+      ) : null}
+      <button
+        ref={ref}
+        type="button"
+        onClick={onSelect}
+        aria-current={active ? "true" : undefined}
+        className={cn(
+          "flex min-w-0 flex-1 items-center gap-2.5 py-2 pr-3 text-left",
+          selecting ? "pl-1" : "pl-3"
+        )}
+      >
       <span className="w-5 shrink-0 text-right font-mono text-[11px] tabular-nums text-muted-foreground">
         {String(index + 1).padStart(2, "0")}
       </span>
@@ -190,8 +216,9 @@ export function QueueRow({
           </span>
         ) : null}
       </span>
-      {trailing ? <span className="shrink-0">{trailing}</span> : null}
-    </button>
+        {trailing ? <span className="shrink-0">{trailing}</span> : null}
+      </button>
+    </div>
   );
 }
 

@@ -38,6 +38,7 @@ import { defaultPlanName } from "@/lib/plan-name";
 import { rememberDevicePlan } from "@/lib/saved-plans";
 import { PostSaveDialog } from "@/components/plan/post-save-dialog";
 import { PlanResults } from "@/components/plan/plan-results";
+import { WizardPreview } from "@/components/plan/wizard-preview";
 import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
 import { toast } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
@@ -1140,7 +1141,13 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
   // ---------- BEGINNER: one question at a time ----------
   return (
-    <div className="mx-auto max-w-2xl pb-24 sm:pb-0" ref={stepContainerRef}>
+    // One question at a time stays exactly that: the column on the left is
+    // unchanged. The preview beside it only fills desktop space that was
+    // previously empty, so the plan being built is visible while it is built.
+    // Below xl there is no room for it, and the WizardContext breadcrumb
+    // already carries the answers so far.
+    <div className="mx-auto grid max-w-2xl gap-10 pb-24 sm:pb-0 xl:max-w-6xl xl:grid-cols-[minmax(0,38rem)_minmax(0,24rem)] xl:justify-center">
+      <div ref={stepContainerRef}>
       <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
         {hasMounted && (
           <ModeToggle mode={mode} onChange={setMode} />
@@ -1584,6 +1591,21 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
           onOpenChange={(open) => {
             if (!open) setSavedPlan(null);
           }}
+        />
+      ) : null}
+      </div>
+
+      {/* The review step already renders the whole plan in the main column,
+          so the preview would be saying the same thing twice there. */}
+      {step < STEPS.length - 1 ? (
+        <WizardPreview
+          className="hidden xl:block xl:sticky xl:top-24 xl:h-fit"
+          result={result}
+          hasPeptide={hasPeptide}
+          vialStrengthMg={vialStrengthMg}
+          doseMcg={doseMcg}
+          syringeType={syringeType}
+          dateMixed={dateMixed}
         />
       ) : null}
     </div>

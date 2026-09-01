@@ -239,6 +239,13 @@ export async function duplicatePlanAction(publicId: string) {
   return { ok: true as const, publicId: created.publicId };
 }
 
+function injectionsPerWeekOf(result: unknown): number {
+  const schedule = (result as { schedule?: { injectionsPerWeek?: number } } | null)?.schedule;
+  return typeof schedule?.injectionsPerWeek === "number" && schedule.injectionsPerWeek >= 1
+    ? schedule.injectionsPerWeek
+    : 1;
+}
+
 /**
  * Load one plan's full stored snapshot for the My Plans workspace.
  *
@@ -271,11 +278,17 @@ export async function getPlanDetailAction(publicId: string) {
     plan: {
       publicId: plan.publicId,
       name: plan.name,
+      peptideSlug: plan.peptideSlug,
       peptideName: plan.peptideName,
       notes: plan.notes ?? "",
       archived: plan.archived,
       vialStrengthMg: plan.vialStrengthMg,
       doseMcg: plan.doseMcg,
+      bacWaterMl: plan.bacWaterMl,
+      syringeType: plan.syringeType,
+      // Frequency lives only in the snapshot; plans saved before weekly
+      // splitting have none and default to 1, leaving their math unchanged.
+      injectionsPerWeek: injectionsPerWeekOf(result),
       dosesPerVial: plan.dosesPerVial,
       dateMixed: plan.dateMixed?.toISOString() ?? null,
       expirationDate: plan.expirationDate?.toISOString() ?? null,
@@ -299,4 +312,79 @@ export async function removePlanAction(publicId: string) {
   await prisma.plan.delete({ where: { id: plan.id } });
   revalidatePath("/plans");
   return { ok: true as const };
+}
+
+/**
+ * Update a plan in place, recalculating from the edited inputs.
+ *
+ * This is deliberately different from the /plan/[id]/edit route, which runs
+ * the inputs back through `savePlanAction` and therefore creates a *second*
+ * plan while keeping the original. That is a fork, and it is the right
+ * behaviour for "start from this one" — the workspace exposes it as the
+ * explicit Duplicate action. But someone correcting a typo in their vial
+ * strength means edit, not fork, and forking silently left them with two
+ * near-identical plans and no idea which their printed label pointed at.
+ *
+ * The publicId is preserved, so a shared link or a printed QR code keeps
+ * resolving to this plan with its corrected numbers.
+ */
+export async function updatePlanAction(
+  publicId: string,
+  raw: unknown,
+  opts?: { name?: string | null; notes?: string | null }
+) {
+  const parsed = inputSchema.safeParse(raw);
+  if (!parsed.success) return { ok: false as const, error: "Invalid input." };
+
+  const session = await auth();
+  const existing = await prisma.plan.findUnique({ where: { publicId } });
+  if (!existing) return { ok: false as const, error: "Plan not found." };
+  if (existing.userId && existing.userId !== (session?.user as { id?: string } | undefined)?.id)
+    return { ok: false as const, error: "Not authorized." };
+
+  const result = calculate({
+    peptideSlug: parsed.data.peptideSlug ?? undefined,
+    peptideName: parsed.data.peptideName ?? undefined,
+    vialStrengthMg: parsed.data.vialStrengthMg,
+    doseMcg: parsed.data.doseMcg,
+    injectionsPerWeek: parsed.data.injectionsPerWeek ?? undefined,
+    bacWaterMl: parsed.data.bacWaterMl,
+    syringeType: parsed.data.syringeType as SyringeType,
+    dateMixed: parsed.data.dateMixed ?? null,
+  });
+
+  const name =
+    opts?.name?.trim() ||
+    existing.name ||
+    defaultPlanName({
+      peptideName: result.input.peptideName,
+      vialStrengthMg: result.input.vialStrengthMg,
+      dateMixed: result.input.dateMixed ?? null,
+    });
+
+  await prisma.plan.update({
+    where: { id: existing.id },
+    data: {
+      name: name.slice(0, 120),
+      peptideSlug: result.input.peptideSlug,
+      peptideName: result.input.peptideName,
+      vialStrengthMg: result.input.vialStrengthMg,
+      doseMcg: result.input.doseMcg,
+      bacWaterMl: result.input.bacWaterMl,
+      syringeType: result.input.syringeType,
+      dateMixed: result.input.dateMixed ? new Date(result.input.dateMixed) : null,
+      finalConcentrationMgPerMl: result.finalConcentrationMgPerMl,
+      doseVolumeMl: result.doseVolumeMl,
+      syringeUnits: result.syringeUnits,
+      dosesPerVial: result.dosesPerVial,
+      expirationDate: result.expiration.date ? new Date(result.expiration.date) : null,
+      ...(opts?.notes !== undefined ? { notes: opts.notes } : {}),
+      data: JSON.stringify(result),
+    },
+  });
+
+  revalidatePath("/plans");
+  revalidatePath(`/plan/${publicId}`);
+  revalidatePath(`/plan/${publicId}/label`);
+  return { ok: true as const, publicId };
 }

@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function PlanNewPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-6 sm:pt-24 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-6 sm:pt-24 pb-24 sm:pb-32 xl:max-w-6xl">
       <WebPageJsonLd
         name="Step-by-Step Reconstitution Planner"
         description="Guided peptide reconstitution planner. One question at a time. We'll do all the math."

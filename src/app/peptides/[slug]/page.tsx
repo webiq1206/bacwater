@@ -14,6 +14,7 @@ import {
 import { PeptideCalc } from "@/components/peptides/peptide-calc";
 import { VialIdentityWarning } from "@/components/peptides/vial-identity-warning";
 import { EvidenceBadge, WhatNobodyKnows } from "@/components/peptides/evidence";
+import { PeptideRail } from "@/components/peptides/peptide-rail";
 import { evidenceOf } from "@/lib/calc/peptides";
 import { StudyTable } from "@/components/peptides/study-table";
 import { studiesFor } from "@/lib/peptides/studies";
@@ -136,8 +137,42 @@ export default async function PeptidePage({
     limit: 5,
   });
 
+  // Rail contents, derived from the same peptide record the page already
+  // renders. Custom/unknown compounds have no facts to pin, so they get no rail.
+  const railFacts = isCustom
+    ? []
+    : [
+        {
+          label: "Category",
+          value: `${p.category.charAt(0).toUpperCase()}${p.category.slice(1)}`,
+        },
+        { label: "Common vial sizes", value: `${p.commonVialStrengthsMg.join(", ")} mg` },
+        {
+          label: "Shelf life",
+          value: `${p.refrigeratedShelfDays} days`,
+          sub: "refrigerated, once mixed",
+        },
+        {
+          label: "Evidence",
+          value:
+            evidenceOf(p) === "fda-approved"
+              ? "Approved as a medicine"
+              : "Research only",
+        },
+      ];
+  const railSections = isCustom
+    ? []
+    : [
+        { id: "what-it-is", label: `What is ${short}?` },
+        { id: "reconstitution-chart", label: "How much BAC water" },
+        { id: "how-to", label: "How to reconstitute" },
+        { id: "storage", label: "Storage and shelf life" },
+        { id: "faq", label: "FAQ" },
+      ];
+
   return (
-    <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32 xl:max-w-6xl xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start xl:gap-10">
+      <div className="min-w-0">
       <WebPageJsonLd
         name={`${short} BAC Water Calculator & Reconstitution Guide`}
         description={lead}
@@ -252,7 +287,7 @@ export default async function PeptidePage({
 
       {/* What it is */}
       {content && (
-        <section className="mt-14">
+        <section id="what-it-is" className="mt-14 scroll-mt-24">
           <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
             What is {short}?
           </h2>
@@ -331,7 +366,7 @@ export default async function PeptidePage({
       )}
 
       {/* How to reconstitute */}
-      <section className="mt-14">
+      <section id="how-to" className="mt-14 scroll-mt-24">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
           How to reconstitute {short}
         </h2>
@@ -353,7 +388,7 @@ export default async function PeptidePage({
       </section>
 
       {/* Storage & shelf life */}
-      <section className="mt-14">
+      <section id="storage" className="mt-14 scroll-mt-24">
         <div className="flex items-center gap-2.5">
           <ShieldCheck
             className="h-5 w-5"
@@ -380,7 +415,7 @@ export default async function PeptidePage({
       </section>
 
       {/* FAQ */}
-      <section className="mt-14">
+      <section id="faq" className="mt-14 scroll-mt-24">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
           {short} reconstitution FAQ
         </h2>
@@ -492,6 +527,11 @@ export default async function PeptidePage({
           </div>
         </div>
       </section>
+      </div>
+
+      {railFacts.length > 0 ? (
+        <PeptideRail facts={railFacts} sections={railSections} compound={short} />
+      ) : null}
     </div>
   );
 }
