@@ -79,6 +79,9 @@ export const STATIC_PAGES: SitemapUrl[] = [
   { path: "/plan", changeFrequency: "weekly", priority: 0.9 },
   { path: "/plan/new", changeFrequency: "weekly", priority: 0.9 },
   { path: "/peptides", changeFrequency: "weekly", priority: 0.9 },
+  // Indexable, self-canonical, and linked from every peptide page, but it was
+  // in no sitemap segment — discoverable only by crawl, never submitted.
+  { path: "/peptides/compare", changeFrequency: "weekly", priority: 0.7 },
   { path: "/learn", changeFrequency: "weekly", priority: 0.8 },
   { path: "/faq", changeFrequency: "weekly", priority: 0.7 },
   { path: "/tools", changeFrequency: "weekly", priority: 0.9 },
