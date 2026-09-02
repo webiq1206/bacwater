@@ -102,6 +102,23 @@ export async function generateMetadata({
   // A single-dimension filter with enough results stays indexable and
   // canonicalizes to itself. Everything else (multi-filter combos, search,
   // or thin single filters) is noindexed and canonicalizes back to /learn.
+  // A key can exist in BOTH taxonomies ("safety" is a content type and a
+  // topic), in which case ?type=safety and ?topic=safety each pass the
+  // threshold below and each self-canonicalise — two indexable URLs with
+  // byte-identical titles and descriptions, competing with each other.
+  // Topic is the canonical home for a colliding key; the type variant points
+  // at it and drops out of the index.
+  const collidesWithTopic =
+    single === "type" && Boolean(f.type) && TOPICS.some((t) => t.key === f.type);
+  if (collidesWithTopic) {
+    const canonical = hrefWith({}, { topic: f.type } as ActiveFilters);
+    return {
+      title: `${CONTENT_TYPE_LABEL[f.type!]} guides · BAC Water Learning Center`,
+      robots: { index: false, follow: true },
+      alternates: { canonical },
+    };
+  }
+
   if (single) {
     const catalog = await getCatalogCached();
     const count = applyFilters(catalog, f).length;
