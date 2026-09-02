@@ -308,7 +308,12 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
           <div className="eyebrow">Dashboard</div>
           <h1 className="mt-1 font-serif text-3xl font-medium tracking-tight">My Plans</h1>
         </div>
-        <div className="flex items-center gap-2">
+        {/*
+          Wraps on narrow screens. The tab pills plus both buttons measure
+          ~441px, so on a 390px phone this row used to push the whole page into
+          a horizontal scroll.
+        */}
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-0.5">
             {(["active", "archived"] as Tab[]).map((t) => (
               <button

@@ -250,7 +250,8 @@ export function ContentWorkspace({
             Edit, preview, and publish without leaving the page.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        {/* Same wrap guard as My Plans: filters plus New overflow a phone. */}
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-0.5">
             <button
               type="button"

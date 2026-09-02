@@ -1140,14 +1140,24 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   }
 
   // ---------- BEGINNER: one question at a time ----------
+  const isReview = step === STEPS.length - 1;
   return (
     // One question at a time stays exactly that: the column on the left is
     // unchanged. The preview beside it only fills desktop space that was
     // previously empty, so the plan being built is visible while it is built.
     // Below xl there is no room for it, and the WizardContext breadcrumb
     // already carries the answers so far.
-    <div className="mx-auto grid max-w-2xl gap-10 pb-24 sm:pb-0 xl:max-w-6xl xl:grid-cols-[minmax(0,38rem)_minmax(0,24rem)] xl:justify-center">
-      <div ref={stepContainerRef}>
+    <div
+      className={cn(
+        "mx-auto pb-24 sm:pb-0",
+        isReview
+          ? // The review step lays out its own panes, so it takes the full width
+            // instead of being squeezed into the question column.
+            "max-w-2xl xl:max-w-7xl"
+          : "grid max-w-2xl gap-10 xl:max-w-6xl xl:grid-cols-[minmax(0,38rem)_minmax(0,24rem)] xl:justify-center"
+      )}
+    >
+      <div ref={stepContainerRef} className="min-w-0">
       <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
         {hasMounted && (
           <ModeToggle mode={mode} onChange={setMode} />
@@ -1456,6 +1466,18 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             </p>
           </div>
 
+          {/*
+            Two panes at xl: the plan itself on the left, and everything you can
+            still change or do about it on the right. Below xl they stack, and
+            the plan comes first in the DOM so the answer is what you land on
+            after the last question rather than a recap of your own inputs.
+          */}
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_23rem] xl:items-start xl:gap-8">
+          <div className="min-w-0 space-y-5">
+            <PlanResults result={result} />
+          </div>
+
+          <aside className="space-y-4 xl:sticky xl:top-24">
           {/* Quick config summary */}
           <div className="border-2 border-foreground bg-surface p-5 sm:p-6">
             <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-4">
@@ -1516,8 +1538,6 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             </div>
           </div>
 
-          <PlanResults result={result} />
-
           <AiAssistantDrawer plan={result} />
 
           <div className="flex flex-col gap-3 pt-2">
@@ -1563,6 +1583,9 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
             </Button>
           </div>
 
+          </aside>
+          </div>
+
           {/* Mobile: sticky Save bar so the primary action is always reachable. */}
           <div className="sm:hidden fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
             <Button
@@ -1597,7 +1620,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
 
       {/* The review step already renders the whole plan in the main column,
           so the preview would be saying the same thing twice there. */}
-      {step < STEPS.length - 1 ? (
+      {!isReview ? (
         <WizardPreview
           className="hidden xl:block xl:sticky xl:top-24 xl:h-fit"
           result={result}

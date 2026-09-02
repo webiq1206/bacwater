@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function PlanPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-6 sm:pt-24 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-6 sm:pt-24 pb-24 sm:pb-32 xl:max-w-7xl">
       <WebPageJsonLd
         name="Build My Plan"
         description="Enter your peptide, vial strength, dose, and syringe. Get an exact reconstitution plan with plain-English explanations and a printable PDF."

@@ -52,7 +52,21 @@ export function PlanResults({ result }: Props) {
       : "user";
 
   return (
-    <div className="space-y-5">
+    /*
+      Container queries, not viewport breakpoints. This component renders in
+      five places whose widths have nothing to do with the window: the wizard
+      review step and the public plan page are wide, while the My Plans and
+      admin workspace centre panes are narrow columns inside a three-pane
+      shell. `@container` sizes the stat row to the box it is actually in —
+      four across on a wide page, two across in a narrow pane — instead of to
+      the window, which tells it nothing useful here.
+
+      The body deliberately stays a single column: splitting it into two made
+      the syringe graphic and the dosage table render narrower than they are
+      designed for, which traded stacking for cramped wrapping. The two-pane
+      split that matters happens one level up, on the review step.
+    */
+    <div className="@container space-y-5">
       {/* 1, PLAN SUMMARY (hero) ------------------------------------------- */}
       <section className="border border-border bg-card rounded-2xl p-6 sm:p-8">
         <div className="eyebrow">Your plan</div>
@@ -92,7 +106,7 @@ export function PlanResults({ result }: Props) {
           )}
         </div>
 
-        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden">
+        <div className="mt-5 grid grid-cols-2 gap-px bg-border rounded-xl overflow-hidden @lg:grid-cols-4">
           <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} source="user" />
           <Stat label="BAC water" value={`${formatMl(result.usedBacMl)} mL`} source={bacSource} />
           <Stat
@@ -367,11 +381,13 @@ function PlanSelfCheck({
         where each came from.
       </p>
 
-      <dl className="mt-5 grid sm:grid-cols-2 gap-x-8 gap-y-4">
+      {/* min-w-0 so a long question can wrap instead of forcing the grid
+          wider than the card on a 360px phone. */}
+      <dl className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
         {rows.map((row) => (
-          <div key={row.q} className="flex flex-col">
-            <dt className="text-sm font-medium text-foreground">{row.q}</dt>
-            <dd className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <div key={row.q} className="flex min-w-0 flex-col">
+            <dt className="text-sm font-medium text-foreground [overflow-wrap:anywhere]">{row.q}</dt>
+            <dd className="mt-1 flex min-w-0 flex-wrap items-center gap-2 text-sm text-muted-foreground [overflow-wrap:anywhere]">
               <span className="tabular-nums">{row.a}</span>
               {row.source && <ProvenanceChip source={row.source} />}
             </dd>
@@ -445,8 +461,14 @@ function DosageReference({ result }: { result: CalcResult }) {
         At {formatConcentration(result.finalConcentrationMgPerMl)} mg/mL, here&apos;s
         what each amount delivers. Your amount is highlighted.
       </p>
-      <div className="mt-4 overflow-hidden rounded-xl border border-border">
-        <table className="w-full text-sm">
+      {/*
+        `overflow-hidden` alone rounds the corners but hard-clips the table
+        when this card sits in a narrow column — the Delivers column was being
+        sliced off with no way to reach it. `overflow-x-auto` keeps the rounded
+        corners and lets the table scroll instead of disappearing.
+      */}
+      <div className="mt-4 min-w-0 overflow-x-auto rounded-xl border border-border">
+        <table className="w-full min-w-[18rem] text-sm">
           <thead>
             <tr className="bg-muted text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-2.5 font-medium">Measure</th>
@@ -495,14 +517,20 @@ function Stat({
   source?: Provenance;
 }) {
   return (
-    <div className="bg-card px-4 py-4">
+    /*
+      Full height + `mt-auto` on the chip so every provenance tag in the row
+      sits on one baseline. Without it, a cell whose label wraps ("Measures /
+      vial") or whose value wraps ("1.33 mg/mL") pushes its own chip down and
+      the row reads as four tags scattered at four different heights.
+    */
+    <div className="flex h-full flex-col bg-card px-4 py-4">
       <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
         {label}
       </div>
       <div className="mt-1.5 text-lg tabular-nums text-foreground">{value}</div>
       {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
       {source && (
-        <div className="mt-1.5">
+        <div className="mt-auto pt-2.5">
           <ProvenanceChip source={source} />
         </div>
       )}
