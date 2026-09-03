@@ -43,6 +43,7 @@ import {
   updatePlanAction,
   updatePlanNotesAction,
 } from "@/lib/plan-actions";
+import { rememberDevicePlan } from "@/lib/saved-plans";
 import {
   PlanInlineEditor,
   type PlanEditableFields,
@@ -264,6 +265,14 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
         toast({ title: "Could not duplicate", variant: "destructive" });
         return;
       }
+      // A guest's copy is only findable through this device's own list, and
+      // the claim token is what lets them attach it to an account later.
+      rememberDevicePlan({
+        publicId: res.publicId,
+        name: res.name || "Untitled plan",
+        savedAt: new Date().toISOString(),
+        claimToken: res.claimToken ?? undefined,
+      });
       toast({ title: "Plan duplicated", variant: "success" });
       // The copy needs a fresh server render to appear in the queue.
       router.refresh();
