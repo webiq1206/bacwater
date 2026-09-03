@@ -11,6 +11,14 @@ diffing that set against every URL in `sitemap.xml` and its three segments.
 
 ## Read this first: what this audit is not
 
+> **Superseded in part, 3 September 2026.** The claim below that GSC data was
+> unreachable was wrong. Search Console *is* reachable from the agent
+> environment, via the Composio connector rather than Ahrefs — see
+> [the query and indexation audit](./2026-09-gsc-query-and-index-audit.md),
+> which carries the query-side analysis this document said it could not do,
+> and which also found that `/tools/bac-water` is unknown to Google entirely.
+> The indexation mechanics below still stand.
+
 **There is no fresh Google Search Console data in this document.**
 
 The request was a comprehensive GSC audit. I could not do that part. The
