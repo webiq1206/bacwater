@@ -1,10 +1,41 @@
 import type { NextConfig } from "next";
 
+/**
+ * The canonical host, taken from the same variable the sitemaps and canonical
+ * tags use so the three can never disagree. A leading "www." is stripped so a
+ * misconfigured value can't produce a www -> www redirect loop.
+ */
+const APEX_HOST = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai"
+).host.replace(/^www\./, "");
+
+/** Escaped for the regex `has` matcher, so the dots are literal. */
+const WWW_HOST_PATTERN = `www\\.${APEX_HOST.replace(/\./g, "\\.")}`;
+
 const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: false },
   serverExternalPackages: ["@prisma/client", "bcryptjs", "@react-pdf/renderer", "qrcode"],
   async redirects() {
     return [
+      // Host consolidation. Google indexed https://www.bacwater.ai/tools/
+      // syringe-units and set ITS OWN canonical to the www URL, overriding the
+      // non-www canonical the page declares, while the apex URL we submit in
+      // the sitemap sat at "Discovered - currently not indexed". Google also
+      // holds a www crawl graph (www/tools/bac-water, www/privacy,
+      // www/learn/how-peptide-reconstitution-works appear as referring URLs),
+      // so the www host has been serving crawlable pages rather than
+      // redirecting. Two hosts serving the same site splits crawl budget and
+      // makes canonical tags advisory; a 308 makes the apex the only address.
+      // See seo-audit/2026-09-gsc-query-and-index-audit.md (F2).
+      //
+      // First in the list so www lands on the apex in ONE hop; the path
+      // redirects below then apply on the canonical host.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: WWW_HOST_PATTERN }],
+        destination: `https://${APEX_HOST}/:path*`,
+        permanent: true,
+      },
       {
         // Consolidated into the dedicated comparison page to avoid duplicate
         // content across two near-identical URLs.
