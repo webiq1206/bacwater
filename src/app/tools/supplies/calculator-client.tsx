@@ -1,0 +1,467 @@
+"use client";
+
+import { useMemo } from "react";
+import Link from "next/link";
+import { ArrowRight, Check, Info } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
+import { cn } from "@/lib/utils";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { setInterestPeptide } from "@/lib/learn/interest";
+import { usePersistentState } from "@/lib/use-persistent-state";
+import { useVialContext } from "@/lib/tools/vial-context";
+import { CarriedOverNotice } from "@/components/tools/carried-over-notice";
+
+type Frequency = "daily" | "twice-daily" | "every-other-day" | "three-weekly" | "twice-weekly" | "weekly";
+type Unit = "mg" | "mcg";
+
+const FREQUENCIES: { id: Frequency; label: string; perWeek: number; hint: string }[] = [
+  { id: "daily", label: "Once a day", perWeek: 7, hint: "Most common in research schedules." },
+  { id: "twice-daily", label: "Twice a day", perWeek: 14, hint: "Morning and evening." },
+  { id: "every-other-day", label: "Every other day", perWeek: 3.5, hint: "3-4 times a week." },
+  { id: "three-weekly", label: "3x a week", perWeek: 3, hint: "E.g., Monday, Wednesday, Friday." },
+  { id: "twice-weekly", label: "Twice a week", perWeek: 2, hint: "E.g., Monday and Thursday." },
+  { id: "weekly", label: "Once a week", perWeek: 1, hint: "Some research schedules use weekly draws." },
+];
+
+/** Map a peptide's typical injections/week to the closest frequency option. */
+function frequencyForPerWeek(perWeek: number): Frequency {
+  if (perWeek >= 14) return "twice-daily";
+  if (perWeek >= 7) return "daily";
+  if (perWeek >= 3.5) return "every-other-day";
+  if (perWeek >= 3) return "three-weekly";
+  if (perWeek >= 2) return "twice-weekly";
+  return "weekly";
+}
+
+const DURATIONS = [
+  { weeks: 4, label: "4 weeks", hint: "Short trial cycle" },
+  { weeks: 8, label: "8 weeks", hint: "Standard cycle length" },
+  { weeks: 12, label: "12 weeks", hint: "Extended cycle" },
+];
+
+export default function SupplyCalculatorPage() {
+  // Peptide, vial size, and measured amount are shared with the BAC water and
+  // reverse-BAC calculators, so moving between them doesn't re-ask. This tool
+  // asks for the vial in mg with no unit toggle, so it writes through the
+  // mg-normalising setter.
+  const vial = useVialContext();
+  const {
+    peptideSlug,
+    setPeptideSlug,
+    doseInput,
+    setDoseInput,
+    doseUnit,
+    setDoseUnit,
+    doseMcg,
+    vialMg,
+    setVialMg,
+  } = vial;
+  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
+  const hasPeptide = !!peptide;
+
+  // How often and for how long are this tool's own questions, so they stay local.
+  const [frequency, setFrequency] = usePersistentState<Frequency | "">("bacwater.tool.supplies.frequency", "");
+  const [durationWeeks, setDurationWeeks] = usePersistentState("bacwater.tool.supplies.duration", 0);
+  const [showCustomDuration, setShowCustomDuration] = usePersistentState("bacwater.tool.supplies.customDur", false);
+
+  // Selecting a peptide records the choice and drives the hints; it never
+  // pre-fills a dose or a vial size.
+  function handlePeptideChange(slug: string) {
+    setPeptideSlug(slug);
+    if (slug !== "custom") setInterestPeptide(slug);
+    // Pre-select the peptide's typical schedule (same reference data the
+    // calculator uses to split weekly doses). Still user-changeable below.
+    const ref = PEPTIDES.find((p) => p.slug === slug);
+    if (ref && slug !== "custom") setFrequency(frequencyForPerWeek(ref.injectionsPerWeek));
+  }
+
+  const valid = doseMcg > 0 && vialMg > 0 && durationWeeks > 0 && frequency !== "";
+
+  const results = useMemo(() => {
+    if (doseMcg <= 0 || vialMg <= 0 || durationWeeks <= 0 || frequency === "") return null;
+    const freq = FREQUENCIES.find((f) => f.id === frequency) ?? FREQUENCIES[0];
+    const totalDoses = Math.ceil(freq.perWeek * durationWeeks);
+
+    const doseMg = doseMcg / 1000;
+    const dosesPerVial = Math.max(1, Math.floor(vialMg / doseMg));
+    const peptideVialsNeeded = Math.ceil(totalDoses / dosesPerVial);
+
+    // BAC water per peptide vial: recommended amount
+    const bacPerVial = recommendBacWaterMl(vialMg, doseMcg);
+    const totalBacMl = bacPerVial * peptideVialsNeeded;
+    // Round up to whole 30 mL BAC vials
+    const bacVialsNeeded = Math.max(1, Math.ceil(totalBacMl / 30));
+
+    // Syringes: one per injection, round to boxes of 100
+    const syringesNeeded = totalDoses;
+    const syringeBoxes = Math.ceil(syringesNeeded / 100);
+
+    // Alcohol prep pads: 2 per injection (vial top + injection site)
+    const padsNeeded = totalDoses * 2;
+    const padBoxes = Math.ceil(padsNeeded / 200);
+
+    return {
+      totalDoses,
+      dosesPerVial,
+      peptideVialsNeeded,
+      bacPerVial,
+      totalBacMl,
+      bacVialsNeeded,
+      syringesNeeded,
+      syringeBoxes,
+      padsNeeded,
+      padBoxes,
+      freq,
+    };
+  }, [frequency, durationWeeks, doseMcg, vialMg]);
+
+  return (
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Tools", href: "/tools" },
+        { label: "Supply Calculator", href: "/tools/supplies" },
+      ]} />
+      <div className="max-w-3xl">
+        <div className="eyebrow">Supply Calculator</div>
+        <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
+          Peptide Supply Calculator
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+          Tell us your peptide, how much you measure, and cycle length and this supply
+          calculator will figure out exactly how many peptide vials, BAC water
+          bottles, syringes, and alcohol pads you&apos;ll need. Counts only,
+          nothing for sale.
+        </p>
+      </div>
+
+      <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
+        <div className="lg:sticky lg:top-24 space-y-4">
+          <CarriedOverNotice visible={vial.carriedOver} onClear={vial.clear} />
+          {/* 1. Peptide */}
+          <Section n={1} total={5} title="Which peptide?">
+            <Select value={peptideSlug} onValueChange={handlePeptideChange}>
+              <SelectTrigger className="h-12">
+                <SelectValue placeholder="Choose a peptide" />
+              </SelectTrigger>
+              <SelectContent>
+                {PEPTIDES.map((p) => (
+                  <SelectItem key={p.slug} value={p.slug}>{p.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Section>
+
+          {/* 2. Amount you measure */}
+          <Section
+            n={2}
+            total={5}
+            title="How much do you measure each time?"
+            hint={
+              hasPeptide
+                ? `Amounts studied: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`
+                : "Enter how much you measure each time, in mg or mcg."
+            }
+          >
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                inputMode="decimal"
+                step="0.05"
+                value={doseInput || ""}
+                placeholder="Type the amount"
+                onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
+                className="flex-1"
+              />
+              <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mg", "mcg"]} />
+            </div>
+            {doseInput > 0 ? (
+              <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
+                <Check className="h-3 w-3 inline mr-1" />
+                {doseUnit === "mg"
+                  ? `${doseInput.toLocaleString()} mg = ${Math.round(doseInput * 1000).toLocaleString()} mcg`
+                  : `${doseInput.toLocaleString()} mcg = ${(doseInput / 1000).toLocaleString(undefined, { maximumFractionDigits: 4 })} mg`}
+              </div>
+            ) : null}
+          </Section>
+
+          {/* 3. Vial size to order */}
+          <Section
+            n={3}
+            total={5}
+            title="What size vial will you order?"
+            hint="Bigger vials = more doses per vial, but slightly less flexibility."
+          >
+            {hasPeptide ? (
+              <div className="flex flex-wrap gap-2">
+                {peptide.commonVialStrengthsMg.map((mg) => (
+                  <button
+                    key={mg}
+                    type="button"
+                    onClick={() => setVialMg(mg)}
+                    className={cn("chip", vialMg === mg && "chip--active")}
+                  >
+                    <div className="flex items-center gap-2 font-medium">
+                      {vialMg === mg && <Check className="h-4 w-4" />}
+                      {mg} mg
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+            <div className={cn("flex items-center gap-2", hasPeptide && "mt-3")}>
+              <Input
+                type="number"
+                inputMode="decimal"
+                step="0.5"
+                value={vialMg || ""}
+                placeholder="Vial size in mg"
+                onChange={(e) => setVialMg(parseFloat(e.target.value) || 0)}
+                className="flex-1"
+              />
+              <span className="text-sm text-muted-foreground">mg</span>
+            </div>
+          </Section>
+
+          {/* 4. Frequency */}
+          <Section n={4} total={5} title="How often will you draw?">
+            <div className="grid gap-2">
+              {FREQUENCIES.map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setFrequency(f.id)}
+                  className={cn("chip text-left", frequency === f.id && "chip--active")}
+                >
+                  <div className="flex items-center gap-2">
+                    {frequency === f.id && <Check className="h-4 w-4 shrink-0" />}
+                    <div>
+                      <div className="font-medium">{f.label}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{f.hint}</div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </Section>
+
+          {/* 5. Cycle length */}
+          <Section n={5} total={5} title="How long is your cycle?">
+            <div className="flex flex-wrap gap-2">
+              {DURATIONS.map((d) => {
+                const active = !showCustomDuration && durationWeeks === d.weeks;
+                return (
+                  <button
+                    key={d.weeks}
+                    type="button"
+                    onClick={() => { setDurationWeeks(d.weeks); setShowCustomDuration(false); }}
+                    className={cn("chip", active && "chip--active")}
+                  >
+                    <div className="flex items-center gap-2 font-medium">
+                      {active && <Check className="h-4 w-4" />}
+                      {d.label}
+                    </div>
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                onClick={() => setShowCustomDuration(true)}
+                className={cn("chip", showCustomDuration && "chip--active")}
+              >
+                <div className="flex items-center gap-2 font-medium">
+                  {showCustomDuration && <Check className="h-4 w-4" />}
+                  Custom
+                </div>
+              </button>
+            </div>
+            {showCustomDuration ? (
+              <div className="mt-3 flex items-center gap-2">
+                <Input
+                  type="number"
+                  min="1"
+                  value={durationWeeks || ""}
+                  placeholder="Number of weeks"
+                  onChange={(e) => setDurationWeeks(Math.max(0, parseInt(e.target.value) || 0))}
+                  className="flex-1"
+                  autoFocus
+                />
+                <span className="text-sm text-muted-foreground">weeks</span>
+              </div>
+            ) : null}
+          </Section>
+        </div>
+
+        {/* Results */}
+        <div className="space-y-4">
+          {!results ? (
+            <div className="section-dark rounded-2xl p-6 sm:p-8">
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your supply list</div>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                Enter how much you measure, the vial size you will order, and your
+                cycle length to see exactly how many vials, bac water bottles,
+                syringes, and pads you will need.
+              </p>
+            </div>
+          ) : (
+          <>
+          <div className="section-dark rounded-2xl p-6 sm:p-8">
+              <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your supply list</div>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-serif font-medium tracking-tight">
+                {results.totalDoses} draws over {durationWeeks} weeks
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                {results.freq.label.toLowerCase()} &times; {durationWeeks} weeks ={" "}
+                <b>{results.totalDoses}</b> total draws. Here&apos;s
+                everything you&apos;ll need.
+              </p>
+
+              <div className="rule my-6" />
+
+              <div className="space-y-4">
+                <SupplyRow
+                  qty={results.peptideVialsNeeded}
+                  label={`${peptide?.name ?? "Peptide"}, ${vialMg} mg vial${results.peptideVialsNeeded === 1 ? "" : "s"}`}
+                  why={`Each vial gives about ${results.dosesPerVial} measurements at ${doseMcg / 1000} mg (${doseMcg.toLocaleString()} mcg). Rounded up so you don't run out.`}
+                />
+                <SupplyRow
+                  qty={results.bacVialsNeeded}
+                  label={`Bacteriostatic water, 30 mL vial${results.bacVialsNeeded === 1 ? "" : "s"}`}
+                  why={`You'll use about ${Math.round(results.totalBacMl * 10) / 10} mL total. Bac water is commonly sold in 30 mL vials.`}
+                  buyable="BAC-30ML"
+                />
+                <SupplyRow
+                  qty={results.syringesNeeded}
+                  label="Insulin syringes"
+                  why={`One fresh syringe per measurement (about ${results.syringesNeeded}). Never reuse. Commonly sold in boxes of 100.`}
+                  buyable="SYR-INS-10"
+                />
+                <SupplyRow
+                  qty={results.padsNeeded}
+                  label="Alcohol prep pads"
+                  why="About two per measurement: the vial top and, if you inject, the site. Commonly sold in boxes of 200."
+                  buyable="ALC-200"
+                />
+              </div>
+
+              <div className="rule my-6" />
+
+              <div className="flex flex-wrap gap-3">
+                <Button asChild variant="brand" size="lg">
+                  <Link href="/plan">
+                    Build a full mixing plan <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" onClick={() => window.print()}>
+                  Print this list
+                </Button>
+              </div>
+          </div>
+
+          <div className="bg-surface border border-border p-5">
+              <div className="flex items-start gap-2">
+                <Info className="h-4 w-4 text-foreground mt-0.5 shrink-0" />
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  We rounded everything up to whole boxes so you won&apos;t run
+                  out mid-cycle. Numbers assume {results.bacPerVial} mL of BAC
+                  water per peptide vial, the amount that gives clean syringe
+                  numbers at your chosen dose.
+                </p>
+              </div>
+          </div>
+          </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Section({
+  n,
+  total,
+  title,
+  hint,
+  children,
+}: {
+  n: number;
+  total: number;
+  title: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border border-border bg-card p-5 sm:p-7">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="step-number step-number--filled text-[11px]">{n}</span>
+        <div className="eyebrow">Step {n} of {total}</div>
+      </div>
+      <h3 className="text-xl font-serif font-medium leading-tight">{title}</h3>
+      {hint ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p> : null}
+      <div className="mt-5">{children}</div>
+    </div>
+  );
+}
+
+function SupplyRow({
+  qty,
+  label,
+  why,
+  buyable,
+}: {
+  qty: number;
+  label: string;
+  why: string;
+  buyable?: string;
+}) {
+  return (
+    <div className="flex items-start gap-4">
+      <div className="shrink-0 w-12 h-12 bg-muted grid place-items-center">
+        <div className="font-semibold text-foreground text-lg tabular-nums">
+          {qty}
+        </div>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-medium leading-tight">{label}</div>
+        <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{why}</div>
+      </div>
+      {buyable ? (
+        <Check className="h-4 w-4 text-foreground shrink-0 mt-2" />
+      ) : null}
+    </div>
+  );
+}
+
+function UnitToggle<U extends string>({
+  value,
+  onChange,
+  options,
+}: {
+  value: U;
+  onChange: (u: U) => void;
+  options: [U, U];
+}) {
+  return (
+    <div className="inline-flex border border-border-strong bg-muted p-0.5 shrink-0">
+      {options.map((opt) => (
+        <button
+          key={opt}
+          type="button"
+          onClick={() => onChange(opt)}
+          className={cn(
+            "px-3 h-8 text-xs font-semibold transition-colors",
+            value === opt
+              ? "bg-card text-foreground shadow-lift"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {opt}
+        </button>
+      ))}
+    </div>
+  );
+}
