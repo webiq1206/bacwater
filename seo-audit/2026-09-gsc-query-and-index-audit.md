@@ -87,12 +87,27 @@ is **not** a site-wide split. But Google holds a `www` crawl graph —
 referring URLs — which means the `www` host has been serving crawlable pages
 with `www`-relative internal links, not redirecting.
 
-**Needs one check I could not run from here:** whether `www.bacwater.ai`
-currently 301s to the apex. Outbound HTTPS to arbitrary hosts is blocked by
-this environment's network policy, so `curl` returns no response. If it does
-not redirect, add the redirect — that is the fix, and it is also the most
-likely explanation for F1, since a crawler splitting effort across two hosts
-finds each one half as often.
+**Fixed in code.** `next.config.ts` now 308s every `www` request to the apex,
+as the first redirect in the list so it resolves in one hop and the path
+redirects then apply on the canonical host. The apex host is derived from
+`NEXT_PUBLIC_SITE_URL` — the same variable the sitemaps and canonical tags
+read — so the three cannot disagree, and a leading `www.` is stripped from it
+so a misconfigured value cannot produce a loop.
+
+Verified against a real production build: `www` root, a deep path, and a path
+with a query string all 308 to `https://bacwater.ai/...` with the path and
+query preserved; the apex host serves 200 and is not redirected; the existing
+legacy path redirects still fire on the apex; and a lookalike host
+(`wwwXbacwater.ai`) does **not** match, confirming the dots in the host
+pattern are literal rather than wildcards.
+
+**Still unverified: production.** Outbound HTTPS to arbitrary hosts is blocked
+by this environment's network policy, so I could not observe what
+`www.bacwater.ai` did before this change, nor confirm it after deploying. Two
+things to check once it ships: that `curl -I https://www.bacwater.ai/` returns
+308 to the apex, and that DNS for `www` actually points at the deployment — if
+it does not, this code never runs and the duplicate host has some other
+origin.
 
 ### F3 — Calculator intent lands on the wrong pages
 
@@ -201,9 +216,10 @@ Sitemaps are all fetching cleanly with zero errors and zero warnings:
 
 ## 4. What to do, in order
 
-**1. Resolve the host split (F2).** Confirm whether `www.bacwater.ai` 301s to
-the apex. If it does not, add the redirect at the edge. Until both hosts stop
-serving, every crawl is split and canonical declarations are advisory.
+**1. Resolve the host split (F2). — Done in code, needs deploying.** The
+`www` → apex 308 is in `next.config.ts`. Deploy it, then confirm with
+`curl -I https://www.bacwater.ai/`. Until both hosts stop serving, every crawl
+is split and canonical declarations are advisory.
 
 **2. Force a crawl of `/tools/bac-water` (F1).** GSC → URL Inspection →
 Request Indexing, on the apex URL. It is unknown to Google, so nothing else —
@@ -251,7 +267,7 @@ Worth re-running monthly, and immediately after the host redirect ships.
 
 | Item | Blocked on |
 |---|---|
-| Does `www.bacwater.ai` redirect? | Outbound HTTPS blocked by this environment's network policy — needs a check from an unrestricted network |
+| Does the `www` redirect work in production? | Shipped in `next.config.ts` and verified locally; outbound HTTPS is blocked here, so confirm after deploy from an unrestricted network |
 | Referring domains / Domain Rating | Ahrefs entitlement (`Insufficient plan` on all endpoints) |
 | Whether August's Phase 1 index requests were ever made | Someone with GSC UI access |
 | AI citation rate | Unmeasured; needs the prompt panel from §4 of the August plan |
