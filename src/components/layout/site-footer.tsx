@@ -21,6 +21,7 @@ const FOOTER = {
   ],
   Company: [
     { href: "/about", label: "About" },
+    { href: "/sitemap", label: "Site map" },
     { href: "/contact", label: "Contact" },
     { href: "/editorial-policy", label: "Editorial & Sourcing Policy" },
     { href: "/terms", label: "Terms" },

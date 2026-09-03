@@ -84,6 +84,9 @@ export const STATIC_PAGES: SitemapUrl[] = [
   { path: "/peptides/compare", changeFrequency: "weekly", priority: 0.7 },
   { path: "/learn", changeFrequency: "weekly", priority: 0.8 },
   { path: "/faq", changeFrequency: "weekly", priority: 0.7 },
+  // The HTML site map: a human- and crawler-readable hub that links to
+  // every indexable page, giving crawlers a live path to all of them.
+  { path: "/sitemap", changeFrequency: "weekly", priority: 0.5 },
   { path: "/tools", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tools/bac-water", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tools/dose", changeFrequency: "weekly", priority: 0.9 },
