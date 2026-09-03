@@ -10,14 +10,14 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Peptide BAC Water Calculators & Reconstitution Guides",
+  title: "Peptide Reconstitution Guides by Compound",
   description:
-    "Per-peptide bac water calculators and reconstitution guides. Exact water amounts, syringe units, storage, and shelf life for every peptide we carry.",
+    "Per-compound peptide reconstitution guides: exact BAC water amounts, syringe units, storage and shelf life, plus a calculator on every peptide page.",
   alternates: { canonical: "/peptides" },
   openGraph: {
-    title: "Peptide BAC Water Calculators & Reconstitution Guides",
+    title: "Peptide Reconstitution Guides by Compound",
     description:
-      "Per-peptide bac water calculators and reconstitution guides. Exact water amounts, syringe units, storage, and shelf life for every peptide we carry.",
+      "Per-compound peptide reconstitution guides: exact BAC water amounts, syringe units, storage and shelf life, plus a calculator on every peptide page.",
     url: "/peptides",
     type: "website",
     siteName: "BACwater.ai",
@@ -41,8 +41,8 @@ export default function PeptidesHubPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-12 sm:pt-16 pb-24 sm:pb-32">
       <WebPageJsonLd
-        name="Peptide BAC Water Calculators & Reconstitution Guides"
-        description="Per-peptide bac water calculators and reconstitution guides for every peptide we carry."
+        name="Peptide Reconstitution Guides by Compound"
+        description="Per-compound peptide reconstitution guides, with exact BAC water amounts and a calculator on every peptide page."
         url="/peptides"
         breadcrumb={[
           { name: "Home", url: "/" },
@@ -55,7 +55,7 @@ export default function PeptidesHubPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
-            name: "Peptide BAC Water Calculators & Reconstitution Guides",
+            name: "Peptide Reconstitution Guides by Compound",
             url: `${siteUrl}/peptides`,
             mainEntity: {
               "@type": "ItemList",
@@ -79,7 +79,7 @@ export default function PeptidesHubPage() {
       <div className="max-w-3xl">
         <div className="eyebrow">Peptide guides</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          Bac water calculators for every peptide
+          Peptide reconstitution guides by compound
         </h1>
         <p className="mt-3 text-muted-foreground leading-relaxed">
           Pick your compound to work out the bac water amount, the concentration,

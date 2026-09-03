@@ -39,6 +39,18 @@ const FAQS: { q: string; a: string }[] = [
     q: "Can you freeze reconstituted peptides?",
     a: "Freezing a reconstituted (already mixed) vial is generally not recommended, because freeze-thaw cycles can degrade the peptide. Keep mixed vials refrigerated instead. Some unopened lyophilized (freeze-dried) powders can be frozen before mixing, but follow the specific product's guidance.",
   },
+  {
+    q: "Does bacteriostatic water need to be refrigerated after opening?",
+    a: "An unopened vial is fine at room temperature until its printed expiry. Once it is opened or first punctured, a multi-dose vial is commonly refrigerated and dated to discard within about 28 days. Refrigeration is standard practice for an opened vial rather than a strict requirement for the water itself; follow the label on your product.",
+  },
+  {
+    q: "Does bacteriostatic water expire?",
+    a: "Yes. Unopened, it lasts until the printed expiry date on the vial. Once opened or first punctured, a multi-dose vial is commonly dated and discarded within about 28 days regardless of the printed date. Discard any vial early if the liquid looks cloudy, changes color, or has floating particles.",
+  },
+  {
+    q: "Can you freeze bacteriostatic water?",
+    a: "Freezing is not needed and is generally avoided for bacteriostatic water: it is kept at room temperature unopened and refrigerated once opened. Freezing an already-mixed peptide vial is a separate question and is also usually avoided, because freeze-thaw cycles can degrade the peptide.",
+  },
 ];
 
 const STORAGE_SLUGS = [
