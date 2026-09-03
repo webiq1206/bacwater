@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { calculate, type CalcInput, type SyringeType } from "@/lib/calc";
-import { defaultPlanName } from "@/lib/plan-name";
+import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 
 const inputSchema = z.object({
   name: z.string().max(120).optional().nullable(),
@@ -380,14 +380,25 @@ export async function updatePlanAction(
     dateMixed: parsed.data.dateMixed ?? null,
   });
 
-  const name =
-    opts?.name?.trim() ||
-    existing.name ||
-    defaultPlanName({
-      peptideName: result.input.peptideName,
-      vialStrengthMg: result.input.vialStrengthMg,
-      dateMixed: result.input.dateMixed ?? null,
-    });
+  // A name that is just a restatement of the plan's numbers follows them when
+  // they change; a name someone typed is left exactly as they typed it. The
+  // test is against the plan's *previous* values, because that is what the
+  // stored name was generated from.
+  const chosenName = (opts?.name?.trim() || existing.name || "").trim();
+  const wasGenerated = isGeneratedPlanName(chosenName, {
+    peptideName: existing.peptideName,
+    vialStrengthMg: existing.vialStrengthMg,
+    dateMixed: existing.dateMixed
+      ? existing.dateMixed.toISOString().slice(0, 10)
+      : null,
+  });
+  const name = wasGenerated
+    ? defaultPlanName({
+        peptideName: result.input.peptideName,
+        vialStrengthMg: result.input.vialStrengthMg,
+        dateMixed: result.input.dateMixed ?? null,
+      })
+    : chosenName;
 
   await prisma.plan.update({
     where: { id: existing.id },

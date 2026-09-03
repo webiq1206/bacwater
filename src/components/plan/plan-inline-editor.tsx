@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PlanResults } from "@/components/plan/plan-results";
+import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 import { cn } from "@/lib/utils";
 
 export interface PlanEditableFields {
@@ -35,6 +36,19 @@ export interface PlanEditableFields {
 }
 
 const FREQUENCIES = [1, 2, 3, 5, 7] as const;
+
+/**
+ * The peptide name a plan is stored under: the chosen peptide's own name, or
+ * whatever was typed for a custom one. Matches what `calculate()` resolves, so
+ * a generated plan name here matches the one the server would produce.
+ */
+function displayPeptideName(f: {
+  peptideSlug: string;
+  peptideName: string;
+}): string {
+  if (f.peptideSlug === "custom") return f.peptideName || "Custom";
+  return PEPTIDES.find((p) => p.slug === f.peptideSlug)?.name ?? f.peptideName;
+}
 
 /**
  * Compact edit form for a saved plan, shown inside the My Plans workspace so
@@ -57,8 +71,30 @@ export function PlanInlineEditor({
 }) {
   const [fields, setFields] = useState<PlanEditableFields>(initial);
 
+  // A name that just restates the plan's numbers keeps restating them as they
+  // are edited, so the field shows the name that will be saved. A name the
+  // user typed is theirs and is never rewritten under them.
+  const [nameIsGenerated, setNameIsGenerated] = useState(() =>
+    isGeneratedPlanName(initial.name, {
+      peptideName: displayPeptideName(initial),
+      vialStrengthMg: initial.vialStrengthMg,
+      dateMixed: initial.dateMixed || null,
+    })
+  );
+
   function patch(p: Partial<PlanEditableFields>) {
-    setFields((f) => ({ ...f, ...p }));
+    setFields((f) => {
+      const next = { ...f, ...p };
+      // Only follow the numbers; typing in the name field is handled there.
+      if (p.name === undefined && nameIsGenerated) {
+        next.name = defaultPlanName({
+          peptideName: displayPeptideName(next),
+          vialStrengthMg: next.vialStrengthMg,
+          dateMixed: next.dateMixed || null,
+        });
+      }
+      return next;
+    });
   }
 
   const dirty = useMemo(
@@ -113,7 +149,12 @@ export function PlanInlineEditor({
             <Label className="text-xs text-muted-foreground">Plan name</Label>
             <Input
               value={fields.name}
-              onChange={(e) => patch({ name: e.target.value })}
+              onChange={(e) => {
+                // An emptied field is no longer a chosen name, so it goes back
+                // to following the numbers.
+                setNameIsGenerated(e.target.value.trim() === "");
+                patch({ name: e.target.value });
+              }}
               maxLength={120}
               className="mt-1 h-10"
             />
