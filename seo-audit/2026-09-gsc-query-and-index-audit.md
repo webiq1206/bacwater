@@ -271,3 +271,52 @@ Worth re-running monthly, and immediately after the host redirect ships.
 | Referring domains / Domain Rating | Ahrefs entitlement (`Insufficient plan` on all endpoints) |
 | Whether August's Phase 1 index requests were ever made | Someone with GSC UI access |
 | AI citation rate | Unmeasured; needs the prompt panel from §4 of the August plan |
+
+---
+
+## 7. Before-deploy snapshot (3 September 2026)
+
+A second pull taken the same day, immediately before PRs #5–#8 were deployed,
+so the post-deploy re-pull has a fixed baseline to diff against. **None of the
+code from those PRs was live at this point** — anything that moved here moved
+on Google's own schedule, not because of our changes.
+
+Window extended by one day (2026-07-04 → 2026-09-01) so the totals are not
+strictly comparable to §0's window; the difference is one day of data.
+
+### Totals — flat
+
+| Metric | §0 pull (→ 08-31) | This pull (→ 09-01) |
+|---|---|---|
+| Impressions | 3,615 | 3,663 |
+| Clicks | 4 | 4 |
+| Avg position | 41.5 | 41.4 |
+
+Last three complete days tightened toward better positions —
+~50 (Aug 27–29) → ~41 (Aug 30–31) → **36 (Sep 1)** — but that is a few dozen
+impressions on one property and predates every change here. Treat as noise
+until it holds for a week.
+
+### Index status — one real move, and it is not ours
+
+| URL | §1/§3 pull | This pull | Read |
+|---|---|---|---|
+| `bacwater.ai/tools/bac-water` | **URL unknown to Google**, no sitemap association | **Discovered — currently not indexed**, now carries a `sitemap-pages.xml` association and apex referring URLs (`/peptides/tirzepatide`, `/tools`) | Google discovered the page on its own by processing the sitemap. Moved into the crawl queue, not out of it. Still not indexed. F1's "unknown" symptom has cleared; the "not crawled" one has not. |
+| `www/tools/syringe-units` | Indexed, `googleCanonical = www`, `lastCrawlTime 2026-08-15` | **Identical** — same canonical, same 08-15 crawl | The `www` hijack is unchanged, as expected: the redirect is not deployed and Google has not re-crawled `www` since before our change existed. |
+| `bacwater.ai/tools/syringe-units` (apex) | Discovered — not indexed | **Identical** | — |
+
+**This is the row to watch.** When the deploy is live and Google next crawls
+`www/tools/syringe-units`, its `lastCrawlTime` should advance past 2026-08-15
+and its `coverageState` should flip from "Submitted and indexed" to a redirect
+state, with the apex URL taking over. If `lastCrawlTime` is still 08-15 a week
+after deploy, either the deploy did not go out or `www` DNS does not point at
+it — the two production checks in F2.
+
+### Re-pull after deploy checks, in order
+
+1. `www/tools/syringe-units` — `lastCrawlTime` advanced past 2026-08-15, and
+   `coverageState` no longer "Submitted and indexed" on the `www` URL.
+2. `bacwater.ai/tools/bac-water` — "Discovered" → "Crawled" → "Submitted and
+   indexed" (each is a separate step; the index request in §4 is what pushes it).
+3. Totals and the calculator-intent cluster (§F3) — whether `/tools/bac-water`
+   starts appearing for *bac water calculator* once it is indexed.
