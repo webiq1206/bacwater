@@ -12,6 +12,7 @@ import {
 } from "@/lib/contact-triage";
 import { contentChecks, extractMetaDescription } from "@/lib/content/checks";
 import { vialMgOf, doseMcgOf } from "@/lib/tools/vial-context";
+import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 
 let failures = 0;
 function check(cond: boolean, label: string) {
@@ -213,4 +214,67 @@ if (failures > 0) {
   console.error(`\n${failures} workspace assertion(s) failed.`);
   process.exit(1);
 }
+// ---- Plan names: generated names follow the numbers, chosen names don't ----
+//
+// An edit recalculates the plan, so a name that merely restates the old
+// numbers would otherwise label a corrected plan with the number that was
+// wrong. The rule has to distinguish that from a name someone typed, and
+// being wrong in the "treat it as chosen" direction is the safe one.
+
+const BEFORE = { peptideName: "BPC-157", vialStrengthMg: 5, dateMixed: null };
+
+check(
+  defaultPlanName(BEFORE) === "BPC-157 · 5 mg",
+  "the generated name restates peptide and vial strength"
+);
+check(
+  isGeneratedPlanName("BPC-157 · 5 mg", BEFORE),
+  "a name matching the generated one is treated as generated"
+);
+check(
+  isGeneratedPlanName("  BPC-157 · 5 mg  ", BEFORE),
+  "surrounding whitespace doesn't make a generated name look chosen"
+);
+check(
+  !isGeneratedPlanName("Travel vial", BEFORE),
+  "a name someone typed is treated as chosen"
+);
+check(
+  !isGeneratedPlanName("BPC-157 · 5 mg (spare)", BEFORE),
+  "a name that merely starts with the generated one is still chosen"
+);
+check(
+  !isGeneratedPlanName("BPC-157 · 10 mg", BEFORE),
+  "a name stating a DIFFERENT number than the plan's is chosen, not generated"
+);
+check(
+  isGeneratedPlanName("", BEFORE) && isGeneratedPlanName(null, BEFORE),
+  "an empty or absent name was never chosen"
+);
+
+// The date is part of the generated name, so a plan named before a mix date
+// was set must not be mistaken for a chosen name once one exists.
+const DATED = { peptideName: "BPC-157", vialStrengthMg: 5, dateMixed: "2026-08-25" };
+check(
+  defaultPlanName(DATED) === "BPC-157 · 5 mg · Aug 25",
+  "the generated name includes the mix date when there is one"
+);
+check(
+  isGeneratedPlanName("BPC-157 · 5 mg · Aug 25", DATED),
+  "a dated generated name is recognised against its own values"
+);
+check(
+  !isGeneratedPlanName("BPC-157 · 5 mg · Aug 25", BEFORE),
+  "a dated name is not generated for a plan that has no date"
+);
+
+// The whole point: the same stored name, checked against the values it was
+// generated from, frees the plan to be renamed to the corrected numbers.
+check(
+  isGeneratedPlanName("BPC-157 · 5 mg", BEFORE) &&
+    defaultPlanName({ ...BEFORE, vialStrengthMg: 10 }) === "BPC-157 · 10 mg",
+  "correcting the vial strength regenerates the name from the new value"
+);
+
+
 console.log("\nAll workspace logic tests passed.");

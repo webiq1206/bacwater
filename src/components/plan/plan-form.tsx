@@ -34,7 +34,7 @@ import {
   type SyringeType,
 } from "@/lib/calc";
 import { savePlanAction, updatePlanAction } from "@/lib/plan-actions";
-import { defaultPlanName } from "@/lib/plan-name";
+import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 import { rememberDevicePlan } from "@/lib/saved-plans";
 import { PostSaveDialog } from "@/components/plan/post-save-dialog";
 import { PlanResults } from "@/components/plan/plan-results";
@@ -432,10 +432,21 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   // Set after a successful save; opens the post-save dialog (PDF download +
   // auth-aware next step) instead of a blind redirect.
   const [savedPlan, setSavedPlan] = useState<{ publicId: string; ownedByUser: boolean } | null>(null);
-  // null = untouched, so the editable field shows the generated default name.
-  // When editing, start from the plan's own name instead: saving must not
-  // silently rename a plan the user only opened to fix a number in.
-  const [planName, setPlanName] = useState<string | null>(editing?.name?.trim() || null);
+  // null = untouched, so the editable field tracks the generated default name
+  // as the numbers change. When editing, a name the user typed is pinned here
+  // so it survives; a name we generated stays null so it follows the numbers,
+  // and the field shows the new one before it is saved rather than after.
+  const [planName, setPlanName] = useState<string | null>(() => {
+    const stored = editing?.name?.trim();
+    if (!stored) return null;
+    return isGeneratedPlanName(stored, {
+      peptideName: initial?.peptideName,
+      vialStrengthMg: initial?.vialStrengthMg,
+      dateMixed: initial?.dateMixed ?? null,
+    })
+      ? null
+      : stored;
+  });
   const [editingSyringe, setEditingSyringe] = useState(false);
 
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
