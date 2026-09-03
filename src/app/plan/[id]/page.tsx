@@ -14,6 +14,8 @@ import { RecordPlanView } from "@/components/plan/record-plan-view";
 import { CopyLinkClient } from "@/components/plan/copy-link";
 import { PlanShareButton } from "@/components/plan/plan-share-button";
 import { PlanActionBar } from "@/components/plan/plan-action-bar";
+import { PlanDuplicateButton } from "@/components/plan/plan-duplicate-button";
+import { auth } from "@/lib/auth";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -35,6 +37,13 @@ export default async function PublicPlanPage({ params }: Props) {
   const plan = await prisma.plan.findUnique({ where: { publicId: id } });
   if (!plan) return notFound();
 
+  // Plan links are shareable, so the person reading this may not be the person
+  // who owns it. Editing writes to the plan now, so only offer it to someone
+  // whose save would actually be accepted; everyone else gets a copy instead.
+  const session = await auth();
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  const canEdit = !plan.userId || plan.userId === userId;
+
   const result = JSON.parse(plan.data) as CalcResult;
 
   return (
@@ -45,10 +54,22 @@ export default async function PublicPlanPage({ params }: Props) {
           <div className="eyebrow">
             Plan · {plan.publicId}
           </div>
-          <PlanNameEditor
-            publicId={plan.publicId}
-            initialName={plan.name || plan.peptideName || "Reconstitution plan"}
-          />
+          {canEdit ? (
+            <PlanNameEditor
+              publicId={plan.publicId}
+              initialName={plan.name || plan.peptideName || "Reconstitution plan"}
+            />
+          ) : (
+            // The rename action is authorized against the owner, so showing
+            // the control to anyone else only offers an edit that silently
+            // fails. Same heading styling as PlanNameEditor's, so the title
+            // doesn't change size depending on who is looking at it.
+            <div className="mt-1 flex items-center gap-2">
+              <h1 className="min-w-0 break-words font-serif text-3xl font-medium tracking-tight sm:text-4xl">
+                {plan.name || plan.peptideName || "Reconstitution plan"}
+              </h1>
+            </div>
+          )}
           <p className="text-sm text-muted-foreground mt-1">
             Saved {formatDate(plan.createdAt)}
           </p>
@@ -74,11 +95,15 @@ export default async function PublicPlanPage({ params }: Props) {
             title={`${plan.peptideName ?? "Reconstitution"} plan`}
             text="Here's my peptide reconstitution plan from BACwater.ai"
           />
-          <Button asChild variant="brand">
-            <Link href={`/plan/${plan.publicId}/edit`}>
-              <Save className="h-4 w-4" /> Edit
-            </Link>
-          </Button>
+          {canEdit ? (
+            <Button asChild variant="brand">
+              <Link href={`/plan/${plan.publicId}/edit`}>
+                <Save className="h-4 w-4" /> Edit
+              </Link>
+            </Button>
+          ) : (
+            <PlanDuplicateButton publicId={plan.publicId} />
+          )}
         </div>
       </div>
 
@@ -132,7 +157,11 @@ export default async function PublicPlanPage({ params }: Props) {
         </aside>
       </div>
 
-      <PlanActionBar publicId={plan.publicId} peptideName={plan.peptideName} />
+      <PlanActionBar
+        publicId={plan.publicId}
+        peptideName={plan.peptideName}
+        canEdit={canEdit}
+      />
     </div>
   );
 }

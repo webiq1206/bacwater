@@ -4,6 +4,8 @@ import { PlanForm, type PlanFormInitial } from "@/components/plan/plan-form";
 import type { SyringeType } from "@/lib/calc";
 
 interface Initial {
+  publicId: string;
+  name: string | null;
   peptideSlug: string;
   peptideName: string;
   vialStrengthMg: number;
@@ -12,10 +14,11 @@ interface Initial {
   bacWaterMl: number;
   syringeType: string;
   dateMixed: string;
-  notes: string;
 }
 
-// Edit reuses the advanced form, prefilled with the saved plan's values.
+// Edit reuses the advanced form, prefilled with the saved plan's values, and
+// tells it which plan it is editing so saving updates that plan rather than
+// creating a second one.
 export function PlanEditor({ initial }: { initial: Initial }) {
   const prefill: PlanFormInitial = {
     peptideSlug: initial.peptideSlug,
@@ -27,5 +30,11 @@ export function PlanEditor({ initial }: { initial: Initial }) {
     syringeType: initial.syringeType as SyringeType,
     dateMixed: initial.dateMixed || null,
   };
-  return <PlanForm mode="advanced" initial={prefill} />;
+  return (
+    <PlanForm
+      mode="advanced"
+      initial={prefill}
+      editing={{ publicId: initial.publicId, name: initial.name }}
+    />
+  );
 }

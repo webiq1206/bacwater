@@ -209,16 +209,35 @@ export async function deletePlanAction(publicId: string) {
   redirect("/plans");
 }
 
+/**
+ * Copy a plan into the caller's own hands.
+ *
+ * Deliberately readable for any plan the caller can open, because plan links
+ * are shareable — this is how someone builds on a plan that was sent to them,
+ * and it is what the plan page offers in place of Edit when the plan is not
+ * theirs to change.
+ *
+ * The copy belongs to whoever pressed the button: the signed-in user, or the
+ * device that made it. It must never inherit `plan.userId` — that assigned a
+ * signed-out visitor's copy to the *original owner*, which left the visitor
+ * unable to edit the copy they had just asked for and quietly filled the
+ * owner's account with plans they never made.
+ */
 export async function duplicatePlanAction(publicId: string) {
   const plan = await prisma.plan.findUnique({ where: { publicId } });
   if (!plan) return { ok: false as const };
   const session = await auth();
+  const userId = (session?.user as { id?: string } | undefined)?.id ?? null;
+  // Same proof-of-possession secret a guest save issues, so a copy made while
+  // signed out can be claimed into an account later.
+  const claimToken = userId ? null : nanoid(24);
   const newPublicId = nanoid(10);
   const created = await prisma.plan.create({
     data: {
       publicId: newPublicId,
       name: plan.name ? `${plan.name} (copy)`.slice(0, 120) : null,
-      userId: (session?.user as { id?: string } | undefined)?.id ?? plan.userId,
+      userId,
+      claimToken,
       peptideSlug: plan.peptideSlug,
       peptideName: plan.peptideName,
       vialStrengthMg: plan.vialStrengthMg,
@@ -236,7 +255,13 @@ export async function duplicatePlanAction(publicId: string) {
     },
   });
   revalidatePath("/plans");
-  return { ok: true as const, publicId: created.publicId };
+  return {
+    ok: true as const,
+    publicId: created.publicId,
+    name: created.name,
+    // Only returned to the device that made the copy (this response).
+    claimToken,
+  };
 }
 
 function injectionsPerWeekOf(result: unknown): number {
@@ -317,16 +342,18 @@ export async function removePlanAction(publicId: string) {
 /**
  * Update a plan in place, recalculating from the edited inputs.
  *
- * This is deliberately different from the /plan/[id]/edit route, which runs
- * the inputs back through `savePlanAction` and therefore creates a *second*
- * plan while keeping the original. That is a fork, and it is the right
- * behaviour for "start from this one" — the workspace exposes it as the
- * explicit Duplicate action. But someone correcting a typo in their vial
- * strength means edit, not fork, and forking silently left them with two
- * near-identical plans and no idea which their printed label pointed at.
+ * This backs every edit surface: the inline editor in the My Plans workspace
+ * and the /plan/[id]/edit route. Edit means edit — someone correcting a typo
+ * in their vial strength gets that plan corrected, not a near-identical second
+ * plan and no idea which one their printed label points at. Branching from an
+ * existing plan is still available, as the explicit Duplicate action.
  *
  * The publicId is preserved, so a shared link or a printed QR code keeps
  * resolving to this plan with its corrected numbers.
+ *
+ * Ownership is enforced here, not just in the UI: an owned plan is only
+ * writable by its owner, while an unclaimed guest plan stays writable by
+ * whoever holds the link (which is how guest plans work everywhere else).
  */
 export async function updatePlanAction(
   publicId: string,

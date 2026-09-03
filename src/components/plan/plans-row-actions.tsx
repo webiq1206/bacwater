@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Archive, ArchiveRestore, Copy, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { deletePlanAction, duplicatePlanAction, togglePlanArchivedAction } from "@/lib/plan-actions";
+import { rememberDevicePlan } from "@/lib/saved-plans";
 import { toast } from "@/components/ui/toaster";
 
 export function PlansRowActions({ publicId, archived }: { publicId: string; archived: boolean }) {
@@ -16,6 +17,12 @@ export function PlansRowActions({ publicId, archived }: { publicId: string; arch
         onClick={async () => {
           const res = await duplicatePlanAction(publicId);
           if (res.ok) {
+            rememberDevicePlan({
+              publicId: res.publicId,
+              name: res.name || "Untitled plan",
+              savedAt: new Date().toISOString(),
+              claimToken: res.claimToken ?? undefined,
+            });
             toast({ title: "Plan duplicated", variant: "success" });
             router.push(`/plan/${res.publicId}`);
           }

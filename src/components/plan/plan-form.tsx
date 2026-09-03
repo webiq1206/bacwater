@@ -33,7 +33,7 @@ import {
   type CalcResult,
   type SyringeType,
 } from "@/lib/calc";
-import { savePlanAction } from "@/lib/plan-actions";
+import { savePlanAction, updatePlanAction } from "@/lib/plan-actions";
 import { defaultPlanName } from "@/lib/plan-name";
 import { rememberDevicePlan } from "@/lib/saved-plans";
 import { PostSaveDialog } from "@/components/plan/post-save-dialog";
@@ -119,6 +119,12 @@ interface Props {
   mode: Mode;
   /** Prefill the form (used when editing an existing plan). */
   initial?: PlanFormInitial;
+  /**
+   * Present when this form is editing a plan that already exists. Saving then
+   * updates that plan in place — same publicId, so a shared link or a printed
+   * QR code keeps resolving to it — rather than creating a second one.
+   */
+  editing?: { publicId: string; name?: string | null };
 }
 
 const STEPS = [
@@ -304,7 +310,7 @@ function ModeToggle({
 
 // ---------- main ----------
 
-export function PlanForm({ mode: initialMode, initial }: Props) {
+export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const router = useRouter();
 
   // Derive first-render values from an optional prefill (edit flow). Computed
@@ -427,7 +433,9 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
   // auth-aware next step) instead of a blind redirect.
   const [savedPlan, setSavedPlan] = useState<{ publicId: string; ownedByUser: boolean } | null>(null);
   // null = untouched, so the editable field shows the generated default name.
-  const [planName, setPlanName] = useState<string | null>(null);
+  // When editing, start from the plan's own name instead: saving must not
+  // silently rename a plan the user only opened to fix a number in.
+  const [planName, setPlanName] = useState<string | null>(editing?.name?.trim() || null);
   const [editingSyringe, setEditingSyringe] = useState(false);
 
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
@@ -611,6 +619,14 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
     planName ??
     defaultPlanName({ peptideName: peptideNameForPlan, vialStrengthMg, dateMixed });
 
+  // Editing and creating share this form, so the primary action has to say
+  // which one is about to happen — the old copy promised a new saved plan in
+  // both cases.
+  const saveLabel = editing ? "Save changes" : "Save my plan";
+  const saveHint = editing
+    ? "Updates this plan in place. Its link, PDF and vial labels keep working and will show the new numbers."
+    : "Saves your plan with a shareable link, downloadable PDF, and printable vial labels.";
+
   async function handleSave() {
     setSaving(true);
     try {
@@ -626,6 +642,28 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
         dateMixed: dateMixed || null,
         notes: null,
       };
+      if (editing) {
+        // Editing an existing plan updates it in place. `notes` is deliberately
+        // not sent: this form never shows them, so passing a value here would
+        // wipe notes the user wrote on the plan page.
+        const res = await updatePlanAction(editing.publicId, payload, {
+          name: nameValue,
+        });
+        if (res.ok) {
+          toast({ title: "Plan updated", variant: "success" });
+          // Back to the plan itself, which now shows the corrected numbers.
+          router.push(`/plan/${editing.publicId}`);
+          router.refresh();
+        } else {
+          toast({
+            title: "Could not update plan",
+            description: res.error,
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+
       const res = await savePlanAction(payload, undefined);
       if (res.ok) {
         // The plan is saved; clear the in-progress draft so the builder starts
@@ -1113,11 +1151,10 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
                 ) : (
                   <Save className="h-4 w-4" />
                 )}
-                Save my plan
+                {saveLabel}
               </Button>
               <p className="mt-3 text-xs text-muted-foreground text-center">
-                Saves your plan with a shareable link, downloadable PDF,
-                and printable vial labels.
+                {saveHint}
               </p>
             </div>
           </div>
@@ -1568,11 +1605,10 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               ) : (
                 <Save className="h-4 w-4" />
               )}
-              Save my plan
+              {saveLabel}
             </Button>
             <p className="text-xs text-muted-foreground text-center">
-              Saves your plan with a shareable link, downloadable PDF,
-              and printable vial labels.
+              {saveHint}
             </p>
             <Button
               variant="ghost"
@@ -1600,7 +1636,7 @@ export function PlanForm({ mode: initialMode, initial }: Props) {
               ) : (
                 <Save className="h-4 w-4" />
               )}
-              Save my plan
+              {saveLabel}
             </Button>
           </div>
         </div>
