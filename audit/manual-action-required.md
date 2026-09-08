@@ -188,6 +188,49 @@ Items that cannot be automated and require human action: account setup, DNS chan
 
 ---
 
+## Google Preferred Sources
+
+### M17: Confirm bacwater.ai Appears in Google's Source Preferences Tool
+
+**Priority:** High
+**Why:** The site-side work is done (button, deeplink, explainer page, CSP). Whether
+the domain is *listed* in the tool is Google's call, not ours. Google decides it
+automatically by crawling; there is no application form, no registration, and no
+approval queue. The stated bar is that the entry be a domain or subdomain (not a
+subdirectory), that the site be indexed, and that it publish fresh content.
+
+**Steps:**
+1. Sign in to a Google account and open https://www.google.com/preferences/source
+2. Search for `bacwater.ai`
+3. If it appears, the domain is eligible and every control on the site works today
+4. If it does not appear, do not file anything -- there is nowhere to file. Work the
+   two inputs Google is actually reading:
+   - **Indexation.** Check Search Console coverage for pages sitting at "Discovered
+     -- currently not indexed" (see `seo-audit/2026-09-indexation-audit.md`)
+   - **Freshness.** Keep publishing and genuinely updating guides rather than
+     bumping dates (see `docs/content-freshness.md`)
+5. Re-check the tool periodically; eligibility is re-evaluated as the crawl updates
+
+**Note:** `bacwater.ai` is the only eligible entry. Google's preferences work at the
+domain and subdomain level, so `bacwater.ai/learn` cannot be added on its own -- which
+is why `PREFERRED_SOURCE_DOMAIN` in `src/lib/preferred-source.ts` is built from the
+canonical apex host and strips any `www.`.
+
+### M18: Promote the Preferred-Sources Ask Off-Site
+
+**Priority:** Medium
+**Why:** The button only converts readers who are already on the site. The deeplink
+(`https://www.google.com/preferences/source?q=bacwater.ai`) is a plain URL that needs
+no JavaScript, so it works anywhere a link works.
+
+**Steps:**
+1. Add the deeplink to any newsletter footer
+2. Post it from the social profiles created in M6
+3. Keep the wording honest about what it does: it is a free Google Search setting,
+   it creates no account with us, and it can be undone at any time
+
+---
+
 ## Summary
 
 | # | Task | Priority | Can Agent Do? |
@@ -208,3 +251,5 @@ Items that cannot be automated and require human action: account setup, DNS chan
 | M14 | Uptime monitoring setup | Low | NO -- requires third-party account |
 | M15 | Structured data testing | Medium | PARTIAL -- agent can run tests |
 | M16 | Core Web Vitals monitoring | Medium | PARTIAL -- agent can run PageSpeed |
+| M17 | Confirm preferred-sources eligibility | High | NO -- requires a Google account; Google decides eligibility |
+| M18 | Promote the preferred-sources deeplink off-site | Medium | NO -- requires newsletter/social accounts |

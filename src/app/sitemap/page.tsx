@@ -62,6 +62,7 @@ const LABELS: Record<string, string> = {
   "/about": "About",
   "/contact": "Contact",
   "/editorial-policy": "Editorial & Sourcing Policy",
+  "/preferred-source": "Prefer BACwater.ai on Google",
   "/terms": "Terms",
   "/privacy": "Privacy",
   "/disclaimer": "Disclaimer",

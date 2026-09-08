@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { POSITIONING_STATEMENT } from "@/lib/positioning";
+import { PreferredSourceButton } from "@/components/common/preferred-source-button";
 
 const FOOTER = {
   Product: [
@@ -21,6 +22,7 @@ const FOOTER = {
   ],
   Company: [
     { href: "/about", label: "About" },
+    { href: "/preferred-source", label: "Prefer us on Google" },
     { href: "/sitemap", label: "Site map" },
     { href: "/contact", label: "Contact" },
     { href: "/editorial-policy", label: "Editorial & Sourcing Policy" },
@@ -49,6 +51,16 @@ export function SiteFooter() {
               reconstitution. Enter your vial&apos;s numbers, see every step, and
               download a PDF.
             </p>
+            {/* Sitewide preferred-sources entry point. The "link" variant is a
+                plain deeplink to Google's source preferences tool, so the
+                footer costs no third-party script on every page view; the
+                Google-rendered button lives on /preferred-source. */}
+            <PreferredSourceButton
+              variant="link"
+              className="mt-5"
+              label="Prefer BACwater.ai on Google"
+              linkClassName="text-xs"
+            />
           </div>
           {Object.entries(FOOTER).map(([title, links]) => (
             <div key={title}>

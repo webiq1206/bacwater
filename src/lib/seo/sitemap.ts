@@ -107,6 +107,9 @@ export const STATIC_PAGES: SitemapUrl[] = [
   { path: "/about", changeFrequency: "monthly", priority: 0.7 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
   { path: "/editorial-policy", changeFrequency: "monthly", priority: 0.5 },
+  // The preferred-sources explainer. Indexable and submitted so readers can
+  // find it from search, not only from the footer link.
+  { path: "/preferred-source", changeFrequency: "monthly", priority: 0.5 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
   { path: "/disclaimer", changeFrequency: "yearly", priority: 0.3 },

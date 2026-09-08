@@ -13,6 +13,12 @@ Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Prisma, NextAut
 - **AI assistant**: Claude-powered drawer that explains a plan; **never** performs math. Default model is Haiku (cheap, fast). Swap `ANTHROPIC_MODEL` for Sonnet or Opus if you want more depth.
 - **Admin panel**: dashboard, orders (with vendor email workflow via Resend), products, vendors, users, content, contact.
 - **SEO/GEO/AEO**: metadata, sitemap, robots, Organization + Product + Article + FAQ JSON-LD.
+- **Google Preferred Sources**: `src/lib/preferred-source.ts` +
+  `<PreferredSourceButton>` implement Google's publisher guide (rendered button,
+  no-JS deeplink fallback, CSP allowances). Explainer page at `/preferred-source`,
+  a link in the footer, and a call to action at the end of every guide.
+  Eligibility itself is Google's call, see M17/M18 in
+  `audit/manual-action-required.md`.
 
 ## Local dev
 
