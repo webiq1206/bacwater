@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ArticleJsonLd } from "@/components/common/article-json-ld";
+import { PreferredSourceButton } from "@/components/common/preferred-source-button";
 import { HowToJsonLd } from "@/components/common/howto-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
@@ -119,6 +120,22 @@ export default async function GuidePage({ params }: Props) {
             Build my plan <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
+      </div>
+
+      {/* Google's preferred-sources button belongs where a reader has just
+          finished something worth reading: the ask makes sense there, and
+          these guides are the fresh content the setting is meant to surface. */}
+      <div className="mt-6 rounded-2xl border border-border p-6 sm:p-8">
+        <div className="font-medium">Want more of this in your search results?</div>
+        <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+          Mark BACwater.ai as a preferred source on Google and our guides show
+          up first when they are relevant.{" "}
+          <Link href="/preferred-source" className="underline hover:text-foreground">
+            What this does
+          </Link>
+          .
+        </p>
+        <PreferredSourceButton className="mt-4" />
       </div>
 
       {relatedReading.length > 0 && (

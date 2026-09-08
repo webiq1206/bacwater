@@ -41,6 +41,7 @@ export function GET() {
 - [Compound reference](${u("/peptides")}): Per-compound BAC water calculators and reconstitution references
 - [Learning Center](${u("/learn")}): Filterable guides, comparisons, and FAQs on BAC water and reconstitution
 - [FAQ](${u("/faq")}): Direct answers on BAC water storage, ingredients, prescription status, and safety
+- [Prefer BACwater.ai on Google](${u("/preferred-source")}): What Google's preferred sources setting is, and how a reader adds bacwater.ai as one of theirs
 
 ## Calculators
 
