@@ -239,20 +239,20 @@ export default function PreferredSourcePage() {
                 className="underline hover:text-foreground"
               >
                 Peptide calculator
-              </Link>{" "}
-              &mdash; the all-in-one reconstitution calculator, every step shown.
+              </Link>
+              : the all-in-one reconstitution calculator, every step shown.
             </li>
             <li>
               <Link href="/learn" className="underline hover:text-foreground">
                 Learning Center
-              </Link>{" "}
-              &mdash; the guides and comparisons we keep current.
+              </Link>
+              : the guides and comparisons we keep current.
             </li>
             <li>
               <Link href="/about" className="underline hover:text-foreground">
                 About BACwater.ai
-              </Link>{" "}
-              &mdash; who publishes this and why.
+              </Link>
+              : who publishes this and why.
             </li>
           </ul>
         </section>
