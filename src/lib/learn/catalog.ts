@@ -232,7 +232,7 @@ const STATIC_ENTRIES: LearnEntry[] = [
   },
 ];
 
-export async function getCatalog(): Promise<LearnEntry[]> {
+export async function getCatalog(strict = false): Promise<LearnEntry[]> {
   // Exclude FAQ content blocks from the catalog: their canonical URL is /faq,
   // not /learn/faq-*, so surfacing them here would create duplicate-indexation
   // signals. They remain accessible at /learn/[slug] with noindex for deep links.
@@ -242,14 +242,16 @@ export async function getCatalog(): Promise<LearnEntry[]> {
       select: { id: true, slug: true, kind: true, title: true, body: true },
     })
     .catch(
-      () =>
-        [] as {
+      () => {
+        if (strict) throw new Error("Published content is temporarily unavailable.");
+        return [] as {
           id: string;
           slug: string;
           kind: string;
           title: string;
           body: string;
-        }[]
+        }[];
+      }
     );
 
   const dbEntries: LearnEntry[] = blocks

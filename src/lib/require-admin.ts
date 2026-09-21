@@ -23,7 +23,7 @@ export interface AdminSessionUser {
 export async function requireAdminPage(): Promise<AdminSessionUser> {
   const session = await auth();
   const user = session?.user as AdminSessionUser | undefined;
-  if (!user) redirect("/signin?callbackUrl=%2Fadmin");
+  if (!user?.id) redirect("/signin?callbackUrl=%2Fadmin");
   if (user.role !== "admin") redirect("/");
   return user;
 }

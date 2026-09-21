@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import { PlanForm } from "@/components/plan/plan-form";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -33,7 +34,7 @@ export default function PlanNewPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJson({
             "@context": "https://schema.org",
             "@type": "HowTo",
             name: "Build a personalized peptide reconstitution plan",

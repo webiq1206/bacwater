@@ -10,7 +10,15 @@
  */
 
 export function inlineMarkdown(text: string): string {
-  return text
+  const escaped = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  return escaped
+    .replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g, (_match, label: string, href: string) => {
+      const decoded = href.replace(/&amp;/g, "&");
+      let allowed = /^\/(?![\/\\])/.test(decoded);
+      try { allowed ||= new URL(decoded).protocol === "https:"; } catch { /* unsupported URL */ }
+      return allowed ? `<a href="${href}" class="underline underline-offset-4">${label}</a>` : label;
+    })
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>");
 }
@@ -64,7 +72,7 @@ function renderBlock(block: string, i: number) {
     }
     const [head, ...body] = rows;
     return (
-      <div key={i} className="mt-4 overflow-x-auto">
+      <div key={i} className="mt-4 overflow-x-auto" role="region" aria-label="Article table" tabIndex={0}>
         <table className="w-full text-sm border border-border">
           <thead>
             <tr className="bg-surface text-left">
@@ -100,4 +108,3 @@ export function renderBody(body: string) {
   const blocks = body.split(/\n\n+/);
   return blocks.map((block, i) => renderBlock(block, i));
 }
-

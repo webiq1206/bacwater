@@ -9,7 +9,7 @@ export default function SignUpPage() {
       <div className="eyebrow text-center">Sign up</div>
       <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight text-center">Create your free account</h1>
       <p className="mt-2 text-center text-sm text-muted-foreground">
-        Save your plans, download PDFs, print vial labels, and track your orders.
+        Save your calculations, download PDFs and print vial labels.
       </p>
       <div className="mt-6 border border-border p-8">
         <SignUpForm />

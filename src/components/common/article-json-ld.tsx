@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import { SITE_URL, orgRef, citationLd } from "@/lib/seo/schema";
 import { LAST_REVIEWED_ISO } from "@/lib/content-meta";
 import type { Reference } from "@/lib/content/references";
@@ -44,7 +45,7 @@ export function ArticleJsonLd({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJson(jsonLd) }}
     />
   );
 }

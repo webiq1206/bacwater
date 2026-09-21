@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ShieldCheck, FlaskConical } from "lucide-react";
 import { POSITIONING_STATEMENT } from "@/lib/positioning";
 
@@ -25,11 +25,21 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
   const [verified, setVerified] = useState(initialVerified);
   const [declined, setDeclined] = useState(false);
 
+  const declinedButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!declined) return;
+    const prior = document.activeElement as HTMLElement | null;
+    const bodyChildren = [...document.body.children].filter((e) => e instanceof HTMLElement && !e.querySelector("#age-gate-title")) as HTMLElement[];
+    const previous = bodyChildren.map((e) => e.inert);
+    bodyChildren.forEach((e) => { e.inert = true; });
+    declinedButton.current?.focus();
+    return () => { bodyChildren.forEach((e, i) => { e.inert = previous[i]; }); prior?.focus(); };
+  }, [declined]);
   if (verified) return null;
 
   function confirm() {
     // Remember for a year on this device.
-    document.cookie = `${COOKIE}=1; max-age=${60 * 60 * 24 * 365}; path=/; SameSite=Lax`;
+    document.cookie = `${COOKIE}=1; max-age=${60 * 60 * 24 * 365}; path=/; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
     try {
       localStorage.setItem(COOKIE, "1");
     } catch {
@@ -44,6 +54,8 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
     return (
       <div
         role="dialog"
+        data-state="open"
+        onKeyDown={(e) => { if (e.key === "Escape") setDeclined(false); if (e.key === "Tab") { e.preventDefault(); declinedButton.current?.focus(); } }}
         aria-modal="true"
         aria-labelledby="age-gate-title"
         className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-background"
@@ -61,6 +73,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
           </p>
           <button
             type="button"
+            ref={declinedButton}
             onClick={() => setDeclined(false)}
             className="mt-6 text-sm font-medium underline underline-offset-4 text-muted-foreground hover:text-foreground"
           >
@@ -75,7 +88,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
     <div
       role="region"
       aria-labelledby="age-gate-title"
-      className="fixed inset-x-0 bottom-0 z-[200] border-t border-border bg-card/95 backdrop-blur-sm shadow-[0_-4px_24px_rgba(0,0,0,0.08)]"
+      className="no-print border-b border-border bg-card"
     >
       <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
@@ -85,7 +98,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
               id="age-gate-title"
               className="text-xs uppercase tracking-widest font-medium"
             >
-              Age check &mdash; are you 21 or older?
+              Age check: are you 21 or older?
             </span>
           </div>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">

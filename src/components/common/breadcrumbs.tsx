@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 
 interface BreadcrumbItem {
@@ -27,7 +28,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(jsonLd) }}
       />
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">

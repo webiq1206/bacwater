@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { Home, Wand2, BookOpen, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +12,7 @@ const ITEMS = [
     href: "/plan",
     label: "Build",
     icon: Wand2,
-    match: (p: string) => p.startsWith("/plan") || p.startsWith("/tools"),
+    match: (p: string) => (p === "/plan" || p.startsWith("/plan/")) || p.startsWith("/tools"),
   },
   {
     href: "/learn",
@@ -39,13 +40,21 @@ export function MobileBottomNav() {
     pathname === "/plan/new" ||
     pathname.startsWith("/plan/") ||
     pathname.startsWith("/admin");
+  useEffect(() => {
+    const update = () => {
+      const active = document.activeElement;
+      document.body.dataset.bacInputActive = String(active instanceof HTMLElement && (active.matches("input,textarea,select") || active.isContentEditable));
+    };
+    document.addEventListener("focusin", update); document.addEventListener("focusout", update);
+    return () => { document.removeEventListener("focusin", update); document.removeEventListener("focusout", update); delete document.body.dataset.bacInputActive; };
+  }, []);
   if (hidden) return null;
 
   return (
     <>
       {/* In-flow spacer so page content clears the fixed bar on mobile. */}
-      <div className="h-14 lg:hidden" aria-hidden />
-      <nav className="lg:hidden no-print fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
+      <div className="bac-bottom-spacer lg:hidden" aria-hidden />
+      <nav aria-label="Mobile primary navigation" className="bac-bottom-nav lg:hidden no-print fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
         <div className="mx-auto grid max-w-md grid-cols-4">
           {ITEMS.map((it) => {
             const active = it.match(pathname);
@@ -54,7 +63,7 @@ export function MobileBottomNav() {
                 key={it.href}
                 href={it.href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
+                  "flex min-h-14 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
                   active ? "text-foreground" : "text-muted-foreground"
                 )}
                 aria-current={active ? "page" : undefined}

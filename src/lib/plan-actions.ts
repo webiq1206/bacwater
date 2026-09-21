@@ -4,15 +4,18 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { safeResultDisplay } from "@/lib/calc/display";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { hasPlanAccess, rememberPlanAccess } from "@/lib/plan-access";
+import { ownsPlan, planCookieName, planWriteWhere } from "@/lib/security/authorization";
 import { calculate, type CalcInput, type SyringeType } from "@/lib/calc";
 import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 
 const inputSchema = z.object({
   name: z.string().max(120).optional().nullable(),
-  peptideSlug: z.string().optional().nullable(),
-  peptideName: z.string().optional().nullable(),
+  peptideSlug: z.string().max(100).optional().nullable(),
+  peptideName: z.string().max(160).optional().nullable(),
   vialStrengthMg: z.number().positive(),
   doseMcg: z.number().positive(),
   bacWaterMl: z.number().positive().optional(),
@@ -23,8 +26,9 @@ const inputSchema = z.object({
     "tuberculin-1ml",
     "syringe-3ml",
   ]),
-  injectionsPerWeek: z.number().min(1).max(28).optional().nullable(),
-  dateMixed: z.string().optional().nullable(),
+  injectionsPerWeek: z.number().int().min(1).max(28).optional().nullable(),
+  dateMixed: z.string().max(40).refine((s) => !s || !Number.isNaN(Date.parse(s)), "Invalid date").optional().nullable(),
+  secondary: z.object({ peptideSlug: z.string().max(100).optional(), peptideName: z.string().max(160).optional(), vialStrengthMg: z.number().positive() }).optional().nullable(),
   notes: z.string().max(2000).optional().nullable(),
 });
 
@@ -42,11 +46,14 @@ export async function computePlanAction(raw: unknown) {
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,
+    secondary: parsed.data.secondary,
   });
+  if (result.errors.length) return { ok: false as const, error: result.errors.join(" ") };
   return { ok: true as const, result };
 }
 
 export async function savePlanAction(raw: unknown, notes?: string) {
+  if (notes !== undefined && (typeof notes !== "string" || notes.length > 2000)) return { ok: false as const, error: "Notes must be 2,000 characters or fewer." };
   const parsed = inputSchema.safeParse(raw);
   if (!parsed.success) return { ok: false as const, error: "Invalid input." };
 
@@ -60,8 +67,10 @@ export async function savePlanAction(raw: unknown, notes?: string) {
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,
+    secondary: parsed.data.secondary,
   };
   const result = calculate(input);
+  if (result.errors.length) return { ok: false as const, error: result.errors.join(" ") };
 
   const publicId = nanoid(10);
   const userId = (session?.user as { id?: string } | undefined)?.id ?? null;
@@ -98,6 +107,7 @@ export async function savePlanAction(raw: unknown, notes?: string) {
     },
   });
 
+  await rememberPlanAccess(plan.publicId, claimToken);
   revalidatePath("/plans");
   return {
     ok: true as const,
@@ -130,9 +140,9 @@ export async function claimDevicePlansAction(
           (c) =>
             c &&
             typeof c.publicId === "string" &&
-            c.publicId.length > 0 &&
+            c.publicId.length >= 10 && c.publicId.length <= 40 &&
             typeof c.claimToken === "string" &&
-            c.claimToken.length > 0
+            c.claimToken.length === 24
         )
         .slice(0, 100)
     : [];
@@ -153,25 +163,27 @@ export async function claimDevicePlansAction(
 }
 
 export async function updatePlanNotesAction(publicId: string, notes: string) {
+  if (typeof notes !== "string" || notes.length > 2000) return { ok: false as const, error: "Notes must be 2,000 characters or fewer." };
   const session = await auth();
   const plan = await prisma.plan.findUnique({ where: { publicId } });
   if (!plan) return { ok: false as const };
-  if (plan.userId && plan.userId !== (session?.user as { id?: string } | undefined)?.id)
+  if (!(await hasPlanAccess(plan, (session?.user as { id?: string } | undefined)?.id)))
     return { ok: false as const, error: "Not authorized." };
-  await prisma.plan.update({ where: { id: plan.id }, data: { notes } });
+  await prisma.plan.update({ where: planWriteWhere(plan), data: { notes } });
   revalidatePath(`/plan/${publicId}`);
   return { ok: true as const };
 }
 
 export async function updatePlanNameAction(publicId: string, name: string) {
+  if (typeof name !== "string" || name.length > 120) return { ok: false as const, error: "Name must be 120 characters or fewer." };
   const session = await auth();
   const plan = await prisma.plan.findUnique({ where: { publicId } });
   if (!plan) return { ok: false as const };
-  if (plan.userId && plan.userId !== (session?.user as { id?: string } | undefined)?.id)
+  if (!(await hasPlanAccess(plan, (session?.user as { id?: string } | undefined)?.id)))
     return { ok: false as const, error: "Not authorized." };
   const trimmed = name.trim().slice(0, 120);
   await prisma.plan.update({
-    where: { id: plan.id },
+    where: planWriteWhere(plan),
     data: {
       name:
         trimmed ||
@@ -191,9 +203,9 @@ export async function togglePlanArchivedAction(publicId: string) {
   const session = await auth();
   const plan = await prisma.plan.findUnique({ where: { publicId } });
   if (!plan) return { ok: false as const };
-  if (plan.userId && plan.userId !== (session?.user as { id?: string } | undefined)?.id)
+  if (!(await hasPlanAccess(plan, (session?.user as { id?: string } | undefined)?.id)))
     return { ok: false as const };
-  await prisma.plan.update({ where: { id: plan.id }, data: { archived: !plan.archived } });
+  await prisma.plan.update({ where: planWriteWhere(plan), data: { archived: !plan.archived } });
   revalidatePath("/plans");
   return { ok: true as const, archived: !plan.archived };
 }
@@ -202,9 +214,9 @@ export async function deletePlanAction(publicId: string) {
   const session = await auth();
   const plan = await prisma.plan.findUnique({ where: { publicId } });
   if (!plan) return;
-  if (plan.userId && plan.userId !== (session?.user as { id?: string } | undefined)?.id)
+  if (!(await hasPlanAccess(plan, (session?.user as { id?: string } | undefined)?.id)))
     return;
-  await prisma.plan.delete({ where: { id: plan.id } });
+  await prisma.plan.delete({ where: planWriteWhere(plan) });
   revalidatePath("/plans");
   redirect("/plans");
 }
@@ -232,10 +244,16 @@ export async function duplicatePlanAction(publicId: string) {
   // signed out can be claimed into an account later.
   const claimToken = userId ? null : nanoid(24);
   const newPublicId = nanoid(10);
+  const mayCopyNotes = await hasPlanAccess(plan, userId);
+  let snapshot: Record<string, unknown>;
+  try { snapshot = JSON.parse(plan.data); } catch { return { ok: false as const }; }
+  if (snapshot.input && typeof snapshot.input === "object") snapshot.input = { ...snapshot.input, dateMixed: null };
+  if (snapshot.expiration && typeof snapshot.expiration === "object") snapshot.expiration = { ...snapshot.expiration, date: null };
+
   const created = await prisma.plan.create({
     data: {
       publicId: newPublicId,
-      name: plan.name ? `${plan.name} (copy)`.slice(0, 120) : null,
+      name: mayCopyNotes && plan.name ? `${plan.name} (copy)`.slice(0, 120) : `${plan.peptideName || "Calculation"} (copy)`,
       userId,
       claimToken,
       peptideSlug: plan.peptideSlug,
@@ -250,10 +268,11 @@ export async function duplicatePlanAction(publicId: string) {
       syringeUnits: plan.syringeUnits,
       dosesPerVial: plan.dosesPerVial,
       expirationDate: null,
-      notes: plan.notes,
-      data: plan.data,
+      notes: mayCopyNotes ? plan.notes : null,
+      data: JSON.stringify(snapshot),
     },
   });
+  await rememberPlanAccess(created.publicId, claimToken);
   revalidatePath("/plans");
   return {
     ok: true as const,
@@ -286,12 +305,12 @@ export async function getPlanDetailAction(publicId: string) {
   const userId = (session?.user as { id?: string } | undefined)?.id;
   const plan = await prisma.plan.findUnique({ where: { publicId } });
   if (!plan) return { ok: false as const, error: "Plan not found." };
-  if (plan.userId && plan.userId !== userId)
+  if (!(await hasPlanAccess(plan, userId)))
     return { ok: false as const, error: "Not authorized." };
 
   let result: unknown = null;
   try {
-    result = JSON.parse(plan.data);
+    result = safeResultDisplay(JSON.parse(plan.data));
   } catch {
     // A corrupt snapshot shouldn't blank the pane; the caller falls back to
     // the plan's own columns.
@@ -316,7 +335,7 @@ export async function getPlanDetailAction(publicId: string) {
       injectionsPerWeek: injectionsPerWeekOf(result),
       dosesPerVial: plan.dosesPerVial,
       dateMixed: plan.dateMixed?.toISOString() ?? null,
-      expirationDate: plan.expirationDate?.toISOString() ?? null,
+      expirationDate: null,
       createdAt: plan.createdAt.toISOString(),
       result,
     },
@@ -332,9 +351,9 @@ export async function removePlanAction(publicId: string) {
   const session = await auth();
   const plan = await prisma.plan.findUnique({ where: { publicId } });
   if (!plan) return { ok: false as const, error: "Plan not found." };
-  if (plan.userId && plan.userId !== (session?.user as { id?: string } | undefined)?.id)
+  if (!(await hasPlanAccess(plan, (session?.user as { id?: string } | undefined)?.id)))
     return { ok: false as const, error: "Not authorized." };
-  await prisma.plan.delete({ where: { id: plan.id } });
+  await prisma.plan.delete({ where: planWriteWhere(plan) });
   revalidatePath("/plans");
   return { ok: true as const };
 }
@@ -352,21 +371,23 @@ export async function removePlanAction(publicId: string) {
  * resolving to this plan with its corrected numbers.
  *
  * Ownership is enforced here, not just in the UI: an owned plan is only
- * writable by its owner, while an unclaimed guest plan stays writable by
- * whoever holds the link (which is how guest plans work everywhere else).
+ * writable by its owner, while an unclaimed guest plan requires the creating device secret.
+ * Shared links grant read access, not write access.
  */
 export async function updatePlanAction(
   publicId: string,
   raw: unknown,
   opts?: { name?: string | null; notes?: string | null }
 ) {
+  if (opts?.notes != null && (typeof opts.notes !== "string" || opts.notes.length > 2000)) return { ok: false as const, error: "Notes must be 2,000 characters or fewer." };
+  if (opts?.name != null && (typeof opts.name !== "string" || opts.name.length > 120)) return { ok: false as const, error: "Name must be 120 characters or fewer." };
   const parsed = inputSchema.safeParse(raw);
   if (!parsed.success) return { ok: false as const, error: "Invalid input." };
 
   const session = await auth();
   const existing = await prisma.plan.findUnique({ where: { publicId } });
   if (!existing) return { ok: false as const, error: "Plan not found." };
-  if (existing.userId && existing.userId !== (session?.user as { id?: string } | undefined)?.id)
+  if (!(await hasPlanAccess(existing, (session?.user as { id?: string } | undefined)?.id)))
     return { ok: false as const, error: "Not authorized." };
 
   const result = calculate({
@@ -378,7 +399,10 @@ export async function updatePlanAction(
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,
+    secondary: parsed.data.secondary,
   });
+
+  if (result.errors.length) return { ok: false as const, error: result.errors.join(" ") };
 
   // A name that is just a restatement of the plan's numbers follows them when
   // they change; a name someone typed is left exactly as they typed it. The
@@ -401,7 +425,7 @@ export async function updatePlanAction(
     : chosenName;
 
   await prisma.plan.update({
-    where: { id: existing.id },
+    where: planWriteWhere(existing),
     data: {
       name: name.slice(0, 120),
       peptideSlug: result.input.peptideSlug,
@@ -425,4 +449,13 @@ export async function updatePlanAction(
   revalidatePath(`/plan/${publicId}`);
   revalidatePath(`/plan/${publicId}/label`);
   return { ok: true as const, publicId };
+}
+
+/** Restore creator access from a device's existing claim secret, never its share URL. */
+export async function restoreDevicePlanAccessAction(publicId: string, claimToken: string) {
+  if (typeof publicId !== "string" || !planCookieName(publicId) || typeof claimToken !== "string" || claimToken.length > 64) return { ok: false as const };
+  const plan = await prisma.plan.findUnique({ where: { publicId } });
+  if (!plan || !ownsPlan(plan, null, claimToken)) return { ok: false as const };
+  await rememberPlanAccess(publicId, claimToken);
+  return { ok: true as const };
 }

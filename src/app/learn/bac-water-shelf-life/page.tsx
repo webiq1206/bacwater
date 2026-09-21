@@ -1,338 +1,49 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, ShieldCheck } from "lucide-react";
-import { PEPTIDES } from "@/lib/calc/peptides";
-import { shortName } from "@/lib/peptides/page-data";
-import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-import { FaqJsonLd } from "@/components/common/faq-json-ld";
-import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { References } from "@/components/common/references";
-import { ReviewedBy } from "@/components/common/reviewed-by";
-import { AdSlot } from "@/components/common/ad-slot";
-import { SHELF_LIFE_REFERENCES } from "@/lib/content/references";
 import { Button } from "@/components/ui/button";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
-
-const DIRECT_ANSWER =
-  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles, follow the instructions that came with yours.";
-
-const FAQS: { q: string; a: string }[] = [
-  {
-    q: "Does bacteriostatic water need to be refrigerated?",
-    a: "An unopened vial can be stored at room temperature until its printed expiry. Once you reconstitute a peptide, many products say to keep the mixed vial cold (about 2 to 8 C) and out of light; follow the instructions that came with yours. Refrigeration slows peptide breakdown, but it does not replace clean, aseptic handling.",
-  },
-  {
-    q: "How long does a reconstituted peptide last in the fridge?",
-    a: "It depends on the compound and its formulation, and no general figure is reliable. Follow the instructions that came with your product. Label the vial with the mix date and a discard date, and stop using it once that date passes or if the solution looks cloudy or off.",
-  },
-  {
-    q: "How long is bacteriostatic water good for after opening?",
-    a: "The benzyl alcohol preservative lets you draw from the vial repeatedly, but once a multi-dose vial is opened or first punctured it is commonly dated and discarded within about 28 days, unless the manufacturer states otherwise. That window is the standard multi-dose vial guidance.",
-  },
-  {
-    q: "Can you freeze reconstituted peptides?",
-    a: "Freezing a reconstituted (already mixed) vial is generally not recommended, because freeze-thaw cycles can degrade the peptide. Keep mixed vials refrigerated instead. Some unopened lyophilized (freeze-dried) powders can be frozen before mixing, but follow the specific product's guidance.",
-  },
-  {
-    q: "Does bacteriostatic water need to be refrigerated after opening?",
-    a: "An unopened vial is fine at room temperature until its printed expiry. Once it is opened or first punctured, a multi-dose vial is commonly refrigerated and dated to discard within about 28 days. Refrigeration is standard practice for an opened vial rather than a strict requirement for the water itself; follow the label on your product.",
-  },
-  {
-    q: "Does bacteriostatic water expire?",
-    a: "Yes. Unopened, it lasts until the printed expiry date on the vial. Once opened or first punctured, a multi-dose vial is commonly dated and discarded within about 28 days regardless of the printed date. Discard any vial early if the liquid looks cloudy, changes color, or has floating particles.",
-  },
-  {
-    q: "Can you freeze bacteriostatic water?",
-    a: "Freezing is not needed and is generally avoided for bacteriostatic water: it is kept at room temperature unopened and refrigerated once opened. Freezing an already-mixed peptide vial is a separate question and is also usually avoided, because freeze-thaw cycles can degrade the peptide.",
-  },
+const references = [
+  { title: "Bacteriostatic Water for Injection, USP: product labeling", source: "Pfizer Medical", url: "https://www.pfizermedical.com/bacteriostatic-water", note: "Storage temperature for this specific product and product-specific dilution instructions." },
+  { title: "Preventing Unsafe Injection Practices: multi-dose vials", source: "CDC", url: "https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html", note: "Opened-vial dating, manufacturer exceptions and contamination limitations." },
 ];
-
-const STORAGE_SLUGS = [
-  "bpc-157",
-  "tb-500",
-  "ipamorelin",
-  "semaglutide",
-  "tirzepatide",
-  "ghk-cu",
-  "melanotan-2",
-  "pt-141",
-];
-
+const description = "BAC water storage depends on the product label. Learn how unopened expiry, opened-vial dating and reconstituted-product instructions differ.";
 export const metadata: Metadata = {
-  title: "BAC Water and Peptide Shelf Life: Storage and Refrigeration",
-  description:
-    "How long reconstituted peptides and opened bacteriostatic water last, why refrigeration and clean technique both matter, and when to discard a vial.",
+  title: "BAC Water Shelf Life: Expiry, Opening and Storage", description,
   alternates: { canonical: "/learn/bac-water-shelf-life" },
-  openGraph: {
-    title: "BAC Water and Peptide Shelf Life: Storage and Refrigeration",
-    description:
-      "The definitive guide to how long BAC water and reconstituted peptides last, and how to store them.",
-    url: "/learn/bac-water-shelf-life",
-    type: "website",
-    siteName: "BACwater.ai",
-  },
+  openGraph: { title: "BAC Water Shelf Life and Storage", description, url: "/learn/bac-water-shelf-life", type: "article" },
 };
-
-const SHELF_LIFE_BODY =
-  "Unopened bacteriostatic water lasts until its printed expiry. Once a multi-dose vial is opened, it is commonly dated and discarded within about 28 days. How long a reconstituted peptide lasts depends on the compound and its formulation, so follow the instructions that came with your product rather than a general figure. Many products say to keep mixed vials cold and out of light, and to set aside any solution that turns cloudy or develops particles, follow the instructions that came with yours. The benzyl alcohol preservative lets you draw from the vial repeatedly. Refrigeration slows peptide breakdown but does not replace clean, aseptic handling. Wipe the rubber top before each draw, use a fresh needle each time, and respect the discard date. If the liquid turns cloudy, changes color, or has floating bits, set it aside regardless of the date.";
-
 export default function ShelfLifePage() {
-  const storageRows = STORAGE_SLUGS.map((slug) =>
-    PEPTIDES.find((p) => p.slug === slug)
-  ).filter((p): p is (typeof PEPTIDES)[number] => Boolean(p));
-
-  return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
-      <ArticleJsonLd
-        title="BAC Water and Peptide Shelf Life: Storage and Refrigeration"
-        body={SHELF_LIFE_BODY}
-        slug="bac-water-shelf-life"
-        createdAt={new Date("2025-01-01")}
-        updatedAt={new Date("2026-07-01")}
-        citations={SHELF_LIFE_REFERENCES}
-      />
-      <WebPageJsonLd
-        name="BAC Water and Peptide Shelf Life"
-        description={DIRECT_ANSWER}
-        url="/learn/bac-water-shelf-life"
-        breadcrumb={[
-          { name: "Home", url: "/" },
-          { name: "Learning Center", url: "/learn" },
-          { name: "Shelf life and storage", url: "/learn/bac-water-shelf-life" },
-        ]}
-        citations={SHELF_LIFE_REFERENCES}
-        reviewed
-      />
-      <FaqJsonLd items={FAQS} />
-
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Learning Center", href: "/learn" },
-          { label: "Shelf life and storage", href: "/learn/bac-water-shelf-life" },
-        ]}
-      />
-
-      <div className="eyebrow">Safety and storage</div>
-      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-        How long does BAC water and reconstituted peptide last?
-      </h1>
-
-      {/* Direct answer */}
-      <p className="mt-5 text-lg leading-relaxed text-foreground/90">
-        {DIRECT_ANSWER}
-      </p>
-      <ReviewedBy className="mt-2" />
-
-      {/* Quick reference */}
-      <section className="mt-10">
-        <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-          Shelf life at a glance
-        </h2>
-        <div className="mt-5 overflow-x-auto border border-border">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-surface text-left">
-                <th className="px-4 py-3 font-medium">State</th>
-                <th className="px-4 py-3 font-medium">How long it keeps</th>
-                <th className="px-4 py-3 font-medium">Storage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">Unopened bac water</td>
-                <td className="px-4 py-3">Until printed expiry</td>
-                <td className="px-4 py-3">Room temperature, out of light</td>
-              </tr>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">Opened bac water vial</td>
-                <td className="px-4 py-3">About 28 days once punctured</td>
-                <td className="px-4 py-3">Refrigerate; date the vial</td>
-              </tr>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">Reconstituted peptide</td>
-                <td className="px-4 py-3">A few weeks (peptide dependent)</td>
-                <td className="px-4 py-3">Refrigerate 2 to 8 C, out of light</td>
-              </tr>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 font-medium">Lyophilized powder</td>
-                <td className="px-4 py-3">Months to years unopened</td>
-                <td className="px-4 py-3">Per product label; often cold</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-3 text-xs text-muted-foreground">
-          The 28-day window for an opened multi-dose vial reflects standard
-          multi-dose vial guidance. Always defer to the discard date on your own
-          product label.
-        </p>
-      </section>
-
-      {/* The refrigeration nuance */}
-      <section className="mt-14">
-        <div className="flex items-center gap-2.5">
-          <ShieldCheck
-            className="h-5 w-5"
-            style={{ color: "var(--color-accent-guide)" }}
-          />
-          <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-            Refrigeration: helpful, but not a substitute for clean technique
-          </h2>
-        </div>
-        <div className="mt-4 space-y-3 text-foreground/90 leading-relaxed">
-          <p>
-            The standard advice is correct: refrigerate reconstituted peptides.
-            Cold storage slows the chemical breakdown of the peptide itself, so a
-            mixed vial stays potent longer in the fridge than at room
-            temperature.
-          </p>
-          <p>
-            Here is a small thing to know. The preservative in BAC water is
-            benzyl alcohol. It is what fights germs. Germ-fighting works a little
-            slower when it is cold. That does not mean the fridge is bad. It
-            means two things keep your vial safe, not one. The cold keeps the
-            peptide strong. Clean habits keep germs out. You need both.
-          </p>
-          <p>
-            Clean habits means: wipe the rubber top before each poke, do not
-            touch the needle, and pull the liquid out gently. Use a fresh needle
-            each time, follow the storage instructions that came with your
-            product, and respect the discard date. If the liquid ever looks
-            cloudy, changes color, or has floating bits, throw it out, no matter
-            the date.
-          </p>
-        </div>
-      </section>
-
-      {/* Per-peptide storage */}
-      <section className="mt-14">
-        <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-          Refrigerated shelf life by peptide
-        </h2>
-        <p className="mt-3 text-muted-foreground leading-relaxed">
-          Common reconstituted shelf-life windows for popular peptides. These are
-          general guides; confirm against your own product and label the vial
-          with a discard date.
-        </p>
-        <div className="mt-5 overflow-x-auto border border-border">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-surface text-left">
-                <th className="px-4 py-3 font-medium">Peptide</th>
-                <th className="px-4 py-3 font-medium">Refrigerated</th>
-                <th className="px-4 py-3 font-medium">Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {storageRows.map((p) => (
-                <tr key={p.slug} className="border-t border-border">
-                  <td className="px-4 py-3 font-medium">
-                    <Link
-                      href={`/peptides/${p.slug}`}
-                      className="underline decoration-border underline-offset-4 hover:decoration-foreground"
-                    >
-                      {shortName(p.name)}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">
-                    {p.refrigeratedShelfDays} days
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {p.storageNote}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* When to discard */}
-      <section className="mt-14">
-        <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-          When to discard a vial
-        </h2>
-        <ul className="mt-4 space-y-2 text-foreground/90 leading-relaxed list-disc pl-5">
-          <li>The solution is cloudy, discolored, or has visible particles.</li>
-          <li>It is past the discard date you wrote on the label.</li>
-          <li>An opened bac water vial is more than about 28 days old.</li>
-          <li>The vial was left unrefrigerated far longer than intended.</li>
-          <li>The seal or stopper looks compromised.</li>
-        </ul>
-      </section>
-
-      {/* FAQ */}
-      <section className="mt-14">
-        <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-          Shelf life and storage FAQ
-        </h2>
-        <Accordion type="single" collapsible className="mt-4">
-          {FAQS.map((f, i) => (
-            <AccordionItem key={i} value={`faq-${i}`}>
-              <AccordionTrigger>{f.q}</AccordionTrigger>
-              <AccordionContent>{f.a}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </section>
-
-      <AdSlot />
-
-      {/* Keep reading */}
-      <section className="mt-14">
-        <h2 className="text-xl font-serif font-medium tracking-tight">
-          Keep reading
-        </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {[
-            { href: "/learn/vs/benzyl-alcohol", label: "BAC water vs benzyl alcohol" },
-            { href: "/learn/how-to-store-reconstituted-peptides", label: "How to store reconstituted peptides" },
-            { href: "/learn/what-is-bac-water", label: "What is BAC water?" },
-            { href: "/faq", label: "BAC water FAQ" },
-          ].map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
-            >
-              <span className="font-medium">{l.label}</span>
-              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <References references={SHELF_LIFE_REFERENCES} />
-
-      {/* CTA */}
-      <section className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-        <div>
-          <div className="font-medium text-foreground">
-            Print a discard date on every vial
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-            The Plan Builder calculates your mix date and discard date and prints
-            them on a vial label.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3 shrink-0">
-          <Button asChild variant="brand">
-            <Link href="/plan">
-              Build a plan <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/tools/vial-labels">Vial labels</Link>
-          </Button>
-        </div>
-      </section>
-    </div>
-  );
+  return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24">
+    <WebPageJsonLd name="BAC Water Shelf Life and Storage" description={description} url="/learn/bac-water-shelf-life" citations={references} breadcrumb={[{ name: "Home", url: "/" }, { name: "Learning Center", url: "/learn" }, { name: "Shelf life and storage", url: "/learn/bac-water-shelf-life" }]} />
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Learning Center", href: "/learn" }, { label: "Shelf life and storage", href: "/learn/bac-water-shelf-life" }]} />
+    <div className="eyebrow">Storage reference</div>
+    <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">How long does BAC water last?</h1>
+    <p className="mt-5 text-lg leading-relaxed">Use the product label for storage and expiry. For opened multi-dose vials, CDC guidance is 28 days unless the manufacturer specifies another opened-vial date, never beyond the original expiry. This is not a universal shelf life for a peptide mixed with that water.</p>
+    <p className="mt-3 text-xs text-muted-foreground">Sources checked September 21, 2026. General reference, not a medical review or product-specific instruction.</p>
+    <section className="mt-9"><h2 className="text-2xl font-serif">Three different dates</h2>
+      <div className="mt-4 overflow-x-auto rounded-xl border border-border" role="region" aria-label="Storage and expiry comparison" tabIndex={0}>
+        <table className="w-full text-sm"><caption className="sr-only">Different dates apply to unopened water, opened multi-dose water and a reconstituted product.</caption><thead><tr className="text-left"><th scope="col" className="p-4">Container</th><th scope="col" className="p-4">Date to check</th><th scope="col" className="p-4">Storage source</th></tr></thead><tbody>
+          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Unopened BAC water</th><td className="p-4">Manufacturer expiry</td><td className="p-4">That water product's label</td></tr>
+          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Opened multi-dose vial</th><td className="p-4">Opened-vial instructions and original expiry</td><td className="p-4">Manufacturer instructions</td></tr>
+          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Reconstituted product</th><td className="p-4">Instructions for the exact formulation</td><td className="p-4">Product-specific instructions</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Does BAC water need refrigeration?</h2>
+      <p className="leading-relaxed">Do not assume it does. Pfizer's Bacteriostatic Water for Injection labeling specifies 20 to 25°C (68 to 77°F). Follow the label for the exact product you have. Once a substance is added, its manufacturer's dilution and storage instructions govern; the water's instructions alone cannot answer that question.</p>
+      <p className="leading-relaxed">This replaces the site's earlier blanket recommendation to refrigerate opened BAC water.</p>
+    </section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">What the 28-day guidance does not mean</h2>
+      <p className="leading-relaxed">CDC's opened multi-dose guidance does not certify that a mixed solution remains stable for 28 days. Preservative also does not provide complete protection against contamination. Questionable sterility is a reason to discard a vial, even before its dated limit.</p>
+      <p className="leading-relaxed">A clear-looking solution, a calendar reminder or a correct concentration calculation is not a test of sterility or potency. For medication-specific questions, ask the dispensing pharmacist or prescriber.</p>
+    </section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">What can the calculator tell you?</h2>
+      <p className="leading-relaxed">It converts entered amounts and volumes. For example, 10 mg in a final volume of 2 mL is 5 mg/mL. Neither that arithmetic nor a compound name establishes an expiry date.</p>
+      <p className="leading-relaxed">Saved calculations and printed labels keep the calculation separate from product-specific storage instructions. They do not generate a safe-use date. See <Link href="/learn/what-you-cannot-know" className="underline">what no calculation can verify</Link> and the <Link href="/tools/vial-labels" className="underline">vial-label tool</Link>.</p>
+    </section>
+    <References references={references} />
+    <section className="section-dark mt-10 rounded-2xl p-6"><h2 className="text-xl font-serif">Check the math, not a shelf-life guess</h2><p className="mt-2 text-sm">Enter the numbers from your existing instructions. Keep the product label alongside your saved calculation.</p><Button asChild variant="brand" className="mt-4"><Link href="/peptide-calculator">Open the calculator</Link></Button></section>
+  </div>;
 }

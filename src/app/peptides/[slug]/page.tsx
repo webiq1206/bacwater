@@ -149,8 +149,8 @@ export default async function PeptidePage({
         { label: "Common vial sizes", value: `${p.commonVialStrengthsMg.join(", ")} mg` },
         {
           label: "Shelf life",
-          value: `${p.refrigeratedShelfDays} days`,
-          sub: "refrigerated, once mixed",
+          value: "Product-specific",
+          sub: "not calculated",
         },
         {
           label: "Evidence",
@@ -187,8 +187,8 @@ export default async function PeptidePage({
       />
       {!isCustom && (
         <HowToJsonLd
-          name={`How to reconstitute ${short}`}
-          description={`Step-by-step reconstitution of ${short} with bacteriostatic water.`}
+          name={`How to check a ${short} concentration calculation`}
+          description={`Check the label inputs and concentration arithmetic for ${short}. Not preparation or medical instructions.`}
           steps={steps}
           supplies={[
             `${short} vial`,
@@ -197,7 +197,6 @@ export default async function PeptidePage({
             "Alcohol prep pads",
           ]}
           tools={["Insulin syringe"]}
-          totalTime="PT5M"
         />
       )}
       <FaqJsonLd items={faqs} />
@@ -247,8 +246,8 @@ export default async function PeptidePage({
             },
             {
               label: "Shelf life",
-              value: `${p.refrigeratedShelfDays} days`,
-              sub: "refrigerated, mixed",
+              value: "Product-specific",
+              sub: "not calculated",
             },
           ]}
         />
@@ -315,7 +314,7 @@ export default async function PeptidePage({
             measurement lands on a 1 mL insulin syringe. Use the calculator above
             for your exact vial and the amount you want to measure.
           </p>
-          <div className="mt-5 overflow-x-auto border border-border">
+          <div className="mt-5 overflow-x-auto border border-border" role="region" aria-label="Scrollable data table" tabIndex={0}>
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-surface text-left">
@@ -368,7 +367,7 @@ export default async function PeptidePage({
       {/* How to reconstitute */}
       <section id="how-to" className="mt-14 scroll-mt-24">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-          How to reconstitute {short}
+          Check the {short} calculation
         </h2>
         <ol className="mt-5 space-y-4">
           {steps.map((s, i) => (
@@ -401,15 +400,14 @@ export default async function PeptidePage({
         <div className="mt-4 grid gap-4 sm:grid-cols-[auto_1fr] sm:items-center border border-border bg-card p-6">
           <div className="sm:border-r sm:border-border sm:pr-6">
             <div className="text-3xl font-semibold tabular-nums">
-              {p.refrigeratedShelfDays} days
+              Product-specific
             </div>
-            <div className="text-xs text-muted-foreground">refrigerated</div>
+            <div className="text-xs text-muted-foreground">not calculated</div>
           </div>
           <p className="text-sm text-foreground/90 leading-relaxed sm:pl-6">
-            {p.storageNote}
-            {content?.caveat ? ` ${content.caveat}` : ""} Once you add bac water,
-            the peptide slowly breaks down, so refrigerate the vial and discard
-            it if the solution turns cloudy or develops particles.
+            Follow the storage and discard instructions for the exact formulation.
+            A compound name or concentration cannot establish stability or sterility.
+            <Link href="/learn/bac-water-shelf-life" className="ml-1 underline">Read about storage limits.</Link>
           </p>
         </div>
       </section>

@@ -224,9 +224,9 @@ export function PlanResults({ result }: Props) {
                 </p>
                 <div className="text-right">
                   <div className="text-2xl font-serif tabular-nums text-foreground">
-                    {result.expiration.days} days
+                    Not determined
                   </div>
-                  <div className="text-xs text-muted-foreground">refrigerated</div>
+                  <div className="text-xs text-muted-foreground">follow product instructions</div>
                   <div className="mt-1.5 flex justify-end">
                     <ProvenanceChip source="research" />
                   </div>
@@ -368,7 +368,7 @@ function PlanSelfCheck({
     },
     {
       q: "How long does it last once mixed?",
-      a: `${result.expiration.days} days refrigerated`,
+      a: `Not determined by this calculator`,
       source: "research",
     },
   ];
@@ -399,7 +399,7 @@ function PlanSelfCheck({
         <span className="font-medium text-foreground">Which numbers are mine?</span>{" "}
         You entered the vial amount, how much to measure, and your syringe. The
         site worked out the concentration, the syringe units, and the measurements
-        per vial. The shelf life comes from published research.
+        per vial. Shelf life is not calculated. Use the product-specific instructions.
       </div>
 
       <Callout variant="note" className="mt-5" title="What this plan does not decide">
@@ -467,7 +467,7 @@ function DosageReference({ result }: { result: CalcResult }) {
         sliced off with no way to reach it. `overflow-x-auto` keeps the rounded
         corners and lets the table scroll instead of disappearing.
       */}
-      <div className="mt-4 min-w-0 overflow-x-auto rounded-xl border border-border">
+      <div className="mt-4 min-w-0 overflow-x-auto rounded-xl border border-border" role="region" aria-label="Scrollable data table" tabIndex={0}>
         <table className="w-full min-w-[18rem] text-sm">
           <thead>
             <tr className="bg-muted text-left text-xs uppercase tracking-wide text-muted-foreground">

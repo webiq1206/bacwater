@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/require-admin";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -14,6 +15,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin", robots: { index: false, follow: false } };
 
 export default async function AdminDashboard() {
+  await requireAdminPage();
   const [
     openContact,
     unpublishedContent,
@@ -37,7 +39,6 @@ export default async function AdminDashboard() {
     prisma.plan.count({
       where: {
         archived: false,
-        expirationDate: { lt: new Date(), not: null },
       },
     }),
   ]);
@@ -66,7 +67,7 @@ export default async function AdminDashboard() {
     { label: "Users", value: userCount, href: "/admin/users", icon: Users },
     { label: "Content blocks", value: contentCount, href: "/admin/content", icon: BookOpen },
     {
-      label: "Active plans past shelf life",
+      label: "Active saved plans",
       value: expiringPlans,
       href: "/admin/plans",
       icon: FileText,

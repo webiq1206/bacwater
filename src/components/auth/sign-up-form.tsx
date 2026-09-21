@@ -15,8 +15,10 @@ export function SignUpForm() {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (pending) return;
     setPending(true);
     const form = new FormData(e.currentTarget);
+    try {
     const res = await signupAction(form);
     setPending(false);
     if (res.ok) {
@@ -26,6 +28,8 @@ export function SignUpForm() {
     } else {
       toast({ title: "Could not create account", description: res.error, variant: "destructive" });
     }
+    } catch { toast({ title: "Could not finish signup", description: "Please retry, or sign in if the account was already created.", variant: "destructive" }); }
+    finally { setPending(false); }
   }
 
   return (

@@ -17,12 +17,13 @@ export const metadata = {
 
 export default async function PlansPage() {
   const session = await auth();
+  const userId = (session?.user as { id?: string } | undefined)?.id;
 
   // Signed-out visitors still get their plans, the ones saved on this device,
   // read client-side from localStorage. No forced sign-in. Those plans live
   // only in the browser, so they keep the simple card list rather than the
   // account-backed workspace.
-  if (!session?.user) {
+  if (!userId) {
     return (
       <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pb-32 sm:pt-24">
         <div className="flex flex-wrap items-end justify-between gap-4">
@@ -46,7 +47,6 @@ export default async function PlansPage() {
     );
   }
 
-  const userId = (session.user as { id?: string }).id!;
   const plans = await prisma.plan.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
@@ -95,7 +95,7 @@ export default async function PlansPage() {
       injectionsPerWeek,
       archived: p.archived,
       dateMixed: p.dateMixed?.toISOString() ?? null,
-      expirationDate: p.expirationDate?.toISOString() ?? null,
+      expirationDate: null,
       createdAt: p.createdAt.toISOString(),
     };
   });

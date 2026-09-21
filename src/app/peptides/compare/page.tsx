@@ -52,7 +52,7 @@ export async function generateMetadata({
   const a = pick(one(sp.a), DEFAULT_A);
   const b = pick(one(sp.b), DEFAULT_B);
   const title = `${shortName(a.name)} vs ${shortName(b.name)}: reconstitution and reference`;
-  const description = `Compare ${shortName(a.name)} and ${shortName(b.name)} side by side: what each is, common vial sizes, refrigerated shelf life, amounts studied in research, and what is not known.`;
+  const description = `Compare ${shortName(a.name)} and ${shortName(b.name)} side by side: what each is, common vial sizes, storage limitations, amounts studied in research, and what is not known.`;
   return {
     title,
     description,
@@ -105,13 +105,13 @@ export default async function ComparePage({
     },
     {
       label: "Shelf life once mixed",
-      a: `${a.refrigeratedShelfDays} days refrigerated`,
-      b: `${b.refrigeratedShelfDays} days refrigerated`,
+      a: "Follow the exact product instructions",
+      b: "Follow the exact product instructions",
     },
     {
       label: "Storage note",
-      a: a.storageNote,
-      b: b.storageNote,
+      a: "Follow the exact product instructions; stability is not calculated.",
+      b: "Follow the exact product instructions; stability is not calculated.",
     },
     {
       label: "What nobody knows",
@@ -157,7 +157,7 @@ export default async function ComparePage({
       </div>
 
       {/* Comparison table */}
-      <div className="mt-8 overflow-x-auto">
+      <div className="mt-8 overflow-x-auto" role="region" aria-label="Scrollable data table" tabIndex={0}>
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr>

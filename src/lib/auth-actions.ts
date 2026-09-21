@@ -5,15 +5,10 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { signIn } from "@/lib/auth";
 
-const adminEmails = (process.env.ADMIN_EMAILS || "")
-  .split(",")
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean);
-
 const signupSchema = z.object({
   name: z.string().min(1).max(120),
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(6).refine((value) => Buffer.byteLength(value, "utf8") <= 72),
 });
 
 export async function signupAction(formData: FormData) {
@@ -31,7 +26,8 @@ export async function signupAction(formData: FormData) {
     return { ok: false, error: "An account with that email already exists." };
   }
   const hashed = await bcrypt.hash(password, 10);
-  const role = adminEmails.includes(email.toLowerCase()) ? "admin" : "user";
+  // An unverified registration email never grants administrator privileges.
+  const role = "user";
   await prisma.user.create({
     data: {
       name,

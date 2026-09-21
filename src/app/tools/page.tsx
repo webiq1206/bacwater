@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 import { ArrowRight, Beaker, Droplets, FlaskConical, Repeat, Ruler, Scale, ShoppingCart, Tag } from "lucide-react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -101,7 +102,7 @@ export default function ToolsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJson({
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: "Peptide reconstitution calculators",

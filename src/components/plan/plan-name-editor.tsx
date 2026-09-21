@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/components/ui/toaster";
 import { useState } from "react";
 import { Pencil, Check, X, Loader2 } from "lucide-react";
 import { updatePlanNameAction } from "@/lib/plan-actions";
@@ -22,14 +23,17 @@ export function PlanNameEditor({
   const [saving, setSaving] = useState(false);
 
   async function save() {
+    if (saving) return;
     const next = draft.trim() || name;
     setSaving(true);
+    try {
     const res = await updatePlanNameAction(publicId, next);
     setSaving(false);
     if (res.ok) {
       setName(next);
       setEditing(false);
-    }
+    } else { toast({ title: "Name was not saved", variant: "destructive" }); }
+    } catch { toast({ title: "Could not save the name", description: "Your edit is still here. Please retry.", variant: "destructive" }); } finally { setSaving(false); }
   }
 
   if (editing) {
@@ -55,7 +59,7 @@ export function PlanNameEditor({
           onClick={save}
           disabled={saving}
           aria-label="Save name"
-          className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border hover:bg-muted"
+          className="shrink-0 inline-flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-muted"
         >
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
         </button>
@@ -66,7 +70,7 @@ export function PlanNameEditor({
             setEditing(false);
           }}
           aria-label="Cancel"
-          className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border hover:bg-muted text-muted-foreground"
+          className="shrink-0 inline-flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-muted text-muted-foreground"
         >
           <X className="h-4 w-4" />
         </button>

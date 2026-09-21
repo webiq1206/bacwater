@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 import { ArrowRight, Lightbulb } from "lucide-react";
 import { prisma } from "@/lib/db";
@@ -140,7 +141,7 @@ export default async function FaqPage() {
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(jsonLd) }}
       />
       <WebPageJsonLd
         name="Frequently Asked Questions"

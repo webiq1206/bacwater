@@ -35,7 +35,7 @@ const FIELDS: { field: string; example: string }[] = [
   { field: "Concentration", example: "2.5 mg/mL" },
   { field: "Dose", example: "250 mcg = 10 units" },
   { field: "Date mixed", example: "2026-07-01" },
-  { field: "Discard by", example: "Based on shelf life" },
+  { field: "Discard by", example: "Follow product instructions" },
   { field: "QR code", example: "Links to the saved plan" },
 ];
 
@@ -46,7 +46,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What information goes on a peptide vial label?",
-    a: "A complete peptide vial label shows the peptide name, the vial strength in milligrams, the final concentration, the dose in mcg and syringe units, the date you mixed it, and a discard-by date based on the peptide's refrigerated shelf life. A QR code links back to the full saved plan. This keeps similar-looking vials from getting mixed up.",
+    a: "A complete peptide vial label shows the peptide name, the vial strength in milligrams, the final concentration, the dose in mcg and syringe units, the date you mixed it, and a separate product-specified discard date. A QR code links back to the full saved plan. This keeps similar-looking vials from getting mixed up.",
   },
   {
     q: "Do the labels include a QR code?",
@@ -116,7 +116,7 @@ export default function VialLabelsPage() {
         illustrative and match the way the Plan Builder calculates a 5 mg vial
         reconstituted for a 250 mcg dose.
       </p>
-      <div className="mt-5 overflow-x-auto border border-border">
+      <div className="mt-5 overflow-x-auto border border-border" role="region" aria-label="Scrollable data table" tabIndex={0}>
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-surface text-left">
@@ -202,7 +202,7 @@ export default function VialLabelsPage() {
             </div>
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
               The plan works out the final concentration, the syringe reading in
-              units, the mix date, and the expiration date so the label reflects
+              units, the mix date and product-specific storage instructions so the label reflects
               your exact vial.
             </p>
           </div>

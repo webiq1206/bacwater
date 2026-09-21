@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
+import { hasPlanAccess } from "@/lib/plan-access";
 import { prisma } from "@/lib/db";
 import { PlanEditor } from "@/components/plan/plan-editor";
 import { PlanDuplicateButton } from "@/components/plan/plan-duplicate-button";
@@ -22,15 +23,18 @@ export default async function PlanEditPage({ params }: Props) {
   // Duplicate gives them their own copy to change.
   const session = await auth();
   const userId = (session?.user as { id?: string } | undefined)?.id;
-  if (plan.userId && plan.userId !== userId) redirect(`/plan/${plan.publicId}`);
+  if (!(await hasPlanAccess(plan, userId))) redirect(`/plan/${plan.publicId}`);
 
   // Frequency lives in the CalcResult snapshot; plans saved before weekly
   // splitting have none and default to 1 (no split) so their math is unchanged.
   let injectionsPerWeek = 1;
+  let secondary: import("@/lib/calc").CalcInput["secondary"];
   try {
     const snapshot = JSON.parse(plan.data) as {
       schedule?: { injectionsPerWeek?: number };
+      secondary?: import("@/lib/calc").CalcInput["secondary"];
     };
+    secondary = snapshot.secondary;
     if (
       typeof snapshot.schedule?.injectionsPerWeek === "number" &&
       snapshot.schedule.injectionsPerWeek >= 1
@@ -76,6 +80,7 @@ export default async function PlanEditPage({ params }: Props) {
             vialStrengthMg: plan.vialStrengthMg,
             doseMcg: plan.doseMcg,
             injectionsPerWeek,
+            secondary,
             bacWaterMl: plan.bacWaterMl,
             syringeType: plan.syringeType as never,
             dateMixed: plan.dateMixed ? plan.dateMixed.toISOString().slice(0, 10) : "",

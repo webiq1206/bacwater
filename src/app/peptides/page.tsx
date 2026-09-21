@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, ArrowLeftRight } from "lucide-react";
@@ -52,7 +53,7 @@ export default function PeptidesHubPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJson({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Peptide Reconstitution Guides by Compound",

@@ -1,18 +1,13 @@
 modules = ["nodejs-22", "python-3.11", "postgresql-16"]
 hidden = [".config", ".next", "node_modules"]
-
 run = "npm run dev"
 
 [nix]
 channel = "stable-24_05"
 
 [deployment]
-# Schema is synced without --accept-data-loss: if a change would drop a column
-# or table, the deploy fails loudly instead of silently destroying prod data.
-# Seeding is NOT run here -- prisma/seed.ts upserts and force-sets
-# published: true, so running it on deploy reverts admin content edits and
-# re-publishes anything unpublished. Seed manually with `npm run db:seed`.
-build = ["sh", "-c", "npm install --include=dev && npx prisma generate && npx prisma db push --skip-generate && npm run build"]
+# Install the reviewed lockfile. Do not run the production seed or accept data loss.
+build = ["sh", "-c", "npm ci --include=dev && npx prisma generate && npx prisma db push --skip-generate && npm run build"]
 run = ["sh", "-c", "npm start"]
 deploymentTarget = "autoscale"
 
@@ -54,4 +49,3 @@ outputType = "webview"
 task = "shell.exec"
 args = "npm run start -- -p 5000"
 waitForPort = 5000
-

@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/require-admin";
 import { prisma } from "@/lib/db";
 import { UsersWorkspace, type UserRecord } from "@/components/admin/users-workspace";
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default async function AdminUsersPage({ searchParams }: Props) {
+  await requireAdminPage();
   const { email } = await searchParams;
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },

@@ -16,17 +16,22 @@ export function SignInForm() {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (pending) return;
     setPending(true);
     const form = new FormData(e.currentTarget);
+    try {
     const res = await signinAction(form);
     setPending(false);
     if (res.ok) {
-      const next = params.get("next") || "/plans";
+      const candidate = params.get("next") || "/plans";
+      const next = /^\/(?![\/\\])/.test(candidate) && !/[\r\n]/.test(candidate) ? candidate : "/plans";
       router.push(next);
       router.refresh();
     } else {
       toast({ title: "Sign in failed", description: res.error, variant: "destructive" });
     }
+    } catch { toast({ title: "Connection interrupted", description: "Your entries are still here. Please retry.", variant: "destructive" }); }
+    finally { setPending(false); }
   }
 
   return (

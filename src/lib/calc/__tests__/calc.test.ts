@@ -79,12 +79,8 @@ const d = calculate({
   syringeType: "insulin-1ml",
   dateMixed: "2026-07-01",
 });
-if (!d.expiration.date || !d.expiration.date.startsWith("2026-07-31")) {
-  console.error(`FAIL expiration date wrong, got ${d.expiration.date}`);
-  process.exitCode = 1;
-} else {
-  console.log("OK   expiration date = mix + 30 days for BPC-157");
-}
+eq(d.expiration.date, null, "No unsupported calculated discard date");
+eq(d.expiration.days, null, "No unsupported stability period");
 
 // ---- Validation guards (PRD §9.4) ----
 function warns(res: { warnings: string[] }, needle: RegExp, label: string) {
@@ -161,12 +157,13 @@ hasAssumption(a, /have not checked that this BAC water works/, "V-11 compatibili
 // => 2 mg per injection at 20 mg/mL = 0.1 mL = 10 units, 20 draws per vial.
 const w1 = calculate({
   peptideSlug: "retatrutide",
+  injectionsPerWeek: 2,
   vialStrengthMg: 40,
   doseMcg: 4000,
   bacWaterMl: 2,
   syringeType: "insulin-1ml",
 });
-eq(w1.schedule?.injectionsPerWeek, 2, "retatrutide defaults to 2 injections/week");
+eq(w1.schedule?.injectionsPerWeek, 2, "explicit two-measurement split is preserved");
 near(w1.schedule?.dosePerInjectionMcg ?? 0, 2000, 0.01, "4 mg/week ÷ 2 = 2 mg per injection");
 near(w1.doseVolumeMl, 0.1, 0.001, "2 mg at 20 mg/mL = 0.1 mL");
 near(w1.syringeUnits, 10, 0.001, "per-injection draw = 10 units");
@@ -197,12 +194,13 @@ near(w3.syringeUnits, 20, 0.001, "weekly draw unchanged when no split");
 // BPC-157 defaults to daily: 1.75 mg/week ÷ 7 = 250 mcg per injection.
 const w4 = calculate({
   peptideSlug: "bpc-157",
+  injectionsPerWeek: 7,
   vialStrengthMg: 5,
   doseMcg: 1750,
   bacWaterMl: 2,
   syringeType: "insulin-1ml",
 });
-eq(w4.schedule?.injectionsPerWeek, 7, "bpc-157 defaults to daily (7/week)");
+eq(w4.schedule?.injectionsPerWeek, 7, "explicit seven-measurement split is preserved");
 near(w4.syringeUnits, 10, 0.001, "1.75 mg/week daily = 10 units per draw");
 eq(w4.dosesPerVial, 20, "vial duration counts per-injection draws");
 hasAssumption(w4, /split into 7 injections/, "split is stated in the assumptions");

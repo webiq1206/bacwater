@@ -1,4 +1,5 @@
 "use client";
+import { getDevicePlans } from "@/lib/saved-plans";
 
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
@@ -38,6 +39,7 @@ import { PlanShareButton } from "@/components/plan/plan-share-button";
 import {
   duplicatePlanAction,
   getPlanDetailAction,
+  restoreDevicePlanAccessAction,
   removePlanAction,
   togglePlanArchivedAction,
   updatePlanAction,
@@ -130,7 +132,11 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
     }
     let stale = false;
     setLoading(true);
-    getPlanDetailAction(selectedId)
+    (async () => {
+      const secret = getDevicePlans().find((p) => p.publicId === selectedId)?.claimToken;
+      if (secret) await restoreDevicePlanAccessAction(selectedId, secret);
+      return getPlanDetailAction(selectedId);
+    })()
       .then((res) => {
         if (stale) return;
         if (res.ok) setDetail(res.plan);
@@ -139,6 +145,7 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
           toast({ title: "Could not open plan", description: res.error, variant: "destructive" });
         }
       })
+      .catch(() => { if (!stale) { setDetail(null); toast({ title: "Could not open plan", description: "Please retry. Your saved data has not changed.", variant: "destructive" }); } })
       .finally(() => {
         if (!stale) setLoading(false);
       });
@@ -207,6 +214,7 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
           bacWaterMl: fields.bacWaterMl,
           syringeType: fields.syringeType,
           dateMixed: fields.dateMixed || null,
+          secondary: (detail?.result as CalcResult | null)?.secondary ?? null,
         },
         { name: fields.name }
       );
