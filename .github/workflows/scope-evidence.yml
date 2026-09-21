@@ -1,31 +1,150 @@
-name: Remaining scope development dependencies
+name: Remaining scope verification
 on:
   push:
     branches: [audit/remaining-scope-2026-09-21]
-    paths: [.github/workflows/scope-evidence.yml]
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: remaining-scope-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  dependencies:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: audit
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: bacwater_audit
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U audit -d bacwater_audit"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://audit:isolated-ci-only@127.0.0.1:5432/bacwater_audit
+      AUTH_SECRET: ci-placeholder-not-a-real-secret
+      AUTH_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      NEXT_TELEMETRY_DISABLED: '1'
+      AUDIT_ORIGIN: http://127.0.0.1:3000
+      AUDIT_OUT: audit-evidence/after
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          fetch-depth: 2
+      - name: Verify exact reviewed source transport before writing
+        run: |
+          mkdir -p audit-evidence
+          python - <<'PY'
+          from pathlib import Path
+          import base64,lzma,json,hashlib
+          raw=''.join(Path(f'audit/transport/remaining.{i}.b64').read_text().strip() for i in range(7))
+          data=lzma.decompress(base64.b64decode(raw))
+          assert hashlib.sha256(data).hexdigest()=='8c46dd6711d88b7b648d0eb4ac7939c8c402f4766322eee790a9ac1bdfd009f5','Transport mismatch'
+          changes=json.loads(data);prepared={}
+          for name,change in changes.items():
+            p=Path(name)
+            assert not p.is_absolute() and '..' not in p.parts and '.git' not in p.parts
+            if 'content' in change:
+              new=change['content']
+              if p.exists(): assert p.read_text()==new, f'New path conflict: {name}'
+            else:
+              old=p.read_text()
+              if hashlib.sha256(old.encode()).hexdigest()==change['after']: continue
+              assert hashlib.sha256(old.encode()).hexdigest()==change['sha256'],f'Baseline mismatch: {name}'
+              lines=old.splitlines(keepends=True)
+              for a,b,text in reversed(change['edits']): lines[a:b]=text
+              new=''.join(lines)
+              assert hashlib.sha256(new.encode()).hexdigest()==change['after'],f'Output mismatch: {name}'
+            prepared[name]=new
+          for name,new in prepared.items():
+            p=Path(name);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(new)
+          print(f'Verified {len(changes)} paths; applied {len(prepared)} source changes.')
+          PY
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: Prepare the reviewed lockfile for offline analysis
+      - name: Install and initialize test database only
         run: |
           npm ci
+          npm audit --json > audit-evidence/dependency-audit.json || true
+          case "$DATABASE_URL" in
+            postgresql://audit:*@127.0.0.1:5432/bacwater_audit) ;;
+            *) exit 1 ;;
+          esac
           npx prisma generate
-          mkdir -p development-evidence
-          sha256sum package-lock.json > development-evidence/lockfile.sha256
-          tar --exclude='*.ttf' --exclude='*.otf' --exclude='*.woff' --exclude='*.woff2' --exclude='*.eot' -czf development-evidence/dependencies.tar.gz node_modules
-      - uses: actions/upload-artifact@v4
+          npx prisma db push --skip-generate
+          npx tsx prisma/seed.ts
+      - name: Typecheck, pure tests and database transactions
+        run: |
+          set -o pipefail
+          npx tsc --noEmit 2>&1 | tee audit-evidence/typecheck.log
+          npm test 2>&1 | tee audit-evidence/tests.log
+          npx tsx scripts/audit-publication.ts 2>&1 | tee audit-evidence/publication-tests.log
+          npx tsx scripts/audit-remaining.ts 2>&1 | tee audit-evidence/remaining-tests.log
+      - name: Build
+        run: set -o pipefail; npx next build 2>&1 | tee audit-evidence/build.log
+      - name: Commit tested source to isolated branch
+        run: |
+          test "$GITHUB_REF" = refs/heads/audit/remaining-scope-2026-09-21
+          git add -A -- src prisma scripts package.json package-lock.json .env.example .replit .github/workflows/master-audit.yml audit/2026-09-21
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix: complete editorial arithmetic and bounded explanation repairs'
+            git push origin HEAD:audit/remaining-scope-2026-09-21
+          fi
+      - uses: actions/cache@v4
         with:
-          name: offline-typecheck-dependencies
-          path: development-evidence/
-          retention-days: 1
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.63.0
+      - name: Install browser audit dependencies
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
+          npx playwright install --with-deps chromium firefox webkit
+          sudo apt-get install -y poppler-utils
+      - name: Start local production build
+        run: |
+          npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
+          for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
+      - name: Publication journeys
+        run: node scripts/audit-publication-browser.mjs
+      - name: Converter regression
+        if: success() || failure()
+        run: node scripts/audit-converters.mjs
+      - name: New arithmetic and explanation journeys
+        if: success() || failure()
+        run: node scripts/audit-remaining-browser.mjs
+      - name: Saved-plan, account and PDF regression
+        if: success() || failure()
+        run: |
+          node scripts/audit-journeys.mjs
+          pdftotext audit-evidence/journeys/owner.pdf audit-evidence/journeys/owner.txt
+          pdftotext audit-evidence/journeys/shared.pdf audit-evidence/journeys/shared.txt
+          grep -q 'PRIVATE NOTE' audit-evidence/journeys/owner.txt
+          if grep -q 'PRIVATE NOTE' audit-evidence/journeys/shared.txt; then exit 1; fi
+      - name: Full route and rendering evidence
+        if: success() || failure()
+        run: node scripts/master-audit.mjs
+      - name: Record original calculation demonstrations
+        if: success() || failure()
+        run: node scripts/record-calculator-demos.mjs
+      - name: Preserve source and results
+        if: always()
+        run: |
+          mkdir -p audit-evidence
+          git rev-parse HEAD > audit-evidence/source-commit.txt
+          git add -A -- src prisma scripts package.json package-lock.json .env.example .replit .github/workflows/master-audit.yml audit/2026-09-21
+          git archive --format=tar $(git write-tree) > audit-evidence/source.tar
+          git diff HEAD > audit-evidence/uncommitted.patch
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: remaining-evidence-${{ github.sha }}
+          path: audit-evidence/
+          retention-days: 14
