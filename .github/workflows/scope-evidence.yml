@@ -1,0 +1,49 @@
+name: Remaining scope evidence
+on:
+  push:
+    branches: [audit/remaining-scope-2026-09-21]
+permissions:
+  contents: read
+concurrency:
+  group: remaining-scope-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preserve tracked source
+        run: |
+          mkdir -p scope-evidence
+          git archive --format=tar HEAD > scope-evidence/source.tar
+          git rev-parse HEAD > scope-evidence/source-commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scope-source-${{ github.sha }}
+          path: scope-evidence/
+          retention-days: 14
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install pinned browser tools
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Capture production read-only inventory and rendering
+        env:
+          AUDIT_ORIGIN: https://bacwater.ai
+          AUDIT_OUT: scope-evidence/production
+        run: |
+          curl -sS -D scope-evidence/version-headers.txt https://bacwater.ai/version.json > scope-evidence/version-response.txt
+          node scripts/master-audit.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scope-production-${{ github.sha }}
+          path: scope-evidence/
+          retention-days: 14
