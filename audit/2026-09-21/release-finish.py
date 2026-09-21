@@ -1,8 +1,20 @@
 from pathlib import Path
-import json
+import json,re
 r=Path('.')
-p=r/'src/components/plan/plans-workspace.tsx';p.write_text(p.read_text().replace('detail?.result?.input.secondary', 'detail?.result?.secondary'))
+p=r/'src/components/plan/plans-workspace.tsx';p.write_text(p.read_text().replace('detail?.result?.input.secondary', '(detail?.result as CalcResult | null)?.secondary').replace('detail?.result?.secondary', '(detail?.result as CalcResult | null)?.secondary'))
 p=r/'src/app/plan/[id]/edit/page.tsx';p.write_text(p.read_text().replace('input?: { secondary?: import("@/lib/calc").CalcInput["secondary"] };', 'secondary?: import("@/lib/calc").CalcInput["secondary"];').replace('secondary = snapshot.input?.secondary', 'secondary = snapshot.secondary'))
+p=r/'src/app/plans/page.tsx';s=p.read_text().replace('  const session = await auth();','  const session = await auth();\n  const userId = (session?.user as { id?: string } | undefined)?.id;').replace('  if (!session?.user) {','  if (!userId) {').replace('  const userId = (session.user as { id?: string }).id!;\n','').replace('expirationDate: p.expirationDate?.toISOString() ?? null,','expirationDate: null,');p.write_text(s)
+for p in (r/'src/app/admin').rglob('page.tsx'):
+    s=p.read_text()
+    if 'await requireAdminPage()' not in s:
+        s='import { requireAdminPage } from "@/lib/require-admin";\n'+s
+        s,n=re.subn(r'(export default async function \w+\([^)]*\)[^{]*\{)',r'\1\n  await requireAdminPage();',s,count=1)
+        if n!=1: raise RuntimeError('Missing page-level gate: '+str(p))
+    s=s.replace('expirationDate: p.expirationDate?.toISOString() ?? null,','expirationDate: null,')
+    s=s.replace('        expirationDate: { lt: new Date(), not: null },\n','').replace('Active plans past shelf life','Active saved plans')
+    p.write_text(s)
+p=r/'src/lib/require-admin.ts';p.write_text(p.read_text().replace('if (!user) redirect(', 'if (!user?.id) redirect('))
+p=r/'src/app/plans/labels/page.tsx';p.write_text(p.read_text().replace('planName: plan.name || plan.peptideName || "Untitled plan",', 'planName: plan.peptideName || "Shared calculation",'))
 p=r/'src/components/plan/plan-form.tsx';s=p.read_text()
 s=s.replace('  if (mode === "advanced") {\n    return (\n      <div>', '''  if (mode === "advanced") {
     return (
