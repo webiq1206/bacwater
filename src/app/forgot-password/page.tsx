@@ -1,0 +1,3 @@
+import { RecoveryForm } from "@/components/auth/recovery-form";
+export const metadata = { title: "Recover your BACwater.ai account", description: "Request a password recovery link for your existing account.", robots: { index: false, follow: false }, referrer: "no-referrer" as const };
+export default function ForgotPasswordPage() { return <section className="mx-auto max-w-md px-5 py-16"><h1 className="text-3xl font-serif">Recover your account</h1><p className="mt-3 mb-7 text-muted-foreground">Use the email on your account. We will not ask you to send your password.</p><RecoveryForm mode="request" /></section>; }

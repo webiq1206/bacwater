@@ -1,0 +1,3 @@
+import { RecoveryForm } from "@/components/auth/recovery-form";
+export const metadata = { title: "Set a new BACwater.ai password", description: "Use your account recovery link to set a new password.", robots: { index: false, follow: false }, referrer: "no-referrer" as const };
+export default function ResetPasswordPage() { return <section className="mx-auto max-w-md px-5 py-16"><h1 className="text-3xl font-serif">Set a new password</h1><p className="mt-3 mb-7 text-muted-foreground">Your recovery link expires after 30 minutes and works once. Reopen the email link after refreshing this page.</p><RecoveryForm mode="reset" /></section>; }

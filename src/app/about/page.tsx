@@ -2,120 +2,33 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-
-export const metadata = {
-  alternates: { canonical: "/about" },
-  title: "About Us",
-  description:
-    "BACwater.ai is an unmonetized BAC water and reconstitution calculator. Exact math on the numbers you enter, plain-English explanations, and every value labeled by source. Nothing is for sale.",
-  openGraph: {
-    title: "About Us",
-    description:
-      "BACwater.ai is an unmonetized BAC water and reconstitution calculator. Exact math on the numbers you enter, plain-English explanations, and every value labeled by source. Nothing is for sale.",
-    url: "/about",
-    type: "website",
-    siteName: "BACwater.ai",
-  },
-};
-
+const description = "Learn what BACwater.ai calculates, how the arithmetic is checked, what saved links share, and what the tools cannot determine. Free to use; no products sold.";
+export const metadata = { title: "About BACwater.ai: Calculation Method and Limits", description, alternates: { canonical: "/about" }, openGraph: { title: "About BACwater.ai", description, url: "/about", type: "website" } };
 export default function AboutPage() {
-  return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <WebPageJsonLd
-        name="About BACwater.ai"
-        description="BACwater.ai is an unmonetized BAC water and reconstitution calculator. Exact math on the numbers you enter, plain-English explanations, and every value labeled by source. Nothing is for sale."
-        url="/about"
-        breadcrumb={[
-          { name: "Home", url: "/" },
-          { name: "About", url: "/about" },
-        ]}
-      />
-      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About", href: "/about" }]} />
-      <div className="eyebrow">About</div>
-      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-        A calmer way to reconstitute
-      </h1>
-      <div className="mt-6 space-y-5 text-lg text-foreground/90 leading-relaxed">
-        <p>
-          We built BACwater.ai because every other reconstitution calculator felt
-          like homework: cluttered with ads, filled with jargon, or locked
-          behind signup walls.
-        </p>
-        <p>
-          Our approach is different. Every calculation shows exactly how the
-          answer was reached, in plain English. Every result can be saved,
-          printed, or shared with a single link. And every tool is designed for
-          people who are doing this for the very first time.
-        </p>
-      </div>
-
-      <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">Our math</h2>
-      <div className="mt-3 space-y-4 text-foreground/90 leading-relaxed">
-        <p>
-          Our reconstitution math is deterministic. The same inputs always produce
-          the same outputs. We use transparent, verified formulas backed by
-          automated tests, not AI-generated guesses. Every result page shows the
-          formula so you can check our work.
-        </p>
-        <p>
-          We chose this approach because accuracy matters when you are calculating
-          doses. Rounding errors in micrograms can produce real consequences, so
-          we never truncate, never approximate, and always show you the exact
-          numbers.
-        </p>
-      </div>
-
-      <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">Our tools</h2>
-      <div className="mt-3 space-y-4 text-foreground/90 leading-relaxed">
-        <p>
-          The <Link href="/plan" className="font-medium underline">Plan Builder</Link> is
-          our flagship tool. Tell it what peptide you have, what dose you need, and
-          which syringe you are using. It calculates how much BAC water to add, how
-          many syringe units to draw, how many doses you will get per vial, and when
-          your reconstituted vial expires. Save it, download a PDF, or print a vial
-          label with a QR code.
-        </p>
-        <p>
-          We also offer standalone <Link href="/tools" className="font-medium underline">calculators</Link> for
-          quick, one-off questions: BAC water amount, dose conversion, syringe
-          unit conversion, mg/mcg conversion, and supply planning.
-        </p>
-      </div>
-
-      <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">What we do not do</h2>
-      <div className="mt-3 space-y-4 text-foreground/90 leading-relaxed">
-        <p>
-          We don&apos;t sell peptides or supplies, and we recommend no vendor.
-          When your plan works out that you need three of something, we show you
-          the count so you can source it yourself. We do not select compounds,
-          recommend quantities, or provide dosing guidance.
-        </p>
-      </div>
-
-      <h2 className="mt-12 text-2xl font-serif font-medium tracking-tight">Important notice</h2>
-      <div className="mt-3 space-y-4 text-foreground/90 leading-relaxed">
-        <p>
-          This is a calculation and reference tool for research and educational
-          use only. We do <b>not</b> provide medical advice, and we do not
-          diagnose, prescribe, or recommend treatment.
-        </p>
-      </div>
-
-      <div className="mt-10 border-t border-border pt-6 text-sm text-muted-foreground">
-        <p>
-          Have questions?{" "}
-          <Link href="/contact" className="font-medium text-foreground underline">Get in touch</Link> or
-          check our{" "}
-          <Link href="/faq" className="font-medium text-foreground underline">FAQ</Link>.
-          Want to learn the basics first? Start with our{" "}
-          <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
-        </p>
-      </div>
-
-      <div className="mt-8 flex gap-3">
-        <Button asChild variant="brand"><Link href="/plan">Build a plan</Link></Button>
-        <Button asChild variant="outline"><Link href="/tools">Open calculators</Link></Button>
-      </div>
-    </div>
-  );
+  return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-12 sm:pt-20 pb-24">
+    <WebPageJsonLd name="About BACwater.ai" description={description} url="/about" breadcrumb={[{ name: "Home", url: "/" }, { name: "About", url: "/about" }]} />
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About", href: "/about" }]} />
+    <div className="eyebrow">About the tools</div>
+    <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">Check the numbers. Understand their limits.</h1>
+    <p className="mt-5 text-lg leading-relaxed">BACwater.ai is a free concentration and measurement utility. Enter the amounts and volumes from instructions you already have. The tools show the arithmetic, explain units and let you keep a calculation for later. We do not sell products or recommend vendors.</p>
+    <section className="mt-10 space-y-4 leading-relaxed"><h2 className="text-2xl font-serif">How the calculation works</h2>
+      <p>Concentration is the total amount divided by the final liquid volume. A measurement volume is the entered amount divided by that concentration. On a U-100 scale, 100 units represent 1 mL. These relationships are built into code; an AI model does not calculate the results.</p>
+      <p>For example, 10 mg in a final volume of 2 mL is 5 mg/mL. Measuring an entered 0.4 mg would correspond to 0.08 mL, or 8 U-100 units. These are illustrative inputs, not a dilution or dose recommendation.</p>
+      <p>The code uses automated arithmetic and boundary tests. Display values may be rounded for readability, and small values may use scientific notation rather than appearing to be zero. The scale and graduation spacing of an actual syringe must be checked separately. A mathematical answer is not a guarantee of physical measurement precision.</p>
+    </section>
+    <section className="mt-10 space-y-4 leading-relaxed"><h2 className="text-2xl font-serif">Choose the tool for your question</h2>
+      <p>The <Link href="/peptide-calculator" className="underline">concentration calculator</Link> brings the main conversions together. The <Link href="/plan" className="underline">plan builder</Link> guides entry and supports saved links, PDFs and printable labels.</p>
+      <p>For one conversion, use the <Link href="/tools/syringe-units" className="underline">U-100 units and mL converter</Link>, <Link href="/tools/mg-to-mcg" className="underline">mg and mcg converter</Link>, or <Link href="/tools" className="underline">complete tool directory</Link>. Basic calculations do not require an account.</p>
+    </section>
+    <section className="mt-10 space-y-4 leading-relaxed"><h2 className="text-2xl font-serif">What a saved link shares</h2>
+      <p>Anyone with a shared plan link can read its calculation. A shared link does not grant editing permission or access to private notes. Editing requires the owning account or the creation secret kept on the original device. Share only information you intend others to see.</p>
+      <p>The optional assistant explains the numbers. It cannot certify their clinical suitability. See the <Link href="/privacy" className="underline">privacy notice</Link> for account storage and provider use.</p>
+    </section>
+    <section className="mt-10 space-y-4 leading-relaxed"><h2 className="text-2xl font-serif">What no calculation can establish</h2>
+      <p>These tools do not select a compound, dose, treatment schedule, diluent or preparation method. They cannot verify a product's identity, purity, sterility, stability or safe-use period. Labels do not generate expiry dates. Follow the instructions for the exact product, and direct medication questions to the dispensing pharmacist or prescriber.</p>
+      <p>Read the <Link href="/learn/what-you-cannot-know" className="underline">calculation limitations</Link> and <Link href="/editorial-policy" className="underline">editorial policy</Link>. A source citation or automated test is not a substitute for qualified medical review.</p>
+    </section>
+    <section className="mt-10 space-y-3"><h2 className="text-2xl font-serif">Report an issue</h2><p className="leading-relaxed">Use <Link href="/contact" className="underline">support</Link> to report a calculation or website problem. Include the page, expected behavior and non-sensitive example inputs. Never send passwords, recovery links or private medical information.</p></section>
+    <div className="mt-8 flex flex-wrap gap-3"><Button asChild variant="brand"><Link href="/peptide-calculator">Open calculator</Link></Button><Button asChild variant="outline"><Link href="/learn">Read the guides</Link></Button></div>
+  </div>;
 }

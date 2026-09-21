@@ -1,0 +1,118 @@
+name: Validate account and assistant repairs
+on:
+  push:
+    branches: [audit/account-ai-2026-09-21]
+permissions:
+  contents: write
+concurrency:
+  group: account-repair-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: audit
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: bacwater_audit
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U audit -d bacwater_audit"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://audit:isolated-ci-only@127.0.0.1:5432/bacwater_audit
+      AUTH_SECRET: ci-placeholder-not-a-real-secret
+      AUTH_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      NEXT_TELEMETRY_DISABLED: '1'
+      AUDIT_ORIGIN: http://127.0.0.1:3000
+      AUDIT_OUT: audit-evidence/after
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply reviewed edits to the exact source baseline
+        run: |
+          mkdir -p audit-evidence
+          python audit/2026-09-21/apply-account-repairs.py
+      - name: Prepare isolated dependencies and database
+        run: |
+          npm ci
+          npm audit --json > audit-evidence/dependency-audit.json || true
+          node -e 'const a=require("./audit-evidence/dependency-audit.json");if(!a.metadata||a.metadata.vulnerabilities.high||a.metadata.vulnerabilities.critical)process.exit(1)'
+          case "$DATABASE_URL" in
+            postgresql://audit:*@127.0.0.1:5432/bacwater_audit) ;;
+            *) exit 1 ;;
+          esac
+          npx prisma generate
+          npx prisma db push --skip-generate
+          npx tsx prisma/seed.ts
+      - name: Typecheck and unit tests
+        run: |
+          set -o pipefail
+          npx tsc --noEmit 2>&1 | tee audit-evidence/typecheck.log
+          npm test 2>&1 | tee audit-evidence/tests.log
+          npx tsx scripts/audit-recovery.ts 2>&1 | tee audit-evidence/recovery-tests.log
+          npx tsx scripts/audit-publication.ts 2>&1 | tee audit-evidence/publication-tests.log
+      - name: Production build
+        run: set -o pipefail; npx next build 2>&1 | tee audit-evidence/build.log
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.63.0
+      - name: Browser dependencies
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
+          npx playwright install --with-deps chromium firefox webkit
+          sudo apt-get install -y poppler-utils
+      - name: Verify application, recovery, CMS and converter journeys
+        run: |
+          npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
+          for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
+          node scripts/audit-publication-browser.mjs
+          node scripts/audit-converters.mjs
+          node scripts/audit-journeys.mjs
+          node scripts/audit-recovery-browser.mjs
+          pdftotext audit-evidence/journeys/owner.pdf audit-evidence/journeys/owner.txt
+          pdftotext audit-evidence/journeys/shared.pdf audit-evidence/journeys/shared.txt
+          grep -q 'PRIVATE NOTE' audit-evidence/journeys/owner.txt
+          if grep -q 'PRIVATE NOTE' audit-evidence/journeys/shared.txt; then exit 1; fi
+      - name: Crawl all public routes and responsive engines
+        run: |
+          node scripts/master-audit.mjs
+          node - <<'JS'
+          const fs=require('fs'),read=name=>JSON.parse(fs.readFileSync(`audit-evidence/after/${name}.json`));
+          const s=read('summary'),http=read('http-inventory'),r=read('responsive-engines');
+          if(s.errors||s.violations.length||s.pagesWithOverflow.length||r.some(x=>x.error||x.errors?.length||x.horizontalOverflow))process.exit(1);
+          if(http.unvisited.length||http.queueRemaining.length||http.pages.some(x=>x.error||x.status!==200))process.exit(1);
+          JS
+      - name: Commit verified application changes to the isolated branch
+        run: |
+          test "$GITHUB_REF" = refs/heads/audit/account-ai-2026-09-21
+          git add src scripts package.json prisma next.config.ts .env.example
+          git rm audit/2026-09-21/apply-account-repairs.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: verified account recovery, request limits and server-side assistant validation'
+          git push origin HEAD:audit/account-ai-2026-09-21
+      - name: Preserve exact source and evidence
+        if: always()
+        run: |
+          mkdir -p audit-evidence
+          git rev-parse HEAD > audit-evidence/source-commit.txt
+          git add src scripts package.json prisma next.config.ts .env.example
+          git archive --format=tar $(git write-tree) > audit-evidence/source.tar
+          git diff HEAD > audit-evidence/uncommitted.patch
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: account-repair-evidence-${{ github.sha }}
+          path: audit-evidence/
+          retention-days: 14
