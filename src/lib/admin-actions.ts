@@ -166,12 +166,13 @@ export async function sendVendorSubmission(submissionId: string, editedBody?: st
   if (key) {
     try {
       const resend = new Resend(key);
-      await resend.emails.send({
+      const delivery = await resend.emails.send({
         from,
         to: submission.vendor.contactEmail,
         subject,
         text: body,
       });
+      if (delivery.error || !delivery.data?.id) throw new Error("Email provider did not accept this message.");
       sent = true;
     } catch (e) {
       console.error("Vendor email failed", e);
@@ -300,6 +301,7 @@ export async function deleteContent(id: string) {
 // ---------- Users ----------
 
 export async function setUserRole(userId: string, role: "user" | "admin") {
+  if (role !== "user" && role !== "admin") throw new Error("Invalid role.");
   await requireAdmin();
   await prisma.user.update({ where: { id: userId }, data: { role } });
   revalidatePath("/admin/users");
@@ -359,7 +361,8 @@ export async function replyToContact(id: string, subject: string, body: string) 
   if (key) {
     try {
       const resend = new Resend(key);
-      await resend.emails.send({ from, to: message.email, subject, text: body });
+      const delivery = await resend.emails.send({ from, to: message.email, subject, text: body });
+      if (delivery.error || !delivery.data?.id) throw new Error("Email provider did not accept this message.");
       sent = true;
     } catch (e) {
       console.error("Contact reply failed", e);

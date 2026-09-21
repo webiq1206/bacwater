@@ -16,6 +16,7 @@ import { PlanShareButton } from "@/components/plan/plan-share-button";
 import { PlanActionBar } from "@/components/plan/plan-action-bar";
 import { PlanDuplicateButton } from "@/components/plan/plan-duplicate-button";
 import { auth } from "@/lib/auth";
+import { hasPlanAccess } from "@/lib/plan-access";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -42,13 +43,14 @@ export default async function PublicPlanPage({ params }: Props) {
   // whose save would actually be accepted; everyone else gets a copy instead.
   const session = await auth();
   const userId = (session?.user as { id?: string } | undefined)?.id;
-  const canEdit = !plan.userId || plan.userId === userId;
+  const canEdit = await hasPlanAccess(plan, userId);
+  const displayName = (canEdit ? plan.name : null) || plan.peptideName || "Shared calculation";
 
   const result = JSON.parse(plan.data) as CalcResult;
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
-      <RecordPlanView publicId={plan.publicId} name={plan.name || plan.peptideName || "Reconstitution plan"} />
+      <RecordPlanView publicId={plan.publicId} name={displayName} canEdit={canEdit} />
       <div className="flex flex-wrap items-center justify-between gap-4 no-print">
         <div>
           <div className="eyebrow">
@@ -57,7 +59,7 @@ export default async function PublicPlanPage({ params }: Props) {
           {canEdit ? (
             <PlanNameEditor
               publicId={plan.publicId}
-              initialName={plan.name || plan.peptideName || "Reconstitution plan"}
+              initialName={displayName}
             />
           ) : (
             // The rename action is authorized against the owner, so showing
@@ -66,7 +68,7 @@ export default async function PublicPlanPage({ params }: Props) {
             // doesn't change size depending on who is looking at it.
             <div className="mt-1 flex items-center gap-2">
               <h1 className="min-w-0 break-words font-serif text-3xl font-medium tracking-tight sm:text-4xl">
-                {plan.name || plan.peptideName || "Reconstitution plan"}
+                {displayName}
               </h1>
             </div>
           )}
@@ -111,15 +113,15 @@ export default async function PublicPlanPage({ params }: Props) {
         <div className="min-w-0">
           <PlanResults result={result} />
 
-          <div className="mt-6 border border-border p-6 sm:p-8">
+          {canEdit && <div className="mt-6 border border-border p-6 sm:p-8">
             <h3 className="font-semibold text-lg">Your notes</h3>
             <p className="text-xs text-muted-foreground mt-1">
-              Add anything you want to remember about this plan.
+              Notes are private to your account or the device that saved this plan.
             </p>
             <div className="mt-4">
               <PlanNotesForm publicId={plan.publicId} initial={plan.notes || ""} />
             </div>
-          </div>
+          </div>}
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-24 h-fit no-print">
@@ -127,6 +129,7 @@ export default async function PublicPlanPage({ params }: Props) {
             <div className="text-xs uppercase tracking-wide text-muted-foreground">
               Share
             </div>
+            <p className="mt-2 text-xs text-muted-foreground">Anyone with this link can read the calculation. They cannot change it or read your private notes.</p>
             <PlanQr publicId={plan.publicId} />
             <div className="mt-3 text-xs text-muted-foreground break-all">
               bacwater.ai/plan/{plan.publicId}

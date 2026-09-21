@@ -11,14 +11,14 @@ export const proxy = auth((req) => {
   if (!pathname.startsWith("/admin")) return NextResponse.next();
 
   if (!req.auth?.user) {
-    const url = req.nextUrl.clone();
+    const url = new URL("/signin", process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai");
     url.pathname = "/signin";
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
   if ((req.auth.user as { role?: string })?.role !== "admin") {
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai"));
   }
 
   return NextResponse.next();

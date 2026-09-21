@@ -1,16 +1,18 @@
 "use client";
-
 import { useEffect } from "react";
-import { rememberDevicePlan } from "@/lib/saved-plans";
-
-/**
- * Records the plan on this device (localStorage) whenever its page is opened, so
- * it shows up under "My Plans" even for visitors who never sign in, including
- * plans that were shared to them. Renders nothing.
- */
-export function RecordPlanView({ publicId, name }: { publicId: string; name: string }) {
+import { useRouter } from "next/navigation";
+import { getDevicePlans, rememberDevicePlan } from "@/lib/saved-plans";
+import { restoreDevicePlanAccessAction } from "@/lib/plan-actions";
+export function RecordPlanView({ publicId, name, canEdit = false }: { publicId: string; name: string; canEdit?: boolean }) {
+  const router = useRouter();
   useEffect(() => {
+    let active = true;
+    const secret = getDevicePlans().find((p) => p.publicId === publicId)?.claimToken;
     rememberDevicePlan({ publicId, name, savedAt: new Date().toISOString() });
-  }, [publicId, name]);
+    if (!canEdit && secret) restoreDevicePlanAccessAction(publicId, secret).then((result) => {
+      if (active && result.ok) router.refresh();
+    }).catch(() => { /* Retry by refreshing; shared viewers never gain access. */ });
+    return () => { active = false; };
+  }, [publicId, name, canEdit, router]);
   return null;
 }
