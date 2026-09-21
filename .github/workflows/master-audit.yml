@@ -9,12 +9,12 @@ permissions:
 
 concurrency:
   group: master-audit-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   baseline:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
       AUTH_SECRET: ci-placeholder-not-a-real-secret
@@ -49,3 +49,16 @@ jobs:
         run: npm test
       - name: Build
         run: npx next build
+      - name: Install audit-only browser tools
+        run: |
+          npm install --no-save --package-lock=false @playwright/test axe-core
+          npx playwright install --with-deps chromium firefox webkit
+          npm list @playwright/test axe-core > audit-evidence/audit-tool-versions.txt
+      - name: Read-only live site audit
+        run: node scripts/master-audit.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: master-audit-evidence-${{ github.sha }}
+          path: audit-evidence/
+          retention-days: 14
