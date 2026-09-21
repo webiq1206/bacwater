@@ -17,6 +17,7 @@ await context.addCookies([{ name: 'bacwater_age_ok', value: '1', url: origin }])
 const page = await context.newPage(); page.on('pageerror', e => errors.push(String(e)));
 const publicContext = await browser.newContext();
 await publicContext.route('**/*', r => new URL(r.request().url()).origin === origin ? r.continue() : r.abort());
+await publicContext.addCookies([{ name: 'bacwater_age_ok', value: '1', url: origin }]);
 const reader = await publicContext.newPage();
 let userId, contentId, slug = prefix;
 const step = async (name, fn) => { try { await fn(); results.push({ name, status: 'passed' }); } catch (e) { results.push({ name, status: 'failed', error: String(e) }); throw e; } };
@@ -31,9 +32,13 @@ async function discovery(included, path = `/learn/${slug}`) {
     const response = await publicContext.request.get(`${origin}${endpoint}`); assert.equal(response.status(), 200);
     const body = await response.text();
     const exactPath = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const appears = new RegExp(exactPath + '(?=[<\"\\s)#?])').test(body);
+    const appears = new RegExp(exactPath + '(?=[<"\\s)#?])').test(body);
     assert.equal(appears, included, `${endpoint}: ${included ? 'missing' : 'leaked'} ${path}`);
   }
+}
+function verifyRedirect(response, target) {
+  assert.equal(response.status(), 308);
+  assert.equal(new URL(response.headers().location, origin).href, `${origin}${target}`);
 }
 try {
   await step('Untrusted IndexNow requests cannot submit or obtain admin data', async () => {
@@ -79,16 +84,11 @@ try {
   await step('Renamed published URLs redirect directly and drop old sitemap membership', async () => {
     const old = slug; slug = `${prefix}-renamed`;
     await page.getByLabel('Content slug', { exact: true }).fill(slug); await saveAndObserve(row => row.slug === slug);
-    let response = await publicContext.request.get(`${origin}/learn/${old}`, { maxRedirects: 0 });
-    assert.equal(response.status(), 308); assert.equal(response.headers().location, `${origin}/learn/${slug}`);
-    await discovery(false, `/learn/${old}`);
-    await discovery(true);
+    verifyRedirect(await publicContext.request.get(`${origin}/learn/${old}`, { maxRedirects: 0 }), `/learn/${slug}`);
+    await discovery(false, `/learn/${old}`); await discovery(true);
     const firstRename = slug; slug = `${prefix}-final`;
     await page.getByLabel('Content slug', { exact: true }).fill(slug); await saveAndObserve(row => row.slug === slug);
-    for (const alias of [old, firstRename]) {
-      response = await publicContext.request.get(`${origin}/learn/${alias}`, { maxRedirects: 0 });
-      assert.equal(response.status(), 308); assert.equal(response.headers().location, `${origin}/learn/${slug}`);
-    }
+    for (const alias of [old, firstRename]) verifyRedirect(await publicContext.request.get(`${origin}/learn/${alias}`, { maxRedirects: 0 }), `/learn/${slug}`);
   });
   await step('Noindex retains public access but removes discoverable membership', async () => {
     await page.getByLabel('Exclude this page from search', { exact: true }).check(); await saveAndObserve(row => row.noindex === true);
