@@ -630,15 +630,15 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
             <View style={{ marginTop: 6 }}>
               <View style={s.bullet}>
                 <Text style={s.bulletDot}>›</Text>
-                <Text style={s.bulletText}>Keep it cold. Refrigerate as soon as it is mixed.</Text>
+                <Text style={s.bulletText}>Follow the storage temperature stated for the exact formulation.</Text>
               </View>
               <View style={s.bullet}>
                 <Text style={s.bulletDot}>›</Text>
-                <Text style={s.bulletText}>Keep it dark. Store in the box or wrap the vial in foil.</Text>
+                <Text style={s.bulletText}>Use the product-specific light protection and packaging instructions.</Text>
               </View>
               <View style={s.bullet}>
                 <Text style={s.bulletDot}>›</Text>
-                <Text style={s.bulletText}>Freezing can damage many peptides. Check your product&apos;s instructions.</Text>
+                <Text style={s.bulletText}>Do not infer freeze tolerance or a safe discard date from this calculation.</Text>
               </View>
             </View>
           </View>
@@ -680,7 +680,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
             <Text style={{ fontSize: 9, color: C.muted }}>
               You entered the vial amount, how much to measure, and your syringe. The site
               worked out the concentration, the syringe units, and the measurements per vial,
-              and the shelf life comes from research. This plan does not decide how much to use,
+              but cannot establish shelf life. This plan does not decide how much to use,
               how often, or whether a compound is safe or right for anyone. Those are not math.
             </Text>
           </View>

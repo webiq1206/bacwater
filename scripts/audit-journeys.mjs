@@ -73,10 +73,17 @@ try {
   });
   await step('Owner and public PDF routes return valid PDFs without shared caching',async()=>{
     for(const [name,c]of[['owner',owner],['shared',stranger]]){
-      const response=await c.request.get(`${origin}/plan/${publicId}/pdf`);assert.equal(response.status(),200);
-      const bytes=await response.body();assert.equal(bytes.subarray(0,5).toString(),'%PDF-');
-      assert.ok(response.headers()['cache-control']?.includes('no-store'));assert.ok(response.headers()['x-robots-tag']?.includes('noindex'));
-      await fs.writeFile(`${out}/${name}.pdf`,bytes);
+      // Use an actual browser request. APIRequestContext applies different Secure-cookie
+      // handling to loopback HTTP than Chromium's trustworthy loopback context.
+      const viewer=await c.newPage();await viewer.goto(`${origin}/plan/${publicId}`);
+      const response=await viewer.evaluate(async(url)=>{
+        const r=await fetch(url,{credentials:'include'});
+        return {status:r.status,headers:Object.fromEntries(r.headers),bytes:Array.from(new Uint8Array(await r.arrayBuffer()))};
+      },`${origin}/plan/${publicId}/pdf`);
+      assert.equal(response.status,200);
+      const bytes=Buffer.from(response.bytes);assert.equal(bytes.subarray(0,5).toString(),'%PDF-');
+      assert.ok(response.headers['cache-control']?.includes('no-store'));assert.ok(response.headers['x-robots-tag']?.includes('noindex'));
+      await fs.writeFile(`${out}/${name}.pdf`,bytes);await viewer.close();
     }
   });
   await step('Contact record is actually saved once and retry is idempotent',async()=>{

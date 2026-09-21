@@ -247,7 +247,7 @@ export default async function HomePage() {
                 </li>
               ))}
             </ul>
-            <div className="mt-8 flex gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild variant="brand">
                 <Link href="/plan">Start the builder</Link>
               </Button>
@@ -359,7 +359,7 @@ export default async function HomePage() {
             syringe, we tell you, because you cannot measure it. The AI helper
             explains the result in plain words. It never does the math itself.
           </p>
-          <div className="mt-8 flex gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild variant="brand">
               <Link href="/plan">Start the builder</Link>
             </Button>
