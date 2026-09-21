@@ -1,0 +1,51 @@
+name: Master audit evidence
+
+on:
+  push:
+    branches: [audit/master-2026-09-21]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: master-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      AUTH_SECRET: ci-placeholder-not-a-real-secret
+      AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: https://bacwater.ai
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preserve exact tracked source
+        run: |
+          mkdir -p audit-evidence
+          git rev-parse HEAD > audit-evidence/source-commit.txt
+          git archive --format=tar HEAD > audit-evidence/source.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-baseline-${{ github.sha }}
+          path: audit-evidence/
+          retention-days: 7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate Prisma client
+        run: npx prisma generate
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Test existing calculation and guardrail suites
+        run: npm test
+      - name: Build
+        run: npx next build
