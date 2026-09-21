@@ -1,16 +1,17 @@
-name: Master audit evidence
+name: Browser and privacy regression
 on:
+  pull_request:
   push:
-    branches: [audit/master-2026-09-21]
+    branches: [main]
 permissions:
-  contents: write
+  contents: read
 concurrency:
-  group: master-audit-${{ github.ref }}
+  group: browser-audit-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     services:
       postgres:
         image: postgres:16
@@ -35,69 +36,43 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: Apply reviewed source changes
+      - name: Install reviewed dependencies and inspect advisories
         run: |
           mkdir -p audit-evidence
-          if [ ! -f audit/2026-09-21/hardening.applied ]; then
-            python - <<'PY'
-          from pathlib import Path
-          import base64, gzip, hashlib
-          p = Path('audit/2026-09-21/apply-repairs.py.b64')
-          raw = p.read_text().replace('E1TkQOd0fsQ8ukWFMlasdZuT5UR6lhs3AZspU4Nnawk1FGgER', 'E1TkQOd0fsQ8ukWFMlasdZuTUR6lhs3AZspU4Nnawk1FGgER')
-          data = gzip.decompress(base64.b64decode(raw))
-          assert hashlib.sha256(data).hexdigest() == '6990e04270217bf780b21995c889524d2ed1ffc4c14ab309bc6061e0a292e046'
-          p.write_text(raw)
-          Path('audit/2026-09-21/apply-repairs.py').write_bytes(data)
-          PY
-            if [ ! -f src/lib/analytics.ts ]; then python audit/2026-09-21/apply-repairs.py; fi
-            if ! grep -q 'window as unknown as AnalyticsWindow' src/components/common/analytics-preferences.tsx; then python audit/2026-09-21/finalize-repairs.py; fi
-            python audit/2026-09-21/release-hardening.py
-            python audit/2026-09-21/release-finish.py
-            touch audit/2026-09-21/hardening.applied
-            npm install --package-lock-only
-            npm audit fix --package-lock-only || true
-          fi
-          python audit/2026-09-21/last-checks.py
+          git rev-parse HEAD > audit-evidence/source-commit.txt
           npm ci
           npm audit --json > audit-evidence/dependency-audit.json || true
-          node -e 'const a=require("./audit-evidence/dependency-audit.json");if(a.metadata.vulnerabilities.critical||a.metadata.vulnerabilities.high)process.exit(1)'
-      - name: Prepare disposable database
+          node -e 'const a=require("./audit-evidence/dependency-audit.json");if(!a.metadata||a.metadata.vulnerabilities.critical||a.metadata.vulnerabilities.high)process.exit(1)'
+      - name: Prepare disposable test database only
         run: |
-          npx prisma generate
           case "$DATABASE_URL" in
             postgresql://audit:*@127.0.0.1:5432/bacwater_audit) ;;
             *) echo 'Refusing a non-test database'; exit 1 ;;
           esac
+          npx prisma generate
           npx prisma db push --skip-generate
           npx tsx prisma/seed.ts
-      - name: Typecheck
-        run: set -o pipefail; npx tsc --noEmit 2>&1 | tee audit-evidence/typecheck.log
-      - name: Unit tests
-        run: set -o pipefail; npm test 2>&1 | tee audit-evidence/tests.log
-      - name: Production build
-        run: set -o pipefail; npx next build 2>&1 | tee audit-evidence/build.log
-      - name: Commit reviewed source to isolated audit branch
+      - name: Typecheck, unit tests and build
         run: |
-          test "$GITHUB_REF" = refs/heads/audit/master-2026-09-21
-          git add -A -- src package.json package-lock.json README.md .env.example scripts audit/2026-09-21
-          if ! git diff --cached --quiet; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'fix: secure accessible calculators and privacy-safe publishing'
-            git push origin HEAD:audit/master-2026-09-21
-          fi
-          git rev-parse HEAD > audit-evidence/source-commit.txt
-      - name: Install browser test tools
+          set -o pipefail
+          npx tsc --noEmit 2>&1 | tee audit-evidence/typecheck.log
+          npm test 2>&1 | tee audit-evidence/tests.log
+          npx next build 2>&1 | tee audit-evidence/build.log
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.63.0
+      - name: Install pinned browser audit tools
         run: |
-          npm install --no-save --package-lock=false @playwright/test axe-core
+          npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
           npx playwright install --with-deps chromium firefox webkit
           sudo apt-get install -y poppler-utils
-      - name: Verify complete user journeys
+      - name: Verify application journeys and private PDF content
         run: |
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
@@ -106,29 +81,27 @@ jobs:
           pdftotext audit-evidence/journeys/shared.pdf audit-evidence/journeys/shared.txt
           grep -q 'PRIVATE NOTE' audit-evidence/journeys/owner.txt
           if grep -q 'PRIVATE NOTE' audit-evidence/journeys/shared.txt; then exit 1; fi
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: journey-evidence-${{ github.sha }}
-          path: audit-evidence/
-          retention-days: 14
-      - name: Full public-page regression
-        if: success()
+          if grep -q 'shelf life comes from research' audit-evidence/journeys/owner.txt; then exit 1; fi
+      - name: Verify public routes, accessibility and responsive engines
         run: |
           node scripts/master-audit.mjs
-          node -e 'const a=require("./audit-evidence/after/summary.json");if(a.errors||a.pagesWithOverflow.length||a.violations.length)process.exit(1)'
-      - name: Preserve source and evidence
-        if: always()
-        run: |
-          mkdir -p audit-evidence
-          git rev-parse HEAD > audit-evidence/source-commit.txt
-          git add -A -- src package.json package-lock.json README.md .env.example scripts audit/2026-09-21
-          git archive --format=tar $(git write-tree) > audit-evidence/source.tar
-          git diff HEAD > audit-evidence/uncommitted.patch
-          git status --short > audit-evidence/worktree-status.txt
+          node - <<'JS'
+          const fs = require('fs');
+          const read = (name) => JSON.parse(fs.readFileSync(`audit-evidence/after/${name}.json`));
+          const summary = read('summary');
+          const responsive = read('responsive-engines');
+          const http = read('http-inventory');
+          const renders = read('rendered-pages');
+          if (summary.errors || summary.pagesWithOverflow.length || summary.violations.length) process.exit(1);
+          if (responsive.some((r) => r.error || r.errors?.length || r.horizontalOverflow)) process.exit(1);
+          if (http.unvisited.length || http.queueRemaining.length || http.pages.some((p) => p.error || p.status !== 200)) process.exit(1);
+          if (http.endpoints.filter((r) => r.requested.includes('does-not-exist-audit')).some((r) => r.status !== 404)) process.exit(1);
+          if (renders.some((r) => !r.title || r.h1?.length !== 1 || r.errors?.length || r.schema?.some((s) => s?.parseError))) process.exit(1);
+          console.log(`Verified ${summary.httpPages} URLs, ${summary.rendered} renders and ${summary.responsive} responsive/engine checks.`);
+          JS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: release-evidence-${{ github.sha }}
+          name: browser-verification-${{ github.sha }}
           path: audit-evidence/
           retention-days: 14
