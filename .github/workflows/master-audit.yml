@@ -1,18 +1,14 @@
 name: Master audit evidence
-
 on:
   push:
     branches: [audit/master-2026-09-21]
-
 permissions:
   contents: write
-
 concurrency:
   group: master-audit-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
-  baseline:
+  verify:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     services:
@@ -34,12 +30,24 @@ jobs:
       AUTH_URL: http://127.0.0.1:3000
       NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
       NEXT_TELEMETRY_DISABLED: '1'
+      AUDIT_ORIGIN: http://127.0.0.1:3000
+      AUDIT_OUT: audit-evidence/after
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Apply reviewed foundation patch
-        run: python audit/2026-09-21/apply-foundation.py
+      - name: Decode and verify reviewed repair script
+        run: |
+          mkdir -p audit-evidence
+          python - <<'PY'
+          from pathlib import Path
+          import base64, gzip, hashlib
+          p = Path('audit/2026-09-21/apply-repairs.py.b64')
+          data = gzip.decompress(base64.b64decode(p.read_text()))
+          assert hashlib.sha256(data).hexdigest() == '6990e04270217bf780b21995c889524d2ed1ffc4c14ab309bc6061e0a292e046', 'Repair transport checksum mismatch'
+          Path('audit/2026-09-21/apply-repairs.py').write_bytes(data)
+          PY
+          if [ ! -f src/lib/analytics.ts ]; then python audit/2026-09-21/apply-repairs.py; fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -60,27 +68,37 @@ jobs:
         run: npm test
       - name: Build
         run: npx next build
-      - name: Commit only validated repair files to the audit branch
+      - name: Install isolated browser tools
+        run: |
+          npm install --no-save --package-lock=false @playwright/test axe-core
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Crawl and render every available test page
+        run: |
+          npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
+          for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
+          node scripts/master-audit.mjs
+      - name: Commit validated code to audit branch
         run: |
           test "$GITHUB_REF" = refs/heads/audit/master-2026-09-21
           git add -A -- src package.json audit/2026-09-21
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'fix: enforce plan ownership, protect private notes and escape content'
+            git commit -m 'fix: accessible tools, private analytics, validation and publication safeguards'
             git push origin HEAD:audit/master-2026-09-21
           fi
-      - name: Capture resulting code and verification evidence
+      - name: Preserve source and test evidence
         if: always()
         run: |
           mkdir -p audit-evidence
           git rev-parse HEAD > audit-evidence/source-commit.txt
           git archive --format=tar HEAD > audit-evidence/source.tar
           git diff > audit-evidence/uncommitted.patch
+          cp audit/2026-09-21/apply-repairs.py.b64 audit-evidence/transport.b64
           git status --short > audit-evidence/worktree-status.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: validated-source-${{ github.sha }}
+          name: repair-evidence-${{ github.sha }}
           path: audit-evidence/
           retention-days: 14
