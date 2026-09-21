@@ -5,7 +5,7 @@ import { History, X } from "lucide-react";
 /**
  * Tells the visitor, in plain words, that the peptide and vial figures on
  * screen came from their last calculation on another tool rather than from
- * nowhere — and gives them one click to clear it.
+ * nowhere: and gives them one click to clear it.
  *
  * Carrying values silently would be the worse failure: someone returning a
  * week later would work from stale numbers without noticing.

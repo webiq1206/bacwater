@@ -16,6 +16,8 @@ import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
 
 export const metadata = {
+  title: "BACwater.ai: Free Calculators, Saved Plans and Vial Labels",
+  description: "Check concentration, syringe units and unit conversions. Use the free calculators, save your entered values, and print labels. No product sales or dose recommendations.",
   alternates: { canonical: "/" },
 };
 
@@ -40,7 +42,7 @@ const BASICS_QA = [
   },
   {
     q: "How much water for a 5 mg vial?",
-    a: "It depends on how strong you want the liquid. Use the calculator instead of guessing.",
+    a: "Follow the exact product instructions. Vial strength alone does not determine a suitable mixing volume.",
   },
   {
     q: "How long can an opened vial be used?",

@@ -30,7 +30,9 @@ async function discovery(included, path = `/learn/${slug}`) {
   for (const endpoint of ['/sitemap-learn.xml', '/llms.txt', '/sitemap', '/learn']) {
     const response = await publicContext.request.get(`${origin}${endpoint}`); assert.equal(response.status(), 200);
     const body = await response.text();
-    assert.equal(body.includes(path), included, `${endpoint}: ${included ? 'missing' : 'leaked'} ${path}`);
+    const exactPath = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const appears = new RegExp(exactPath + '(?=[<\"\\s)#?])').test(body);
+    assert.equal(appears, included, `${endpoint}: ${included ? 'missing' : 'leaked'} ${path}`);
   }
 }
 try {
@@ -41,7 +43,7 @@ try {
     }
   });
   await step('Administrator signs in and opens the actual content editor', async () => {
-    const user = await prisma.user.create({ data: { email, name: 'Disposable CMS fixture', passwordHash: await bcrypt.hash(password, 10), role: 'admin' } }); userId = user.id;
+    const user = await prisma.user.create({ data: { email, name: 'Disposable CMS fixture', hashedPassword: await bcrypt.hash(password, 10), role: 'admin' } }); userId = user.id;
     await page.goto(`${origin}/signin?next=/admin/content?new=1`);
     await page.getByLabel('Email', { exact: true }).fill(email); await page.getByLabel('Password', { exact: true }).fill(password);
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
@@ -79,7 +81,7 @@ try {
     await page.getByLabel('Content slug', { exact: true }).fill(slug); await saveAndObserve(row => row.slug === slug);
     let response = await publicContext.request.get(`${origin}/learn/${old}`, { maxRedirects: 0 });
     assert.equal(response.status(), 308); assert.equal(response.headers().location, `${origin}/learn/${slug}`);
-    await discovery(false, `/learn/${old}` + '"');
+    await discovery(false, `/learn/${old}`);
     await discovery(true);
     const firstRename = slug; slug = `${prefix}-final`;
     await page.getByLabel('Content slug', { exact: true }).fill(slug); await saveAndObserve(row => row.slug === slug);
@@ -91,7 +93,6 @@ try {
   await step('Noindex retains public access but removes discoverable membership', async () => {
     await page.getByLabel('Exclude this page from search', { exact: true }).check(); await saveAndObserve(row => row.noindex === true);
     assert.equal((await reader.goto(`${origin}/learn/${slug}`)).status(), 200);
-    assert.ok((await reader.locator('meta[name="robots"]').allTextContents()).length >= 0);
     assert.match(await reader.locator('meta[name="robots"]').first().getAttribute('content'), /noindex/);
     await discovery(false);
   });

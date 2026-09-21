@@ -15,7 +15,7 @@ export interface RailSection {
 
 /**
  * The facts a reader keeps needing while working through a peptide page —
- * common vial sizes, refrigerated shelf life, category, evidence stage — held
+ * common vial sizes, refrigerated shelf life, category, evidence stage: held
  * in view instead of scrolling away with the At a glance block at the top.
  *
  * Desktop only. Below xl there is no room for a rail, and the page already

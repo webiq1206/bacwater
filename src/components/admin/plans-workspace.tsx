@@ -57,7 +57,7 @@ export function PlansWorkspace({
   initialId,
 }: {
   plans: PlanRow[];
-  /** Preselect a plan — how the users workspace links into this one. */
+  /** Preselect a plan: how the users workspace links into this one. */
   initialId?: string;
 }) {
   const [rows, setRows] = useState(plans);
@@ -179,7 +179,7 @@ export function PlansWorkspace({
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Plans</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            Inspect any saved plan in place — no trip out to the public site.
+            Inspect any saved plan in place: no trip out to the public site.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -278,7 +278,7 @@ export function PlansWorkspace({
                 <FieldRow label="Amount">{formatDose(current.doseMcg)}</FieldRow>
                 <FieldRow label="Measures/vial">{current.dosesPerVial}</FieldRow>
                 <FieldRow label="Expires" attention={Boolean(expired)}>
-                  {current.expirationDate ? formatDate(current.expirationDate) : "—"}
+                  {current.expirationDate ? formatDate(current.expirationDate) : "Not set"}
                 </FieldRow>
                 <FieldRow label="Status">
                   <Badge variant={current.archived ? "outline" : "success"}>

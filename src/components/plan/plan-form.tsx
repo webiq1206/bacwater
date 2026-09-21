@@ -123,8 +123,8 @@ interface Props {
   initial?: PlanFormInitial;
   /**
    * Present when this form is editing a plan that already exists. Saving then
-   * updates that plan in place — same publicId, so a shared link or a printed
-   * QR code keeps resolving to it — rather than creating a second one.
+   * updates that plan in place: same publicId, so a shared link or a printed
+   * QR code keeps resolving to it: rather than creating a second one.
    */
   editing?: { publicId: string; name?: string | null };
 }
@@ -397,7 +397,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const [peptideSlug, setPeptideSlug] = useState<string>(init?.slug ?? "");
   const [customPeptideName, setCustomPeptideName] = useState(init?.customName ?? "");
   // Picking a peptide is an interest signal used to personalize panels
-  // elsewhere on the site. It does NOT pre-fill vial/dose — the user enters
+  // elsewhere on the site. It does NOT pre-fill vial/dose: the user enters
   // those (or picks a suggestion chip) so nothing is silently pre-populated.
   const selectPeptide = useCallback((slug: string) => {
     setPeptideSlug(slug);
@@ -596,7 +596,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     defaultPlanName({ peptideName: peptideNameForPlan, vialStrengthMg, dateMixed });
 
   // Editing and creating share this form, so the primary action has to say
-  // which one is about to happen — the old copy promised a new saved plan in
+  // which one is about to happen: the old copy promised a new saved plan in
   // both cases.
   const saveLabel = editing ? "Save changes" : "Save my plan";
   const saveHint = editing
@@ -690,7 +690,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       label: "Schedule",
       value:
         injectionsPerWeek > 1
-          ? `${injectionsPerWeek}x per week — ${(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection`
+          ? `${injectionsPerWeek}x per week: ${(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection`
           : "One injection per week",
     },
     { label: "Syringe", value: syringe.label },
@@ -1143,7 +1143,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             </div>
           </div>
 
-          {/* Live results (only once the inputs are complete — nothing is
+          {/* Live results (only once the inputs are complete: nothing is
               shown for an empty, un-started plan). */}
           <div>
             {hasValidInputs ? (

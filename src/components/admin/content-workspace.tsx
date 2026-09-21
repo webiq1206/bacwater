@@ -64,9 +64,9 @@ export function ContentWorkspace({
   startNew: openNew,
 }: {
   blocks: ContentRecord[];
-  /** Preselect a row — used by the old /admin/content/[id] bookmarks. */
+  /** Preselect a row: used by the old /admin/content/[id] bookmarks. */
   initialId?: string;
-  /** Open an empty draft — used by /admin/content/new. */
+  /** Open an empty draft: used by /admin/content/new. */
   startNew?: boolean;
 }) {
   const [rows, setRows] = useState(blocks);

@@ -33,16 +33,18 @@ export async function savePublication(raw: unknown, client: PrismaClient = prism
     const alias = await tx.contentRedirect.findUnique({ where: { slug: c.slug } });
     if ((existing && existing.id !== c.id) || (alias && alias.contentId !== c.id)) throw new PublicationError("That URL is already in use, including its saved redirects. Choose another slug.");
     const self = `/learn/${c.slug}`;
-    const canonicalPath = c.canonicalPath && c.canonicalPath !== self ? c.canonicalPath : null;
-    if (canonicalPath && (!validateCanonicalPath(canonicalPath) || c.noindex || c.kind === "faq")) throw new PublicationError("Use a valid public canonical path, and choose either a canonical duplicate or noindex. FAQ copies already canonicalize to /faq.");
+    const proposedCanonical = c.canonicalPath === undefined ? old?.canonicalPath : c.canonicalPath;
+    const canonicalPath = proposedCanonical && proposedCanonical !== self ? proposedCanonical : null;
+    const noindex = c.noindex ?? old?.noindex ?? false;
+    if (canonicalPath && (!validateCanonicalPath(canonicalPath) || noindex || c.kind === "faq")) throw new PublicationError("Use a valid public canonical path, and choose either a canonical duplicate or noindex. FAQ copies already canonicalize to /faq.");
     if (canonicalPath && !CODE_PUBLIC_PATHS.has(canonicalPath)) {
       const targetSlug = canonicalPath.slice("/learn/".length);
       const target = await tx.contentBlock.findFirst({ where: { slug: targetSlug, published: true, noindex: false, canonicalPath: null, kind: { in: ["guide", "page"] } } });
       if (!target || target.id === c.id || RESERVED_LEARN_SLUGS.has(target.slug)) throw new PublicationError("The canonical must point directly to a published, indexable page. Redirects and canonical chains are not accepted.");
     }
     const dependents = old ? await tx.contentBlock.findMany({ where: { canonicalPath: `/learn/${old.slug}`, published: true }, select: { id: true, slug: true } }) : [];
-    if (dependents.length && (!c.published || c.noindex || canonicalPath || c.kind === "faq")) throw new PublicationError("Other published pages use this page as their canonical. Update those references before excluding this page.");
-    const data = { slug: c.slug, kind: c.kind, title: c.title, body: c.body, published: c.published, seoTitle: c.seoTitle || null, metaDescription: c.metaDescription || null, noindex: c.noindex ?? old?.noindex ?? false, canonicalPath };
+    if (dependents.length && (!c.published || noindex || canonicalPath || c.kind === "faq")) throw new PublicationError("Other published pages use this page as their canonical. Update those references before excluding this page.");
+    const data = { slug: c.slug, kind: c.kind, title: c.title, body: c.body, published: c.published, seoTitle: c.seoTitle === undefined ? old?.seoTitle ?? null : c.seoTitle || null, metaDescription: c.metaDescription === undefined ? old?.metaDescription ?? null : c.metaDescription || null, noindex, canonicalPath };
     const block = old ? await tx.contentBlock.update({ where: { id: old.id }, data }) : await tx.contentBlock.create({ data });
     if (alias?.contentId === block.id) await tx.contentRedirect.delete({ where: { slug: c.slug } });
     if (old && old.slug !== block.slug) {

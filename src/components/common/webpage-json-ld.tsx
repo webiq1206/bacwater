@@ -37,11 +37,8 @@ export function WebPageJsonLd({ name, description, url, breadcrumb, citations, r
     },
   };
 
-  if (reviewed) {
-    jsonLd.reviewedBy = orgRef;
-    jsonLd.lastReviewed = LAST_REVIEWED_ISO;
-    jsonLd.dateModified = LAST_REVIEWED_ISO;
-  }
+  // A caller flag is not evidence of a completed clinical or editorial review.
+  void reviewed;
 
   const citation = citationLd(citations);
   if (citation) jsonLd.citation = citation;

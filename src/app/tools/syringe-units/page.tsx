@@ -9,8 +9,8 @@ import CalculatorClient from "./calculator-client";
 // layout's default title and had no canonical, so Google saw six duplicate,
 // canonical-less pages and indexed none of them (or picked its own host).
 
-const TITLE = 'Syringe Units to mL Converter (Insulin U-100)';
-const DESCRIPTION = 'Convert insulin syringe units to milliliters and back instantly. On a U-100 syringe, 100 units equal 1 mL — type either value and the other updates. Research use.';
+const TITLE = 'Syringe Units to mL Converter: U-100 and U-40';
+const DESCRIPTION = 'Convert syringe units to mL and back using your actual syringe scale. U-100 means 100 units per mL; this tool does not convert units directly into milligrams.';
 const PATH = "/tools/syringe-units";
 
 export const metadata: Metadata = {

@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ArticleJsonLd } from "@/components/common/article-json-ld";
 import { PreferredSourceButton } from "@/components/common/preferred-source-button";
-import { HowToJsonLd } from "@/components/common/howto-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
 import { guideReferences } from "@/lib/content/references";
-import { HOWTO_SCHEMAS } from "@/lib/learn/howto-schema";
 import { renderBody } from "@/lib/content/render";
 import { extractMetaDescription } from "@/lib/content/checks";
 
@@ -71,21 +69,10 @@ export default async function GuidePage({ params }: Props) {
     limit: 4,
   });
 
-  const howtoSchema = HOWTO_SCHEMAS[slug];
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
-      <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} createdAt={guide.createdAt} updatedAt={guide.updatedAt} citations={refs} />
-      {howtoSchema && (
-        <HowToJsonLd
-          name={guide.title}
-          description={howtoSchema.description}
-          steps={howtoSchema.steps}
-          supplies={howtoSchema.supplies}
-          tools={howtoSchema.tools}
-          totalTime={howtoSchema.totalTime}
-        />
-      )}
+      {!guide.canonicalPath && guide.kind !== "faq" && <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} createdAt={guide.createdAt} updatedAt={guide.updatedAt} citations={refs} />}
       <Breadcrumbs items={[
         { label: "Home", href: "/" },
         { label: "Learning Center", href: "/learn" },

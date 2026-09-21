@@ -9,8 +9,8 @@ import CalculatorClient from "./calculator-client";
 // layout's default title and had no canonical, so Google saw six duplicate,
 // canonical-less pages and indexed none of them (or picked its own host).
 
-const TITLE = 'BAC Water Calculator: How Much to Add to a Vial';
-const DESCRIPTION = 'Free BAC water calculator. Enter your vial size and target measurement to get exactly how much bacteriostatic water to add for clean syringe units. Research use.';
+const TITLE = 'BAC Water Calculator: Volume and Concentration';
+const DESCRIPTION = 'Compare BAC water volume and concentration using the values you enter. Check the arithmetic and follow the exact product instructions, not a suggested dose.';
 const PATH = "/tools/bac-water";
 
 export const metadata: Metadata = {
