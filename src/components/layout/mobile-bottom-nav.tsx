@@ -12,64 +12,61 @@ const ITEMS = [
     href: "/plan",
     label: "Build",
     icon: Wand2,
-    match: (p: string) => (p === "/plan" || p.startsWith("/plan/")) || p.startsWith("/tools"),
+    match: (p: string) => p === "/plan" || p.startsWith("/plan/") || p.startsWith("/tools"),
   },
   {
     href: "/learn",
     label: "Learn",
     icon: BookOpen,
-    match: (p: string) =>
-      p.startsWith("/learn") || p.startsWith("/faq") || p.startsWith("/peptides"),
+    match: (p: string) => p.startsWith("/learn") || p.startsWith("/faq") || p.startsWith("/peptides"),
   },
-  {
-    href: "/plans",
-    label: "Account",
-    icon: User,
-    match: (p: string) => p.startsWith("/plans"),
-  },
+  { href: "/plans", label: "Account", icon: User, match: (p: string) => p.startsWith("/plans") },
 ];
 
-/**
- * Native-style bottom navigation on mobile (§8). Hidden on large screens (the
- * header nav covers those), in admin, and during the wizard / results pages,  * those have their own bottom sticky action bars and would otherwise collide.
- */
+/** The wizard and admin have their own navigation and action placement. */
 export function MobileBottomNav() {
   const pathname = usePathname() || "/";
-  const hidden =
-    pathname === "/plan" ||
-    pathname === "/plan/new" ||
-    pathname.startsWith("/plan/") ||
-    pathname.startsWith("/admin");
-  useEffect(() => {
-    const update = () => {
-      const active = document.activeElement;
-      document.body.dataset.bacInputActive = String(active instanceof HTMLElement && (active.matches("input,textarea,select") || active.isContentEditable));
-    };
-    document.addEventListener("focusin", update); document.addEventListener("focusout", update);
-    return () => { document.removeEventListener("focusin", update); document.removeEventListener("focusout", update); delete document.body.dataset.bacInputActive; };
-  }, []);
-  if (hidden) return null;
+  const hidden = pathname === "/plan" || pathname === "/plan/new" || pathname.startsWith("/plan/") || pathname.startsWith("/admin");
 
+  useEffect(() => {
+    let mounted = true;
+    const update = () => {
+      if (!mounted) return;
+      const active = document.activeElement;
+      const editing = active instanceof HTMLElement && (
+        active.matches("input,textarea,select") || active.isContentEditable ||
+        // A Clear/Submit action is part of the active form interaction too.
+        // Restoring the bar between pointerdown and click can cover the target.
+        (Boolean(active.closest("main")) && active.matches("button,[role='combobox']"))
+      );
+      document.body.dataset.bacInputActive = String(editing);
+    };
+    // focusout can temporarily expose document.body before the next control
+    // receives focus. Evaluate after that transition instead of flashing the bar.
+    const afterFocusChange = () => queueMicrotask(update);
+    document.addEventListener("focusin", update);
+    document.addEventListener("focusout", afterFocusChange);
+    update();
+    return () => {
+      mounted = false;
+      document.removeEventListener("focusin", update);
+      document.removeEventListener("focusout", afterFocusChange);
+      delete document.body.dataset.bacInputActive;
+    };
+  }, [pathname]);
+
+  if (hidden) return null;
   return (
     <>
-      {/* In-flow spacer so page content clears the fixed bar on mobile. */}
       <div className="bac-bottom-spacer lg:hidden" aria-hidden />
       <nav aria-label="Mobile primary navigation" className="bac-bottom-nav lg:hidden no-print fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
         <div className="mx-auto grid max-w-md grid-cols-4">
-          {ITEMS.map((it) => {
-            const active = it.match(pathname);
+          {ITEMS.map(item => {
+            const active = item.match(pathname);
             return (
-              <Link
-                key={it.href}
-                href={it.href}
-                className={cn(
-                  "flex min-h-14 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
-                  active ? "text-foreground" : "text-muted-foreground"
-                )}
-                aria-current={active ? "page" : undefined}
-              >
-                <it.icon className="h-5 w-5" />
-                {it.label}
+              <Link key={item.href} href={item.href} className={cn("flex min-h-14 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors", active ? "text-foreground" : "text-muted-foreground")} aria-current={active ? "page" : undefined}>
+                <item.icon className="h-5 w-5" />
+                {item.label}
               </Link>
             );
           })}
