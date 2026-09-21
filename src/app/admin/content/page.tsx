@@ -20,6 +20,7 @@ export default async function AdminContentPage({ searchParams }: Props) {
     title: c.title,
     body: c.body,
     published: c.published,
+    seoTitle: c.seoTitle, metaDescription: c.metaDescription, noindex: c.noindex, canonicalPath: c.canonicalPath,
     updatedAt: c.updatedAt.toISOString(),
   }));
   return (

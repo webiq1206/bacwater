@@ -44,6 +44,10 @@ export interface ContentRecord {
   body: string;
   published: boolean;
   updatedAt: string;
+  seoTitle?: string | null;
+  metaDescription?: string | null;
+  noindex?: boolean;
+  canonicalPath?: string | null;
 }
 
 type Draft = Omit<ContentRecord, "updatedAt">;
@@ -51,7 +55,7 @@ type View = "write" | "split" | "preview";
 const NEW_ID = "__new__";
 
 function emptyDraft(): Draft {
-  return { id: NEW_ID, slug: "", kind: "guide", title: "", body: "", published: false };
+  return { id: NEW_ID, slug: "", kind: "guide", title: "", body: "", published: false, seoTitle: "", metaDescription: "", noindex: false, canonicalPath: "" };
 }
 
 export function ContentWorkspace({
@@ -87,7 +91,7 @@ export function ContentWorkspace({
       ? null
       : drafts[selectedId] ??
         (saved
-          ? { id: saved.id, slug: saved.slug, kind: saved.kind, title: saved.title, body: saved.body, published: saved.published }
+          ? { id: saved.id, slug: saved.slug, kind: saved.kind, title: saved.title, body: saved.body, published: saved.published, seoTitle: saved.seoTitle, metaDescription: saved.metaDescription, noindex: saved.noindex, canonicalPath: saved.canonicalPath }
           : emptyDraft());
 
   const dirty = Boolean(
@@ -99,7 +103,11 @@ export function ContentWorkspace({
             draft.body !== saved.body ||
             draft.slug !== saved.slug ||
             draft.kind !== saved.kind ||
-            draft.published !== saved.published))
+            draft.published !== saved.published ||
+            (draft.seoTitle || "") !== (saved.seoTitle || "") ||
+            (draft.metaDescription || "") !== (saved.metaDescription || "") ||
+            !!draft.noindex !== !!saved.noindex ||
+            (draft.canonicalPath || "") !== (saved.canonicalPath || "")))
   );
 
   // Warn before a reload or tab close drops unsaved edits.
@@ -160,6 +168,9 @@ export function ContentWorkspace({
           title: draft.title,
           body: draft.body,
           published: draft.published,
+          seoTitle: draft.seoTitle, metaDescription: draft.metaDescription,
+          noindex: draft.noindex, canonicalPath: draft.canonicalPath,
+          expectedUpdatedAt: saved?.updatedAt,
         });
         if (!res.ok) {
           toast({ title: "Save failed", description: res.error, variant: "destructive" });
@@ -201,13 +212,13 @@ export function ContentWorkspace({
     }
     if (!saved) return;
     startTransition(async () => {
-      const res = await toggleContentPublished(saved.id);
+      const res = await toggleContentPublished(saved.id, !saved.published, saved.updatedAt);
       if (!res.ok) {
         toast({ title: "Could not change status", description: res.error, variant: "destructive" });
         return;
       }
       setRows((rs) =>
-        rs.map((r) => (r.id === saved.id ? { ...r, published: res.published } : r))
+        rs.map((r) => (r.id === saved.id ? { ...r, published: res.published, updatedAt: res.updatedAt } : r))
       );
       toast({ title: res.published ? "Published" : "Unpublished", variant: "success" });
     });
@@ -217,7 +228,8 @@ export function ContentWorkspace({
     if (!saved) return;
     if (!window.confirm(`Delete "${saved.title}"? This cannot be undone.`)) return;
     startTransition(async () => {
-      await deleteContent(saved.id);
+      const removal = await deleteContent(saved.id);
+      if (!removal.ok) { toast({ title: "Not deleted", description: removal.error, variant: "destructive" }); return; }
       setRows((rs) => rs.filter((r) => r.id !== saved.id));
       toast({ title: "Deleted", variant: "success" });
       const remaining = queue.filter((r) => r.id !== saved.id);
@@ -364,6 +376,7 @@ export function ContentWorkspace({
                 <label className="mt-1 block text-xs text-muted-foreground">Slug</label>
                 <div className="mt-1 flex gap-1.5">
                   <Input
+                    aria-label="Content slug"
                     value={draft.slug}
                     onChange={(e) => patch({ slug: e.target.value })}
                     placeholder="url-slug"
@@ -384,6 +397,7 @@ export function ContentWorkspace({
 
                 <label className="mt-3 block text-xs text-muted-foreground">Kind</label>
                 <select
+                  aria-label="Content kind"
                   value={draft.kind}
                   onChange={(e) => patch({ kind: e.target.value })}
                   className="mt-1 h-10 w-full rounded-lg border border-input bg-card px-3 text-sm"
@@ -396,6 +410,7 @@ export function ContentWorkspace({
                 <button
                   type="button"
                   onClick={togglePublish}
+                  aria-pressed={draft.published}
                   disabled={pending}
                   className="mt-3 flex w-full items-center justify-between rounded-lg border border-border px-3 py-2.5 text-sm hover:bg-muted/50"
                 >
@@ -408,6 +423,15 @@ export function ContentWorkspace({
                     />
                   </span>
                 </button>
+
+                <div className="mt-4 space-y-3 border-t border-border pt-4">
+                  <label className="block text-xs">Search title (optional)<Input aria-label="Search title" value={draft.seoTitle || ""} onChange={e => patch({ seoTitle: e.target.value })} maxLength={200} /></label>
+                  <label className="block text-xs">Search description (optional)<Textarea aria-label="Search description" value={draft.metaDescription || ""} onChange={e => patch({ metaDescription: e.target.value })} maxLength={320} /></label>
+                  <label className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={!!draft.noindex} onChange={e => patch({ noindex: e.target.checked })} />Exclude this page from search</label>
+                  <label className="block text-xs">Canonical path (optional)<Input aria-label="Canonical path" placeholder="/learn/preferred-page" value={draft.canonicalPath || ""} onChange={e => patch({ canonicalPath: e.target.value })} /></label>
+                  <p className="text-xs leading-relaxed text-muted-foreground">Leave the canonical empty for an original page. Published content is public even when excluded from search. Unpublish content to remove public access. Renamed published URLs redirect automatically.</p>
+                  <Link href="/admin/publication" className="text-xs underline">Check discovery notifications</Link>
+                </div>
 
                 {saved && saved.published ? (
                   <Link
@@ -488,12 +512,14 @@ export function ContentWorkspace({
             {view !== "preview" ? (
               <div className="min-w-0 p-4 sm:p-5">
                 <Input
+                  aria-label="Content title"
                   value={draft.title}
                   onChange={(e) => patch({ title: e.target.value })}
                   placeholder="Title"
                   className="h-12 border-0 px-0 font-serif text-2xl font-medium tracking-tight shadow-none focus-visible:ring-0"
                 />
                 <Textarea
+                  aria-label="Content body"
                   value={draft.body}
                   onChange={(e) => patch({ body: e.target.value })}
                   placeholder={"Write the guide.\n\n## Sections use two hashes\n\n- Lists use hyphens\n\n**Bold** and *italic* work inline."}

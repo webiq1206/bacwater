@@ -1,7 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { revalidatePublication } from "@/lib/seo/publication";
+import { publishDiscoveryChange } from "@/lib/seo/publication";
+import { savePublication, deletePublication, publicationMessage, type PublicationInput } from "@/lib/content/publication-store";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { safeResultDisplay } from "@/lib/calc/display";
@@ -267,40 +268,15 @@ export async function deleteProduct(id: string) {
 
 // ---------- Content ----------
 
-const contentSchema = z.object({
-  id: z.string().optional(),
-  slug: z.string().min(1),
-  kind: z.enum(["guide", "faq", "page"]),
-  title: z.string().min(1),
-  body: z.string().min(1),
-  published: z.coerce.boolean().optional(),
-});
-
 export async function upsertContent(formData: FormData) {
-  await requireAdmin();
-  const parsed = contentSchema.safeParse({
-    ...Object.fromEntries(formData.entries()),
-    published: formData.get("published") === "on",
-  });
-  if (!parsed.success) return { ok: false, error: "Invalid content." };
-  const c = parsed.data;
-  if (c.id) {
-    await prisma.contentBlock.update({ where: { id: c.id }, data: c });
-  } else {
-    await prisma.contentBlock.create({ data: c });
-  }
-  revalidatePath("/admin/content");
-  revalidatePublication();
-  revalidatePath(`/learn/${c.slug}`);
-  return { ok: true };
+  return saveContentBlock({ ...Object.fromEntries(formData.entries()),
+    published: formData.get("published") === "on", noindex: formData.get("noindex") === "on",
+  } as PublicationInput);
 }
-
 export async function deleteContent(id: string) {
   await requireAdmin();
-  const removed = await prisma.contentBlock.delete({ where: { id } });
-  revalidatePublication([removed.slug]);
-  revalidatePath("/admin/content");
-  revalidatePublication();
+  try { const result = await deletePublication(id); publishDiscoveryChange(result.paths); return { ok: true as const }; }
+  catch (e) { return { ok: false as const, error: publicationMessage(e) }; }
 }
 
 // ---------- Users ----------
@@ -407,90 +383,21 @@ export async function deleteContactMessage(id: string) {
 
 // ---------- Content workspace ----------
 
-const contentBlockSchema = z.object({
-  id: z.string().optional().nullable(),
-  slug: z.string().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase words separated by single hyphens."),
-  kind: z.enum(["guide", "faq", "page"]),
-  title: z.string().min(1).max(200),
-  body: z.string().min(1),
-  published: z.boolean(),
-});
-
-export type ContentBlockInput = z.input<typeof contentBlockSchema>;
-
-/**
- * Create-or-update that hands the saved row back.
- *
- * `upsertContent` above takes a FormData and returns only `{ ok }`, which
- * forced the old editor to redirect to the list to see its own result. The
- * workspace stays put instead, so it needs the persisted values (id, and the
- * server-side updatedAt) to reconcile its local queue.
- */
+export type ContentBlockInput = PublicationInput;
 export async function saveContentBlock(input: ContentBlockInput) {
   await requireAdmin();
-  const parsed = contentBlockSchema.safeParse(input);
-  if (!parsed.success)
-    return { ok: false as const, error: parsed.error.issues[0]?.message ?? "Invalid content." };
-  const c = parsed.data;
-
-  // Slug is unique in the database; catching it here gives a usable message
-  // instead of an unhandled Prisma error in the action.
-  const clash = await prisma.contentBlock.findUnique({ where: { slug: c.slug } });
-  if (clash && clash.id !== c.id)
-    return { ok: false as const, error: `The slug "${c.slug}" is already used by "${clash.title}".` };
-
-  const data = {
-    slug: c.slug,
-    kind: c.kind,
-    title: c.title,
-    body: c.body,
-    published: c.published,
-  };
-  // Capture the old slug before writing: renaming a block leaves the previous
-  // /learn/<slug> route cached until it is revalidated too.
-  const previousSlug = c.id
-    ? (await prisma.contentBlock.findUnique({ where: { id: c.id }, select: { slug: true } }))?.slug
-    : undefined;
-
-  const saved = c.id
-    ? await prisma.contentBlock.update({ where: { id: c.id }, data })
-    : await prisma.contentBlock.create({ data });
-
-  revalidatePath("/admin/content");
-  revalidatePublication();
-  revalidatePath("/admin");
-  revalidatePath("/learn");
-  revalidatePath(`/learn/${saved.slug}`);
-  if (previousSlug && previousSlug !== saved.slug) revalidatePath(`/learn/${previousSlug}`);
-
-  return {
-    ok: true as const,
-    block: {
-      id: saved.id,
-      slug: saved.slug,
-      kind: saved.kind,
-      title: saved.title,
-      body: saved.body,
-      published: saved.published,
-      updatedAt: saved.updatedAt.toISOString(),
-    },
-  };
+  try {
+    const result = await savePublication(input);
+    publishDiscoveryChange(result.paths);
+    return { ok: true as const, block: { ...result.block, createdAt: result.block.createdAt.toISOString(), updatedAt: result.block.updatedAt.toISOString() } };
+  } catch (e) { return { ok: false as const, error: publicationMessage(e) }; }
 }
-
-export async function toggleContentPublished(id: string) {
+export async function toggleContentPublished(id: string, published?: boolean, expectedUpdatedAt?: string) {
   await requireAdmin();
-  const block = await prisma.contentBlock.findUnique({ where: { id } });
-  if (!block) return { ok: false as const, error: "Not found." };
-  const updated = await prisma.contentBlock.update({
-    where: { id },
-    data: { published: !block.published },
-  });
-  revalidatePath("/admin/content");
-  revalidatePublication();
-  revalidatePath("/admin");
-  revalidatePath("/learn");
-  revalidatePath(`/learn/${updated.slug}`);
-  return { ok: true as const, published: updated.published };
+  const old = await prisma.contentBlock.findUnique({ where: { id } });
+  if (!old) return { ok: false as const, error: "Content not found." };
+  const result = await saveContentBlock({ ...old, kind: old.kind as "guide" | "faq" | "page", published: published ?? !old.published, expectedUpdatedAt });
+  return result.ok ? { ok: true as const, published: result.block.published, updatedAt: result.block.updatedAt } : result;
 }
 
 // ---------- Plans ----------

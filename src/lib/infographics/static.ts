@@ -9,10 +9,10 @@ import { PALETTE, esc, svgDoc } from "@/lib/infographics/svg";
 /* ---------- Storage & shelf life (FAQ hub) ---------- */
 
 const STORAGE_CARDS = [
-  { big: "Fridge", sub: "Keep mixed vials cold, per your product's instructions" },
+  { big: "Temperature", sub: "Use the exact product label" },
   { big: "Discard date", sub: "Follow the instructions that came with your product" },
-  { big: "Dark", sub: "Keep in the box or foil" },
-  { big: "Freezing", sub: "Can damage many peptides. Check your instructions" },
+  { big: "Packaging", sub: "Use product-specific protection" },
+  { big: "No guessing", sub: "Math cannot establish stability" },
 ];
 
 export function storageAlt(): string {
@@ -39,7 +39,7 @@ export function storageSvg(): string {
 
   const inner = `
     <text x="${padX}" y="42" font-size="20" font-weight="700" fill="${PALETTE.foreground}">Storing reconstituted peptides</text>
-    <text x="${padX}" y="66" font-size="13" fill="${PALETTE.muted}">Four rules that keep a mixed vial usable for its full shelf life.</text>
+    <text x="${padX}" y="66" font-size="13" fill="${PALETTE.muted}">Storage and discard limits are product-specific, not calculated.</text>
     ${cards}
   `;
 

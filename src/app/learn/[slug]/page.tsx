@@ -21,7 +21,7 @@ interface Props { params: Promise<{ slug: string }>; }
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const g = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
-  if (!g) return { title: "Guide not found" };
+  if (!g) return { title: "Guide not found", robots: { index: false, follow: false } };
 
   // FAQ content blocks are canonicalized to /faq; noindex the /learn/faq-* URLs
   // so search engines see one authoritative version of each FAQ answer.
@@ -33,30 +33,25 @@ export async function generateMetadata({ params }: Props) {
     };
   }
 
-  const description = extractMetaDescription(g.body);
+  const description = g.metaDescription || extractMetaDescription(g.body);
+  const searchTitle = g.seoTitle || g.title;
+  const canonical = g.canonicalPath || `/learn/${slug}`;
   return {
-    title: g.title,
+    title: searchTitle,
     description,
+    robots: { index: !g.noindex, follow: true },
     openGraph: {
-      title: g.title,
+      title: searchTitle,
       description,
-      url: `/learn/${slug}`,
+      url: canonical,
       type: "website",
       siteName: "BACwater.ai",
     },
-    alternates: { canonical: `/learn/${slug}` },
+    alternates: { canonical },
   };
 }
 
-export async function generateStaticParams() {
-  const guides = await prisma.contentBlock.findMany({
-    where: { kind: "guide", published: true },
-    select: { slug: true },
-  }).catch(() => []);
-  return guides.map((g) => ({ slug: g.slug }));
-}
-
-export const dynamic = "auto";
+export const dynamic = "force-dynamic";
 
 export default async function GuidePage({ params }: Props) {
   const { slug } = await params;
@@ -112,7 +107,7 @@ export default async function GuidePage({ params }: Props) {
         <div>
           <div className="font-medium">Ready to build a plan?</div>
           <div className="text-sm text-muted-foreground">
-            Turn what you just learned into an exact reconstitution plan.
+            Check the arithmetic using values from instructions you already have.
           </div>
         </div>
         <Button asChild variant="brand">
@@ -128,8 +123,8 @@ export default async function GuidePage({ params }: Props) {
       <div className="mt-6 rounded-2xl border border-border p-6 sm:p-8">
         <div className="font-medium">Want more of this in your search results?</div>
         <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-          Mark BACwater.ai as a preferred source on Google and our guides show
-          up first when they are relevant.{" "}
+          Choose BACwater.ai as a preferred source where Google supports it.
+          Google controls eligibility and placement; this does not guarantee a ranking.{" "}
           <Link href="/preferred-source" className="underline hover:text-foreground">
             What this does
           </Link>
