@@ -2,7 +2,7 @@
  * Deterministic triage for inbound contact messages.
  *
  * The workspace uses this to pre-answer the two decisions an admin makes on
- * every message — what kind of message is this, and what do I say back — so
+ * every message: what kind of message is this, and what do I say back: so
  * the common case is one keystroke instead of a blank textarea. It is plain
  * keyword matching on purpose: no model call, no latency, and the admin can
  * always see and edit what it suggested before anything is sent.
@@ -53,7 +53,7 @@ const RULES: Rule[] = [
     patterns: [
       /\b(bug|error|broken|crash\w*|not working|doesn'?t work|won'?t load|blank (page|screen)|500|404)\b/i,
       /\b(wrong|incorrect) (answer|number|result|math|calculation)\b/i,
-      // "the answer is wrong", "my total doesn't match" — the complaint and the
+      // "the answer is wrong", "my total doesn't match": the complaint and the
       // noun are usually separated by a few words, so match across the gap too.
       /\b(answer|number|result|math|calculation|total)s?\b[^.?!]{0,40}\b(wrong|incorrect|off by|doesn'?t match|does not match)\b/i,
     ],
@@ -103,7 +103,7 @@ export function classifyContactMessage(input: {
       id: "medical",
       label: "Medical advice request",
       detail:
-        "Reads as a request for medical guidance. BACwater.ai is not a medical service — answer the tool question only and refer them to a clinician.",
+        "Reads as a request for medical guidance. BACwater.ai is not a medical service: answer the tool question only and refer them to a clinician.",
       severity: "blocker",
     });
   }
@@ -112,7 +112,7 @@ export function classifyContactMessage(input: {
       id: "commerce",
       label: "Asks about an order",
       detail:
-        "Mentions an order or payment. The site sells nothing today, so this is likely a mistaken sender or a phishing probe — verify before replying.",
+        "Mentions an order or payment. The site sells nothing today, so this is likely a mistaken sender or a phishing probe: verify before replying.",
       severity: "warning",
     });
   }
@@ -174,13 +174,13 @@ If the numbers it gives you don't match what you expected, reply with the vial s
   },
   {
     id: "medical",
-    label: "Medical question — decline and refer",
+    label: "Medical question: decline and refer",
     description: "Declines to advise, keeps the door open for tool questions.",
     subject: re,
     body: (name) =>
       `Hi ${firstName(name)},
 
-Thanks for writing in, and I'm sorry — this isn't something I can help with.
+Thanks for writing in, and I'm sorry: this isn't something I can help with.
 
 BACwater.ai is a calculation tool. It works out reconstitution volumes and syringe readings from numbers you supply. It is not a medical service, and we don't advise on whether a compound is appropriate for anyone, what amount to use, or how it might affect you. Please take those questions to a qualified clinician.
 
@@ -194,7 +194,7 @@ If you have a question about how the calculator itself works, I'm glad to answer
     body: (name) =>
       `Hi ${firstName(name)},
 
-Thanks for reaching out — your request is noted and I'm handling it now.
+Thanks for reaching out: your request is noted and I'm handling it now.
 
 For context on what exists: an account holds your email address and the reconstitution plans you chose to save. Plans saved without an account are held against a random link ID rather than a person. Nothing is sold or shared with advertisers.
 
@@ -208,7 +208,7 @@ I'll confirm here once the deletion is complete.${SIGNOFF}`,
     body: (name) =>
       `Hi ${firstName(name)},
 
-Thanks for flagging this — genuinely useful.
+Thanks for flagging this: genuinely useful.
 
 So I can reproduce it, could you tell me:
 
@@ -239,7 +239,7 @@ If you're working on something specific to peptide reconstitution accuracy, feel
     body: (name) =>
       `Hi ${firstName(name)},
 
-Thanks for writing in — I've read your message.
+Thanks for writing in: I've read your message.
 
 Could you tell me a little more about what you were trying to do? If it relates to a specific calculation, the vial strength on your label and the amount you're aiming to measure is usually all I need.${SIGNOFF}`,
   },

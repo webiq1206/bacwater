@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { SEARCH_CONTENT_WHERE } from "@/lib/seo/publication-policy";
 import {
   urlsetXml,
   xmlResponse,
@@ -18,7 +19,7 @@ export async function GET() {
   try {
   const guides = await prisma.contentBlock
     .findMany({
-      where: { kind: "guide", published: true },
+      where: SEARCH_CONTENT_WHERE,
       select: { slug: true, updatedAt: true },
     })
     ;

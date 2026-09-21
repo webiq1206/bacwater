@@ -96,8 +96,9 @@ export function BatchLabelSheet({ plans }: { plans: BatchLabelPlan[] }) {
         </h1>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           One sheet covering every plan you selected. Set how many labels each
-          vial needs and when it was mixed — expiry fills in from that plan&apos;s
-          own shelf life. Print at 100% scale and cut along the outlines.
+          vial needs and when it was mixed. Storage and discard instructions
+          come from the exact product, not this calculation. Print at 100% scale
+          and cut along the outlines.
         </p>
 
         <div className="mt-5 border border-border bg-surface">

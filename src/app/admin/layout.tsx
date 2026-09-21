@@ -21,6 +21,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: "/admin", label: "Dashboard", icon: "dashboard" as const },
     { href: "/admin/contact", label: "Contact", icon: "contact" as const, count: openContact },
     { href: "/admin/content", label: "Content", icon: "content" as const, count: draftContent },
+    { href: "/admin/publication", label: "Publishing", icon: "content" as const },
     { href: "/admin/plans", label: "Plans", icon: "plans" as const },
     { href: "/admin/users", label: "Users", icon: "users" as const },
   ];

@@ -220,14 +220,41 @@ model VendorSubmission {
 // ---------- Content + Contact ----------
 
 model ContentBlock {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  kind      String   // guide | faq | page
-  title     String
-  body      String
-  published Boolean  @default(true)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  kind            String
+  title           String
+  body            String
+  published       Boolean  @default(true)
+  seoTitle        String?
+  metaDescription String?
+  noindex         Boolean  @default(false)
+  canonicalPath   String?
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  redirects       ContentRedirect[]
+}
+
+// Aliases point at a content ID, not another alias, avoiding redirect chains.
+model ContentRedirect {
+  slug      String       @id
+  contentId String
+  content   ContentBlock @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+  @@index([contentId])
+}
+
+// Durable discovery outbox. Contains public paths only, never content or secrets.
+model IndexNowEvent {
+  path          String   @id
+  revision      Int      @default(1)
+  status        String   @default("pending")
+  attempts      Int      @default(0)
+  nextAttemptAt DateTime @default(now())
+  lastStatus    Int?
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  @@index([status, nextAttemptAt])
 }
 
 model ContactMessage {

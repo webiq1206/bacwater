@@ -58,7 +58,7 @@ export function PlanResults({ result }: Props) {
       review step and the public plan page are wide, while the My Plans and
       admin workspace centre panes are narrow columns inside a three-pane
       shell. `@container` sizes the stat row to the box it is actually in —
-      four across on a wide page, two across in a narrow pane — instead of to
+      four across on a wide page, two across in a narrow pane: instead of to
       the window, which tells it nothing useful here.
 
       The body deliberately stays a single column: splitting it into two made
@@ -463,7 +463,7 @@ function DosageReference({ result }: { result: CalcResult }) {
       </p>
       {/*
         `overflow-hidden` alone rounds the corners but hard-clips the table
-        when this card sits in a narrow column — the Delivers column was being
+        when this card sits in a narrow column: the Delivers column was being
         sliced off with no way to reach it. `overflow-x-auto` keeps the rounded
         corners and lets the table scroll instead of disappearing.
       */}

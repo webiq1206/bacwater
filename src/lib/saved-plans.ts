@@ -11,7 +11,7 @@ export interface DeviceSavedPlan {
   /**
    * Proof-of-possession secret issued when this device saved the plan while
    * signed out. Presented on sign-in to claim the plan into the account.
-   * Absent for plans merely viewed (e.g. shared links) — those can't be claimed.
+   * Absent for plans merely viewed (e.g. shared links): those can't be claimed.
    */
   claimToken?: string;
 }

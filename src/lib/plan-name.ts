@@ -25,13 +25,13 @@ export function defaultPlanName(p: {
  * typed.
  *
  * A generated name is a restatement of the plan's own numbers, so it should
- * follow them when they change — a plan called "BPC-157 · 5 mg" whose vial is
+ * follow them when they change: a plan called "BPC-157 · 5 mg" whose vial is
  * corrected to 10 mg is otherwise labelled with the very number that was
  * wrong. A name someone chose is theirs and is never rewritten.
  *
  * `values` are the plan's values as they were when the name was stored, so the
  * comparison asks "is this still exactly what we would have produced?".
- * Anything else — including a name that merely looks similar — counts as
+ * Anything else: including a name that merely looks similar: counts as
  * chosen, which is the safe direction to be wrong in.
  */
 export function isGeneratedPlanName(

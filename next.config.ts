@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import { execFileSync } from "node:child_process";
+let buildCommit = "unavailable";
+try { const value = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); if (/^[a-f0-9]{40}$/.test(value)) buildCommit = value; } catch {}
 
 /**
  * The canonical host, taken from the same variable the sitemaps and canonical
@@ -13,6 +16,7 @@ const APEX_HOST = new URL(
 const WWW_HOST_PATTERN = `www\\.${APEX_HOST.replace(/\./g, "\\.")}`;
 
 const nextConfig: NextConfig = {
+  env: { BACWATER_BUILD_COMMIT: buildCommit },
   typescript: { ignoreBuildErrors: false },
   serverExternalPackages: ["@prisma/client", "bcryptjs", "@react-pdf/renderer", "qrcode"],
   async redirects() {

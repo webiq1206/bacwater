@@ -139,7 +139,7 @@ export interface CalcResult {
     injectionsPerWeek: number;
     weeklyDoseMcg: number;
     dosePerInjectionMcg: number;
-    /** e.g. "Twice weekly — e.g., Monday and Thursday" */
+    /** e.g. "Twice weekly: e.g., Monday and Thursday" */
     label: string;
     halfLifeHours: number | null;
   };

@@ -37,8 +37,6 @@ export function ArticleJsonLd({
     dateModified: updatedAt.toISOString(),
     author: orgRef,
     publisher: orgRef,
-    reviewedBy: orgRef,
-    lastReviewed: LAST_REVIEWED_ISO,
   };
   const citation = citationLd(citations);
   if (citation) jsonLd.citation = citation;

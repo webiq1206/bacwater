@@ -57,12 +57,14 @@ jobs:
           npx prisma generate
           npx prisma db push --skip-generate
           npx tsx prisma/seed.ts
-      - name: Typecheck, unit tests and build
+      - name: Typecheck, unit tests and publication transactions
         run: |
           set -o pipefail
           npx tsc --noEmit 2>&1 | tee audit-evidence/typecheck.log
           npm test 2>&1 | tee audit-evidence/tests.log
-          npx next build 2>&1 | tee audit-evidence/build.log
+          npx tsx scripts/audit-publication.ts 2>&1 | tee audit-evidence/publication-tests.log
+      - name: Build
+        run: set -o pipefail; npx next build 2>&1 | tee audit-evidence/build.log
       - uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -72,10 +74,12 @@ jobs:
           npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
           npx playwright install --with-deps chromium firefox webkit
           sudo apt-get install -y poppler-utils
-      - name: Verify application journeys and private PDF content
+      - name: Verify publication, conversions, application journeys and private PDFs
         run: |
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
+          node scripts/audit-publication-browser.mjs
+          node scripts/audit-converters.mjs
           node scripts/audit-journeys.mjs
           pdftotext audit-evidence/journeys/owner.pdf audit-evidence/journeys/owner.txt
           pdftotext audit-evidence/journeys/shared.pdf audit-evidence/journeys/shared.txt
@@ -87,16 +91,13 @@ jobs:
           node scripts/master-audit.mjs
           node - <<'JS'
           const fs = require('fs');
-          const read = (name) => JSON.parse(fs.readFileSync(`audit-evidence/after/${name}.json`));
-          const summary = read('summary');
-          const responsive = read('responsive-engines');
-          const http = read('http-inventory');
-          const renders = read('rendered-pages');
+          const read = name => JSON.parse(fs.readFileSync(`audit-evidence/after/${name}.json`));
+          const summary = read('summary'), responsive = read('responsive-engines'), http = read('http-inventory'), renders = read('rendered-pages');
           if (summary.errors || summary.pagesWithOverflow.length || summary.violations.length) process.exit(1);
-          if (responsive.some((r) => r.error || r.errors?.length || r.horizontalOverflow)) process.exit(1);
-          if (http.unvisited.length || http.queueRemaining.length || http.pages.some((p) => p.error || p.status !== 200)) process.exit(1);
-          if (http.endpoints.filter((r) => r.requested.includes('does-not-exist-audit')).some((r) => r.status !== 404)) process.exit(1);
-          if (renders.some((r) => !r.title || r.h1?.length !== 1 || r.errors?.length || r.schema?.some((s) => s?.parseError))) process.exit(1);
+          if (responsive.some(r => r.error || r.errors?.length || r.horizontalOverflow)) process.exit(1);
+          if (http.unvisited.length || http.queueRemaining.length || http.pages.some(p => p.error || p.status !== 200)) process.exit(1);
+          if (http.endpoints.filter(r => r.requested.includes('does-not-exist-audit')).some(r => r.status !== 404)) process.exit(1);
+          if (renders.some(r => !r.title || r.h1?.length !== 1 || r.errors?.length || r.schema?.some(s => s?.parseError))) process.exit(1);
           console.log(`Verified ${summary.httpPages} URLs, ${summary.rendered} renders and ${summary.responsive} responsive/engine checks.`);
           JS
       - uses: actions/upload-artifact@v4

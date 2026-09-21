@@ -8,7 +8,7 @@ export type MassUnit = "mg" | "mcg";
  * The vial a visitor is currently working with, shared across the calculators.
  *
  * The BAC water, reverse-BAC, and supplies tools each ask for the same three
- * facts — which peptide, how much is in the vial, how much you measure — and
+ * facts: which peptide, how much is in the vial, how much you measure: and
  * each used to keep its own private copy in localStorage. Walking the natural
  * path (work out the water, check what to buy, reverse-check against the
  * syringe you own) therefore meant typing the same three things three times.
@@ -16,7 +16,7 @@ export type MassUnit = "mg" | "mcg";
  * This is one record they all read and write. The routes are untouched: each
  * calculator stays its own indexable page, it just stops re-asking.
  *
- * The "nothing is pre-populated" rule still holds — a first-time visitor gets
+ * The "nothing is pre-populated" rule still holds: a first-time visitor gets
  * an empty context. Only a visitor's own previous entries carry over, and the
  * tools surface that with a dismissible notice rather than silently filling
  * fields in.
@@ -107,7 +107,7 @@ function migrateLegacy(): StoredVial {
 /**
  * Vial contents in mg, from whatever unit was typed. Kept as a standalone
  * function (rather than inline in the hook) so the conversions the tools used
- * before they shared state can be asserted against these directly — sharing
+ * before they shared state can be asserted against these directly: sharing
  * the record must not move a single displayed number.
  */
 export function vialMgOf(v: Pick<StoredVial, "vialInput" | "vialUnit">): number {

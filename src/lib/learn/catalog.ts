@@ -12,6 +12,7 @@
  */
 
 import { cache } from "react";
+import { SEARCH_CONTENT_WHERE, RESERVED_LEARN_SLUGS } from "@/lib/seo/publication-policy";
 import { prisma } from "@/lib/db";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { PEPTIDE_CONTENT } from "@/lib/peptides/content";
@@ -224,7 +225,7 @@ const STATIC_ENTRIES: LearnEntry[] = [
     url: "/tools/vial-labels",
     title: "Free printable peptide vial labels",
     excerpt:
-      "Generate printable vial labels with a QR code showing strength, concentration, dose, mix date, and discard date.",
+      "Generate printable vial labels with a QR code showing strength, concentration, measurement and mix date. Storage limits come from the product instructions.",
     contentType: "guide",
     peptideTags: [],
     topicTags: ["injection-supplies", "reconstitution-method"],
@@ -238,7 +239,7 @@ export async function getCatalog(strict = false): Promise<LearnEntry[]> {
   // signals. They remain accessible at /learn/[slug] with noindex for deep links.
   const blocks = await prisma.contentBlock
     .findMany({
-      where: { published: true, kind: "guide" },
+      where: SEARCH_CONTENT_WHERE,
       select: { id: true, slug: true, kind: true, title: true, body: true },
     })
     .catch(
@@ -255,7 +256,7 @@ export async function getCatalog(strict = false): Promise<LearnEntry[]> {
     );
 
   const dbEntries: LearnEntry[] = blocks
-    .filter((b) => !REDIRECTED.has(b.slug))
+    .filter((b) => !REDIRECTED.has(b.slug) && !RESERVED_LEARN_SLUGS.has(b.slug))
     .map((b) => {
       const t = DB_TAGS[b.slug] ?? inferTagging(b.slug, b.kind);
       return {

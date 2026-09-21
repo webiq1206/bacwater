@@ -1,149 +1,33 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-
-export const metadata = {
-  alternates: { canonical: "/editorial-policy" },
-  title: "Editorial & Sourcing Policy",
-  description:
-    "How BACwater.ai researches, fact-checks, and maintains its reconstitution guides and calculators. Company-level accountability, verified formulas, quarterly review.",
-  openGraph: {
-    title: "Editorial & Sourcing Policy",
-    description:
-      "How BACwater.ai researches, fact-checks, and maintains its reconstitution guides and calculators. Company-level accountability, verified formulas, quarterly review.",
-    url: "/editorial-policy",
-    type: "website",
-    siteName: "BACwater.ai",
-  },
-};
-
+const description = "How BACwater.ai calculates concentration and syringe units, handles sources and corrections, and separates arithmetic from medical advice.";
+export const metadata = { title: "Calculation Methodology and Editorial Policy", description, alternates: { canonical: "/editorial-policy" }, openGraph: { title: "Calculation Methodology and Editorial Policy", description, url: "/editorial-policy", type: "website" } };
 export default function EditorialPolicyPage() {
-  return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <WebPageJsonLd
-        name="Editorial & Sourcing Policy"
-        description="How BACwater.ai researches, fact-checks, and maintains its reconstitution guides and calculators."
-        url="/editorial-policy"
-        breadcrumb={[
-          { name: "Home", url: "/" },
-          { name: "Editorial & Sourcing Policy", url: "/editorial-policy" },
-        ]}
-      />
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Editorial & Sourcing Policy", href: "/editorial-policy" },
-        ]}
-      />
-      <div className="eyebrow">Trust</div>
-      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-        Editorial and sourcing policy
-      </h1>
-      <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-        Everything we publish is accountable at the company level. We do not use
-        individual author or reviewer bylines. Instead, BACwater.ai stands
-        behind every guide, calculator, and dosage reference as an organization,
-        and this page explains exactly how that content is researched, checked,
-        and kept current.
-      </p>
-
-      <div className="mt-10 space-y-10 text-foreground/90 leading-relaxed">
-        <section>
-          <h2 className="text-2xl font-serif font-medium tracking-tight">
-            How we research
-          </h2>
-          <p className="mt-3">
-            Our reconstitution content draws on manufacturer product
-            documentation, published pharmacology and stability references, and
-            established clinical-pharmacy practice for handling sterile
-            multi-dose vials. When sources disagree, we describe the range
-            rather than presenting a single number as settled fact, and we say
-            plainly when a value is a typical reference rather than a rule.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-serif font-medium tracking-tight">
-            How our calculators work
-          </h2>
-          <p className="mt-3">
-            The math behind our calculators is deterministic. The same inputs
-            always produce the same outputs, using transparent formulas that are
-            backed by automated tests. We do not use AI to generate dosing
-            numbers. Every result page shows the underlying formula so you can
-            verify our work, and the calculator flags input combinations that
-            would produce an implausible or hard-to-measure result instead of
-            silently returning a number.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-serif font-medium tracking-tight">
-            How we fact-check
-          </h2>
-          <p className="mt-3">
-            Before publishing, every dosage table and reconstitution step is
-            checked against the commercial vial strengths actually sold for that
-            peptide and against the calculator&apos;s own tested output. Numeric
-            claims are presented in tables so they are easy to audit. If a claim
-            cannot be verified, it does not go on the page.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-serif font-medium tracking-tight">
-            How we keep content current
-          </h2>
-          <p className="mt-3">
-            Dosing norms, product availability, and the comparison landscape in
-            this category change quickly. We audit our content at least
-            quarterly to re-verify dosage tables against current product
-            offerings, confirm that comparison and buying-guide claims are still
-            accurate, and update the last-updated date on each page only when
-            the content genuinely changes, never as a cosmetic bump.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-serif font-medium tracking-tight">
-            Our limits
-          </h2>
-          <p className="mt-3">
-            BACwater.ai is a calculation and education tool, not a medical
-            service. Our content is not created or reviewed by a licensed
-            physician and is not a substitute for professional medical judgment.
-            Everything on the site is for research and informational purposes
-            only. See our{" "}
-            <Link href="/disclaimer" className="underline hover:text-foreground">
-              full disclaimer
-            </Link>{" "}
-            for details.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-serif font-medium tracking-tight">
-            Found an error?
-          </h2>
-          <p className="mt-3">
-            If you spot something inaccurate or out of date, please{" "}
-            <Link href="/contact" className="underline hover:text-foreground">
-              contact us
-            </Link>
-            . We take corrections seriously and will review and fix verified
-            errors promptly.
-          </p>
-        </section>
-
-        <div className="mt-8 pt-6 border-t border-border">
-          <Link
-            href="/"
-            className="text-sm font-medium text-foreground hover:underline"
-          >
-            &larr; Back to BACwater.ai
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-12 pb-24">
+    <WebPageJsonLd name="Calculation methodology and editorial policy" description={description} url="/editorial-policy" />
+    <Breadcrumbs items={[{label:"Home",href:"/"},{label:"Editorial policy",href:"/editorial-policy"}]} />
+    <div className="eyebrow">Method and limitations</div><h1 className="mt-2 text-4xl font-serif">Calculation methodology and editorial policy</h1>
+    <p className="mt-5 text-lg leading-relaxed">BACwater.ai is a free calculation and reference website. The calculator works from values you enter. Publisher attribution is not a claim that a clinician has reviewed an article or approved a result.</p>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">The arithmetic</h2>
+      <p>Concentration in mg/mL equals the total amount in mg divided by the final liquid volume in mL. A measurement in mL equals the entered amount in mg divided by that concentration. One mg equals 1,000 mcg.</p>
+      <p>On a U-100 scale, multiply mL by 100 to obtain syringe units. On a U-40 scale, multiply by 40. Syringe capacity and syringe calibration are different: a smaller U-100 syringe still uses the U-100 ratio.</p>
+      <p>For an arithmetic example, 10 mg in a final 2 mL is 5 mg/mL. An entered 0.4 mg measurement corresponds to 0.08 mL, or 8 U-100 units. These numbers demonstrate a conversion. They are not a mixing or dosing recommendation.</p>
+    </section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Inputs, rounding and warnings</h2>
+      <p>The result assumes the stated amount is present and fully dissolved in the stated final volume. The website cannot inspect the vial or verify its contents. Enter the correct mass unit and use the scale printed on the actual measuring device.</p>
+      <p>Calculations retain numeric precision before display formatting. A displayed rounded syringe mark is an approximation, not permission to change an instruction. Warnings flag invalid inputs, capacity problems or measurements that may be difficult to read.</p>
+      <p>Automated fixtures test arithmetic and application behavior. A passing software test does not establish sterility, product quality, chemical compatibility or clinical suitability.</p>
+    </section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">What the tool does not decide</h2>
+      <p>The calculator does not choose a dose, treatment frequency, diluent or route of administration. It does not calculate a safe storage period. Dates in a saved plan are recordkeeping, not proof that a product remains usable.</p>
+      <p>Use instructions for the exact formulation and ask the dispensing pharmacist or prescriber about medication-specific questions. Read <Link href="/learn/what-you-cannot-know" className="underline">what no calculation can verify</Link> and our <Link href="/disclaimer" className="underline">full disclaimer</Link>.</p>
+    </section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Sources and corrections</h2>
+      <p>Consequential factual claims should link to applicable primary sources and identify their limits. A manufacturer label for one product is not a storage rule for every mixture. Research discussion does not establish an approved use.</p>
+      <p>A content timestamp records an edit. It is not a medical review date. Corrections, changed product documentation and changes to the calculation code trigger renewed review. We do not claim that every article has received a completed clinical review.</p>
+      <p>Report a problem through <Link href="/contact" className="underline">support</Link>. Include the public page, units, expected result and actual result. Leave out personal health information, account tokens and private share links.</p>
+    </section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Use the right tool</h2><p><Link href="/peptide-calculator" className="underline">Full concentration calculator</Link>, <Link href="/tools/syringe-units" className="underline">syringe units to mL</Link>, <Link href="/tools/mg-to-mcg" className="underline">mg to mcg</Link>, and <Link href="/tools/vial-labels" className="underline">vial labels</Link> are available without a purchase. Saved plans and public share links have separate <Link href="/privacy" className="underline">privacy considerations</Link>.</p></section>
+  </div>;
 }

@@ -1,425 +1,124 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
-import { ArrowRight, Beaker, Check, Droplets, HelpCircle, Lightbulb } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PEPTIDES, recommendBacWaterMl } from "@/lib/calc";
-import { formatConcentration, formatUnits } from "@/lib/calc/format";
-import { cn } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
-import { ResearchDisclaimer } from "@/components/common/research-disclaimer";
-import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
-import { setInterestPeptide } from "@/lib/learn/interest";
-import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { CopyButton } from "@/components/common/copy-button";
-import { StickyResultBar } from "@/components/tools/sticky-result-bar";
-import { useVialContext } from "@/lib/tools/vial-context";
 import { CarriedOverNotice } from "@/components/tools/carried-over-notice";
+import { useVialContext, type MassUnit } from "@/lib/tools/vial-context";
+import { usePersistentState } from "@/lib/use-persistent-state";
+import { recommendBacWaterMl } from "@/lib/calc";
 
-type Unit = "mg" | "mcg";
+function display(value: number): string {
+  if (value > 0 && (value < 0.000001 || value >= 1000000000)) return value.toExponential(6);
+  return new Intl.NumberFormat("en-US", { maximumSignificantDigits: 12, useGrouping: false }).format(value);
+}
+
+function UnitChoice({ value, onChange, label }: { value: MassUnit; onChange: (unit: MassUnit) => void; label: string }) {
+  return <div className="flex shrink-0 gap-1" role="group" aria-label={label}>{(["mg", "mcg"] as const).map(unit => <Button key={unit} type="button" variant={value === unit ? "brand" : "outline"} aria-pressed={value === unit} onClick={() => onChange(unit)} className="min-h-11 px-3">{unit}</Button>)}</div>;
+}
 
 export default function BacWaterCalculatorPage() {
-  // Peptide, vial amount, and measured amount are shared with the reverse-BAC
-  // and supplies calculators, so moving between them doesn't re-ask.
   const vial = useVialContext();
-  const {
-    peptideSlug,
-    setPeptideSlug,
-    vialInput,
-    setVialInput,
-    vialUnit,
-    setVialUnit,
-    vialMg,
-    doseInput,
-    setDoseInput,
-    doseUnit,
-    setDoseUnit,
-    doseMcg,
-  } = vial;
-  const peptide = PEPTIDES.find((p) => p.slug === peptideSlug);
-  const hasPeptide = !!peptide;
+  const [savedMode, setMode] = usePersistentState<"known" | "example">("bacwater.tool.bacwater.mode.v2", "known");
+  const [savedVolume, setVolume] = usePersistentState<string>("bacwater.tool.bacwater.volume.v2", "");
+  const mode = savedMode === "example" ? "example" : "known";
+  const volumeText = typeof savedVolume === "string" ? savedVolume : "";
+  const vialAmount = Number(vial.vialInput);
+  const measurementAmount = Number(vial.doseInput);
+  const vialMg = vial.vialUnit === "mcg" ? vialAmount / 1000 : vialAmount;
+  const measurementMg = vial.doseUnit === "mcg" ? measurementAmount / 1000 : measurementAmount;
+  const amountsValid = [vialMg, measurementMg].every(n => Number.isFinite(n) && n > 0);
+  const exampleVolume = amountsValid ? recommendBacWaterMl(vialMg, measurementMg * 1000) : 0;
+  const volume = mode === "example" ? exampleVolume : Number(volumeText);
+  const concentration = amountsValid && volume > 0 ? vialMg / volume : 0;
+  const measurementMl = concentration > 0 ? measurementMg / concentration : 0;
+  const units = measurementMl * 100;
+  const valid = amountsValid && [volume, concentration, measurementMl, units].every(n => Number.isFinite(n) && n > 0);
+  const invalidAmount = [vialAmount, measurementAmount].some(n => !Number.isFinite(n) || n < 0);
+  const invalidVolume = mode === "known" && volumeText.trim() !== "" && (!Number.isFinite(volume) || volume <= 0);
+  const outsideRange = amountsValid && volume > 0 && !valid;
+  const error = invalidAmount ? "Enter positive, finite amounts and confirm their units." : invalidVolume ? "The final liquid volume must be greater than zero." : outsideRange ? "These values exceed the supported numeric range. Check the entered amounts and units." : "";
 
-  // Selecting a peptide only records the choice (and drives the hints); it does
-  // not pre-fill a vial amount or an amount to measure. The user enters those.
-  function handlePeptideChange(slug: string) {
-    setPeptideSlug(slug);
-    if (slug !== "custom") setInterestPeptide(slug);
+  function clear() {
+    vial.clear();
+    setVolume("");
+    setMode("known");
   }
 
-  const rec = useMemo(() => recommendBacWaterMl(vialMg, doseMcg), [vialMg, doseMcg]);
-  const concentration = vialMg > 0 && rec > 0 ? vialMg / rec : 0;
-  const doseMl = concentration > 0 ? (doseMcg / 1000) / concentration : 0;
-  const syringeUnits = doseMl * 100;
-  const dosesPerVial = doseMcg > 0 ? Math.floor(vialMg / (doseMcg / 1000)) : 0;
-  const valid = vialMg > 0 && doseMcg > 0;
-
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <Breadcrumbs items={[
-        { label: "Home", href: "/" },
-        { label: "Tools", href: "/tools" },
-        { label: "BAC Water Calculator", href: "/tools/bac-water" },
-      ]} />
-      <StickyResultBar
-        label="Add this much bac water"
-        value={valid ? `${rec} mL` : "--"}
-        sub={valid ? `${formatUnits(syringeUnits)} units/measurement` : undefined}
-        visible={valid}
-      />
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools", href: "/tools" }, { label: "BAC water calculator", href: "/tools/bac-water" }]} />
       <div className="max-w-3xl">
-        <div className="eyebrow">Calculator</div>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          How much BAC water do I add?
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-          Tell us your peptide, vial amount, and how much you want to measure. We&apos;ll tell you exactly
-          how much bacteriostatic water to add so your syringe math comes out clean
-          and easy to measure.
-        </p>
+        <div className="eyebrow">Concentration and volume</div>
+        <h1 className="mt-3 text-4xl sm:text-5xl font-serif">BAC water volume calculator</h1>
+        <p className="mt-4 text-lg leading-relaxed">Vial strength alone cannot tell you how much BAC water to add. Enter the final liquid volume from your product instructions or an existing solution to check concentration and measurement units.</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">A calculation does not choose a compatible diluent, dose, treatment or safe storage period. Use the instructions for the exact product. No purchase or account is required.</p>
       </div>
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
-        {/* Inputs: sticky on desktop */}
-        <div className="lg:sticky lg:top-24 space-y-4">
-          <CarriedOverNotice visible={vial.carriedOver} onClear={vial.clear} />
-          <StepCard n={1} total={3} title="Which peptide?">
-            <Select value={peptideSlug} onValueChange={handlePeptideChange}>
-              <SelectTrigger aria-label="Compound" className="h-12">
-                <SelectValue placeholder="Choose a peptide" />
-              </SelectTrigger>
-              <SelectContent>
-                {PEPTIDES.map((p) => (
-                  <SelectItem key={p.slug} value={p.slug}>{p.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="mt-3 bg-surface px-3 py-2 text-xs text-muted-foreground">
-              Pick your compound, then enter your own vial amount and how much you
-              want to measure. Nothing is filled in for you.
-            </div>
-          </StepCard>
-
-          <StepCard
-            n={2}
-            total={3}
-            title="What size is your vial?"
-            hint="Look at the number printed on your vial label. It tells you how much peptide powder is inside."
-          >
-            {hasPeptide && (
-              <div className="flex flex-wrap gap-2">
-                {peptide.commonVialStrengthsMg.map((mg) => (
-                  <button
-                    key={mg}
-                    type="button"
-                    onClick={() => { setVialInput(mg); setVialUnit("mg"); }}
-                    className={cn(
-                      "chip",
-                      vialUnit === "mg" && vialInput === mg && "chip--active"
-                    )}
-                  >
-                    <div className="flex items-center gap-2 font-medium">
-                      {vialUnit === "mg" && vialInput === mg && <Check className="h-4 w-4" />}
-                      {mg} mg
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-            <div className="mt-3 flex items-center gap-2">
-              <Input
-                type="number"
-                inputMode="decimal"
-                step="0.5"
-                value={vialInput || ""}
-                onChange={(e) => setVialInput(parseFloat(e.target.value) || 0)}
-                className="flex-1"
-                placeholder="Type your vial amount"
-              />
-              <UnitToggle value={vialUnit} onChange={setVialUnit} options={["mg", "mcg"]} />
-            </div>
-            {vialUnit === "mcg" && vialInput > 0 ? (
-              <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
-                <Check className="h-3 w-3 inline mr-1" />
-                {vialInput.toLocaleString()} mcg = {(vialInput / 1000).toFixed(vialInput % 1000 === 0 ? 0 : 2)} mg
-              </div>
-            ) : null}
-          </StepCard>
-
-          <StepCard
-            n={3}
-            total={3}
-            title="How much do you measure each time?"
-            hint={
-              hasPeptide
-                ? `Amounts studied for ${peptide.name}: ${peptide.typicalDoseMcgRange[0] / 1000} to ${peptide.typicalDoseMcgRange[1] / 1000} mg (${peptide.typicalDoseMcgRange[0].toLocaleString()} to ${peptide.typicalDoseMcgRange[1].toLocaleString()} mcg).`
-                : "Enter how much you want to measure each time, in mg or mcg."
-            }
-          >
-            <div className="flex items-center gap-2">
-              <Input
-                type="number"
-                inputMode="decimal"
-                step="0.01"
-                value={doseInput || ""}
-                placeholder="Type the amount"
-                onChange={(e) => setDoseInput(parseFloat(e.target.value) || 0)}
-                className="flex-1"
-              />
-              <UnitToggle value={doseUnit} onChange={setDoseUnit} options={["mg", "mcg"]} />
-            </div>
-            {doseInput > 0 ? (
-              <div className="mt-2 bg-surface px-3 py-2 text-xs text-muted-foreground">
-                <Check className="h-3 w-3 inline mr-1" />
-                {doseUnit === "mg"
-                  ? `${doseInput.toLocaleString()} mg = ${Math.round(doseInput * 1000).toLocaleString()} mcg`
-                  : `${doseInput.toLocaleString()} mcg = ${(doseInput / 1000).toLocaleString(undefined, { maximumFractionDigits: 4 })} mg`}
-              </div>
-            ) : null}
-          </StepCard>
-        </div>
-
-        {/* Result + Teaching (right column) */}
-        <div className="space-y-4">
-          {/* Main result, dark instrument readout so the answer anchors the page */}
-          <div className="section-dark rounded-2xl p-6 sm:p-8">
-            <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Your answer</div>
-            <div className="mt-4 flex items-baseline gap-2">
-              <span className="result-hero">{valid ? rec : "--"}</span>
-              <span className="text-2xl text-muted-foreground font-serif">mL</span>
-            </div>
-            {valid && <div className="mt-2"><CopyButton value={`${rec} mL`} label="Copy amount" /></div>}
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              {valid ? (
-                <>Add <strong className="text-foreground">{rec} mL</strong> of bacteriostatic water to your {vialMg} mg vial. This gives you clean, easy-to-measure amounts on a standard insulin syringe.</>
-              ) : (
-                <>Enter a vial amount and how much you want to measure to see exactly how much bac water to add.</>
-              )}
-            </p>
-
-            {valid && (
-              <>
-                <div className="rule my-6" />
-                <div className="space-y-3 text-sm">
-                  <ResultRow
-                    label="Concentration after mixing"
-                    value={`${formatConcentration(concentration)} mg/mL`}
-                    sub={`${Math.round(concentration * 1000).toLocaleString()} mcg/mL`}
-                  />
-                  <ResultRow
-                    label="Amount per measurement"
-                    value={`${formatUnits(syringeUnits)} units`}
-                    sub={`${doseMl.toFixed(3)} mL = ${doseMcg.toLocaleString()} mcg`}
-                  />
-                  <ResultRow
-                    label="Measurements per vial"
-                    value={`${dosesPerVial}`}
-                  />
-                </div>
-              </>
-            )}
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild variant="brand" size="lg">
-                <Link href="/plan">
-                  Build a full plan <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/learn">Learn the basics</Link>
-              </Button>
-            </div>
-
-            <ResearchDisclaimer className="mt-6" />
-          </div>
-
-          {/* Syringe visualization: shows where to draw to */}
-          {valid && (
-            <SyringeVisual
-              fillPercent={Math.min(100, syringeUnits)}
-              readoutLabel={`${formatUnits(syringeUnits)} units`}
-              scale="u100"
-              maxLabel="1 mL (100 units)"
-            />
-          )}
-
-          {/* Why this number */}
-          {valid && (
-            <div className="callout-panel">
-              <div className="flex items-start gap-2.5">
-                <Lightbulb className="h-5 w-5 shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-medium text-sm mb-1">Why this number?</div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    We aim for about <strong className="text-foreground">10 units per measurement</strong> on
-                    a U-100 insulin syringe. That makes it easy to measure accurately
-                    without squinting at tiny markings. The math:
-                    (10 &times; {vialMg}) &divide; (100 &times; {(doseMcg / 1000).toFixed(3)}) = {rec} mL.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Contextual related reading for the selected peptide */}
-          {hasPeptide && peptideSlug !== "custom" && (
-            <RelatedReadingDynamic
-              peptide={peptideSlug}
-              topics={["storage", "safety", "reconstitution-method"]}
-              title={`Related reading for ${peptide.name}`}
-              limit={4}
-            />
-          )}
-
-          {/* Teaching sections */}
-          <div className="mt-6 space-y-8">
-            <TeachingSection
-              icon={<Droplets className="h-5 w-5" />}
-              title="What is bacteriostatic water?"
-            >
-              <p>
-                Bacteriostatic water (BAC water) is sterile water with a tiny amount
-                of benzyl alcohol (0.9%) added. The benzyl alcohol prevents bacteria
-                from growing, which means your reconstituted peptide stays safe to
-                use for weeks instead of hours.
-              </p>
-              <p>
-                You can&apos;t use tap water, bottled water, or regular sterile water.
-                Only BAC water is designed for this purpose.
-              </p>
-            </TeachingSection>
-
-            <TeachingSection
-              icon={<Beaker className="h-5 w-5" />}
-              title="What does &ldquo;reconstitute&rdquo; mean?"
-            >
-              <p>
-                Peptides arrive as a dry powder inside a sealed vial. Before you can
-                measure an amount, you need to dissolve the powder in liquid.
-                That process is called <strong>reconstitution</strong>. You add BAC water to
-                the vial, swirl gently, and the powder dissolves into a clear solution.
-              </p>
-            </TeachingSection>
-
-            <TeachingSection
-              icon={<HelpCircle className="h-5 w-5" />}
-              title="Why does the amount of water matter?"
-            >
-              <p>
-                The amount of water you add determines the <strong>concentration</strong> of
-                the solution: how much peptide is in each drop of liquid. More water
-                means a weaker solution (you measure more each time). Less water means a
-                stronger solution (you measure less each time).
-              </p>
-              <p>
-                We pick an amount that makes each measurement land on a round, easy-to-read
-                number on your syringe. No squinting at tiny lines, no guessing
-                between markings.
-              </p>
-            </TeachingSection>
-          </div>
-
-          {/* Related tools */}
-          <div className="mt-6">
-            <h2 className="text-xl font-serif font-medium tracking-tight">Related tools</h2>
-            <div className="mt-3 grid gap-3">
-              <RelatedTool href="/tools/dose" title="Dose Calculator" body="Know your concentration and volume? Find out exactly how much you're getting." />
-              <RelatedTool href="/tools/syringe-units" title="Syringe Unit Converter" body="Convert between mL and insulin syringe units (100 units = 1 mL)." />
-              <RelatedTool href="/tools/supplies" title="Supply Calculator" body="Figure out how many vials, syringes, and prep pads you need for your cycle." />
+      <div className="mt-8 grid items-start gap-6 lg:grid-cols-2">
+        <section className="min-w-0 space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-labelledby="volume-inputs-heading">
+          <h2 id="volume-inputs-heading" className="text-xl font-semibold">Your label values</h2>
+          <CarriedOverNotice visible={vial.carriedOver} onClear={clear} />
+          <div>
+            <label htmlFor="bac-vial-amount" className="block text-sm font-medium">Total amount in the vial</label>
+            <div className="mt-2 flex gap-2">
+              <Input id="bac-vial-amount" type="number" inputMode="decimal" min="0" step="any" value={vial.vialInput || ""} onChange={e => vial.setVialInput(e.target.value === "" ? 0 : Number(e.target.value))} placeholder="Amount from the label" className="min-w-0 flex-1" aria-describedby="bac-input-error" aria-invalid={vialAmount < 0 || !Number.isFinite(vialAmount)} />
+              <UnitChoice value={vial.vialUnit} onChange={vial.setVialUnit} label="Vial amount unit" />
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+          <div>
+            <label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount to measure</label>
+            <div className="mt-2 flex gap-2">
+              <Input id="bac-measured-amount" type="number" inputMode="decimal" min="0" step="any" value={vial.doseInput || ""} onChange={e => vial.setDoseInput(e.target.value === "" ? 0 : Number(e.target.value))} placeholder="Amount from your instructions" className="min-w-0 flex-1" aria-describedby="bac-measurement-help bac-input-error" aria-invalid={measurementAmount < 0 || !Number.isFinite(measurementAmount)} />
+              <UnitChoice value={vial.doseUnit} onChange={vial.setDoseUnit} label="Measurement amount unit" />
+            </div>
+            <p id="bac-measurement-help" className="mt-2 text-xs text-muted-foreground">This is an input you supply, not an amount recommended by the website.</p>
+          </div>
+          <div className="border-t border-border pt-5">
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Volume calculation mode">
+              <Button type="button" variant={mode === "known" ? "brand" : "outline"} aria-pressed={mode === "known"} onClick={() => setMode("known")}>Use a known volume</Button>
+              <Button type="button" variant={mode === "example" ? "brand" : "outline"} aria-pressed={mode === "example"} onClick={() => setMode("example")}>Show a math example</Button>
+            </div>
+            {mode === "known" ? <div className="mt-4"><label htmlFor="bac-final-volume" className="block text-sm font-medium">Final liquid volume in mL</label><Input id="bac-final-volume" type="number" inputMode="decimal" min="0" step="any" value={volumeText} onChange={e => setVolume(e.target.value)} placeholder="Volume from your instructions" className="mt-2" aria-describedby="bac-volume-help bac-input-error" aria-invalid={invalidVolume} /><p id="bac-volume-help" className="mt-2 text-xs text-muted-foreground">Use the final solution volume. The tool cannot verify dissolution, contents or vial capacity.</p></div> : <p className="mt-4 rounded-lg bg-muted p-3 text-sm leading-relaxed">This optional example picks a volume from 1 to 3 mL in 0.5 mL steps, aiming near 10 U-100 units for the amount you entered. Rounding and those limits can change the resulting units. It is not an instruction to use that volume.</p>}
+          </div>
+          <p id="bac-input-error" role={error ? "alert" : undefined} className="text-sm text-destructive">{error}</p>
+          <Button type="button" variant="outline" onClick={clear}>Clear entered values</Button>
+        </section>
 
-function StepCard({
-  n,
-  total,
-  title,
-  hint,
-  children,
-}: {
-  n: number;
-  total: number;
-  title: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="border border-border bg-card p-5 sm:p-7">
-      <div className="flex items-center gap-3 mb-3">
-        <span className="step-number step-number--filled text-[11px]">{n}</span>
-        <div className="eyebrow">Step {n} of {total}</div>
+        <section className="section-dark min-w-0 rounded-2xl p-5 sm:p-7" aria-labelledby="volume-result-heading">
+          <h2 id="volume-result-heading" className="text-xl font-semibold">{mode === "example" ? "Illustrative result" : "Calculated result"}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">{mode === "example" ? "Example inputs are not product instructions." : "Based only on the values you entered."}</p>
+          <div className="mt-5" role="status" aria-live="polite" aria-atomic="true" id="bac-result">
+            {valid ? <dl className="space-y-5">
+              <div><dt className="text-sm text-muted-foreground">Final liquid volume</dt><dd className="mt-1 break-words text-2xl font-semibold">{display(volume)} mL</dd></div>
+              <div><dt className="text-sm text-muted-foreground">Concentration</dt><dd className="mt-1 break-words text-3xl font-semibold">{display(concentration)} mg/mL</dd></div>
+              <div><dt className="text-sm text-muted-foreground">Entered measurement</dt><dd className="mt-1 break-words text-2xl font-semibold">{display(measurementMl)} mL</dd><dd className="mt-1 break-words text-sm">{display(units)} U-100 units</dd></div>
+            </dl> : <p className="rounded-lg border border-border p-4 text-sm">Enter both amounts and {mode === "known" ? "the final liquid volume" : "check their units"} to see a calculation.</p>}
+          </div>
+          {valid && <>
+            <CopyButton className="mt-3" value={`${display(vialMg)} mg in ${display(volume)} mL = ${display(concentration)} mg/mL. Entered ${display(measurementMg)} mg = ${display(measurementMl)} mL = ${display(units)} U-100 units. Calculation only, not preparation or dosing instructions.`} label="Copy calculation" />
+            {measurementMg > vialMg && <p className="mt-3 rounded-lg border border-border p-3 text-sm">The entered measurement exceeds the total amount in the vial. Check the amounts and units before using this result.</p>}
+            {measurementMl > 1 && <p className="mt-3 rounded-lg border border-border p-3 text-sm">This volume exceeds a 1 mL syringe's capacity. A conversion is not an instruction to use a different device or preparation.</p>}
+          </>}
+          <p className="mt-5 text-xs leading-relaxed text-muted-foreground">U-100 means 100 units per mL. Confirm the scale, capacity and graduation spacing on the actual device. Display values are rounded; very small or large values use scientific notation. No shelf life or safe-use date is calculated.</p>
+          <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="brand"><Link href="/plan">Build a saved plan</Link></Button><Button asChild variant="outline"><Link href="/editorial-policy">See the methodology</Link></Button></div>
+        </section>
       </div>
-      <h3 className="text-xl font-serif font-medium leading-tight">{title}</h3>
-      {hint && <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{hint}</p>}
-      <div className="mt-5">{children}</div>
-    </div>
-  );
-}
 
-function ResultRow({ label, value, sub }: { label: string; value: string; sub?: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4">
-      <span className="text-muted-foreground">{label}</span>
-      <div className="text-right">
-        <span className="font-medium tabular-nums">{value}</span>
-        {sub && (
-          <div className="text-xs text-muted-foreground">{sub}</div>
-        )}
-      </div>
+      <section className="mt-10 max-w-3xl space-y-3">
+        <h2 className="text-2xl font-serif">How the volume changes concentration</h2>
+        <p>Concentration in mg/mL equals the total amount in mg divided by the final liquid volume in mL. The volume for an entered measurement equals that measurement in mg divided by the concentration.</p>
+        <p>For a mathematical example, 10 mg in a final 2 mL is 5 mg/mL. An entered 0.4 mg measurement corresponds to 0.08 mL, or 8 U-100 units. In a final 4 mL instead, the concentration would be 2.5 mg/mL and that same amount would correspond to 0.16 mL.</p>
+        <p>These examples demonstrate arithmetic, not product preparation. Changing liquid volume may be incompatible with the product instructions or vial capacity. Read <Link href="/learn/what-you-cannot-know" className="underline">what a calculator cannot verify</Link>.</p>
+      </section>
+      <section className="mt-9 max-w-3xl space-y-3">
+        <h2 className="text-2xl font-serif">Does BAC water establish a shelf life?</h2>
+        <p>This calculator cannot establish sterility or stability. Do not treat a preservative, a clear-looking solution or a correct calculation as proof that a mixture remains usable. Follow the exact product's storage and discard instructions.</p>
+        <p>The <Link href="/learn/bac-water-shelf-life" className="underline">BAC water storage reference</Link> separates unopened expiry, opened-vial guidance and reconstituted-product instructions. They are different questions.</p>
+      </section>
+      <section className="mt-9"><h2 className="text-2xl font-serif">Related calculations</h2><div className="mt-4 grid gap-3 sm:grid-cols-3">{[{ href: "/tools/syringe-units", title: "U-100 units and mL", text: "Convert volume units without assuming syringe markings." }, { href: "/tools/mg-to-mcg", title: "mg and mcg", text: "Check milligram and microgram conversions." }, { href: "/tools/dose", title: "Known concentration", text: "Check the amount in a stated liquid volume." }].map(tool => <Link key={tool.href} href={tool.href} className="rounded-xl border border-border p-4 transition-colors hover:bg-muted"><h3 className="font-medium">{tool.title}</h3><p className="mt-2 text-sm text-muted-foreground">{tool.text}</p></Link>)}</div></section>
     </div>
-  );
-}
-
-function UnitToggle({ value, onChange, options }: { value: Unit; onChange: (u: Unit) => void; options: [Unit, Unit] }) {
-  return (
-    <div className="inline-flex border border-border-strong bg-muted p-0.5 shrink-0">
-      {options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          onClick={() => onChange(opt)}
-          className={cn(
-            "px-3 h-10 text-xs font-semibold transition-colors",
-            value === opt
-              ? "bg-card text-foreground shadow-lift"
-              : "text-muted-foreground hover:text-foreground"
-          )}
-        >
-          {opt}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function TeachingSection({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 border-2 border-foreground/20 grid place-items-center shrink-0">{icon}</div>
-        <h3 className="text-lg font-serif font-medium">{title}</h3>
-      </div>
-      <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
-  return (
-    <Link href={href} className="group block border border-border hover:bg-muted transition-colors p-5">
-      <h3 className="font-semibold group-hover:underline">{title}</h3>
-      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
-      <div className="mt-3 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
-        Open <ArrowRight className="h-4 w-4" />
-      </div>
-    </Link>
   );
 }

@@ -34,7 +34,7 @@ interface WorkspaceShellProps {
  *
  * Below `lg` this is deliberately NOT three squeezed columns. It becomes a
  * queue that swaps to a single record view, with the right rail folded in
- * below the record — the mobile shape people actually use.
+ * below the record: the mobile shape people actually use.
  */
 export function WorkspaceShell({
   queue,

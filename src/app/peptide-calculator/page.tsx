@@ -19,7 +19,7 @@ import {
 
 const TITLE = "Peptide Calculator: Reconstitution, BAC Water & Syringe Units";
 const DESCRIPTION =
-  "Free peptide calculator. Enter your vial amount and how much you want to measure to get the exact bacteriostatic water to add, the concentration, and how many syringe units that is. Every step shown. For research use.";
+  "Free peptide calculator for concentration, mL and U-100 units. Enter your label values and final liquid volume. Save a plan or print a vial label.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -47,15 +47,15 @@ const POPULAR = [
 const FAQS = [
   {
     q: "What is a peptide calculator?",
-    a: "A peptide calculator does the reconstitution math. It turns your vial's amount and the amount you want to measure into how much bacteriostatic water to add, the concentration that makes, and how many units to draw on an insulin syringe. It calculates from your numbers, it does not recommend how much to use.",
+    a: "A peptide calculator converts the labeled amount and final liquid volume into concentration. Enter the amount to measure from instructions you already have to find its mL and syringe-unit equivalent. It does not select a diluent, dose or treatment.",
   },
   {
     q: "How do you calculate peptide reconstitution?",
-    a: "Concentration equals the vial amount divided by the bacteriostatic water you add. The volume to measure equals the amount you want divided by that concentration. On a U-100 insulin syringe, that volume times 100 gives the units. This calculator shows every step so you can check it.",
+    a: "Concentration equals the vial amount divided by the final liquid volume. The volume to measure equals the amount you want divided by that concentration. On a U-100 insulin syringe, that volume times 100 gives the units. This calculator shows every step so you can check it.",
   },
   {
     q: "How much bacteriostatic water should I add to a peptide vial?",
-    a: "Enough that your measurement lands on a clean, easy-to-read mark. The calculator suggests an amount that puts a typical measurement near 10 units on a 1 mL insulin syringe, and you can change it to any amount you prefer.",
+    a: "Vial strength alone cannot answer that question. Use the volume and diluent in the exact product instructions. An arithmetic comparison can show how concentration changes, but it does not establish compatibility, vial capacity or a safe preparation.",
   },
   {
     q: "How many syringe units is my measurement?",
@@ -81,7 +81,7 @@ export default function PeptideCalculatorPage() {
       />
       <SoftwareAppJsonLd
         name="Peptide Calculator"
-        description="Free peptide reconstitution calculator: enter your vial amount and the amount to measure to get the exact bacteriostatic water to add, the concentration, syringe units, and measurements per vial."
+        description="Free concentration and measurement calculator using your stated vial amount, final volume and amount to measure. Includes printable labels and optional saved plans."
         url="/peptide-calculator"
       />
       <FaqJsonLd items={FAQS} />
@@ -120,10 +120,10 @@ export default function PeptideCalculatorPage() {
 
         {/* Answer-first block: the extractable direct answer for search and AI. */}
         <AnswerBox className="mt-5" label="In short">
-          A peptide calculator turns the numbers on your vial into a mixing plan:
-          how much bacteriostatic water to add, the concentration that makes, how
-          many units to measure on your syringe, and how many measurements the
-          vial gives. Enter your numbers below to see all of it, with the math.
+          A peptide calculator divides the labeled amount by the final liquid
+          volume to find concentration, then converts your entered measurement
+          into mL and syringe units. Use values from the product instructions.
+          No account is needed to calculate; saving a plan is optional.
         </AnswerBox>
 
         <p className="mt-4 text-sm text-muted-foreground">
@@ -151,10 +151,10 @@ export default function PeptideCalculatorPage() {
         </p>
         <ol className="mt-5 space-y-4">
           {[
-            ["Concentration", "Vial amount divided by the bacteriostatic water you add. A 5 mg vial with 2 mL of water is 2.5 mg/mL."],
+            ["Concentration", "Vial amount divided by final liquid volume. An illustrative 5 mg in a final 2 mL is 2.5 mg/mL."],
             ["Volume to measure", "The amount you want divided by the concentration. 250 mcg at 2.5 mg/mL is 0.1 mL."],
             ["Syringe units", "On a U-100 insulin syringe, 100 units equal 1 mL, so 0.1 mL is 10 units."],
-            ["Measurements per vial", "The vial amount divided by the amount per measurement, so you know how long a vial lasts."],
+            ["Measurements per vial", "The vial amount divided by the amount per measurement. This is a quantity estimate, not a safe storage period."],
           ].map(([t, b], i) => (
             <li key={i} className="flex gap-4">
               <span className="step-number step-number--filled text-[11px] shrink-0">{i + 1}</span>

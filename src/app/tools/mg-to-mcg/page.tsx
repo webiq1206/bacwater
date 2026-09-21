@@ -9,8 +9,8 @@ import CalculatorClient from "./calculator-client";
 // layout's default title and had no canonical, so Google saw six duplicate,
 // canonical-less pages and indexed none of them (or picked its own host).
 
-const TITLE = 'mg to mcg Converter for Peptide Dosing';
-const DESCRIPTION = 'Convert milligrams to micrograms and back for peptide labels. 1 mg equals 1,000 mcg — type either value and the other updates instantly. Research use only.';
+const TITLE = 'mg to mcg Converter: Milligrams and Micrograms';
+const DESCRIPTION = 'Convert milligrams to micrograms and back. Multiply mg by 1,000 or divide mcg by 1,000. Check label units without estimating a dose or choosing a treatment.';
 const PATH = "/tools/mg-to-mcg";
 
 export const metadata: Metadata = {

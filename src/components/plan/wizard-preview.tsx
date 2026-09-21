@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * The plan taking shape, shown beside the guided wizard on desktop.
  *
  * The wizard asks one question at a time, which is right for someone who
- * would be overwhelmed by the full form — but it meant the thing being built
+ * would be overwhelmed by the full form: but it meant the thing being built
  * stayed invisible until the final step, on a screen that was two-thirds
  * empty. This fills that space with the answer as it becomes knowable: the
  * numbers appear the moment the inputs that determine them are in, and the

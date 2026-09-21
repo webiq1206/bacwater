@@ -105,7 +105,7 @@ export async function generateMetadata({
   // or thin single filters) is noindexed and canonicalizes back to /learn.
   // A key can exist in BOTH taxonomies ("safety" is a content type and a
   // topic), in which case ?type=safety and ?topic=safety each pass the
-  // threshold below and each self-canonicalise — two indexable URLs with
+  // threshold below and each self-canonicalise: two indexable URLs with
   // byte-identical titles and descriptions, competing with each other.
   // Topic is the canonical home for a colliding key; the type variant points
   // at it and drops out of the index.
@@ -312,7 +312,7 @@ export default async function LearnPage({
         sit above the grid, so scrolling into the results left them off screen
         and changing one meant scrolling back. Every chip is still a plain link
         to a real ?type= / ?topic= URL, so the indexable filtered pages are
-        untouched — this is layout only.
+        untouched: this is layout only.
       */}
       <div className="mt-8 grid gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start">
       <div className="space-y-5 border border-border bg-surface p-5 lg:sticky lg:top-24">

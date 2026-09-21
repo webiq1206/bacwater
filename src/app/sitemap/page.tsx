@@ -14,7 +14,7 @@ export const revalidate = 3600;
 
 const TITLE = "Site Map: Every Calculator, Peptide and Guide";
 const DESCRIPTION =
-  "A complete, browsable map of BACwater.ai — every reconstitution calculator, peptide reference, comparison and learning guide, linked from one page.";
+  "A complete, browsable map of BACwater.ai: every reconstitution calculator, peptide reference, comparison and learning guide, linked from one page.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -126,7 +126,7 @@ export default async function HtmlSitemapPage() {
     .map((e) => ({ href: e.url, label: e.title }));
 
   // Single-dimension /learn filter views that clear the indexability threshold
-  // (>= 3 results) — the same rule the learn XML sitemap applies. Linking them
+  // (>= 3 results): the same rule the learn XML sitemap applies. Linking them
   // here gives each one a crawl path from a real page, not only the XML file.
   const filterLinks: SiteLink[] = [];
   for (const c of CONTENT_TYPES) {

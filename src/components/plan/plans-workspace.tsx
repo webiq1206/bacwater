@@ -98,7 +98,7 @@ function expiryState(expirationDate: string | null) {
  * be a full page navigation to /plan/[id] and a trip back for the next one,
  * which made comparing two plans or printing a batch of labels needlessly slow.
  *
- * /plan/[id] is untouched — shared links and printed QR codes still land there.
+ * /plan/[id] is untouched: shared links and printed QR codes still land there.
  */
 export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
   const router = useRouter();
@@ -487,7 +487,7 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
                   {current.dateMixed ? formatDate(current.dateMixed) : "Not set"}
                 </FieldRow>
                 <FieldRow label="Expires" attention={expiry?.tone !== "ok" && Boolean(expiry)}>
-                  {current.expirationDate ? formatDate(current.expirationDate) : "—"}
+                  {current.expirationDate ? formatDate(current.expirationDate) : "Not set"}
                 </FieldRow>
               </div>
 

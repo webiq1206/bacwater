@@ -56,7 +56,7 @@ export function UsersWorkspace({
   initialEmail,
 }: {
   users: UserRecord[];
-  /** Preselect by email — how the plans workspace links into this one. */
+  /** Preselect by email: how the plans workspace links into this one. */
   initialEmail?: string;
 }) {
   const [rows, setRows] = useState(users);

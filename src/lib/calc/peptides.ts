@@ -62,7 +62,7 @@ export interface PeptideRef {
    * dose across this many draws by default; users can override it.
    */
   injectionsPerWeek: number;
-  /** Human-readable schedule note, e.g. "Twice weekly — e.g., Monday and Thursday". */
+  /** Human-readable schedule note, e.g. "Twice weekly: e.g., Monday and Thursday". */
   scheduleNote: string;
   /** Shelf life after reconstitution, refrigerated (days) */
   refrigeratedShelfDays: number;
@@ -98,7 +98,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 2500,
     halfLifeHours: 240,
     injectionsPerWeek: 2,
-    scheduleNote: "Twice weekly — e.g., Monday and Thursday",
+    scheduleNote: "Twice weekly: e.g., Monday and Thursday",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge. Larger doses typical.",
   },
@@ -139,7 +139,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 1000,
     halfLifeHours: 192,
     injectionsPerWeek: 2,
-    scheduleNote: "Twice weekly — e.g., Monday and Thursday",
+    scheduleNote: "Twice weekly: e.g., Monday and Thursday",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge. Longer half-life than non-DAC.",
   },
@@ -178,7 +178,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 250,
     halfLifeHours: 168,
     injectionsPerWeek: 1,
-    scheduleNote: "Once weekly — same day each week",
+    scheduleNote: "Once weekly: same day each week",
     refrigeratedShelfDays: 56,
     storageNote: "Keep in the fridge, following your product's instructions.",
     note: "This is an FDA-approved molecule; the approved product's labeling is the reference for amounts. The unapproved powder is a different thing and carries no assurance of identity, purity, or strength.",
@@ -193,7 +193,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 2500,
     halfLifeHours: 120,
     injectionsPerWeek: 1,
-    scheduleNote: "Once weekly — same day each week",
+    scheduleNote: "Once weekly: same day each week",
     refrigeratedShelfDays: 42,
     storageNote: "Keep in the fridge, following your product's instructions.",
     note: "This is an FDA-approved molecule; the approved product's labeling is the reference for amounts. The unapproved powder is a different thing and carries no assurance of identity, purity, or strength.",
@@ -208,7 +208,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 2000,
     halfLifeHours: 144,
     injectionsPerWeek: 2,
-    scheduleNote: "Twice weekly — e.g., Monday and Thursday",
+    scheduleNote: "Twice weekly: e.g., Monday and Thursday",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge. Emerging research compound.",
   },
@@ -221,7 +221,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 300,
     halfLifeHours: 180,
     injectionsPerWeek: 1,
-    scheduleNote: "Once weekly — same day each week",
+    scheduleNote: "Once weekly: same day each week",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge.",
   },
@@ -234,7 +234,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 5000,
     halfLifeHours: 0.5,
     injectionsPerWeek: 3,
-    scheduleNote: "Three times weekly — e.g., Monday, Wednesday, Friday",
+    scheduleNote: "Three times weekly: e.g., Monday, Wednesday, Friday",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge.",
   },
@@ -339,7 +339,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 200,
     halfLifeHours: 0.1,
     injectionsPerWeek: 3,
-    scheduleNote: "Three times weekly — e.g., Monday, Wednesday, Friday",
+    scheduleNote: "Three times weekly: e.g., Monday, Wednesday, Friday",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge.",
   },
@@ -352,7 +352,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 1000,
     halfLifeHours: 11,
     injectionsPerWeek: 1,
-    scheduleNote: "As needed — not a fixed weekly schedule; treated as one draw per week here",
+    scheduleNote: "As needed: not a fixed weekly schedule; treated as one draw per week here",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge.",
   },
@@ -365,7 +365,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 500,
     halfLifeHours: 36,
     injectionsPerWeek: 3,
-    scheduleNote: "Three times weekly — e.g., Monday, Wednesday, Friday",
+    scheduleNote: "Three times weekly: e.g., Monday, Wednesday, Friday",
     refrigeratedShelfDays: 30,
     storageNote: "Keep in the fridge.",
     note: "HCG strength is often stated in IU. Confirm vial units before proceeding.",
@@ -393,7 +393,7 @@ export const PEPTIDES: PeptideRef[] = [
     suggestedDoseMcg: 250,
     halfLifeHours: 0,
     injectionsPerWeek: 1,
-    scheduleNote: "One draw per week by default — set your own schedule below",
+    scheduleNote: "One draw per week by default: set your own schedule below",
     refrigeratedShelfDays: 28,
     storageNote:
       "Keep in the fridge. Refer to the label on your vial for storage guidance.",

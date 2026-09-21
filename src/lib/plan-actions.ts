@@ -124,7 +124,7 @@ export async function savePlanAction(raw: unknown, notes?: string) {
 /**
  * Attach plans that were saved on this device while signed out to the current
  * user's account. Requires the per-plan claim token issued at save time as
- * proof this device created the plan — knowing a shared plan URL is not
+ * proof this device created the plan: knowing a shared plan URL is not
  * enough. Atomic per plan: `claimed` reflects only rows actually updated.
  */
 export async function claimDevicePlansAction(
@@ -225,12 +225,12 @@ export async function deletePlanAction(publicId: string) {
  * Copy a plan into the caller's own hands.
  *
  * Deliberately readable for any plan the caller can open, because plan links
- * are shareable — this is how someone builds on a plan that was sent to them,
+ * are shareable: this is how someone builds on a plan that was sent to them,
  * and it is what the plan page offers in place of Edit when the plan is not
  * theirs to change.
  *
  * The copy belongs to whoever pressed the button: the signed-in user, or the
- * device that made it. It must never inherit `plan.userId` — that assigned a
+ * device that made it. It must never inherit `plan.userId`: that assigned a
  * signed-out visitor's copy to the *original owner*, which left the visitor
  * unable to edit the copy they had just asked for and quietly filled the
  * owner's account with plans they never made.
@@ -293,8 +293,8 @@ function injectionsPerWeekOf(result: unknown): number {
 /**
  * Load one plan's full stored snapshot for the My Plans workspace.
  *
- * The list ships summary rows only — a `CalcResult` blob per plan would make
- * the page heavy for anyone with a lot of them — so the selected plan's detail
+ * The list ships summary rows only: a `CalcResult` blob per plan would make
+ * the page heavy for anyone with a lot of them: so the selected plan's detail
  * is fetched here on demand.
  *
  * Owned plans are restricted to their owner. Unowned (guest) plans stay
@@ -362,7 +362,7 @@ export async function removePlanAction(publicId: string) {
  * Update a plan in place, recalculating from the edited inputs.
  *
  * This backs every edit surface: the inline editor in the My Plans workspace
- * and the /plan/[id]/edit route. Edit means edit — someone correcting a typo
+ * and the /plan/[id]/edit route. Edit means edit: someone correcting a typo
  * in their vial strength gets that plan corrected, not a near-identical second
  * plan and no idea which one their printed label points at. Branching from an
  * existing plan is still available, as the explicit Duplicate action.

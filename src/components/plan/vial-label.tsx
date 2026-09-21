@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 /**
  * One 2.5 × 1.5 inch vial label, and the print CSS that lays a sheet of them
  * out. Shared by the single-plan sheet at /plan/[id]/label and the multi-plan
- * sheet at /plans/labels — two sheets, one label design, so a batch print and
+ * sheet at /plans/labels: two sheets, one label design, so a batch print and
  * a single print never disagree about what a label looks like.
  */
 

@@ -83,14 +83,14 @@ export function contentChecks(input: {
     checks.push({
       id: "title-long",
       label: `Title is ${title.length} characters`,
-      detail: "Search results cut off around 60. Trim it or accept the truncation.",
+      detail: "Search display varies. Check whether the important meaning fits; character count is an editing guide.",
       status: "warn",
     });
   } else if (title.length < 25) {
     checks.push({
       id: "title-short",
       label: `Title is only ${title.length} characters`,
-      detail: "Short titles win fewer queries. Aim for roughly 30 to 60.",
+      detail: "Check that this short title describes the page and its distinct purpose.",
       status: "warn",
     });
   } else {
@@ -144,7 +144,7 @@ export function contentChecks(input: {
     checks.push({
       id: "desc-short",
       label: "Meta description is thin",
-      detail: `"${description}" — ${description.length} characters. Around 120 to 160 reads better in results.`,
+      detail: `"${description}": ${description.length} characters. Around 120 to 160 reads better in results.`,
       status: "warn",
     });
   } else {
@@ -160,7 +160,7 @@ export function contentChecks(input: {
     checks.push({
       id: "thin",
       label: `Only ${words} words`,
-      detail: "Thin pages rarely rank and rarely help. Consider expanding.",
+      detail: "Review whether the page answers its intended question. Length alone does not establish thin content.",
       status: "warn",
     });
   }
@@ -169,7 +169,7 @@ export function contentChecks(input: {
     checks.push({
       id: "no-headings",
       label: "No section headings",
-      detail: "Guides scan better with `## ` sections, and they anchor featured snippets.",
+      detail: "Guides scan better with `## ` sections, and make longer explanations easier to navigate.",
       status: "warn",
     });
   }
