@@ -6,7 +6,7 @@ permissions:
   contents: write
 concurrency:
   group: publication-implementation-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -42,19 +42,23 @@ jobs:
         run: |
           mkdir -p audit-evidence
           if [ ! -f src/lib/content/publication-store.ts ]; then python scripts/apply-publication-upgrade.py; fi
-          git add src prisma next.config.ts
+          if [ ! -f audit/2026-09-21/publication-finalized ]; then
+            python scripts/finalize-publication.py
+            touch audit/2026-09-21/publication-finalized
+          fi
+          git add src prisma next.config.ts scripts audit/2026-09-21
           if ! git diff --cached --quiet; then
             test "$GITHUB_REF" = refs/heads/fix/publication-lifecycle-2026-09-21
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'feat: validated publication controls and durable discovery notifications'
+            git commit -m 'fix: accurate editorial claims, metadata and publication controls'
             git push origin HEAD:fix/publication-lifecycle-2026-09-21
           fi
       - name: Preserve source checkpoint
         if: always()
         run: |
           mkdir -p audit-evidence
-          git add src prisma next.config.ts
+          git add src prisma next.config.ts scripts audit/2026-09-21
           git archive --format=tar $(git write-tree) > audit-evidence/source.tar
           git rev-parse HEAD > audit-evidence/source-commit.txt
           git diff HEAD > audit-evidence/uncommitted.patch
