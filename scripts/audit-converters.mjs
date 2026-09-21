@@ -89,6 +89,23 @@ try {
     assert.deepEqual(errors, []);
   });
   await page.screenshot({ path: `${out}/bac-mobile-320.png`, fullPage: true });
+  await step('Updated tools show their heading first without duplicate legacy wrappers', async () => {
+    for (const slug of ['bac-water', 'syringe-units']) {
+      await page.goto(`${origin}/tools/${slug}`);
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+      const heading = page.getByRole('heading', { level: 1 });
+      await expect(heading).toHaveCount(1);
+      const bounds = await heading.boundingBox();
+      assert.ok(bounds && bounds.y >= 0 && bounds.y < 360, `${slug}: heading displaced by a legacy wrapper`);
+      const schema = await page.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.map(n => JSON.parse(n.textContent || '{}')));
+      assert.equal(schema.filter(value => value['@type'] === 'WebPage').length, 1, `${slug}: duplicate page schema`);
+      const text = await page.locator('main').innerText();
+      assert.equal(text.includes('Adding more is not a safety problem'), false);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
+      await page.screenshot({ path: `${out}/${slug}-heading-320.png`, fullPage: false });
+    }
+    assert.deepEqual(errors, []);
+  });
 } catch (e) {
   await page.screenshot({ path: `${out}/failure.png`, fullPage: true }).catch(() => {});
   console.error(e); process.exitCode = 1;
