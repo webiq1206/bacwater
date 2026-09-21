@@ -1,5 +1,6 @@
 "use client";
 
+import { trackUsage } from "@/lib/analytics";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { setInterestPeptide } from "@/lib/learn/interest";
@@ -56,6 +57,7 @@ export interface PlanFormInitial {
   bacWaterMl?: number;
   syringeType?: SyringeType;
   dateMixed?: string | null;
+  secondary?: CalcInput["secondary"];
 }
 
 /** Frequency choices offered alongside the peptide's own default. */
@@ -87,7 +89,7 @@ function FrequencyPicker({
   return (
     <div className="mt-5">
       <Label className="text-xs text-muted-foreground">
-        How many injections per week?
+        Split your entered weekly total into how many measurements?
       </Label>
       <div className="mt-1.5 flex flex-wrap gap-1.5">
         {choices.map((c) => (
@@ -96,7 +98,7 @@ function FrequencyPicker({
             type="button"
             onClick={() => onChange(c.perWeek)}
             className={cn(
-              "rounded-full border px-3 py-1.5 text-sm transition-colors",
+              "min-h-11 rounded-full border px-3 py-1.5 text-sm transition-colors",
               value === c.perWeek
                 ? "border-transparent bg-foreground text-background font-medium"
                 : "border-border bg-card hover:bg-surface"
@@ -104,7 +106,7 @@ function FrequencyPicker({
             aria-pressed={value === c.perWeek}
           >
             {c.label}
-            {c.perWeek === defaultPerWeek ? " · typical" : ""}
+            
           </button>
         ))}
       </div>
@@ -167,6 +169,7 @@ function ChipButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={cn("chip", active && "chip--active")}
     >
       <div className="flex items-center gap-2">
@@ -233,8 +236,9 @@ function UnitToggle<U extends string>({
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
+          aria-pressed={value === opt}
           className={cn(
-            "px-3 h-8 text-xs font-semibold transition-colors",
+            "px-3 min-h-11 text-xs font-semibold transition-colors",
             value === opt
               ? "bg-card text-foreground shadow-lift"
               : "text-muted-foreground hover:text-foreground"
@@ -283,6 +287,7 @@ function ModeToggle({
       <button
         type="button"
         onClick={() => onChange("beginner")}
+        aria-pressed={mode === "beginner"}
         className={cn(
           "px-4 py-2 text-sm font-medium transition-colors",
           mode === "beginner"
@@ -295,6 +300,7 @@ function ModeToggle({
       <button
         type="button"
         onClick={() => onChange("advanced")}
+        aria-pressed={mode === "advanced"}
         className={cn(
           "px-4 py-2 text-sm font-medium transition-colors",
           mode === "advanced"
@@ -339,9 +345,9 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       showCustomVial: !(ref?.commonVialStrengthsMg ?? []).includes(vialMg),
       doseMcg,
       injectionsPerWeek,
-      showCustomDose: !dosePresetValues.includes(doseMcg),
+      showCustomDose: true,
       syringeType: initial.syringeType ?? "insulin-1ml",
-      useRecommendedBac: bac == null || Math.abs(bac - recommended) < 1e-9,
+      useRecommendedBac: bac == null,
       customBacMl: bac ?? recommended,
       dateMixed: initial.dateMixed ? initial.dateMixed.slice(0, 10) : "",
       showDate: !!initial.dateMixed,
@@ -376,7 +382,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     const alreadyInView =
       Math.abs(window.scrollY - Math.max(0, top)) < 24;
     if (!alreadyInView) {
-      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+      window.scrollTo({ top: Math.max(0, top), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     }
   }, [step]);
 
@@ -407,7 +413,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   const [doseInput, setDoseInput] = useState<number>(init?.doseMcg ?? 0);
   const [doseUnit, setDoseUnit] = useState<Unit>(init ? "mcg" : "mg");
-  const [showCustomDose, setShowCustomDose] = useState(init?.showCustomDose ?? false);
+  const [showCustomDose, setShowCustomDose] = useState(init?.showCustomDose ?? true);
   // null = follow the selected peptide's typical frequency.
   const [freqOverride, setFreqOverride] = useState<number | null>(
     init ? init.injectionsPerWeek : null
@@ -415,17 +421,17 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   const [syringeType, setSyringeType] = useState<SyringeType>(init?.syringeType ?? "insulin-1ml");
 
-  const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(init?.useRecommendedBac ?? true);
+  const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(init?.useRecommendedBac ?? false);
   const [customBacMl, setCustomBacMl] = useState<number>(init?.customBacMl ?? 0);
 
   const [dateMixed, setDateMixed] = useState<string>(init?.dateMixed ?? "");
   const [showDate, setShowDate] = useState<boolean>(init?.showDate ?? false);
 
   // Blend
-  const [showBlend, setShowBlend] = useState<boolean>(false);
-  const [secondarySlug, setSecondarySlug] = useState<string>("cjc-1295-no-dac");
-  const [customSecondaryName, setCustomSecondaryName] = useState("");
-  const [secondaryVialInput, setSecondaryVialInput] = useState<number>(5);
+  const [showBlend, setShowBlend] = useState<boolean>(!!initial?.secondary);
+  const [secondarySlug, setSecondarySlug] = useState<string>(initial?.secondary?.peptideSlug || "custom");
+  const [customSecondaryName, setCustomSecondaryName] = useState(initial?.secondary?.peptideName || "");
+  const [secondaryVialInput, setSecondaryVialInput] = useState<number>(initial?.secondary?.vialStrengthMg || 0);
   const [secondaryVialUnit, setSecondaryVialUnit] = useState<Unit>("mg");
 
   const [saving, setSaving] = useState(false);
@@ -461,7 +467,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   const hasPeptide =
     peptideSlug === "custom" ? customPeptideName.trim().length > 0 : peptideSlug !== "";
-  const hasValidInputs = hasPeptide && vialStrengthMg > 0 && doseMcg > 0;
+  const hasValidInputs = hasPeptide && Number.isFinite(vialStrengthMg) && vialStrengthMg > 0 && Number.isFinite(doseMcg) && doseMcg > 0;
 
   // Per-user draft cache: nothing is pre-populated for a new visitor, but their
   // own in-progress inputs persist on this device so returning resumes where
@@ -521,7 +527,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   // Effective injections per week: user override, else the peptide's typical
   // frequency (from its half-life). The entered dose is the WEEKLY total.
-  const injectionsPerWeek = freqOverride ?? peptide.injectionsPerWeek ?? 1;
+  const injectionsPerWeek = freqOverride ?? 1;
   const dosePerInjectionMcg = doseMcg / Math.max(1, injectionsPerWeek);
 
   const recommendedBac = useMemo(
@@ -529,49 +535,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     [vialStrengthMg, doseMcg, injectionsPerWeek]
   );
 
-  const dosePresets = useMemo(() => {
-    // The reference ranges are per-injection amounts; the wizard asks for a
-    // weekly total, so each preset is (typical per-injection) x (typical
-    // injections per week for this peptide).
-    const perWeek = peptide.injectionsPerWeek ?? 1;
-    const [lo, hi] = [
-      peptide.typicalDoseMcgRange[0] * perWeek,
-      peptide.typicalDoseMcgRange[1] * perWeek,
-    ];
-    const common = peptide.suggestedDoseMcg * perWeek;
-    const fmtLabel = (mcg: number) => {
-      const mg = mcg / 1000;
-      const mgStr = mg >= 1 ? `${mg} mg` : `${mg.toFixed(mg % 0.1 === 0 ? 1 : 2)} mg`;
-      return `${mgStr} (${mcg.toLocaleString()} mcg)`;
-    };
-    const list: { mcg: number; label: string; hint: string }[] = [];
-    if (lo && lo !== common)
-      list.push({
-        mcg: lo,
-        label: fmtLabel(lo),
-        hint: "Weekly total at the lower end of the studied range",
-      });
-    list.push({
-      mcg: common,
-      label: fmtLabel(common),
-      hint: "Weekly total at the most commonly studied amount",
-    });
-    if (hi && hi !== common)
-      list.push({
-        mcg: hi,
-        label: fmtLabel(hi),
-        hint: "Weekly total at the upper end of the studied range",
-      });
-    return list;
-  }, [peptide]);
-
-  // Reference range hint, expressed as weekly totals to match the input.
-  const weeklyRangeHint = useMemo(() => {
-    const perWeek = peptide.injectionsPerWeek ?? 1;
-    const lo = peptide.typicalDoseMcgRange[0] * perWeek;
-    const hi = peptide.typicalDoseMcgRange[1] * perWeek;
-    return `Weekly totals studied for ${peptide.name}: ${lo / 1000} to ${hi / 1000} mg per week (${lo.toLocaleString()} to ${hi.toLocaleString()} mcg). We split it into ${perWeek === 1 ? "one draw" : `${perWeek} draws`} per week.`;
-  }, [peptide]);
+  const dosePresets: { mcg: number; label: string; hint: string }[] = [];
+  const weeklyRangeHint = "Enter the total from instructions you already have. This tool does not recommend a dose or treatment schedule.";
 
   const primaryName =
     peptideSlug === "custom"
@@ -636,9 +601,12 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const saveLabel = editing ? "Save changes" : "Save my plan";
   const saveHint = editing
     ? "Updates this plan in place. Its link, PDF and vial labels keep working and will show the new numbers."
-    : "Saves your plan with a shareable link, downloadable PDF, and printable vial labels.";
+    : !hasValidInputs || result.errors.length > 0
+      ? "Enter the compound, vial amount, amount to measure and final liquid volume before saving."
+      : "Saves your calculation with a shareable link, downloadable PDF and printable labels.";
 
   async function handleSave() {
+    if (saving || !hasValidInputs || result.errors.length) return;
     setSaving(true);
     try {
       const payload = {
@@ -652,6 +620,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
         syringeType,
         dateMixed: dateMixed || null,
         notes: null,
+        secondary: result?.secondary ? { peptideName: result.secondary.peptideName, vialStrengthMg: result.secondary.vialStrengthMg } : null,
       };
       if (editing) {
         // Editing an existing plan updates it in place. `notes` is deliberately
@@ -661,6 +630,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           name: nameValue,
         });
         if (res.ok) {
+          trackUsage("plan_updated");
           toast({ title: "Plan updated", variant: "success" });
           // Back to the plan itself, which now shows the corrected numbers.
           router.push(`/plan/${editing.publicId}`);
@@ -693,6 +663,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           savedAt: new Date().toISOString(),
           claimToken: res.claimToken ?? undefined,
         });
+        trackUsage("plan_saved");
         setSavedPlan({ publicId: res.publicId, ownedByUser: res.ownedByUser });
       } else {
         toast({
@@ -701,6 +672,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           variant: "destructive",
         });
       }
+    } catch { toast({ title: "Could not save plan", description: "Your values are still here. Check your connection and retry.", variant: "destructive" });
     } finally {
       setSaving(false);
     }
@@ -725,7 +697,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     {
       label: "BAC water",
       value: useRecommendedBac
-        ? `${recommendedBac} mL (recommended)`
+        ? `${recommendedBac} mL (arithmetic example)`
         : `${customBacMl} mL (custom)`,
     },
     {
@@ -744,6 +716,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   if (mode === "advanced") {
     return (
       <div>
+        {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={(open) => { if (!open) setSavedPlan(null); }} />}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           {hasMounted && (
             <ModeToggle mode={mode} onChange={setMode} />
@@ -761,7 +734,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               hint="Pick from the list, or choose &ldquo;Other&rdquo; if yours isn't shown."
             >
               <Select value={peptideSlug} onValueChange={selectPeptide}>
-                <SelectTrigger className="h-12">
+                <SelectTrigger aria-label="Primary compound" className="h-12">
                   <SelectValue placeholder="Choose a peptide" />
                 </SelectTrigger>
                 <SelectContent>
@@ -777,7 +750,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                   <Label className="text-xs text-muted-foreground">
                     Type the name on your label
                   </Label>
-                  <Input
+                  <Input aria-label="Custom peptide name"
                     className="mt-1"
                     placeholder="e.g., MyPeptide-500"
                     value={customPeptideName}
@@ -817,7 +790,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                       value={secondarySlug}
                       onValueChange={setSecondarySlug}
                     >
-                      <SelectTrigger className="h-11">
+                      <SelectTrigger aria-label="Second compound in this vial" className="h-11">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -845,7 +818,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                       How much of it is in the vial?
                     </Label>
                     <div className="mt-1 flex items-center gap-2">
-                      <Input
+                      <Input aria-label="Second compound amount"
                         type="number"
                         inputMode="decimal"
                         step="0.1"
@@ -936,7 +909,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               total={6}
               label="Amount"
               title="How much per week in total?"
-              hint={hasPeptide ? weeklyRangeHint : "Type your total for the week, in mg or mcg. We'll split it across your injections."}
+              hint={hasPeptide ? weeklyRangeHint : weeklyRangeHint}
             >
               <div className="grid gap-1.5 sm:gap-2">
                 {hasPeptide && dosePresets.map((d) => (
@@ -972,8 +945,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                   <div className="mt-1 flex items-center gap-2">
                     <Input
                       type="number"
-                      inputMode="numeric"
-                      step="10"
+                      inputMode="decimal"
+                      step="any"
                       value={doseInput || ""}
                       onChange={(e) =>
                         setDoseInput(parseFloat(e.target.value) || 0)
@@ -994,8 +967,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               {hasPeptide && (
                 <FrequencyPicker
                   value={injectionsPerWeek}
-                  defaultPerWeek={peptide.injectionsPerWeek ?? 1}
-                  scheduleNote={peptide.scheduleNote}
+                  defaultPerWeek={1}
+                  scheduleNote={undefined}
                   onChange={(n) => setFreqOverride(n)}
                 />
               )}
@@ -1015,13 +988,13 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               total={6}
               label="Syringe"
               title="Which syringe are you using?"
-              hint="Not sure? A 1 mL insulin syringe works for almost everyone."
+              hint="Choose the scale printed on your actual syringe. These markings are not interchangeable."
             >
               <Select
                 value={syringeType}
                 onValueChange={(v) => setSyringeType(v as SyringeType)}
               >
-                <SelectTrigger className="h-12">
+                <SelectTrigger aria-label="Syringe size and scale" className="h-12">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1052,14 +1025,14 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 <ChipButton
                   active={useRecommendedBac}
                   onClick={() => setUseRecommendedBac(true)}
-                  hint="Chosen to give clean, round numbers on your syringe."
+                  hint="An arithmetic example only. Follow the product instructions and vial capacity."
                 >
-                  {recommendedBac} mL (recommended)
+                  {recommendedBac} mL (arithmetic example)
                 </ChipButton>
                 <ChipButton
                   active={!useRecommendedBac}
                   onClick={() => setUseRecommendedBac(false)}
-                  hint="Pick your own amount."
+                  hint="Enter the product-specified or actual final volume."
                 >
                   Custom amount
                 </ChipButton>
@@ -1070,7 +1043,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                     BAC water amount
                   </Label>
                   <div className="mt-1 flex items-center gap-2">
-                    <Input
+                    <Input aria-label="Final liquid volume in mL"
                       type="number"
                       step="0.1"
                       value={customBacMl || ""}
@@ -1094,7 +1067,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               total={6}
               label="Mixing date"
               title="When did you (or will you) mix it?"
-              hint="Optional. Lets us calculate when the vial expires so you know when to discard it."
+              hint="Optional recordkeeping only. This date does not determine shelf life or a safe discard date."
             >
               {!showDate ? (
                 <button
@@ -1106,7 +1079,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 </button>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Input
+                  <Input aria-label="Mixing date"
                     type="date"
                     value={dateMixed}
                     onChange={(e) => setDateMixed(e.target.value)}
@@ -1152,7 +1125,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               </div>
               <Button
                 onClick={handleSave}
-                disabled={saving}
+                disabled={saving || !hasValidInputs || result.errors.length > 0}
                 variant="brand"
                 size="lg"
                 className="w-full"
@@ -1230,7 +1203,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           nextDisabled={!hasPeptide}
         >
           <Select value={peptideSlug} onValueChange={selectPeptide}>
-            <SelectTrigger className="h-14 text-base">
+            <SelectTrigger aria-label="Compound" className="h-14 text-base">
               <SelectValue placeholder="Choose a peptide" />
             </SelectTrigger>
             <SelectContent>
@@ -1252,7 +1225,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           ) : peptideSlug ? (
             <div className="mt-4 bg-surface px-4 py-3 text-sm text-muted-foreground">
               <strong className="text-foreground">{peptide.name}</strong>
-              {". "}Amounts studied here: {peptide.typicalDoseMcgRange[0] / 1000} to {peptide.typicalDoseMcgRange[1] / 1000} mg ({peptide.typicalDoseMcgRange[0].toLocaleString()} to {peptide.typicalDoseMcgRange[1].toLocaleString()} mcg). These are study details, not instructions.
+              {". "}Confirm the amount and units on your own label.
               Common vial sizes: {peptide.commonVialStrengthsMg.join(", ")} mg.
             </div>
           ) : null}
@@ -1305,7 +1278,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 Enter what&apos;s on your label
               </Label>
               <div className="mt-1 flex items-center gap-2">
-                <Input
+                <Input aria-label="Vial strength"
                   type="number"
                   step="0.1"
                   value={vialInput || ""}
@@ -1329,11 +1302,11 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       {step === 2 && (
         <StepPanel
           title="How much per week in total?"
-          hint={`${weeklyRangeHint} Not sure? Pick the most commonly studied amount.`}
+          hint={weeklyRangeHint}
           onNext={() => goToStep(3)}
           onBack={() => goToStep(1)}
           stepNum={3}
-          nextDisabled={!(doseMcg > 0)}
+          nextDisabled={!(doseMcg > 0) || !Number.isFinite(doseMcg)}
         >
           <div className="grid gap-1.5 sm:gap-2">
             {dosePresets.map((d) => (
@@ -1367,7 +1340,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 Enter the amount you measure
               </Label>
               <div className="mt-1 flex items-center gap-2">
-                <Input
+                <Input aria-label="Dose amount"
                   type="number"
                   step="0.05"
                   value={doseInput || ""}
@@ -1387,8 +1360,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           ) : null}
           <FrequencyPicker
             value={injectionsPerWeek}
-            defaultPerWeek={peptide.injectionsPerWeek ?? 1}
-            scheduleNote={peptide.scheduleNote}
+            defaultPerWeek={1}
+            scheduleNote={undefined}
             onChange={(n) => setFreqOverride(n)}
           />
           {doseMcg > 0 && injectionsPerWeek > 1 && (
@@ -1416,7 +1389,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               onClick={() => setUseRecommendedBac(true)}
               hint="Chosen so your amount lands on a clean, easy-to-read number."
             >
-              {recommendedBac} mL (recommended)
+              {recommendedBac} mL (arithmetic example)
             </ChipButton>
             <ChipButton
               active={!useRecommendedBac}
@@ -1427,7 +1400,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             </ChipButton>
             {!useRecommendedBac ? (
               <div className="mt-2 flex items-center gap-2">
-                <Input
+                <Input aria-label="Final liquid volume in mL"
                   type="number"
                   step="0.1"
                   value={customBacMl}
@@ -1454,14 +1427,14 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       {step === 4 && (
         <StepPanel
           title="When did you mix it?"
-          hint="Pick the day you added BAC water, or the day you plan to. This sets your discard date. We won't guess this one for you."
+          hint="Record the mixing date, or leave it blank. Follow product-specific storage and discard instructions."
           onNext={() => goToStep(5)}
           onBack={() => goToStep(3)}
           stepNum={5}
-          nextDisabled={!dateMixed}
+          nextDisabled={false}
         >
           <div className="flex flex-col sm:flex-row items-stretch gap-2">
-            <Input
+            <Input aria-label="Mixing date"
               type="date"
               value={dateMixed}
               onChange={(e) => setDateMixed(e.target.value)}
@@ -1486,14 +1459,14 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 day: "numeric",
                 year: "numeric",
               })}
-              . We&apos;ll count your shelf life from this date.
+              . This is a record, not a calculated expiry date.
             </p>
           ) : (
             <p
               className="mt-4 text-sm font-medium"
               style={{ color: "var(--color-accent-guide)" }}
             >
-              Choose a date to continue.
+              The date is optional. Continue when you are ready.
             </p>
           )}
         </StepPanel>
@@ -1608,7 +1581,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               variant="brand"
               size="xl"
               onClick={handleSave}
-              disabled={saving}
+              disabled={saving || !hasValidInputs || result.errors.length > 0}
               className="w-full hidden sm:flex"
             >
               {saving ? (
@@ -1639,7 +1612,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               variant="brand"
               size="lg"
               onClick={handleSave}
-              disabled={saving}
+              disabled={saving || !hasValidInputs || result.errors.length > 0}
               className="w-full"
             >
               {saving ? (

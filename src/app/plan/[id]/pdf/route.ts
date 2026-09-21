@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import * as React from "react";
 import QRCode from "qrcode";
+import { safeResultDisplay } from "@/lib/calc/display";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { hasPlanAccess } from "@/lib/plan-access";
@@ -18,7 +19,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
 
   let result: CalcResult;
   try {
-    result = JSON.parse(plan.data) as CalcResult;
+    result = safeResultDisplay(JSON.parse(plan.data) as CalcResult);
   } catch {
     return NextResponse.json({ error: "This plan's data is corrupted." }, { status: 422 });
   }

@@ -419,3 +419,17 @@ h1, h2, h3, h4, h5, h6 {
     print-color-adjust: exact;
   }
 }
+
+/* Audit: readable muted text on the dark section, safe mobile navigation. */
+.section-dark { --color-mist: #b8beb9; --color-accent-guide: #b6c3a8; }
+html { scroll-padding-top: 5rem; }
+[id] { scroll-margin-top: 5rem; }
+.bac-bottom-spacer { height: calc(3.5rem + env(safe-area-inset-bottom)); }
+@media (max-width: 1023px) {
+  body[data-bac-input-active="true"] .bac-bottom-nav,
+  body:has([role="dialog"][data-state="open"]) .bac-bottom-nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+@media print { .bac-bottom-nav, .bac-bottom-spacer, .bac-privacy-preferences { display: none !important; } }

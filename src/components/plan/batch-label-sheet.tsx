@@ -135,7 +135,7 @@ export function BatchLabelSheet({ plans }: { plans: BatchLabelPlan[] }) {
                   <div className="truncate text-sm font-medium">{p.planName}</div>
                   <div className="text-xs text-muted-foreground">
                     {p.peptideName} · {p.vialStrengthMg} mg · {p.doseReading}/dose ·{" "}
-                    {p.shelfDays} d shelf life
+                    Storage: follow product instructions
                   </div>
                 </div>
                 <label className="text-sm">

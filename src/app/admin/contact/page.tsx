@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/require-admin";
 import { prisma } from "@/lib/db";
 import {
   ContactWorkspace,
@@ -9,6 +10,7 @@ export const metadata = { title: "Admin · Contact", robots: { index: false, fol
 export const dynamic = "force-dynamic";
 
 export default async function AdminContactPage() {
+  await requireAdminPage();
   const messages = await prisma.contactMessage.findMany({
     orderBy: [{ handled: "asc" }, { createdAt: "desc" }],
     take: 500,

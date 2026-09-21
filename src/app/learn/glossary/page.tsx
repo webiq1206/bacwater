@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
@@ -147,7 +148,7 @@ export default function GlossaryPage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(termSet) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(termSet) }}
       />
       <FaqJsonLd items={FAQS} />
 

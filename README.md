@@ -1,82 +1,37 @@
-# BACWater.ai
+# BACwater.ai
 
-The trusted utility for peptide reconstitution: deterministic calculations, personalized plans, printable labels, and premium supplies.
+A free concentration and measurement utility built with Next.js, TypeScript, Prisma/PostgreSQL and NextAuth. Public calculators do not require an account. The current public site does not sell products.
 
-Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Prisma, NextAuth v5, Stripe, Resend, and Anthropic Claude.
+## Calculation and privacy boundaries
 
-## What's inside
+The calculation engine uses deterministic arithmetic. Users provide the amount, final volume, syringe scale and any weekly split from instructions they already have. The tool does not select a treatment, recommend a regimen, establish product compatibility, verify sterility or calculate a safe shelf life.
 
-- **Plan builder**: beginner (one-question-at-a-time) and advanced (calculator layout). Deterministic math, plain-English explanations, PDF, printable vial label, QR code.
-- **Ecommerce**: shop, cart, guest checkout, Stripe redirect, order tracking.
-- **Learning Center**: MDX-lite guides pulled from the database, editable in admin.
-- **Standalone tools**: BAC water, reconstitution, dose, syringe unit, mg↔mcg, and supply calculators.
-- **AI assistant**: Claude-powered drawer that explains a plan; **never** performs math. Default model is Haiku (cheap, fast). Swap `ANTHROPIC_MODEL` for Sonnet or Opus if you want more depth.
-- **Admin panel**: dashboard, orders (with vendor email workflow via Resend), products, vendors, users, content, contact.
-- **SEO/GEO/AEO**: metadata, sitemap, robots, Organization + Product + Article + FAQ JSON-LD.
-- **Google Preferred Sources**: `src/lib/preferred-source.ts` +
-  `<PreferredSourceButton>` implement Google's publisher guide (rendered button,
-  no-JS deeplink fallback, CSP allowances). Explainer page at `/preferred-source`,
-  a link in the footer, and a call to action at the end of every guide.
-  Eligibility itself is Google's call, see M17/M18 in
-  `audit/manual-action-required.md`.
+Saved links allow anyone who receives the link to read the calculation. Private notes and custom names remain restricted to the account owner or creating device. Guest access requires the device claim secret, not merely the shared URL. Saving a link in another browser does not grant edit permission.
 
-## Local dev
+## Development
 
-Postgres is required (the Prisma datasource is `postgresql`; a SQLite URL will
-not validate).
+Use Node.js 22 and npm. The authoritative lockfile is package-lock.json. PostgreSQL is required. Copy .env.example to a local .env and supply your own database and authentication values.
 
-```bash
-npm install
-cp .env.example .env         # fill in values, incl. a Postgres DATABASE_URL
-createdb bacwater_dev
-npm run db:push
-npm run db:seed
-npm run dev
-```
+Run npm ci, npx prisma generate, npm run db:push, then npm run dev. Seeding is optional and is intended only for a new disposable development database. The seed can overwrite content and must not be run automatically against production.
 
-Then visit http://localhost:3000.
+## Checks
 
-## Environment variables
+npm test runs calculation, model-guardrail, workspace and security fixtures. npm run build runs those tests and a production build. CI also runs TypeScript and isolated browser checks. Automated browser evidence is not a WCAG certification or proof of real-device behavior.
 
-See `.env.example` for the full list. The app runs in **offline test mode** when Stripe, Resend, Google, or Anthropic keys are missing:
+## Replit deployment
 
-- No Stripe key → orders are created and marked "paid" immediately (for admin flow testing).
-- No Resend key → vendor emails save as `failed` (draft preserved).
-- No Anthropic key → AI drawer returns a friendly "not configured yet" message.
-- No Google client → Google sign-in is hidden; email/password still works.
+Repository: webiq1206/bacwater. Keep the existing Next.js deployment; do not convert the application to Vite. Verify the Replit checkout has no unrelated changes, fetch origin and pull main using a fast-forward-only update. The post-merge script installs from npm's lockfile and generates Prisma. It does not seed or migrate the database. Use a pooled PostgreSQL endpoint in autoscaled production.
 
-## Admin
+Never use a destructive schema-push flag. Do not seed production as part of a build. Keep AUTH_SECRET stable across deployments. Review the actual production version after publishing; a GitHub push is not proof that Replit pulled or deployed it.
 
-The first user whose email matches `ADMIN_EMAILS` (comma-separated) is auto-promoted to admin on signup. You can also promote an existing user from `/admin/users`.
+## Access and optional integrations
 
-## Deploy on Replit
+New registrations always receive the user role. An operator must verify account ownership before granting an administrator role in the database or through an existing authorized administrator. Roles are checked from the database on subsequent authenticated requests.
 
-1. Import this repo into Replit.
-2. Replit's Next.js template should be picked up automatically. **Do not let Replit rewrite this to Vite**. Next.js is required for SSR, Prisma, and app router. If it offers to convert, decline and reset.
-3. Add the environment variables from `.env.example` in the Replit Secrets panel.
-4. Set `DATABASE_URL` to your production database. On Neon, use the **pooled**
-   endpoint (`-pooler` in the hostname). The direct endpoint gets terminated
-   when Neon's compute auto-suspends (`57P01`), causing intermittent 500s.
-5. The deploy build runs `prisma db push` **without** `--accept-data-loss`, so a
-   destructive schema change fails the deploy instead of dropping prod data.
-   Resolve it deliberately rather than re-adding the flag.
-6. Seeding is **not** part of the deploy. `prisma/seed.ts` upserts and force-sets
-   `published: true`, so running it against prod reverts content edited in the
-   admin panel and re-publishes unpublished guides. Run `npm run db:seed`
-   manually, and only when you intend to reset content.
-7. Deploy.
+Missing Anthropic credentials leave the optional explanation assistant unavailable; calculations still work. Provider acceptance of a support email is not proof of inbox delivery. Contact submissions are stored in the admin support inbox and use a request ID to prevent duplicate records.
 
-## Calculation library
+Optional analytics and session replay are disabled by default. Before setting NEXT_PUBLIC_ANALYTICS_MANUAL_CONFIRMED=true, disable automatic Enhanced Measurement/history, form, advertising and user-provided-data collection in GA4 and verify sanitized event delivery. Consent is required; private account/plan pages and sensitive query data are not tracked. Clarity replay is not enabled by this release.
 
-`src/lib/calc/` is the deterministic core.
+## Audit records
 
-- `index.ts`: `calculate()`, `recommendBacWaterMl()`, syringe map.
-- `peptides.ts`: 20+ curated research peptides with typical strengths and shelf life.
-- `converters.ts`: unit conversion helpers.
-- `__tests__/calc.test.ts`: assertion-based tests. Run: `npx tsx src/lib/calc/__tests__/calc.test.ts`.
-
-**The AI assistant never runs this math.** All arithmetic is deterministic.
-
-## Disclaimer
-
-BACWater.ai provides calculation tools and research supplies. It is **not** a medical service and does not diagnose, prescribe, or provide medical advice. Products are sold for laboratory research and educational purposes only.
+See audit/2026-09-21 for release evidence, unresolved dependencies and remaining master-audit obligations. Code changes, test verification, production deployment, indexing and ranking are separate statuses.

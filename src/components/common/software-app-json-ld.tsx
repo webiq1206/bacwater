@@ -1,3 +1,4 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import { softwareApplicationLd, type SoftwareAppInput } from "@/lib/seo/schema";
 
 /**
@@ -10,7 +11,7 @@ export function SoftwareAppJsonLd(props: SoftwareAppInput) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJson(jsonLd) }}
     />
   );
 }

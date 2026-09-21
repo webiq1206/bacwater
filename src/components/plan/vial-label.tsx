@@ -97,7 +97,7 @@ export interface VialLabelData {
   doseReading: string;
   /** Injections per week; null for older plans saved without a schedule. */
   injectionsPerWeek?: number | null;
-  shelfDays: number;
+  shelfDays: number | null;
 }
 
 export function VialLabel({
@@ -111,7 +111,7 @@ export function VialLabel({
   onMixDateChange: (v: string) => void;
   ariaLabel: string;
 }) {
-  const exp = mixDate ? addDaysIso(mixDate, data.shelfDays) : "";
+  const exp = "";
   return (
     <div className="vial-label">
       <div className="flex items-start justify-between gap-2">
@@ -153,13 +153,13 @@ export function VialLabel({
             {exp ? fmtLabelDate(exp) : <span className="vl-write" />}
           </span>
           <span className="whitespace-nowrap text-muted-foreground">
-            within {data.shelfDays} d
+            per product label
           </span>
         </div>
       </div>
 
       <div className="text-[8px] leading-tight text-muted-foreground">
-        Refrigerate &middot; protect from light &middot; do not freeze
+        Storage and discard: follow product instructions
       </div>
     </div>
   );

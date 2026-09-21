@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/require-admin";
 import { prisma } from "@/lib/db";
 import { ContentWorkspace, type ContentRecord } from "@/components/admin/content-workspace";
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default async function AdminContentPage({ searchParams }: Props) {
+  await requireAdminPage();
   const { id, new: isNew } = await searchParams;
   const items = await prisma.contentBlock.findMany({ orderBy: { updatedAt: "desc" } });
   const blocks: ContentRecord[] = items.map((c) => ({

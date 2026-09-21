@@ -9,18 +9,19 @@ import { COMPARISONS } from "@/lib/comparisons/content";
 import { getCatalog } from "@/lib/learn/catalog";
 import { CONTENT_TYPES, TOPICS } from "@/lib/learn/taxonomy";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 // Slugs that now 301-redirect elsewhere; keep them out of the sitemap.
 const REDIRECTED = new Set(["bac-water-vs-sterile-water", "how-long-bac-water-lasts"]);
 
 export async function GET() {
+  try {
   const guides = await prisma.contentBlock
     .findMany({
       where: { kind: "guide", published: true },
       select: { slug: true, updatedAt: true },
     })
-    .catch(() => [] as { slug: string; updatedAt: Date }[]);
+    ;
 
   const guideUrls: SitemapUrl[] = guides
     // Skip slugs that 301 elsewhere, and slugs whose URL is already submitted
@@ -43,7 +44,7 @@ export async function GET() {
   // Single-dimension filter views that are indexable (>= 3 results). These are
   // the legitimate, non-duplicate landing pages the taxonomy creates.
   // Filter views are structural; no meaningful update date, so omit lastmod.
-  const catalog = await getCatalog().catch(() => []);
+  const catalog = await getCatalog(true);
   const filterUrls: SitemapUrl[] = [];
   for (const c of CONTENT_TYPES) {
     const count = catalog.filter((e) => e.contentType === c.key).length;
@@ -67,4 +68,5 @@ export async function GET() {
   return xmlResponse(
     urlsetXml([...comparisonUrls, ...guideUrls, ...filterUrls])
   );
+  } catch { return new Response("Sitemap temporarily unavailable", { status: 503, headers: { "Retry-After": "300", "Cache-Control": "no-store" } }); }
 }

@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/require-admin";
 import { prisma } from "@/lib/db";
 import { PlansWorkspace, type PlanRow } from "@/components/admin/plans-workspace";
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default async function AdminPlansPage({ searchParams }: Props) {
+  await requireAdminPage();
   const { id } = await searchParams;
   const plans = await prisma.plan.findMany({
     orderBy: { createdAt: "desc" },
@@ -38,7 +40,7 @@ export default async function AdminPlansPage({ searchParams }: Props) {
     doseMcg: p.doseMcg,
     dosesPerVial: p.dosesPerVial,
     archived: p.archived,
-    expirationDate: p.expirationDate?.toISOString() ?? null,
+    expirationDate: null,
     createdAt: p.createdAt.toISOString(),
   }));
 

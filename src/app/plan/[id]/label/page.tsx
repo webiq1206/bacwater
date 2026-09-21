@@ -1,3 +1,4 @@
+import { safeResultDisplay } from "@/lib/calc/display";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { findPeptide, type CalcResult } from "@/lib/calc";
@@ -18,20 +19,14 @@ export default async function LabelPage({ params }: Props) {
   const plan = await prisma.plan.findUnique({ where: { publicId: id } });
   if (!plan) return notFound();
 
-  const shelfDays =
-    plan.dateMixed && plan.expirationDate
-      ? Math.max(
-          1,
-          Math.round((+plan.expirationDate - +plan.dateMixed) / 86_400_000)
-        )
-      : findPeptide(plan.peptideSlug ?? "")?.refrigeratedShelfDays ?? 28;
+  const shelfDays = null;
 
   // Use the stored result's syringe reading so the label matches the plan page
   // and PDF exactly (same rounding, correct units-vs-mL label).
   let doseReading: string;
   let injectionsPerWeek: number | null = null;
   try {
-    const parsed = JSON.parse(plan.data) as CalcResult;
+    const parsed = safeResultDisplay(JSON.parse(plan.data) as CalcResult);
     doseReading = formatSyringeReading(parsed.syringeReadout);
     if (
       typeof parsed.schedule?.injectionsPerWeek === "number" &&

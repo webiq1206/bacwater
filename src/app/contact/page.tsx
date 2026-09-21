@@ -6,10 +6,10 @@ import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 export const metadata = {
   alternates: { canonical: "/contact" },
   title: "Contact Us",
-  description: "Have a question about an order, a plan, or our products? Reach the BACwater.ai team.",
+  description: "Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website.",
   openGraph: {
     title: "Contact Us",
-    description: "Have a question about an order, a plan, or our products? Reach the BACwater.ai team.",
+    description: "Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website.",
     url: "/contact",
     type: "website",
     siteName: "BACwater.ai",
@@ -21,7 +21,7 @@ export default function ContactPage() {
     <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Contact BACwater.ai"
-        description="Have a question about an order, a plan, or our products? Reach the BACwater.ai team."
+        description="Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website."
         url="/contact"
         breadcrumb={[
           { name: "Home", url: "/" },
@@ -34,8 +34,8 @@ export default function ContactPage() {
         Get in touch
       </h1>
       <p className="mt-3 text-muted-foreground leading-relaxed">
-        Questions about an order, a plan, a product, or wholesale pricing?
-        Send us a note and we&apos;ll get back to you within one business day.
+        Questions about a calculation, a saved plan or this website?
+        Send the support team a note. We do not sell products or provide medical advice.
       </p>
       <div className="mt-6 border border-border p-4">
         <p className="text-sm text-muted-foreground leading-relaxed">

@@ -1,5 +1,6 @@
+import { safeJson } from "@/lib/seo/safe-json";
 import type { Metadata } from "next";
-import Script from "next/script";
+import { AnalyticsPreferences } from "@/components/common/analytics-preferences";
 import { cookies } from "next/headers";
 import { Montserrat, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
@@ -36,8 +37,8 @@ const jetbrains = JetBrains_Mono({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
-const GA_ID = "G-CWEKGP6NKB";
-const CLARITY_ID = "xgb3ipxhf6";
+
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -70,7 +71,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
-  const isAuthenticated = !!session?.user;
+  const isAuthenticated = Boolean((session?.user as { id?: string } | undefined)?.id);
   const ageVerified = (await cookies()).get("bacwater_age_ok")?.value === "1";
   return (
     <html
@@ -81,7 +82,7 @@ export default async function RootLayout({
         <OrgJsonLd />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          dangerouslySetInnerHTML={{ __html: safeJson({
             "@context": "https://schema.org",
             "@type": "WebSite",
             "@id": `${siteUrl}/#website`,
@@ -91,38 +92,6 @@ export default async function RootLayout({
             publisher: { "@id": `${siteUrl}/#organization` },
           }) }}
         />
-        {process.env.NODE_ENV === "production" && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-gtag" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_ID}');`}
-            </Script>
-            <Script id="ms-clarity" strategy="afterInteractive">
-              {`(function(c,l,a,r,i,t,y){
-c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";
-y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-})(window, document, "clarity", "script", "${CLARITY_ID}");`}
-            </Script>
-            {/* Only pulled in when ads are actually enabled; otherwise this is
-                a third-party script on every page for zero revenue. */}
-            {ADS_ENABLED && (
-              <Script
-                id="adsbygoogle-init"
-                strategy="afterInteractive"
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3192081478482854"
-                crossOrigin="anonymous"
-              />
-            )}
-          </>
-        )}
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:border focus:border-border focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
@@ -130,11 +99,12 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           Skip to content
         </a>
         <SiteHeader isAuthenticated={isAuthenticated} />
+        <AgeGate initialVerified={ageVerified} />
         <main id="main" className="flex-1">{children}</main>
         <SiteFooter />
         <MobileBottomNav />
         <Toaster />
-        <AgeGate initialVerified={ageVerified} />
+        <AnalyticsPreferences />
       </body>
     </html>
   );

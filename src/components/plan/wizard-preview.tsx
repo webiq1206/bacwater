@@ -129,7 +129,7 @@ export function WizardPreview({
                 value={
                   dateMixed && result.expiration.date
                     ? formatDate(result.expiration.date)
-                    : `${result.expiration.days} days after mixing`
+                    : "Follow product instructions"
                 }
               />
             </dl>

@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/require-admin";
 import { redirect } from "next/navigation";
 
 interface Props { params: Promise<{ id: string }>; }
@@ -9,6 +10,7 @@ export const metadata = { title: "Admin · Content", robots: { index: false, fol
  * live preview on one screen. Old bookmarks land there with the row selected.
  */
 export default async function ContentEditRedirect({ params }: Props) {
+  await requireAdminPage();
   const { id } = await params;
   redirect(id === "new" ? "/admin/content?new=1" : `/admin/content?id=${encodeURIComponent(id)}`);
 }

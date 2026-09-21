@@ -59,50 +59,17 @@ export function representativeStrength(p: PeptideRef): number {
 /** 40-60 word direct-answer paragraph that opens the page. */
 export function directAnswer(p: PeptideRef): string {
   const name = shortName(p.name);
-  const vialMg = representativeStrength(p);
-  const doseMcg = p.suggestedDoseMcg;
-  const bacMl = recommendBacWaterMl(vialMg, doseMcg);
-  const conc = round(vialMg / bacMl, 2);
-  const units = round(((doseMcg / 1000) / (vialMg / bacMl)) * 100, 1);
-  return (
-    `To mix a ${vialMg} mg vial of ${name}, add about ${round(bacMl, 2)} mL of BAC water. ` +
-    `Now each 1 mL of liquid holds ${conc} mg of peptide. So a ${formatDose(doseMcg)} dose is about ` +
-    `${units} units on a 1 mL insulin syringe. Want a rounder number? Add a little more or a little less water.`
-  );
+  return `Use this ${name} calculator to convert your stated vial amount and final liquid volume into concentration and U-100 syringe units. Enter an amount to measure from instructions you already have. Vial strength alone cannot determine a suitable diluent, mixing volume, dose or storage time.`;
 }
 
 /** Reconstitution steps for the HowTo block, tuned to this peptide. */
-export function reconstitutionSteps(
-  p: PeptideRef
-): { name: string; text: string }[] {
-  const name = shortName(p.name);
-  const vialMg = representativeStrength(p);
-  const bacMl = round(recommendBacWaterMl(vialMg, p.suggestedDoseMcg), 2);
+export function reconstitutionSteps(p: PeptideRef): { name: string; text: string }[] {
   return [
-    {
-      name: "Gather your supplies",
-      text: `Wash your hands and lay out your ${name} vial, a vial of bacteriostatic water, an insulin syringe, and alcohol prep pads on a clean surface.`,
-    },
-    {
-      name: "Swab both vial tops",
-      text: "Wipe the rubber stopper of both the peptide vial and the bacteriostatic water vial with separate alcohol prep pads. Let them air dry.",
-    },
-    {
-      name: "Draw the bacteriostatic water",
-      text: `For a ${vialMg} mg vial, draw about ${bacMl} mL of bacteriostatic water. Use the calculator on this page to match your exact vial strength.`,
-    },
-    {
-      name: "Add water to the peptide vial",
-      text: "Insert the needle at an angle and let the water run slowly down the inside wall of the vial. Do not spray it directly onto the powder.",
-    },
-    {
-      name: "Swirl gently",
-      text: "Roll or swirl the vial between your palms until the powder fully dissolves. Roll it, do not shake it, if your product's instructions say so. The solution should look clear.",
-    },
-    {
-      name: "Label and refrigerate",
-      text: "Label the vial with the peptide name, the date mixed, and the expiration date, then refrigerate it immediately.",
-    },
+    { name: "Check the product instructions", text: `Confirm the identity, amount and units on your ${shortName(p.name)} label. A name alone does not establish formulation, purity or suitability for use.` },
+    { name: "Enter the known volume", text: "Use the liquid volume specified for your product or the actual final volume of an existing solution. A convenient calculator result is not permission to change those instructions." },
+    { name: "Check the concentration", text: "Divide the total amount in milligrams by the final volume in milliliters to obtain mg/mL. The calculation assumes the stated amount is fully dissolved in that final volume." },
+    { name: "Check the measurement", text: "Convert the amount you entered to milliliters using that concentration. U-100 markings represent 100 units per mL, not milligrams of a compound." },
+    { name: "Keep storage instructions separate", text: "Use the product-specific storage and discard instructions. This calculation cannot determine a safe use period or verify sterility." },
   ];
 }
 
@@ -124,14 +91,14 @@ export function buildFaqs(
   for (const r of rows) {
     faqs.push({
       q: `How much bac water for ${r.vialMg} mg ${name}?`,
-      a: `Add about ${r.bacMl} mL of bacteriostatic water to a ${r.vialMg} mg vial of ${name}. That creates a ${r.concentrationMgPerMl} mg/mL solution, so a ${r.doseLabel} dose is about ${r.units} units on a 1 mL insulin syringe. Adjust the water amount to move the dose to a cleaner mark.`,
+      a: `A ${r.vialMg} mg vial in a final volume of ${r.bacMl} mL would have a concentration of ${r.concentrationMgPerMl} mg/mL. In that arithmetic example, ${r.doseLabel} corresponds to ${r.units} U-100 units. These are illustrative inputs, not a recommended dilution or dose. Follow the product-specific instructions.`,
     });
   }
 
   // Storage / shelf life.
   faqs.push({
     q: `How long does reconstituted ${name} last?`,
-    a: `Once mixed, ${name} is typically stable for about ${p.refrigeratedShelfDays} days when refrigerated. ${p.storageNote} Discard it sooner if the solution turns cloudy or develops particles.`,
+    a: `A reliable storage period for ${name} cannot be inferred from the compound name or concentration alone. Follow the instructions for the exact formulation. This calculator does not establish sterility, stability or a discard date.`,
   });
 
   // Extra curated entries.

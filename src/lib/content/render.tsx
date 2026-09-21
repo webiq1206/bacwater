@@ -108,4 +108,3 @@ export function renderBody(body: string) {
   const blocks = body.split(/\n\n+/);
   return blocks.map((block, i) => renderBlock(block, i));
 }
-

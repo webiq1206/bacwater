@@ -22,9 +22,8 @@ export const orgNode = {
   "@id": ORG_ID,
   name: "BACwater.ai",
   url: SITE_URL,
-  logo: `${SITE_URL}/favicon.ico`,
   description:
-    "BACwater.ai is the complete BAC water calculator and reconstitution guide: deterministic calculations, printable plans, and premium supplies.",
+    "BACwater.ai is the complete BAC water calculator and reconstitution guide: deterministic calculations, printable plans, and educational references.",
   contactPoint: {
     "@type": "ContactPoint",
     email: "info@bacwater.ai",
@@ -73,7 +72,7 @@ export function softwareApplicationLd({ name, description, url }: SoftwareAppInp
     name,
     description,
     url: absoluteUrl(url),
-    applicationCategory: "HealthApplication",
+    applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any (web browser)",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     isAccessibleForFree: true,

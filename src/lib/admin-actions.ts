@@ -1,8 +1,10 @@
 "use server";
 
 import { z } from "zod";
+import { revalidatePublication } from "@/lib/seo/publication";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { safeResultDisplay } from "@/lib/calc/display";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { Resend } from "resend";
@@ -288,14 +290,17 @@ export async function upsertContent(formData: FormData) {
     await prisma.contentBlock.create({ data: c });
   }
   revalidatePath("/admin/content");
+  revalidatePublication();
   revalidatePath(`/learn/${c.slug}`);
   return { ok: true };
 }
 
 export async function deleteContent(id: string) {
   await requireAdmin();
-  await prisma.contentBlock.delete({ where: { id } });
+  const removed = await prisma.contentBlock.delete({ where: { id } });
+  revalidatePublication([removed.slug]);
   revalidatePath("/admin/content");
+  revalidatePublication();
 }
 
 // ---------- Users ----------
@@ -404,7 +409,7 @@ export async function deleteContactMessage(id: string) {
 
 const contentBlockSchema = z.object({
   id: z.string().optional().nullable(),
-  slug: z.string().min(1).max(160),
+  slug: z.string().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase words separated by single hyphens."),
   kind: z.enum(["guide", "faq", "page"]),
   title: z.string().min(1).max(200),
   body: z.string().min(1),
@@ -452,6 +457,7 @@ export async function saveContentBlock(input: ContentBlockInput) {
     : await prisma.contentBlock.create({ data });
 
   revalidatePath("/admin/content");
+  revalidatePublication();
   revalidatePath("/admin");
   revalidatePath("/learn");
   revalidatePath(`/learn/${saved.slug}`);
@@ -480,6 +486,7 @@ export async function toggleContentPublished(id: string) {
     data: { published: !block.published },
   });
   revalidatePath("/admin/content");
+  revalidatePublication();
   revalidatePath("/admin");
   revalidatePath("/learn");
   revalidatePath(`/learn/${updated.slug}`);
@@ -506,7 +513,7 @@ export async function getAdminPlanDetail(publicId: string) {
   let result: unknown = null;
   let parseError: string | null = null;
   try {
-    result = JSON.parse(plan.data);
+    result = safeResultDisplay(JSON.parse(plan.data));
   } catch {
     // Older or truncated rows exist; the workspace falls back to the
     // denormalised columns rather than blowing up the pane.
@@ -530,7 +537,7 @@ export async function getAdminPlanDetail(publicId: string) {
       syringeUnits: plan.syringeUnits,
       dosesPerVial: plan.dosesPerVial,
       dateMixed: plan.dateMixed?.toISOString() ?? null,
-      expirationDate: plan.expirationDate?.toISOString() ?? null,
+      expirationDate: null,
       owner: plan.user
         ? {
             id: plan.user.id,

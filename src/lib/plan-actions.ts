@@ -4,6 +4,7 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { safeResultDisplay } from "@/lib/calc/display";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { hasPlanAccess, rememberPlanAccess } from "@/lib/plan-access";
@@ -26,7 +27,8 @@ const inputSchema = z.object({
     "syringe-3ml",
   ]),
   injectionsPerWeek: z.number().int().min(1).max(28).optional().nullable(),
-  dateMixed: z.string().optional().nullable(),
+  dateMixed: z.string().max(40).refine((s) => !s || !Number.isNaN(Date.parse(s)), "Invalid date").optional().nullable(),
+  secondary: z.object({ peptideSlug: z.string().max(100).optional(), peptideName: z.string().max(160).optional(), vialStrengthMg: z.number().positive() }).optional().nullable(),
   notes: z.string().max(2000).optional().nullable(),
 });
 
@@ -44,7 +46,9 @@ export async function computePlanAction(raw: unknown) {
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,
+    secondary: parsed.data.secondary,
   });
+  if (result.errors.length) return { ok: false as const, error: result.errors.join(" ") };
   return { ok: true as const, result };
 }
 
@@ -63,8 +67,10 @@ export async function savePlanAction(raw: unknown, notes?: string) {
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,
+    secondary: parsed.data.secondary,
   };
   const result = calculate(input);
+  if (result.errors.length) return { ok: false as const, error: result.errors.join(" ") };
 
   const publicId = nanoid(10);
   const userId = (session?.user as { id?: string } | undefined)?.id ?? null;
@@ -134,9 +140,9 @@ export async function claimDevicePlansAction(
           (c) =>
             c &&
             typeof c.publicId === "string" &&
-            c.publicId.length > 0 &&
+            c.publicId.length >= 10 && c.publicId.length <= 40 &&
             typeof c.claimToken === "string" &&
-            c.claimToken.length > 0
+            c.claimToken.length === 24
         )
         .slice(0, 100)
     : [];
@@ -304,7 +310,7 @@ export async function getPlanDetailAction(publicId: string) {
 
   let result: unknown = null;
   try {
-    result = JSON.parse(plan.data);
+    result = safeResultDisplay(JSON.parse(plan.data));
   } catch {
     // A corrupt snapshot shouldn't blank the pane; the caller falls back to
     // the plan's own columns.
@@ -329,7 +335,7 @@ export async function getPlanDetailAction(publicId: string) {
       injectionsPerWeek: injectionsPerWeekOf(result),
       dosesPerVial: plan.dosesPerVial,
       dateMixed: plan.dateMixed?.toISOString() ?? null,
-      expirationDate: plan.expirationDate?.toISOString() ?? null,
+      expirationDate: null,
       createdAt: plan.createdAt.toISOString(),
       result,
     },
@@ -393,7 +399,10 @@ export async function updatePlanAction(
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
     dateMixed: parsed.data.dateMixed ?? null,
+    secondary: parsed.data.secondary,
   });
+
+  if (result.errors.length) return { ok: false as const, error: result.errors.join(" ") };
 
   // A name that is just a restatement of the plan's numbers follows them when
   // they change; a name someone typed is left exactly as they typed it. The

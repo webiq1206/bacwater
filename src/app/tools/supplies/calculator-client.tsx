@@ -145,7 +145,7 @@ export default function SupplyCalculatorPage() {
           {/* 1. Peptide */}
           <Section n={1} total={5} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
-              <SelectTrigger className="h-12">
+              <SelectTrigger aria-label="Compound" className="h-12">
                 <SelectValue placeholder="Choose a peptide" />
               </SelectTrigger>
               <SelectContent>

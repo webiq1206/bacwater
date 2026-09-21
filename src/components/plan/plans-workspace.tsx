@@ -214,6 +214,7 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
           bacWaterMl: fields.bacWaterMl,
           syringeType: fields.syringeType,
           dateMixed: fields.dateMixed || null,
+          secondary: (detail?.result as CalcResult | null)?.secondary ?? null,
         },
         { name: fields.name }
       );

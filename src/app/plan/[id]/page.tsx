@@ -1,3 +1,4 @@
+import { safeResultDisplay } from "@/lib/calc/display";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Download, Printer, Save, ArrowLeft, Sparkles } from "lucide-react";
@@ -46,7 +47,7 @@ export default async function PublicPlanPage({ params }: Props) {
   const canEdit = await hasPlanAccess(plan, userId);
   const displayName = (canEdit ? plan.name : null) || plan.peptideName || "Shared calculation";
 
-  const result = JSON.parse(plan.data) as CalcResult;
+  const result = safeResultDisplay(JSON.parse(plan.data) as CalcResult);
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
@@ -168,4 +169,3 @@ export default async function PublicPlanPage({ params }: Props) {
     </div>
   );
 }
-

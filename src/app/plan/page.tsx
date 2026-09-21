@@ -44,7 +44,7 @@ export default function PlanPage() {
         </h1>
         <p className="mt-3 sm:mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed">
           Tell us what&apos;s on your vial label. We&apos;ll do the math (BAC
-          water, syringe units, doses per vial, expiration, supplies) and
+          water, syringe units, measurements per vial and supply quantities) and
           explain it all in plain English.
         </p>
         <p className="mt-2 text-sm text-muted-foreground hidden sm:block">

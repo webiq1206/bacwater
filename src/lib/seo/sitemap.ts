@@ -36,9 +36,9 @@ function escapeXml(value: string): string {
 }
 
 export function urlsetXml(urls: SitemapUrl[]): string {
-  const body = urls
+  const body = [...new Map(urls.map((u) => [u.path || "/", u])).values()]
     .map((u) => {
-      const loc = escapeXml(`${SITE_URL}${u.path}`);
+      const loc = escapeXml(`${SITE_URL}${u.path || "/"}`);
       const lm = u.lastModified
         ? `<lastmod>${u.lastModified.toISOString()}</lastmod>`
         : "";
@@ -67,7 +67,7 @@ export function xmlResponse(xml: string): Response {
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      "Cache-Control": "public, max-age=0, s-maxage=0, must-revalidate",
     },
   });
 }

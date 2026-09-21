@@ -87,7 +87,7 @@ export default function BacWaterCalculatorPage() {
           <CarriedOverNotice visible={vial.carriedOver} onClear={vial.clear} />
           <StepCard n={1} total={3} title="Which peptide?">
             <Select value={peptideSlug} onValueChange={handlePeptideChange}>
-              <SelectTrigger className="h-12">
+              <SelectTrigger aria-label="Compound" className="h-12">
                 <SelectValue placeholder="Choose a peptide" />
               </SelectTrigger>
               <SelectContent>

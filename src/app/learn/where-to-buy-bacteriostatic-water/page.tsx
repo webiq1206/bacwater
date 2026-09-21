@@ -193,7 +193,7 @@ export default function WhereToBuyPage() {
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
           The four places people actually get it
         </h2>
-        <div className="mt-5 overflow-x-auto border border-border">
+        <div className="mt-5 overflow-x-auto border border-border" role="region" aria-label="Scrollable data table" tabIndex={0}>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-surface text-left">

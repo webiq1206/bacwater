@@ -93,7 +93,7 @@ export interface CalcInput {
   doseMcg: number;
   /**
    * How many injections the weekly dose is split across. Defaults to the
-   * peptide's typical frequency (driven by its half-life); 1 when unknown.
+   * explicit user input; defaults to 1. No regimen is inferred.
    */
   injectionsPerWeek?: number;
   bacWaterMl?: number;
@@ -152,7 +152,7 @@ export interface CalcResult {
   };
   dosesPerVial: number;
   expiration: {
-    days: number;
+    days: number | null;
     date: string | null;
     note: string;
   };
@@ -253,24 +253,13 @@ function buildInstructions(input: {
   units: number;
   syringe: SyringeSpec;
 }): string[] {
-  const drawLabel =
-    input.syringe.scale === "u100"
-      ? `Draw ${round(input.units, 1)} units on the ${input.syringe.label}.`
-      : `Draw ${round(input.units / 100, 2)} mL on the ${input.syringe.label}.`;
-  // Lowercase only the first letter so it flows after "and", without mangling
-  // units like "mL" into "ml".
-  const drawLabelInline = drawLabel.charAt(0).toLowerCase() + drawLabel.slice(1);
-
   return [
-    "Wash your hands and lay out your supplies on a clean surface.",
-    `Wipe the top of the BAC water vial with an alcohol prep pad. Let it dry.`,
-    `Using a syringe, draw ${round(input.bacMl, 2)} mL of BAC water.`,
-    "Wipe the top of the peptide vial. Slowly inject the BAC water along the inside wall of the vial. Do not aim directly at the peptide powder.",
-    "Gently swirl (do not shake) until the powder is fully dissolved. The solution should look clear.",
-    "Label the vial with the peptide name, date mixed, and expiration.",
-    "Refrigerate the reconstituted vial immediately.",
-    `When ready to dose: wipe the vial top, invert the vial, and ${drawLabelInline}`,
-    "Wipe the injection site, inject, then dispose of the syringe safely in a sharps container.",
+    "Check the product identity, labeled amount, units, and product-specific instructions. A calculator does not establish suitability for use.",
+    `This example uses ${round(input.vialStrengthMg, 4)} mg and ${round(input.bacMl, 4)} mL. Confirm the volume means the final solution volume in your protocol.`,
+    `Concentration = amount divided by volume: ${round(input.concentrationMgPerMl, 4)} mg/mL.`,
+    `The entered amount of ${round(input.doseMcg, 4)} mcg corresponds to ${round(input.units / 100, 4)} mL. On a U-100 scale only, that volume corresponds to ${round(input.units, 4)} units.`,
+    "Confirm the actual syringe capacity and graduation spacing. A rounded display is not permission to round a prescribed amount.",
+    "Obtain product-specific preparation, administration, storage and discard instructions from the responsible professional or manufacturer. This is a calculation record, not an injection protocol.",
   ];
 }
 
@@ -287,15 +276,21 @@ export function calculate(input: CalcInput): CalcResult {
   if (!isFiniteNumber(input.doseMcg) || input.doseMcg <= 0)
     errors.push("Dose must be greater than 0 mcg.");
 
-  const vialStrengthMg = Math.max(0.0001, input.vialStrengthMg || 0);
+  if (input.bacWaterMl !== undefined && (!isFiniteNumber(input.bacWaterMl) || input.bacWaterMl <= 0)) errors.push("Water volume must be a finite number greater than 0 mL.");
+  if (input.injectionsPerWeek != null && (!Number.isInteger(input.injectionsPerWeek) || input.injectionsPerWeek < 1 || input.injectionsPerWeek > 28)) errors.push("The number of equal measurements must be a whole number from 1 to 28.");
+  if (!SYRINGES.some((s) => s.id === input.syringeType)) errors.push("Select a supported syringe scale.");
+  if (input.dateMixed && Number.isNaN(new Date(input.dateMixed).getTime())) errors.push("Enter a valid mixing date.");
+  if (input.secondary && (!isFiniteNumber(input.secondary.vialStrengthMg) || input.secondary.vialStrengthMg <= 0)) errors.push("The second vial amount must be greater than 0 mg.");
+  // Invalid states stay finite for rendering, and are never allowed to save.
+  const vialStrengthMg = isFiniteNumber(input.vialStrengthMg) && input.vialStrengthMg > 0 ? input.vialStrengthMg : 1;
   // The entered dose is the WEEKLY total; it is split across the peptide's
   // typical injections per week (user-overridable). All draw math below is
   // per injection.
-  const weeklyDoseMcg = Math.max(0.0001, input.doseMcg || 0);
+  const weeklyDoseMcg = isFiniteNumber(input.doseMcg) && input.doseMcg > 0 ? input.doseMcg : 1;
   const rawPerWeek =
     isFiniteNumber(input.injectionsPerWeek) && input.injectionsPerWeek! > 0
       ? input.injectionsPerWeek!
-      : peptideRef?.injectionsPerWeek ?? 1;
+      : 1;
   const injectionsPerWeek = Math.min(28, Math.max(1, rawPerWeek));
   const doseMcg = weeklyDoseMcg / injectionsPerWeek;
   const doseMg = doseMcg * MG_PER_MCG;
@@ -338,7 +333,7 @@ export function calculate(input: CalcInput): CalcResult {
 
   const recommendedBacMl = recommendBacWaterMl(vialStrengthMg, doseMcg);
   const usedBacMl = isFiniteNumber(input.bacWaterMl)
-    ? Math.max(0.1, input.bacWaterMl!)
+    ? input.bacWaterMl! > 0 ? input.bacWaterMl! : 1
     : recommendedBacMl;
 
   if (usedBacMl > 5)
@@ -383,7 +378,7 @@ export function calculate(input: CalcInput): CalcResult {
     const onMark = Math.abs(marks - Math.round(marks)) < 0.02;
     if (!onMark) {
       warnings.push(
-        `Your syringe has a mark every ${markLabel}. Your amount is ${round(syringeUnits, 1)} units. That is between two marks, so you cannot measure it exactly. Change your water amount so the amount lands on a line.`
+        `This calculation assumes a mark every ${markLabel}. Your amount is ${round(syringeUnits, 1)} units. That is between two marks, so you cannot measure it exactly. Change your water amount so the amount lands on a line.`
       );
     }
   }
@@ -392,12 +387,12 @@ export function calculate(input: CalcInput): CalcResult {
   // measured at all. Below that, flag it rather than return an unusable number.
   if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < markUnits)
     warnings.push(
-      `This is ${round(syringeUnits, 1)} units. The smallest mark on your syringe is ${markLabel}, so it is too small to measure. Use less BAC water, or switch to a 0.3 mL syringe.`
+      `This is ${round(syringeUnits, 1)} units. The assumed smallest mark is ${markLabel}, so it is too small to measure. More water increases the calculated volume for the same amount. Do not change a preparation without checking its instructions, capacity and actual syringe markings.`
     );
   // Still measurable, but small enough to be hard to read accurately.
   else if (syringe.scale === "u100" && syringeUnits >= markUnits && syringeUnits < 4)
     warnings.push(
-      `This amount is only ${round(syringeUnits, 1)} units, which is hard to measure accurately. Using less BAC water lands it at a larger, easier-to-read mark.`
+      `This amount is only ${round(syringeUnits, 1)} units, which is hard to measure accurately. More water gives a larger calculated volume for the same amount. Confirm the product instructions and actual syringe markings before any change.`
     );
 
   const syringeReadout = {
@@ -424,15 +419,10 @@ export function calculate(input: CalcInput): CalcResult {
     );
   }
 
-  const days = peptideRef?.refrigeratedShelfDays ?? 28;
-  let expDate: string | null = null;
-  if (input.dateMixed) {
-    const d = new Date(input.dateMixed);
-    if (!Number.isNaN(d.getTime())) {
-      d.setDate(d.getDate() + days);
-      expDate = d.toISOString();
-    }
-  }
+  const days = null;
+  const expDate = null;
+  assumptions.push("No usable shelf life, discard date, storage condition or compatibility can be determined from this arithmetic. Follow the specific product label and qualified professional guidance.");
+  assumptions.push("Syringe graduation spacing is an assumption. Verify the markings on the actual device; equal capacity does not guarantee equal graduations.");
 
   assumptions.push(
     "Concentration is calculated as (vial strength in mg) ÷ (BAC water in mL)."
@@ -494,18 +484,6 @@ export function calculate(input: CalcInput): CalcResult {
       companionDoseMcg: round(companionDoseMcg, 1),
     };
 
-    // Blend: expiration is limited by the shorter-lived peptide.
-    const secondaryDays = secondaryRef?.refrigeratedShelfDays ?? days;
-    if (secondaryDays < days) {
-      // Recompute expiration date using the shorter shelf life.
-      if (input.dateMixed) {
-        const d2 = new Date(input.dateMixed);
-        if (!Number.isNaN(d2.getTime())) {
-          d2.setDate(d2.getDate() + secondaryDays);
-          expDate = d2.toISOString();
-        }
-      }
-    }
     assumptions.push(
       `Blend detected: every draw delivers both peptides in proportion. Companion ${secondaryName} dose = ${round(companionDoseMcg, 0)} mcg per injection.`
     );
@@ -516,7 +494,7 @@ export function calculate(input: CalcInput): CalcResult {
     : peptideName || "peptide";
 
   const summary =
-    `Mix ${vialStrengthMg} mg of ${displayName} with ${round(usedBacMl, 2)} mL of BAC water. ` +
+    `Calculation: ${vialStrengthMg} mg of ${displayName} in ${round(usedBacMl, 2)} mL. ` +
     (injectionsPerWeek > 1
       ? `Your ${round(weeklyDoseMcg, 1)} mcg weekly total splits into ${injectionsPerWeek} injections. `
       : "") +
@@ -529,6 +507,10 @@ export function calculate(input: CalcInput): CalcResult {
       ? ` Each draw also delivers ${round(secondaryOutput.companionDoseMcg, 0)} mcg of ${secondaryOutput.peptideName}.`
       : "");
 
+  if (![finalConcentrationMgPerMl, finalConcentrationMcgPerMl, doseVolumeMl, syringeUnits, dosesPerVial].every(Number.isFinite)) {
+    const fallback = calculate({ vialStrengthMg: 1, doseMcg: 1, bacWaterMl: 1, syringeType: "insulin-1ml" });
+    return { ...fallback, errors: [...errors, "These values exceed the supported numeric range. Check the units and amounts."], summary: "Correct the input values before using or saving a calculation.", instructions: [] };
+  }
   return {
     input: {
       peptideSlug: peptideRef?.slug ?? input.peptideSlug ?? null,
@@ -538,7 +520,7 @@ export function calculate(input: CalcInput): CalcResult {
       injectionsPerWeek,
       bacWaterMl: usedBacMl,
       syringeType: input.syringeType,
-      dateMixed: input.dateMixed
+      dateMixed: input.dateMixed && !Number.isNaN(new Date(input.dateMixed).getTime())
         ? new Date(input.dateMixed).toISOString()
         : null,
     },
@@ -552,23 +534,15 @@ export function calculate(input: CalcInput): CalcResult {
       injectionsPerWeek,
       weeklyDoseMcg: round(weeklyDoseMcg, 2),
       dosePerInjectionMcg: round(doseMcg, 2),
-      label:
-        input.injectionsPerWeek != null &&
-        peptideRef &&
-        input.injectionsPerWeek !== peptideRef.injectionsPerWeek
-          ? `${injectionsPerWeek}x per week (your schedule)`
-          : peptideRef?.scheduleNote ??
-            (injectionsPerWeek === 1
-              ? "Once weekly"
-              : `${injectionsPerWeek}x per week`),
-      halfLifeHours: peptideRef?.halfLifeHours ?? null,
+      label: `${injectionsPerWeek} equal measurement${injectionsPerWeek === 1 ? "" : "s"} (your input, not a recommended schedule)`,
+      halfLifeHours: null,
     },
     syringeReadout,
     dosesPerVial,
     expiration: {
       days,
       date: expDate,
-      note: peptideRef?.storageNote ?? "Keep in the fridge.",
+      note: "Not determined. Follow the specific product instructions; a calculation cannot establish stability or a safe discard date.",
     },
     supplies,
     assumptions,

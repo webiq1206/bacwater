@@ -93,9 +93,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-32 pb-16 sm:pb-20 text-center">
         <div className="eyebrow">Concentration &amp; measurement calculator</div>
         <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-serif font-medium tracking-tight leading-[1.1] text-balance">
-          Concentration and Measurement Calculations
-          <br className="hidden sm:block" />
-          {" "}for Peptide Reconstitution
+          BAC Water Calculator and Mixing Guide
         </h1>
         <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
           Enter the numbers on your vial. We work out the concentration, how much

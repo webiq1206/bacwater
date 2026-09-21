@@ -14,6 +14,7 @@ interface Initial {
   bacWaterMl: number;
   syringeType: string;
   dateMixed: string;
+  secondary?: PlanFormInitial["secondary"];
 }
 
 // Edit reuses the advanced form, prefilled with the saved plan's values, and
@@ -29,6 +30,7 @@ export function PlanEditor({ initial }: { initial: Initial }) {
     bacWaterMl: initial.bacWaterMl,
     syringeType: initial.syringeType as SyringeType,
     dateMixed: initial.dateMixed || null,
+    secondary: initial.secondary,
   };
   return (
     <PlanForm

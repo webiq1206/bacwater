@@ -10,7 +10,7 @@ export default function SignInPage() {
       <div className="eyebrow text-center">Sign in</div>
       <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight text-center">Welcome back</h1>
       <p className="mt-2 text-center text-sm text-muted-foreground">
-        Sign in to access your saved plans and order history.
+        Sign in to access your saved calculations.
       </p>
       <div className="mt-6 border border-border p-8">
         <Suspense fallback={null}>

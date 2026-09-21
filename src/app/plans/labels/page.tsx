@@ -1,3 +1,4 @@
+import { safeResultDisplay } from "@/lib/calc/display";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -68,20 +69,14 @@ export default async function BatchLabelsPage({ searchParams }: Props) {
   const labelPlans: BatchLabelPlan[] = ordered.map((plan) => {
     // Shelf life from the plan's own dates when it has them, else the
     // peptide's refrigerated default. Same derivation as /plan/[id]/label.
-    const shelfDays =
-      plan.dateMixed && plan.expirationDate
-        ? Math.max(
-            1,
-            Math.round((+plan.expirationDate - +plan.dateMixed) / 86_400_000)
-          )
-        : findPeptide(plan.peptideSlug ?? "")?.refrigeratedShelfDays ?? 28;
+    const shelfDays = null;
 
     // Read the syringe reading from the stored snapshot so the printed label
     // matches the plan page and the PDF exactly.
     let doseReading: string;
     let injectionsPerWeek: number | null = null;
     try {
-      const parsed = JSON.parse(plan.data) as CalcResult;
+      const parsed = safeResultDisplay(JSON.parse(plan.data) as CalcResult);
       doseReading = formatSyringeReading(parsed.syringeReadout);
       if (
         typeof parsed.schedule?.injectionsPerWeek === "number" &&
@@ -95,7 +90,7 @@ export default async function BatchLabelsPage({ searchParams }: Props) {
 
     return {
       publicId: plan.publicId,
-      planName: plan.name || plan.peptideName || "Untitled plan",
+      planName: plan.peptideName || "Shared calculation",
       peptideName: plan.peptideName || "Peptide",
       vialStrengthMg: plan.vialStrengthMg,
       bacWaterMl: formatMl(plan.bacWaterMl),

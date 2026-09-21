@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { Menu, User, X, LogOut, LayoutGrid, LogIn, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -14,21 +14,23 @@ const NAV = [
   { href: "/learn", label: "Learning Center" },
 ];
 
-const ITEM = "flex items-center gap-2.5 px-3.5 py-2.5 text-sm hover:bg-muted transition-colors";
+const ITEM = "flex items-center gap-2.5 px-3.5 min-h-11 py-2.5 text-sm hover:bg-muted transition-colors";
 
 /** Account icon + dropdown. Works signed-in (My Plans / Sign out) or signed-out
  *  (Sign in / Create account), so there's always a login entry point. */
 function AccountMenu({ isAuthenticated }: { isAuthenticated: boolean }) {
   const [open, setOpen] = useState(false);
+  const trigger = useRef<HTMLButtonElement>(null);
   return (
-    <div className="relative">
+    <div className="relative" onKeyDown={(e) => { if (e.key === "Escape" && open) { e.preventDefault(); setOpen(false); trigger.current?.focus(); } }} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpen(false); }}>
       <button
         type="button"
         onClick={() => setOpen((s) => !s)}
         aria-label="Account"
-        aria-haspopup="menu"
+        aria-controls="account-options"
+        ref={trigger}
         aria-expanded={open}
-        className="inline-flex h-10 w-10 items-center justify-center border border-border bg-white hover:bg-muted transition-colors"
+        className="inline-flex h-11 w-11 items-center justify-center border border-border bg-white hover:bg-muted transition-colors"
       >
         <User className="h-4 w-4" />
       </button>
@@ -36,17 +38,17 @@ function AccountMenu({ isAuthenticated }: { isAuthenticated: boolean }) {
         <>
           <div className="fixed inset-0 z-40" aria-hidden onClick={() => setOpen(false)} />
           <div
-            role="menu"
+            id="account-options"
             className="absolute right-0 top-full mt-1.5 z-50 w-52 rounded-xl border border-border bg-white shadow-lift py-1 overflow-hidden"
           >
             {isAuthenticated ? (
               <>
-                <Link href="/plans" role="menuitem" onClick={() => setOpen(false)} className={ITEM}>
+                <Link href="/plans" onClick={() => setOpen(false)} className={ITEM}>
                   <LayoutGrid className="h-4 w-4 text-muted-foreground" /> My Plans
                 </Link>
                 <button
                   type="button"
-                  role="menuitem"
+
                   onClick={() => {
                     setOpen(false);
                     signOut({ callbackUrl: "/" });
@@ -61,14 +63,14 @@ function AccountMenu({ isAuthenticated }: { isAuthenticated: boolean }) {
                 <div className="px-3.5 pt-2 pb-1 text-[11px] uppercase tracking-wide text-muted-foreground">
                   Account
                 </div>
-                <Link href="/signin" role="menuitem" onClick={() => setOpen(false)} className={ITEM}>
+                <Link href="/signin" onClick={() => setOpen(false)} className={ITEM}>
                   <LogIn className="h-4 w-4 text-muted-foreground" /> Sign in
                 </Link>
-                <Link href="/signup" role="menuitem" onClick={() => setOpen(false)} className={ITEM}>
+                <Link href="/signup" onClick={() => setOpen(false)} className={ITEM}>
                   <UserPlus className="h-4 w-4 text-muted-foreground" /> Create account
                 </Link>
                 <div className="my-1 h-px bg-border" />
-                <Link href="/plans" role="menuitem" onClick={() => setOpen(false)} className={ITEM}>
+                <Link href="/plans" onClick={() => setOpen(false)} className={ITEM}>
                   <LayoutGrid className="h-4 w-4 text-muted-foreground" /> My Plans
                 </Link>
               </>
@@ -84,10 +86,12 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  const trigger = useRef<HTMLButtonElement>(null);
+  useEffect(() => { setOpen(false); }, [pathname]);
   if (pathname?.startsWith("/admin")) return null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-sm">
+    <header onKeyDown={(e) => { if (e.key === "Escape" && open) { e.preventDefault(); setOpen(false); trigger.current?.focus(); } }} className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" className="flex items-baseline gap-2">
           <span className="font-serif text-2xl font-medium tracking-tight leading-none">
@@ -98,9 +102,9 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-1">
           {NAV.map((n) => {
-            const active = pathname === n.href || (n.href !== "/" && pathname?.startsWith(n.href));
+            const active = pathname === n.href || (n.href !== "/" && pathname?.startsWith(`${n.href}/`));
             return (
               <Link
                 key={n.href}
@@ -120,9 +124,12 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
           <AccountMenu isAuthenticated={isAuthenticated} />
           <button
             type="button"
-            aria-label="Menu"
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            ref={trigger}
             onClick={() => setOpen((s) => !s)}
-            className="lg:hidden inline-flex h-10 w-10 items-center justify-center border border-border hover:bg-muted"
+            className="lg:hidden inline-flex h-11 w-11 items-center justify-center border border-border hover:bg-muted"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -130,8 +137,8 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
       </div>
 
       {open ? (
-        <div className="lg:hidden border-t border-border bg-white">
-          <nav className="mx-auto flex max-w-7xl flex-col p-3">
+        <div id="mobile-navigation" className="lg:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-white">
+          <nav aria-label="Expanded mobile navigation" className="mx-auto flex max-w-7xl flex-col p-3">
             {NAV.map((n) => (
               <Link
                 key={n.href}

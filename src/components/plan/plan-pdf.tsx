@@ -615,8 +615,8 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
           <Text style={s.sectionTitle}>Storage & stability</Text>
           <View style={s.card}>
             <View style={s.kv}>
-              <Text style={s.kvLabel}>Shelf life (refrigerated)</Text>
-              <Text style={s.kvValue}>{result.expiration.days} days</Text>
+              <Text style={s.kvLabel}>Shelf life</Text>
+              <Text style={s.kvValue}>Not determined</Text>
             </View>
             {result.expiration.date ? (
               <View style={s.kv}>
