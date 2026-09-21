@@ -51,44 +51,71 @@ jobs:
           PY
           if [ ! -f src/lib/analytics.ts ]; then python audit/2026-09-21/apply-repairs.py; fi
           if ! grep -q 'window as unknown as AnalyticsWindow' src/components/common/analytics-preferences.tsx; then python audit/2026-09-21/finalize-repairs.py; fi
+          if [ ! -f audit/2026-09-21/hardening.applied ]; then
+            python audit/2026-09-21/release-hardening.py
+            python audit/2026-09-21/release-finish.py
+            touch audit/2026-09-21/hardening.applied
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: Install and prepare isolated fixtures
+      - name: Resolve reviewed dependency patches
         run: |
+          npm install --package-lock-only
+          npm audit fix --package-lock-only || true
           npm ci
           npm audit --json > audit-evidence/dependency-audit.json || true
+          npm ls next next-auth @auth/core @prisma/client prisma deepmerge-ts sharp postcss > audit-evidence/resolved-versions.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dependency-review-${{ github.sha }}
+          path: audit-evidence/
+          retention-days: 14
+      - name: Prepare disposable database
+        run: |
           npx prisma generate
           case "$DATABASE_URL" in
             postgresql://audit:*@127.0.0.1:5432/bacwater_audit) ;;
-            *) echo 'Refusing to initialize any non-test database'; exit 1 ;;
+            *) echo 'Refusing a non-test database'; exit 1 ;;
           esac
           npx prisma db push --skip-generate
           npx tsx prisma/seed.ts
       - name: Typecheck
-        run: npx tsc --noEmit
+        run: set -o pipefail; npx tsc --noEmit 2>&1 | tee audit-evidence/typecheck.log
       - name: Tests
-        run: npm test
+        run: set -o pipefail; npm test 2>&1 | tee audit-evidence/tests.log
       - name: Build
-        run: npx next build
+        run: set -o pipefail; npx next build 2>&1 | tee audit-evidence/build.log
       - name: Install isolated browser tools
         run: |
           npm install --no-save --package-lock=false @playwright/test axe-core
           npx playwright install --with-deps chromium firefox webkit
-      - name: Crawl and render test pages
+          sudo apt-get install -y poppler-utils
+      - name: Test real user journeys and saved records
         run: |
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
-          node scripts/master-audit.mjs
+          node scripts/audit-journeys.mjs
+          pdftotext audit-evidence/journeys/owner.pdf audit-evidence/journeys/owner.txt
+          pdftotext audit-evidence/journeys/shared.pdf audit-evidence/journeys/shared.txt
+          grep -q 'PRIVATE NOTE' audit-evidence/journeys/owner.txt
+          if grep -q 'PRIVATE NOTE' audit-evidence/journeys/shared.txt; then echo 'Private notes leaked into shared PDF'; exit 1; fi
+      - name: Crawl and render all public test pages
+        if: success() || failure()
+        run: |
+          if curl -fsS http://127.0.0.1:3000/robots.txt >/dev/null; then node scripts/master-audit.mjs; else echo 'Browser crawl unavailable: app did not start'; exit 1; fi
+      - name: Verify no high or critical dependency advisories
+        run: |
+          node -e 'const a=require("./audit-evidence/dependency-audit.json");if(a.metadata.vulnerabilities.critical||a.metadata.vulnerabilities.high)process.exit(1)'
       - name: Commit validated code to audit branch
         run: |
           test "$GITHUB_REF" = refs/heads/audit/master-2026-09-21
-          git add -A -- src package.json audit/2026-09-21
+          git add -A -- src package.json package-lock.json README.md .env.example scripts audit/2026-09-21
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'fix: accessible tools, private analytics, validation and publication safeguards'
+            git commit -m 'fix: secure accessible calculators and privacy-safe publishing'
             git push origin HEAD:audit/master-2026-09-21
           fi
       - name: Preserve source and evidence
@@ -96,13 +123,13 @@ jobs:
         run: |
           mkdir -p audit-evidence
           git rev-parse HEAD > audit-evidence/source-commit.txt
-          git add -A -- src package.json audit/2026-09-21
+          git add -A -- src package.json package-lock.json README.md .env.example scripts audit/2026-09-21
           git archive --format=tar $(git write-tree) > audit-evidence/source.tar
           git diff HEAD > audit-evidence/uncommitted.patch
           git status --short > audit-evidence/worktree-status.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: repair-evidence-${{ github.sha }}
+          name: release-evidence-${{ github.sha }}
           path: audit-evidence/
           retention-days: 14
