@@ -1,6 +1,8 @@
 from pathlib import Path
 import json
 r=Path('.')
+p=r/'src/components/plan/plans-workspace.tsx';p.write_text(p.read_text().replace('detail?.result?.input.secondary', 'detail?.result?.secondary'))
+p=r/'src/app/plan/[id]/edit/page.tsx';p.write_text(p.read_text().replace('input?: { secondary?: import("@/lib/calc").CalcInput["secondary"] };', 'secondary?: import("@/lib/calc").CalcInput["secondary"];').replace('secondary = snapshot.input?.secondary', 'secondary = snapshot.secondary'))
 p=r/'src/components/plan/plan-form.tsx';s=p.read_text()
 s=s.replace('  if (mode === "advanced") {\n    return (\n      <div>', '''  if (mode === "advanced") {
     return (
