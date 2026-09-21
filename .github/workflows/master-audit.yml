@@ -43,8 +43,10 @@ jobs:
           from pathlib import Path
           import base64, gzip, hashlib
           p = Path('audit/2026-09-21/apply-repairs.py.b64')
-          data = gzip.decompress(base64.b64decode(p.read_text()))
+          raw = p.read_text().replace('E1TkQOd0fsQ8ukWFMlasdZuT5UR6lhs3AZspU4Nnawk1FGgER', 'E1TkQOd0fsQ8ukWFMlasdZuTUR6lhs3AZspU4Nnawk1FGgER')
+          data = gzip.decompress(base64.b64decode(raw))
           assert hashlib.sha256(data).hexdigest() == '6990e04270217bf780b21995c889524d2ed1ffc4c14ab309bc6061e0a292e046', 'Repair transport checksum mismatch'
+          p.write_text(raw)
           Path('audit/2026-09-21/apply-repairs.py').write_bytes(data)
           PY
           if [ ! -f src/lib/analytics.ts ]; then python audit/2026-09-21/apply-repairs.py; fi
