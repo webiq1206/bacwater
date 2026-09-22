@@ -16,7 +16,7 @@ export function ArticleJsonLd({
   body: string;
   slug?: string;
   url?: string;
-  createdAt: Date;
+  createdAt?: Date;
   updatedAt: Date;
   citations?: Reference[];
 }) {
@@ -33,7 +33,7 @@ export function ArticleJsonLd({
     image: `${SITE_URL}/opengraph-image`,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,
-    datePublished: createdAt.toISOString(),
+    ...(createdAt && !Number.isNaN(createdAt.getTime()) ? {datePublished:createdAt.toISOString()} : {}),
     dateModified: updatedAt.toISOString(),
     author: orgRef,
     publisher: orgRef,

@@ -38,7 +38,7 @@ const COMMON_COMPARISONS = [
 const BASICS_QA = [
   {
     q: "What is bac water?",
-    a: "Sterile water plus 0.9% benzyl alcohol preservative.",
+    a: "Sterile water with a benzyl alcohol preservative. Check the exact product label; formulations differ.",
   },
   {
     q: "How much water for a 5 mg vial?",
@@ -63,14 +63,14 @@ const PATHS = [
     href: "/plan",
     icon: Wand2,
     title: "Build my plan",
-    body: "Answer a few short questions about the numbers on your vial and get an exact reconstitution plan with every step shown, syringe units, a PDF, and a printable label.",
+    body: "Enter the vial amount, final liquid volume and amount to measure. Save the resulting calculation, check its formulas, or print a reference label.",
     cta: "Start the guided builder",
   },
   {
     href: "/tools",
     icon: Calculator,
     title: "Calculators",
-    body: "Already know your numbers? Use a single calculator: how much water to add, how many syringe units, mg to mcg, and more.",
+    body: "Already know your numbers? Check concentration, syringe-volume notation, mg to mcg, and quantities in separate tools.",
     cta: "Open the calculators",
   },
   {
@@ -95,7 +95,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-32 pb-16 sm:pb-20 text-center">
         <div className="eyebrow">Concentration &amp; measurement calculator</div>
         <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-serif font-medium tracking-tight leading-[1.1] text-balance">
-          BAC Water Calculator and Mixing Guide
+          BAC Water Calculators and Measurement Tools
         </h1>
         <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
           Enter the numbers on your vial. We work out the concentration, how much
@@ -117,7 +117,7 @@ export default async function HomePage() {
             <Check className="h-3.5 w-3.5 accent-check" /> Every step shown
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5 accent-check" /> Nothing is guessed
+            <Check className="h-3.5 w-3.5 accent-check" /> Your inputs, visible formulas
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Check className="h-3.5 w-3.5 accent-check" /> Every number labeled
@@ -151,15 +151,15 @@ export default async function HomePage() {
               What is bacteriostatic water?
             </h2>
             <p className="mt-4 text-lg text-foreground/90 leading-relaxed">
-              Bacteriostatic water is sterile water with 0.9% benzyl alcohol in
-              it. Sterile means it had no germs in it when it was made. The benzyl
-              alcohol, a{" "}
-              <Term id="preservative">preservative</Term>, slows germs from
-              growing after you open the vial, so you can use the same vial more
-              than once. It is not safe for newborn babies. People use it to turn
-              dried peptide powder into a liquid they can measure. The calculators
-              here work out how much to add.
+              Bacteriostatic water is sterile water with a benzyl alcohol
+              <Term id="preservative"> preservative</Term>. Pfizer's labeling
+              includes 0.9% and 1.1% formulations. The exact product label, not
+              the name alone, determines its contents and instructions.
+              Preservative does not guarantee protection from contamination.
+              These tools calculate from entered values; they do not select a
+              diluent or confirm that a product is suitable to use.
             </p>
+            <p className="mt-3 text-xs text-muted-foreground">Sources: <a href="https://www.pfizermedical.com/bacteriostatic-water" className="underline">Pfizer product labeling</a> and <a href="https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html" className="underline">CDC injection safety guidance</a>. Checked September 22, 2026.</p>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
               <Link href="/tools/bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Bac water calculator</Link>
               <Link href="/learn/what-is-bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">What is bac water?</Link>
@@ -259,8 +259,8 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="border border-border rounded-2xl p-6 sm:p-8" style={{ background: "var(--color-surface-raised)" }}>
-            <div className="eyebrow">Example</div>
-            <div className="mt-2 text-xl font-serif font-medium">BPC-157</div>
+            <div className="eyebrow">Illustrative arithmetic, not instructions</div>
+            <div className="mt-2 text-xl font-serif font-medium">Check a concentration</div>
             <div className="rule my-5" />
             <dl className="space-y-3 text-sm">
               <div className="flex justify-between">
@@ -268,7 +268,7 @@ export default async function HomePage() {
                 <dd>5 mg</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-muted-foreground">BAC water</dt>
+                <dt className="text-muted-foreground">Final liquid volume</dt>
                 <dd>2 mL</dd>
               </div>
               <div className="flex justify-between">
@@ -290,7 +290,7 @@ export default async function HomePage() {
             </dl>
             <div className="rule my-5" />
             <p className="text-sm text-muted-foreground">
-              This measures <b style={{ color: "var(--color-accent-guide)" }}>10 units</b> on a 1 mL insulin syringe.
+              This measures <b style={{ color: "var(--color-accent-guide)" }}>10 units</b> on a U-100 scale. The example is not a recommended dilution or dose.
             </p>
           </div>
         </div>
@@ -355,11 +355,12 @@ export default async function HomePage() {
             Here is the formula, your numbers, and how we round.
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Every answer shows its work. Concentration is the vial amount divided
-            by the water you add. We keep full precision inside and round only
-            when we show a number. If an amount lands between the marks on your
-            syringe, we tell you, because you cannot measure it. The AI helper
-            explains the result in plain words. It never does the math itself.
+            Concentration is total dissolved mass divided by the final solution
+            volume. The amount of water added is not always identical to that
+            final volume. The tools show formulas and rounded results, not a
+            guarantee of measurement accuracy. Check the scale on your actual
+            device and read the <Link href="/methodology" className="underline">calculation methodology</Link>.
+            Built-in explanations restate the arithmetic without choosing a dose.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild variant="brand">

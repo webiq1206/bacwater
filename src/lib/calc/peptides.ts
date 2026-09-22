@@ -86,11 +86,11 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge. Protect from light.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "tb-500",
-    name: "TB-500 (Thymosin Beta-4)",
+    name: "TB-500 (verify exact fragment)",
     aliases: ["thymosin beta 4", "tb500"],
     category: "healing",
     commonVialStrengthsMg: [2, 5, 10],
@@ -100,7 +100,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 2,
     scheduleNote: "Twice weekly: e.g., Monday and Thursday",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge. Larger doses typical.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "ipamorelin",
@@ -113,7 +113,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily (research schedules often split this into smaller draws)",
     refrigeratedShelfDays: 28,
-    storageNote: "Keep in the fridge. Consider splitting into smaller batches.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "cjc-1295-no-dac",
@@ -127,7 +127,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 21,
-    storageNote: "Keep in the fridge. Less stable. Use within ~3 weeks.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "cjc-1295-with-dac",
@@ -141,7 +141,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 2,
     scheduleNote: "Twice weekly: e.g., Monday and Thursday",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge. Longer half-life than non-DAC.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "sermorelin",
@@ -154,7 +154,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 21,
-    storageNote: "Put in the fridge right away. Use within ~3 weeks.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "hexarelin",
@@ -167,7 +167,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 28,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "semaglutide",
@@ -180,7 +180,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 1,
     scheduleNote: "Once weekly: same day each week",
     refrigeratedShelfDays: 56,
-    storageNote: "Keep in the fridge, following your product's instructions.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
     note: "This is an FDA-approved molecule; the approved product's labeling is the reference for amounts. The unapproved powder is a different thing and carries no assurance of identity, purity, or strength.",
     evidence: "fda-approved",
   },
@@ -195,7 +195,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 1,
     scheduleNote: "Once weekly: same day each week",
     refrigeratedShelfDays: 42,
-    storageNote: "Keep in the fridge, following your product's instructions.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
     note: "This is an FDA-approved molecule; the approved product's labeling is the reference for amounts. The unapproved powder is a different thing and carries no assurance of identity, purity, or strength.",
     evidence: "fda-approved",
   },
@@ -210,7 +210,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 2,
     scheduleNote: "Twice weekly: e.g., Monday and Thursday",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge. Emerging research compound.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "cagrilintide",
@@ -223,7 +223,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 1,
     scheduleNote: "Once weekly: same day each week",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "mots-c",
@@ -236,7 +236,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 3,
     scheduleNote: "Three times weekly: e.g., Monday, Wednesday, Friday",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "epithalon",
@@ -249,7 +249,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily during a short course",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "ghk-cu",
@@ -262,7 +262,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge. Blue tint is normal.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "melanotan-2",
@@ -276,7 +276,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily during a loading phase",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge. Start with a very low test dose.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "ss-31",
@@ -289,7 +289,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "selank",
@@ -302,7 +302,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "semax",
@@ -315,7 +315,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "aod-9604",
@@ -328,7 +328,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "kisspeptin-10",
@@ -341,7 +341,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 3,
     scheduleNote: "Three times weekly: e.g., Monday, Wednesday, Friday",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "pt-141",
@@ -354,7 +354,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 1,
     scheduleNote: "As needed: not a fixed weekly schedule; treated as one draw per week here",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
   },
   {
     slug: "hcg",
@@ -367,7 +367,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 3,
     scheduleNote: "Three times weekly: e.g., Monday, Wednesday, Friday",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
     note: "HCG strength is often stated in IU. Confirm vial units before proceeding.",
   },
   {
@@ -381,7 +381,7 @@ export const PEPTIDES: PeptideRef[] = [
     injectionsPerWeek: 7,
     scheduleNote: "Once daily",
     refrigeratedShelfDays: 30,
-    storageNote: "Keep in the fridge. Blends: reference the label for exact ratios.",
+    storageNote: "Follow the exact product instructions; shelf life is not calculated.",
     note: "Blends contain multiple peptides. Verify each component strength.",
   },
   {

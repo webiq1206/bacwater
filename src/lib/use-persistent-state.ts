@@ -20,7 +20,11 @@ export function usePersistentState<T>(key: string, initial: T) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(key);
-      if (raw !== null) setValue(JSON.parse(raw) as T);
+      if (raw !== null) {
+        const candidate: unknown = JSON.parse(raw);
+        const sameType = candidate !== null && typeof candidate === typeof initial;
+        if (sameType && (typeof candidate !== "number" || Number.isFinite(candidate))) setValue(candidate as T);
+      }
     } catch {
       /* ignore unavailable or malformed storage */
     }

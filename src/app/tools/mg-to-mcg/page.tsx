@@ -2,12 +2,7 @@ import type { Metadata } from "next";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import CalculatorClient from "./calculator-client";
 
-// This route is a client component (the calculator is interactive), which
-// cannot export metadata. The page is split so this server wrapper owns the
-// title, description, and self-referencing canonical, and the interactive UI
-// lives in ./calculator-client. Without this every tool page inherited the
-// layout's default title and had no canonical, so Google saw six duplicate,
-// canonical-less pages and indexed none of them (or picked its own host).
+// The server wrapper owns metadata; the interactive client owns the visible converter.
 
 const TITLE = 'mg to mcg Converter: Milligrams and Micrograms';
 const DESCRIPTION = 'Convert milligrams to micrograms and back. Multiply mg by 1,000 or divide mcg by 1,000. Check label units without estimating a dose or choosing a treatment.';

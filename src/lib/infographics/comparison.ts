@@ -63,9 +63,9 @@ export function comparisonSvg(c: ComparisonTopic): string {
     .join("");
 
   const inner = `
-    <text x="${padX}" y="42" font-size="20" font-weight="700" fill="${PALETTE.foreground}">${esc(c.title)}</text>
+    <text x="${padX}" y="42" font-size="20" font-weight="700" fill="${PALETTE.foreground}">${esc(c.title.length > 57 ? c.title.slice(0,54) + "..." : c.title)}</text>
     <rect x="${padX}" y="58" width="${width - padX * 2}" height="30" rx="4" fill="${PALETTE.accentSoft}"/>
-    <text x="${padX + 12}" y="78" font-size="13" font-weight="600" fill="${PALETTE.accent}">${esc(firstSentence(c.verdict))}</text>
+    <text x="${padX + 12}" y="78" font-size="13" font-weight="600" fill="${PALETTE.accent}">${esc("Read the exact product label; names alone do not establish compatibility.")}</text>
     ${headers}
     ${body}
     <text x="${padX}" y="${height - 20}" font-size="11" fill="${PALETTE.muted}">For research and educational use only. bacwater.ai</text>

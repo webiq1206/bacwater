@@ -10,7 +10,6 @@ import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { Toaster } from "@/components/ui/toaster";
 import { OrgJsonLd } from "@/components/common/org-json-ld";
 import { AgeGate } from "@/components/common/age-gate";
-import { ADS_ENABLED } from "@/lib/ads";
 import { auth } from "@/lib/auth";
 
 // Montserrat carries the voice (body, labels, and light-weight headings).
@@ -88,7 +87,7 @@ export default async function RootLayout({
             "@id": `${siteUrl}/#website`,
             name: "BACwater.ai",
             url: siteUrl,
-            description: "The complete BAC water calculator and reconstitution guide.",
+            description: "Free concentration and unit-conversion tools with explicit inputs, formulas and limitations.",
             publisher: { "@id": `${siteUrl}/#organization` },
           }) }}
         />

@@ -278,3 +278,11 @@ model ContactMessage {
   @@index([handled])
   @@index([email])
 }
+
+// Short-lived counters for optional authenticated AI topic routing, never message content.
+model RequestBudget {
+  id        String   @id
+  count     Int      @default(0)
+  expiresAt DateTime
+  @@index([expiresAt])
+}
