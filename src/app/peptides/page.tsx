@@ -1,165 +1,18 @@
-import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
-import type { Metadata } from "next";
-import { ArrowRight, ArrowLeftRight } from "lucide-react";
 import { PEPTIDES } from "@/lib/calc/peptides";
-import type { PeptideCategory } from "@/lib/calc/peptides";
 import { PEPTIDE_CONTENT } from "@/lib/peptides/content";
 import { shortName } from "@/lib/peptides/page-data";
-import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { safeJson } from "@/lib/seo/safe-json";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
-import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "Peptide Reconstitution Guides by Compound",
-  description:
-    "Per-compound peptide reconstitution guides: exact BAC water amounts, syringe units, storage and shelf life, plus a calculator on every peptide page.",
-  alternates: { canonical: "/peptides" },
-  openGraph: {
-    title: "Peptide Reconstitution Guides by Compound",
-    description:
-      "Per-compound peptide reconstitution guides: exact BAC water amounts, syringe units, storage and shelf life, plus a calculator on every peptide page.",
-    url: "/peptides",
-    type: "website",
-    siteName: "BACwater.ai",
-  },
-};
-
-const CATEGORY_ORDER: { key: PeptideCategory; label: string }[] = [
-  { key: "metabolic", label: "Metabolic & GLP-1" },
-  { key: "healing", label: "Healing & recovery" },
-  { key: "growth", label: "Growth hormone secretagogues" },
-  { key: "cosmetic", label: "Cosmetic & skin" },
-  { key: "cognitive", label: "Cognitive" },
-  { key: "reproductive", label: "Reproductive" },
-  { key: "longevity", label: "Longevity" },
-  { key: "other", label: "Any other peptide" },
-];
-
-export default function PeptidesHubPage() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
-
-  return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-12 sm:pt-16 pb-24 sm:pb-32">
-      <WebPageJsonLd
-        name="Peptide Reconstitution Guides by Compound"
-        description="Per-compound peptide reconstitution guides, with exact BAC water amounts and a calculator on every peptide page."
-        url="/peptides"
-        breadcrumb={[
-          { name: "Home", url: "/" },
-          { name: "Peptides", url: "/peptides" },
-        ]}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: safeJson({
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            name: "Peptide Reconstitution Guides by Compound",
-            url: `${siteUrl}/peptides`,
-            mainEntity: {
-              "@type": "ItemList",
-              itemListElement: PEPTIDES.map((p, i) => ({
-                "@type": "ListItem",
-                position: i + 1,
-                url: `${siteUrl}/peptides/${p.slug}`,
-                name: shortName(p.name),
-              })),
-            },
-          }),
-        }}
-      />
-
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Peptides", href: "/peptides" },
-        ]}
-      />
-      <div className="max-w-3xl">
-        <div className="eyebrow">Peptide guides</div>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          Peptide reconstitution guides by compound
-        </h1>
-        <p className="mt-3 text-muted-foreground leading-relaxed">
-          Pick your compound to work out the bac water amount, the concentration,
-          and your measurement in syringe units. Every calculator uses the same
-          deterministic, tested math as our{" "}
-          <Link href="/plan" className="text-foreground font-medium underline">
-            Plan Builder
-          </Link>
-          .
-        </p>
-      </div>
-
-      <Link
-        href="/peptides/compare"
-        className="group mt-6 flex items-center justify-between gap-4 border border-border bg-surface p-5 hover:bg-muted transition-colors"
-      >
-        <div>
-          <div className="flex items-center gap-2">
-            <ArrowLeftRight className="h-4 w-4 accent-check" />
-            <span className="font-medium">Compare two peptides side by side</span>
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            See what each compound is, how it is stored, what research studied,
-            and what no one can tell you, in one table.
-          </p>
-        </div>
-        <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-      </Link>
-
-      <div className="mt-10 space-y-12">
-        {CATEGORY_ORDER.map(({ key, label }) => {
-          const items = PEPTIDES.filter((p) => p.category === key);
-          if (items.length === 0) return null;
-          return (
-            <section key={key}>
-              <h2 className="text-sm uppercase tracking-wide text-muted-foreground font-medium">
-                {label}
-              </h2>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {items.map((p) => {
-                  const short = shortName(p.name);
-                  const blurb = PEPTIDE_CONTENT[p.slug]?.what ?? "";
-                  return (
-                    <Link
-                      key={p.slug}
-                      href={`/peptides/${p.slug}`}
-                      className="group block border border-border p-5 hover:bg-muted transition-colors"
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-medium">{short}</span>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-                      </div>
-                      {blurb && (
-                        <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
-                          {blurb}
-                        </p>
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-
-      <div className="section-dark mt-14 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-        <div>
-          <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>Not sure which peptide you have?</div>
-          <p className="mt-2 text-sm text-muted-foreground">
-            The Plan Builder walks you through it and does all the math for you.
-          </p>
-        </div>
-        <Button asChild variant="brand" className="shrink-0">
-          <Link href="/plan">
-            Build my plan <ArrowRight className="h-4 w-4" />
-          </Link>
-        </Button>
-      </div>
-    </div>
-  );
-}
+import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+export const metadata={title:"Peptide Calculators and Compound References",description:"Find a compound calculator with identity context, linked research and calculation limits. Enter your own label values; no recommended dose, diluent or expiry.",alternates:{canonical:"/peptides"}};
+const groups=[['metabolic','Metabolic signaling research'],['healing','Tissue and repair research'],['growth','Growth hormone signaling research'],['cosmetic','Dermatology and pigmentation research'],['cognitive','Neurological research'],['reproductive','Reproductive signaling research'],['longevity','Mitochondrial and aging research'],['other','Other compound names']];
+export default function PeptidesHubPage(){const origin=process.env.NEXT_PUBLIC_SITE_URL||'https://bacwater.ai';return <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-8 sm:pt-12 pb-24">
+ <WebPageJsonLd name="Peptide calculators and compound references" description="Compound identity context and arithmetic tools, not treatment recommendations." url="/peptides"/>
+ <script type="application/ld+json" dangerouslySetInnerHTML={{__html:safeJson({'@context':'https://schema.org','@type':'CollectionPage',name:'Peptide calculators and compound references',url:origin+'/peptides',mainEntity:{'@type':'ItemList',itemListElement:PEPTIDES.map((p,i)=>({'@type':'ListItem',position:i+1,url:origin+'/peptides/'+p.slug,name:shortName(p.name)}))}})}}/>
+ <Breadcrumbs items={[{label:'Home',href:'/'},{label:'Compounds',href:'/peptides'}]}/><p className="eyebrow">Compound directory</p><h1 className="mt-2 text-3xl sm:text-5xl font-serif">Peptide calculators and compound references</h1><p className="mt-4 max-w-3xl leading-relaxed">Choose the name on your label to find identity context, selected research and a calculator. Enter the amount and final liquid volume from your existing instructions. A compound name cannot establish a suitable dilution, dose or shelf life.</p>
+ <p className="mt-4 text-sm"><Link href="/peptides/compare" className="underline">Compare two compound references</Link> · <Link href="/methodology" className="underline">Check calculation formulas</Link> · <Link href="/plan" className="underline">Use the guided builder</Link></p>
+ <p className="mt-5 rounded-xl border p-4 text-sm">The groups below organize research topics. They do not claim a benefit, establish approval, or recommend using a compound. hCG activity is entered in IU, not mg; device scale units are separate.</p>
+ <div className="mt-8 space-y-8">{groups.map(([key,label])=>{const items=PEPTIDES.filter(p=>p.category===key);return items.length?<section key={key}><h2 className="text-xl font-serif">{label}</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{items.map(p=><Link key={p.slug} href={'/peptides/'+p.slug} className="rounded-xl border bg-card p-5 transition-colors hover:bg-muted"><h3 className="font-semibold">{shortName(p.name)}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{PEPTIDE_CONTENT[p.slug]?.what||'Enter the identity and numbers from your actual label. No substance is inferred from an unknown name.'}</p></Link>)}</div></section>:null;})}</div>
+ <p className="mt-9 text-sm"><Link className="underline" href="/learn/what-you-cannot-know">What the website cannot verify about a vial</Link> · <Link className="underline" href="/editorial-policy">Source and review policy</Link></p>
+ </div>;}

@@ -1,0 +1,11 @@
+/* Tool-first phone composition without changing article typography or hiding limits. */
+@media (max-width: 639px) {
+ .workspace > div { padding-top: 1.25rem; }
+ .workspace h1 { font-size: 1.75rem; line-height: 1.16; letter-spacing: -0.02em; }
+ .workspace nav[aria-label="Breadcrumb"] { margin-bottom: 1rem; }
+ .workspace h1 + p { font-size: 1rem; line-height: 1.5; margin-top: 0.75rem; }
+ .workspace :global(.text-lg.leading-relaxed) { font-size: 1rem; line-height: 1.5; }
+}
+@media (prefers-reduced-motion: reduce) {
+ .workspace * { scroll-behavior: auto; }
+}
