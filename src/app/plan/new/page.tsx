@@ -37,15 +37,15 @@ export default function PlanNewPage() {
           __html: safeJson({
             "@context": "https://schema.org",
             "@type": "HowTo",
-            name: "Build a personalized peptide reconstitution plan",
+            name: "Build a calculation from stated inputs",
             description:
-              "Use BACwater.ai's step-by-step planner to create an exact reconstitution plan for your peptide vial.",
+              "Use BACwater.ai's step-by-step planner to create a concentration calculation with explicit product and device limitations.",
             step: [
               {
                 "@type": "HowToStep",
                 position: 1,
                 name: "Choose your peptide",
-                text: "Select the peptide you're working with from the list. We'll pre-fill common vial sizes and doses.",
+                text: "Select the peptide you're working with from the list. No dose or vehicle is selected for you.",
               },
               {
                 "@type": "HowToStep",
@@ -63,7 +63,7 @@ export default function PlanNewPage() {
                 "@type": "HowToStep",
                 position: 4,
                 name: "Pick your syringe",
-                text: "Choose which insulin syringe you'll use (0.3 mL, 0.5 mL, or 1 mL).",
+                text: "Match the scale on the actual device; the illustration does not choose a syringe.",
               },
               {
                 "@type": "HowToStep",

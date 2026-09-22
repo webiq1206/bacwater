@@ -1,204 +1,50 @@
 "use client";
-
 import Link from "next/link";
-import { ArrowRight, HelpCircle, Lightbulb, Scale } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { mgToMcg, mcgToMg } from "@/lib/calc/converters";
+import { Input } from "@/components/ui/input";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
-import { usePersistentState } from "@/lib/use-persistent-state";
-
+import { convertMassText, type MassUnit } from "@/lib/calc/mass-text";
+import { trackUsage } from "@/lib/analytics";
+const KEY = "bacwater.tool.mass.v2";
+type Entry = { unit: MassUnit; text: string };
+const empty: Entry = { unit: "mg", text: "" };
 export default function MgMcgConverterPage() {
-  const [mg, setMg] = usePersistentState("bacwater.tool.mgmcg.mg", 0);
-  const [mcg, setMcg] = usePersistentState("bacwater.tool.mgmcg.mcg", 0);
-  const hasValue = mg > 0 || mcg > 0;
-
-  return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
-      <Breadcrumbs items={[
-        { label: "Home", href: "/" },
-        { label: "Tools", href: "/tools" },
-        { label: "mg to mcg Converter", href: "/tools/mg-to-mcg" },
-      ]} />
-      <div className="eyebrow">Converter</div>
-      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-        mg &harr; mcg
-      </h1>
-      <p className="mt-4 text-lg text-muted-foreground leading-relaxed max-w-2xl">
-        Peptide labels use both milligrams (mg) and micrograms (mcg). They
-        measure the same thing at different scales. Type a number in either
-        box and the other updates instantly.
-      </p>
-
-      {/* Converter card */}
-      <div className="border border-border bg-card p-6 sm:p-8 mt-10">
-          <div className="grid gap-6 sm:grid-cols-2 items-end">
-            <div>
-              <label className="text-sm font-medium">Milligrams (mg)</label>
-              <p className="text-xs text-muted-foreground mt-0.5">The larger unit. Vial amounts are usually in mg</p>
-              <Input
-                type="number"
-                inputMode="decimal"
-                step="0.1"
-                value={mg || ""}
-                placeholder="0"
-                onChange={(e) => {
-                  const v = parseFloat(e.target.value) || 0;
-                  setMg(v);
-                  setMcg(mgToMcg(v));
-                }}
-                className="mt-2 text-lg h-12"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Micrograms (mcg)</label>
-              <p className="text-xs text-muted-foreground mt-0.5">The smaller unit. Measurements are usually in mcg</p>
-              <Input
-                type="number"
-                inputMode="decimal"
-                step="10"
-                value={mcg || ""}
-                placeholder="0"
-                onChange={(e) => {
-                  const v = parseFloat(e.target.value) || 0;
-                  setMcg(v);
-                  setMg(mcgToMg(v));
-                }}
-                className="mt-2 text-lg h-12"
-              />
-            </div>
-          </div>
-
-          <div className="mt-6 callout-panel text-center">
-            {hasValue ? (
-              <div className="text-xl font-semibold">{mg} mg = {mcg.toLocaleString()} mcg</div>
-            ) : (
-              <div className="text-xl font-semibold text-muted-foreground">Type a number in either box</div>
-            )}
-            <p className="mt-1 text-sm text-muted-foreground">1 milligram always equals 1,000 micrograms.</p>
-          </div>
-
-          <div className="mt-6 bg-surface border border-border p-4">
-            <p className="text-sm font-medium">Quick reference</p>
-            <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
-              {[
-                [0.1, 100], [0.25, 250], [0.5, 500], [1, 1000],
-                [2, 2000], [5, 5000], [10, 10000], [15, 15000],
-              ].map(([m, u]) => (
-                <div key={m} className="flex justify-between text-muted-foreground">
-                  <span>{m} mg</span>
-                  <span className="tabular-nums">{u.toLocaleString()} mcg</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild variant="brand" size="lg">
-              <Link href="/plan">
-                Build a full plan <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link href="/tools/dose">Dose calculator</Link>
-            </Button>
-          </div>
+  const recorded=useRef("");
+  const [entry, setEntry] = useState<Entry>(empty);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    try {
+      const stored: unknown = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (stored && typeof stored === "object" && "unit" in stored && "text" in stored && (stored.unit === "mg" || stored.unit === "mcg") && typeof stored.text === "string" && stored.text.length <= 64) setEntry({ unit: stored.unit, text: stored.text });
+    } catch { /* Unavailable or damaged local storage must not prevent calculation. */ }
+    setLoaded(true);
+  }, []);
+  useEffect(() => { if (loaded) { try { localStorage.setItem(KEY, JSON.stringify(entry)); } catch { /* Optional persistence only. */ } } }, [loaded, entry]);
+  const result = convertMassText(entry.text, entry.unit);
+  const value = (unit: MassUnit) => unit === entry.unit ? entry.text : result.kind === "value" ? result[unit] : "";
+  return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-8 sm:pt-12 pb-24">
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools", href: "/tools" }, { label: "mg to mcg", href: "/tools/mg-to-mcg" }]} />
+    <p className="eyebrow">Mass converter</p>
+    <h1 className="mt-2 text-4xl sm:text-5xl font-serif">mg to mcg converter</h1>
+    <p className="mt-4 text-lg leading-relaxed">1 mg equals 1,000 mcg. Enter either mass to convert in both directions. Zero and small decimals work without rounding them away.</p>
+    <section className="mt-7 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-label="Mass conversion">
+      <div className="grid gap-5 sm:grid-cols-2">
+        {(["mg", "mcg"] as const).map(unit => <div key={unit}>
+          <label htmlFor={`mass-${unit}`} className="block font-medium">{unit === "mg" ? "Milligrams (mg)" : "Micrograms (mcg)"}</label>
+          <Input id={`mass-${unit}`} type="text" inputMode="decimal" autoComplete="off" spellCheck={false} maxLength={64} value={value(unit)}
+            aria-invalid={result.kind === "error" && entry.unit === unit} aria-describedby="mass-help mass-status"
+            onChange={e => setEntry({ unit, text: e.target.value })}
+            onBlur={() => { if (result.kind === "value" && recorded.current!==result.mg) { recorded.current=result.mg; trackUsage("calculation_completed"); } }} className="mt-2 min-h-12 text-base" />
+        </div>)}
       </div>
-
-      {/* Teaching sections */}
-      <div className="mt-16 space-y-10">
-        <TeachingSection
-          icon={<Scale className="h-5 w-5 text-muted-foreground" />}
-          title="What's the difference between mg and mcg?"
-        >
-          <p>
-            Both measure weight, just at different scales, like feet vs. inches.
-          </p>
-          <ul className="list-disc pl-4 space-y-1">
-            <li><b>mg (milligram)</b>: one thousandth of a gram. Vial amounts are usually listed in mg (e.g., &ldquo;5 mg vial&rdquo;).</li>
-            <li><b>mcg (microgram)</b>: one millionth of a gram, or one thousandth of a milligram. The amounts you measure are usually listed in mcg (e.g., &ldquo;250 mcg per measurement&rdquo;).</li>
-          </ul>
-          <p>
-            <b>The rule is simple:</b> 1 mg = 1,000 mcg. To go from mg to mcg,
-            multiply by 1,000. To go from mcg to mg, divide by 1,000.
-          </p>
-        </TeachingSection>
-
-        <TeachingSection
-          icon={<HelpCircle className="h-5 w-5 text-muted-foreground" />}
-          title="Why do labels use both?"
-        >
-          <p>
-            Vial amounts use mg because the total amount of peptide is large enough
-            that mg keeps the numbers simple (e.g., &ldquo;5 mg&rdquo; instead of
-            &ldquo;5,000 mcg&rdquo;).
-          </p>
-          <p>
-            The amounts you measure use mcg because they are much smaller, and mcg
-            avoids confusing decimals (e.g., &ldquo;250 mcg&rdquo; instead of
-            &ldquo;0.25 mg&rdquo;).
-          </p>
-          <p>
-            This is why it can feel confusing, but once you know the conversion
-            (multiply or divide by 1,000), it becomes second nature.
-          </p>
-        </TeachingSection>
-
-        <TeachingSection
-          icon={<Lightbulb className="h-5 w-5 text-muted-foreground" />}
-          title="A real-world example"
-        >
-          <p>
-            You have a <b>5 mg vial</b> of BPC-157 and want to measure <b>250 mcg each time</b>.
-          </p>
-          <p>
-            First, convert 250 mcg to mg: 250 &divide; 1,000 = 0.25 mg.
-          </p>
-          <p>
-            Now you can see how many measurements fit in the vial: 5 mg &divide; 0.25 mg = <b>20 measurements</b>.
-          </p>
-          <p>
-            Our <Link href="/plan" className="text-foreground underline font-medium">plan builder</Link> does
-            all of this math for you automatically, including the syringe units
-            and BAC water amount.
-          </p>
-        </TeachingSection>
+      <p id="mass-help" className="mt-3 text-sm text-muted-foreground">Use a decimal point, without commas. Your last entry stays on this device when local storage is available. No account is needed.</p>
+      <div id="mass-status" role="status" aria-live="polite" aria-atomic="true" className="mt-5 rounded-xl border border-border p-4 break-words [overflow-wrap:anywhere]">
+        {result.kind === "value" ? <><p className="font-semibold">{result.mg} mg = {result.mcg} mcg</p><p className="mt-2 text-sm">{entry.unit === "mg" ? "Multiply mg by 1,000." : "Divide mcg by 1,000."} This changes the unit, not the amount.</p></> : <p>{result.kind === "error" ? result.message : "Enter a mass in either field."}</p>}
       </div>
-
-      {/* Related tools */}
-      <div className="mt-16">
-        <h2 className="text-2xl font-serif font-medium tracking-tight">Related tools</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <RelatedTool href="/tools/syringe-units" title="Syringe Unit Converter" body="Convert between mL and insulin syringe units (100 units = 1 mL)." />
-          <RelatedTool href="/tools/bac-water" title="BAC Water Calculator" body="Find out how much BAC water to add to your peptide vial." />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TeachingSection({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 border-2 border-foreground/20 grid place-items-center shrink-0">{icon}</div>
-        <h3 className="text-lg font-serif font-medium">{title}</h3>
-      </div>
-      <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function RelatedTool({ href, title, body }: { href: string; title: string; body: string }) {
-  return (
-    <Link href={href} className="group block border border-border hover:bg-muted transition-colors p-5">
-      <h3 className="font-semibold group-hover:underline">{title}</h3>
-      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
-      <div className="mt-3 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
-        Open <ArrowRight className="h-4 w-4" />
-      </div>
-    </Link>
-  );
+      <div className="mt-5 flex flex-wrap items-center gap-3"><Button type="button" variant="outline" onClick={() => setEntry(empty)}>Clear conversion</Button><Link className="inline-flex min-h-11 items-center underline" href="/tools/dose">Need amount and volume calculations?</Link></div>
+    </section>
+    <section className="mt-10"><h2 className="text-2xl font-serif">Check the relationship</h2><div className="mt-4 overflow-x-auto rounded-xl border border-border" role="region" tabIndex={0} aria-label="Mass conversion examples"><table className="w-full text-left text-sm"><caption className="sr-only">Equivalent amounts in milligrams and micrograms</caption><thead><tr><th scope="col" className="p-3">Milligrams</th><th scope="col" className="p-3">Micrograms</th></tr></thead><tbody>{[["0", "0"], ["0.000001", "0.001"], ["0.125", "125"], ["0.5", "500"], ["1", "1000"], ["12", "12000"]].map(([mg, mcg]) => <tr key={mg} className="border-t border-border"><td className="p-3">{mg} mg</td><td className="p-3">{mcg} mcg</td></tr>)}</tbody></table></div></section>
+    <section className="mt-10 space-y-3"><h2 className="text-2xl font-serif">Mass is not volume or syringe units</h2><p>mg and mcg both measure mass. Neither specifies mL or a U-100 marking unless the solution concentration is also known. This converter does not choose a dose or a preparation.</p><p>The conversion shifts decimal places in text, rather than rounding through binary floating-point arithmetic. It accepts up to 64 input characters and exponents from -100 to 100. Other site calculators have separate numeric display limits.</p><p>See <a className="underline" href="https://www.nist.gov/pml/owm/metric-si-prefixes" rel="noopener noreferrer" target="_blank">NIST's SI prefix definitions</a>, <Link href="/methodology" className="underline">our calculation methodology</Link> and the <Link href="/learn/how-to-read-a-peptide-vial" className="underline">vial-label guide</Link>.</p></section>
+  </div>;
 }

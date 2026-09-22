@@ -116,11 +116,11 @@ noWarn(v02clean, /between two marks/, "V-02 quiet at 15 units on a 1 mL barrel (
 
 // V-05: 250 mg dose (mg picked where mcg meant) => ~1,000x.
 const v05 = calculate({ peptideSlug: "bpc-157", injectionsPerWeek: 1, vialStrengthMg: 500, doseMcg: 250000, bacWaterMl: 2, syringeType: "insulin-1ml" });
-warns(v05, /1,000 times/, "V-05 flags the mg/mcg unit swap");
+noWarn(v05, /amounts in the studies/, "V-05 does not infer a dose range from an unverified lookup");
 
 // V-13: 5 mg dose (10x the studied high of 500 mcg).
 const v13 = calculate({ peptideSlug: "bpc-157", injectionsPerWeek: 1, vialStrengthMg: 50, doseMcg: 5000, bacWaterMl: 2, syringeType: "insulin-1ml" });
-warns(v13, /10 times bigger/, "V-13 flags the order-of-magnitude outlier");
+noWarn(v13, /amounts in the studies/, "V-13 does not invent a study-based outlier");
 
 // Normal dose stays quiet on the magnitude guards.
 noWarn(a, /times (bigger|smaller)|1,000 times/, "magnitude guards quiet on a normal dose");
@@ -139,7 +139,7 @@ warns(v04, /too small to measure/, "V-04 flags an amount below the smallest mark
 
 // V-07: 500 mg in 2 mL = 250 mg/mL, implausibly strong.
 const v07 = calculate({ vialStrengthMg: 500, doseMcg: 1000, bacWaterMl: 2, syringeType: "insulin-1ml" });
-warns(v07, /much stronger than usual/, "V-07 flags an implausible concentration");
+warns(v07, /software review threshold/, "V-07 flags a concentration for unit review without a clinical assertion");
 
 // V-12: 308 mcg at 2.5 mg/mL = 12.32 units, rounded to 12.3.
 const v12 = calculate({ vialStrengthMg: 5, doseMcg: 308, bacWaterMl: 2, syringeType: "insulin-1ml" });

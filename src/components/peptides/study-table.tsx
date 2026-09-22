@@ -16,6 +16,7 @@ export function StudyTable({ data }: { data: CompoundStudies }) {
         {data.humanEvidence} {data.fdaStatus}
       </p>
 
+      <p className="mt-2 text-xs text-muted-foreground">Source abstracts checked September 21, 2026 where available. Read the original methods before interpreting an experimental condition.</p>
       <ul className="mt-6 space-y-4">
         {data.studies.map((s, i) => (
           <li key={i} className="rounded-2xl border border-border bg-card p-5 sm:p-6">
@@ -30,7 +31,7 @@ export function StudyTable({ data }: { data: CompoundStudies }) {
             <a
               href={s.sourceUrl}
               target="_blank"
-              rel="noopener noreferrer nofollow"
+              rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
             >
               <ExternalLink className="h-3.5 w-3.5 shrink-0" />

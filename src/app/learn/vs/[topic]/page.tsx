@@ -73,7 +73,7 @@ export default async function ComparisonPage({
 
   const others = COMPARISONS.filter((x) => x.slug !== c.slug);
   const dims = comparisonDims(c);
-  const refs = topicReferences(c.slug);
+  const refs = c.sources.map((url) => ({ url, title: url.includes("cdc.gov") ? "CDC: injection safety and multi-dose containers" : "Manufacturer product labeling", source: new URL(url).hostname, note: "Label distinction checked September 21, 2026; not an individual compatibility assessment." }));
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
@@ -93,8 +93,7 @@ export default async function ComparisonPage({
         title={c.title}
         body={[c.verdict, ...c.body.map((s) => `${s.h2}\n\n${s.p}`)].join("\n\n")}
         url={`${SITE_URL}/learn/vs/${c.slug}`}
-        createdAt={new Date(LAST_REVIEWED_ISO)}
-        updatedAt={new Date(LAST_REVIEWED_ISO)}
+        updatedAt={new Date("2026-09-21")}
         citations={refs}
       />
       <FaqJsonLd items={c.faqs} />
@@ -129,7 +128,7 @@ export default async function ComparisonPage({
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-surface text-left">
-              <th className="px-4 py-3 font-medium"></th>
+              <th scope="col" className="px-4 py-3 font-medium">Label detail</th>
               <th className="px-4 py-3 font-medium">Bac water</th>
               <th className="px-4 py-3 font-medium">{c.otherName}</th>
             </tr>
@@ -202,10 +201,10 @@ export default async function ComparisonPage({
         </div>
       </section>
 
-      {/* Reconstitute a specific peptide (into the peptide hub) */}
+      {/* Read a compound-specific reference (into the peptide hub) */}
       <section className="mt-12">
         <h2 className="text-xl font-serif font-medium tracking-tight">
-          Reconstitute a specific peptide
+          Read a compound-specific reference
         </h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {[
@@ -239,7 +238,7 @@ export default async function ComparisonPage({
       <section className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
           <div className="font-medium text-foreground">
-            Ready to reconstitute?
+            Have the product instructions?
           </div>
           <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
             Build a step-by-step plan or shop sealed, research-grade bac water.

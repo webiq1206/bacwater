@@ -74,6 +74,7 @@ export function xmlResponse(xml: string): Response {
 
 /** Static, hand-maintained pages (everything not driven by the database). */
 export const STATIC_PAGES: SitemapUrl[] = [
+  { path: "/methodology", priority: 0.6 },
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/peptide-calculator", changeFrequency: "weekly", priority: 1.0 },
   { path: "/plan", changeFrequency: "weekly", priority: 0.9 },

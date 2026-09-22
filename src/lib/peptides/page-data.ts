@@ -31,12 +31,13 @@ export function formatDose(mcg: number): string {
   return `${round(mcg, 0)} mcg`;
 }
 
-/** One dosage row per common vial strength, using the peptide's typical dose. */
+/** One illustrative row per listed vial amount; no compound dose is inferred. */
 export function dosageRows(p: PeptideRef): DosageRow[] {
-  const doseMcg = p.suggestedDoseMcg;
+  // The same compound-neutral mass demonstrates arithmetic, not a research regimen.
+  const doseMcg = 100;
   const doseMg = doseMcg / 1000;
   return p.commonVialStrengthsMg.map((vialMg) => {
-    const bacMl = recommendBacWaterMl(vialMg, doseMcg);
+    const bacMl = 2; // Fixed illustrative final volume, not a recommended dilution.
     const concentrationMgPerMl = vialMg / bacMl;
     const doseVolumeMl = doseMg / concentrationMgPerMl;
     const units = doseVolumeMl * 100;

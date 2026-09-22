@@ -15,6 +15,7 @@
 
 import { PEPTIDES, findPeptide } from "./peptides";
 import { round } from "@/lib/utils";
+import { formatNumeric } from "./format";
 
 export type SyringeType =
   | "insulin-0.3ml"
@@ -41,7 +42,7 @@ export const SYRINGES: SyringeSpec[] = [
     maxVolumeMl: 0.3,
     maxUnits: 30,
     incrementMl: 0.005,
-    description: "Best for very small doses. Each half-unit mark = 0.005 mL.",
+    description: "Illustration assumes half-unit intervals. Verify the actual device.",
   },
   {
     id: "insulin-0.5ml",
@@ -50,7 +51,7 @@ export const SYRINGES: SyringeSpec[] = [
     maxVolumeMl: 0.5,
     maxUnits: 50,
     incrementMl: 0.01,
-    description: "Middle range for most reconstituted peptides.",
+    description: "Illustration assumes one-unit intervals. Verify the actual device.",
   },
   {
     id: "insulin-1ml",
@@ -59,7 +60,7 @@ export const SYRINGES: SyringeSpec[] = [
     maxVolumeMl: 1.0,
     maxUnits: 100,
     incrementMl: 0.01,
-    description: "Standard insulin syringe. Each mark = 1 unit.",
+    description: "Illustration assumes one-unit intervals; actual products may differ.",
   },
   {
     id: "tuberculin-1ml",
@@ -68,7 +69,7 @@ export const SYRINGES: SyringeSpec[] = [
     maxVolumeMl: 1.0,
     maxUnits: 0,
     incrementMl: 0.01,
-    description: "Marked in mL. Useful for larger volumes.",
+    description: "mL-scale illustration assumes 0.01 mL intervals, not a device recommendation.",
   },
   {
     id: "syringe-3ml",
@@ -77,7 +78,7 @@ export const SYRINGES: SyringeSpec[] = [
     maxVolumeMl: 3.0,
     maxUnits: 0,
     incrementMl: 0.1,
-    description: "Used mostly for drawing BAC water, not for injections.",
+    description: "mL-scale illustration assumes 0.1 mL intervals. Follow actual device instructions.",
   },
 ];
 
@@ -119,6 +120,7 @@ export interface SupplyRecommendation {
 }
 
 export interface CalcResult {
+  calculationVersion?: "2026-09-21-v2";
   input: Required<Omit<CalcInput, "dateMixed" | "peptideSlug" | "peptideName" | "bacWaterMl" | "secondary">> & {
     peptideSlug: string | null;
     peptideName: string | null;
@@ -146,6 +148,7 @@ export interface CalcResult {
   syringeReadout: {
     kind: "u100" | "ml";
     valueRounded: number;
+    exactValue?: number;
     displayLabel: string;
     exceedsSyringe: boolean;
     fillPercent: number;
@@ -206,17 +209,12 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
     sku: "BAC-30ML",
     name: "Bacteriostatic water, 30 mL vial",
     quantity: bacVials,
-    reason: `You'll use about ${round(bac, 2)} mL for this vial. Bac water is commonly sold in 30 mL vials, so one covers this plan.`,
+    reason: `You'll use about ${round(bac, 2)} mL for this vial. This quantity assumes 30 mL containers, without waste or storage constraints. It is not a purchase or handling recommendation.`,
   });
 
   // Syringes: at least dosesPerVial, plus 1 extra for reconstitution draw
   const injectionSyringes = Math.max(1, Math.ceil(dosesPerVial));
-  const syringeName =
-    syringe.id === "insulin-0.3ml"
-      ? "Insulin syringes, 0.3 mL / 30 units"
-      : syringe.id === "insulin-0.5ml"
-        ? "Insulin syringes, 0.5 mL / 50 units"
-        : "Insulin syringes, 1 mL / 100 units";
+  const syringeName = syringe.label;
   // Report the number you actually USE (one per measurement, plus one to draw
   // the water), not a purchase box. Showing "1 (100 pack)" next to "13
   // measurements per vial" reads as a mismatch. Pack size is context, in the
@@ -231,7 +229,7 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
           : "SYR-INS-10",
     name: syringeName,
     quantity: syringesUsed,
-    reason: `One per measurement (this vial gives about ${injectionSyringes}), plus one to draw the water. Commonly sold in boxes of 100.`,
+    reason: `Illustrative count: ${injectionSyringes} measurements plus one preparation device. Confirm the actual supplies and device instructions separately.`,
   });
 
   const padsUsed = injectionSyringes * 2 + 1;
@@ -239,7 +237,7 @@ function pickSupplies(input: CalcInput, syringe: SyringeSpec, dosesPerVial: numb
     sku: "ALC-200",
     name: "Alcohol prep pads",
     quantity: padsUsed,
-    reason: "About two per measurement: the vial top and, if you inject, the site. Commonly sold in boxes of 200.",
+    reason: "Illustrative inventory assumption: two pads per measurement plus one. This is not a preparation checklist or an administration protocol.",
   });
 
   return supplies;
@@ -255,9 +253,9 @@ function buildInstructions(input: {
 }): string[] {
   return [
     "Check the product identity, labeled amount, units, and product-specific instructions. A calculator does not establish suitability for use.",
-    `This example uses ${round(input.vialStrengthMg, 4)} mg and ${round(input.bacMl, 4)} mL. Confirm the volume means the final solution volume in your protocol.`,
-    `Concentration = amount divided by volume: ${round(input.concentrationMgPerMl, 4)} mg/mL.`,
-    `The entered amount of ${round(input.doseMcg, 4)} mcg corresponds to ${round(input.units / 100, 4)} mL. On a U-100 scale only, that volume corresponds to ${round(input.units, 4)} units.`,
+    `This example uses ${formatNumeric(input.vialStrengthMg, 4)} mg and ${formatNumeric(input.bacMl, 4)} mL. Confirm the volume means the final solution volume in your protocol.`,
+    `Concentration = amount divided by volume: ${formatNumeric(input.concentrationMgPerMl, 4)} mg/mL.`,
+    `The entered amount of ${formatNumeric(input.doseMcg, 4)} mcg corresponds to ${formatNumeric(input.units / 100, 4)} mL. On a U-100 scale only, that volume corresponds to ${formatNumeric(input.units, 4)} units.`,
     "Confirm the actual syringe capacity and graduation spacing. A rounded display is not permission to round a prescribed amount.",
     "Obtain product-specific preparation, administration, storage and discard instructions from the responsible professional or manufacturer. This is a calculation record, not an injection protocol.",
   ];
@@ -281,6 +279,9 @@ export function calculate(input: CalcInput): CalcResult {
   if (!SYRINGES.some((s) => s.id === input.syringeType)) errors.push("Select a supported syringe scale.");
   if (input.dateMixed && Number.isNaN(new Date(input.dateMixed).getTime())) errors.push("Enter a valid mixing date.");
   if (input.secondary && (!isFiniteNumber(input.secondary.vialStrengthMg) || input.secondary.vialStrengthMg <= 0)) errors.push("The second vial amount must be greater than 0 mg.");
+  for (const [label,value] of [["Vial mass",input.vialStrengthMg],["Entered amount",input.doseMcg],["Final volume",input.bacWaterMl],["Second mass",input.secondary?.vialStrengthMg]] as const) {
+    if (value != null && Number.isFinite(value) && (value < 1e-12 || value > 1e12)) errors.push(`${label} is outside this planner's supported range (0.000000000001 to 1,000,000,000,000 in the selected base unit). This is a software limit, not a medically suitable range.`);
+  }
   // Invalid states stay finite for rendering, and are never allowed to save.
   const vialStrengthMg = isFiniteNumber(input.vialStrengthMg) && input.vialStrengthMg > 0 ? input.vialStrengthMg : 1;
   // The entered dose is the WEEKLY total; it is split across the peptide's
@@ -298,38 +299,17 @@ export function calculate(input: CalcInput): CalcResult {
   // Sanity flags on unusual inputs
   if (vialStrengthMg > 100)
     warnings.push(
-      "That vial strength is unusually high. Double-check the label before mixing."
+      "The entered vial amount is above this tool's 100 mg review threshold. Recheck the value and units; this is not a clinical range."
     );
   if (vialStrengthMg < 0.5)
-    warnings.push("That vial strength is unusually low. Confirm the label.");
+    warnings.push("The entered vial amount is below this tool's 0.5 mg review threshold. Confirm the units; this is not a clinical range.");
   if (doseMg > vialStrengthMg)
     warnings.push(
       "Your dose is larger than the vial contains. Verify your dose and vial strength."
     );
-  // Unit-error and outlier guards (PRD §9.4 V-05/V-06/V-13). These catch the
-  // dominant failure mode in this category: a 10x or 1,000x mistake from
-  // confusing mg and mcg. Measured against what the studies on the page used.
-  if (peptideRef) {
-    const [lo, hi] = peptideRef.typicalDoseMcgRange;
-    if (doseMcg >= hi * 100) {
-      // ~1,000x too big, almost always mg picked where mcg was meant.
-      warnings.push(
-        `That amount is about 1,000 times the amounts in the studies here. Vial amounts like this are usually measured in mcg. Did you pick "mg" by mistake? Check your label.`
-      );
-    } else if (doseMcg >= hi * 10) {
-      warnings.push(
-        `This is about 10 times bigger than the amounts in the studies on this page. Check what you typed.`
-      );
-    } else if (doseMcg > 0 && doseMcg <= lo / 100) {
-      warnings.push(
-        `That amount is far smaller than the amounts in the studies here. Did you mean mg instead of mcg? Check your label.`
-      );
-    } else if (doseMcg <= lo / 10) {
-      warnings.push(
-        `This is about 10 times smaller than the amounts in the studies on this page. Check what you typed.`
-      );
-    }
-  }
+  // A compound lookup is not a validated dosing range. Check unit identity,
+  // not a supposed safe/research dose or an inferred regimen.
+  assumptions.push("1 mg equals 1,000 mcg. Confirm the selected mass unit against the original instructions; software cannot detect every unit-entry mistake.");
 
   const recommendedBacMl = recommendBacWaterMl(vialStrengthMg, doseMcg);
   const usedBacMl = isFiniteNumber(input.bacWaterMl)
@@ -338,11 +318,11 @@ export function calculate(input: CalcInput): CalcResult {
 
   if (usedBacMl > 5)
     warnings.push(
-      "Using more than 5 mL of BAC water is unusual for a single vial. Confirm this is what you intend."
+      "The entered volume exceeds this tool's 5 mL review threshold. Check the stated final volume and actual container capacity."
     );
   if (usedBacMl < 0.5)
     warnings.push(
-      "Using less than 0.5 mL of BAC water may make dosing very small and hard to draw."
+      "The entered volume is below 0.5 mL. Check the stated final volume and actual measurement limits."
     );
 
   const finalConcentrationMgPerMl = vialStrengthMg / usedBacMl;
@@ -352,18 +332,20 @@ export function calculate(input: CalcInput): CalcResult {
   // vial amount or the water amount was mistyped.
   if (finalConcentrationMgPerMl > 100)
     warnings.push(
-      `This makes ${round(finalConcentrationMgPerMl, 1)} mg in every mL, which is much stronger than usual. Check the vial amount and the water amount.`
+      `This makes ${round(finalConcentrationMgPerMl, 1)} mg in every mL, above the 100 mg/mL software review threshold. Check mass and volume units; the threshold does not establish a clinically suitable concentration.`
     );
 
   const doseVolumeMl = doseMg / finalConcentrationMgPerMl;
   const syringeUnits = doseVolumeMl * 100;
-  const dosesPerVial = Math.floor(vialStrengthMg / doseMg);
+  const portionRatio = vialStrengthMg / doseMg;
+  const nearestPortion = Math.round(portionRatio);
+  const dosesPerVial = Math.abs(portionRatio - nearestPortion) <= Number.EPSILON * Math.max(1, Math.abs(portionRatio)) * 4 ? nearestPortion : Math.floor(portionRatio);
 
   const syringe = findSyringe(input.syringeType);
   const exceedsSyringe = doseVolumeMl > syringe.maxVolumeMl + 1e-9;
   if (exceedsSyringe)
     warnings.push(
-      `The calculated dose (${round(doseVolumeMl, 2)} mL) exceeds the capacity of the selected ${syringe.label}. Consider a larger syringe or less BAC water.`
+      `The calculated dose (${formatNumeric(doseVolumeMl, 2)} mL) exceeds the capacity of the selected ${syringe.label}. Resolve the mismatch with the actual device and product instructions. Do not change a preparation based on this result.`
     );
 
   // V-02 (PRD §9.4): the amount must land on a mark you can actually read.
@@ -378,7 +360,7 @@ export function calculate(input: CalcInput): CalcResult {
     const onMark = Math.abs(marks - Math.round(marks)) < 0.02;
     if (!onMark) {
       warnings.push(
-        `This calculation assumes a mark every ${markLabel}. Your amount is ${round(syringeUnits, 1)} units. That is between two marks, so you cannot measure it exactly. Change your water amount so the amount lands on a line.`
+        `This calculation assumes a mark every ${markLabel}. Your amount is ${formatNumeric(syringeUnits, 1)} units. That is between two marks in this illustration. Verify the actual graduation and measuring instructions; do not change the water amount to fit the illustration.`
       );
     }
   }
@@ -387,22 +369,23 @@ export function calculate(input: CalcInput): CalcResult {
   // measured at all. Below that, flag it rather than return an unusable number.
   if (syringe.scale === "u100" && syringeUnits > 0 && syringeUnits < markUnits)
     warnings.push(
-      `This is ${round(syringeUnits, 1)} units. The assumed smallest mark is ${markLabel}, so it is too small to measure. More water increases the calculated volume for the same amount. Do not change a preparation without checking its instructions, capacity and actual syringe markings.`
+      `This is ${formatNumeric(syringeUnits, 1)} units. The assumed smallest mark is ${markLabel}, so it is too small to measure. More water increases the calculated volume for the same amount. Do not change a preparation without checking its instructions, capacity and actual syringe markings.`
     );
   // Still measurable, but small enough to be hard to read accurately.
   else if (syringe.scale === "u100" && syringeUnits >= markUnits && syringeUnits < 4)
     warnings.push(
-      `This amount is only ${round(syringeUnits, 1)} units, which is hard to measure accurately. More water gives a larger calculated volume for the same amount. Confirm the product instructions and actual syringe markings before any change.`
+      `This amount is only ${formatNumeric(syringeUnits, 1)} units, which is hard to measure accurately. More water gives a larger calculated volume for the same amount. Confirm the product instructions and actual syringe markings before any change.`
     );
 
   const syringeReadout = {
     kind: syringe.scale,
+    exactValue: syringe.scale === "u100" ? syringeUnits : doseVolumeMl,
     valueRounded:
       syringe.scale === "u100" ? round(syringeUnits, 1) : round(doseVolumeMl, 2),
     displayLabel:
       syringe.scale === "u100"
-        ? `${round(syringeUnits, 1)} units on the ${syringe.label}`
-        : `${round(doseVolumeMl, 2)} mL on the ${syringe.label}`,
+        ? `${formatNumeric(syringeUnits, 1)} units on the ${syringe.label}`
+        : `${formatNumeric(doseVolumeMl, 2)} mL on the ${syringe.label}`,
     exceedsSyringe,
     fillPercent: Math.min(
       100,
@@ -425,14 +408,14 @@ export function calculate(input: CalcInput): CalcResult {
   assumptions.push("Syringe graduation spacing is an assumption. Verify the markings on the actual device; equal capacity does not guarantee equal graduations.");
 
   assumptions.push(
-    "Concentration is calculated as (vial strength in mg) ÷ (BAC water in mL)."
+    "Concentration is calculated as (total mass in mg) ÷ (final solution volume in mL)."
   );
   assumptions.push(
-    "Syringe units use the U-100 insulin scale: 100 units = 1 mL."
+    "U-100 scale conversions use 100 units = 1 mL. This relationship does not apply to every syringe scale."
   );
   if (injectionsPerWeek > 1) {
     assumptions.push(
-      `The dose you entered (${round(weeklyDoseMcg, 1)} mcg) is treated as a weekly total and split into ${injectionsPerWeek} injections of ${round(doseMcg, 1)} mcg each. You can change the injections per week.`
+      `The dose you entered (${round(weeklyDoseMcg, 1)} mcg) is treated as a weekly total and split into ${injectionsPerWeek} injections of ${formatNumeric(doseMcg, 1)} mcg each. You can change the injections per week.`
     );
   }
   // V-11 (PRD §9.4): compatibility is never assumed, and it is stated every time.
@@ -446,7 +429,7 @@ export function calculate(input: CalcInput): CalcResult {
   }
   if (!isFiniteNumber(input.bacWaterMl)) {
     assumptions.push(
-      `BAC water amount was recommended automatically (${recommendedBacMl} mL) to give clean dosing math.`
+      `An illustrative volume (${recommendedBacMl} mL) was used because no final volume was supplied. This is not a mixing recommendation. Enter the product-specified final volume before saving.`
     );
   }
 
@@ -472,7 +455,7 @@ export function calculate(input: CalcInput): CalcResult {
     const secondaryRef = input.secondary.peptideSlug
       ? findPeptide(input.secondary.peptideSlug)
       : null;
-    const secondaryVialMg = Math.max(0.0001, input.secondary.vialStrengthMg);
+    const secondaryVialMg = input.secondary.vialStrengthMg;
     const secondaryConcentration = secondaryVialMg / usedBacMl;
     const companionDoseMcg = doseVolumeMl * secondaryConcentration * 1000;
     secondaryName =
@@ -480,12 +463,12 @@ export function calculate(input: CalcInput): CalcResult {
     secondaryOutput = {
       peptideName: secondaryName,
       vialStrengthMg: secondaryVialMg,
-      concentrationMgPerMl: round(secondaryConcentration, 4),
-      companionDoseMcg: round(companionDoseMcg, 1),
+      concentrationMgPerMl: secondaryConcentration,
+      companionDoseMcg,
     };
 
     assumptions.push(
-      `Blend detected: every draw delivers both peptides in proportion. Companion ${secondaryName} dose = ${round(companionDoseMcg, 0)} mcg per injection.`
+      `Blend detected: every draw delivers both peptides in proportion. Companion ${secondaryName} dose = ${formatNumeric(companionDoseMcg, 1)} mcg per injection.`
     );
   }
 
@@ -494,24 +477,25 @@ export function calculate(input: CalcInput): CalcResult {
     : peptideName || "peptide";
 
   const summary =
-    `Calculation: ${vialStrengthMg} mg of ${displayName} in ${round(usedBacMl, 2)} mL. ` +
+    `Calculation: ${vialStrengthMg} mg of ${displayName} in ${formatNumeric(usedBacMl, 2)} mL. ` +
     (injectionsPerWeek > 1
       ? `Your ${round(weeklyDoseMcg, 1)} mcg weekly total splits into ${injectionsPerWeek} injections. `
       : "") +
-    `Each ${round(doseMcg, 1)} mcg dose is ${round(doseVolumeMl, 3)} mL, ` +
+    `Each ${formatNumeric(doseMcg, 1)} mcg dose is ${formatNumeric(doseVolumeMl, 3)} mL, ` +
     (syringe.scale === "u100"
-      ? `${round(syringeUnits, 1)} units on your ${syringe.label}.`
-      : `${round(doseVolumeMl, 2)} mL on your ${syringe.label}.`) +
+      ? `${formatNumeric(syringeUnits, 1)} units on your ${syringe.label}.`
+      : `${formatNumeric(doseVolumeMl, 2)} mL on your ${syringe.label}.`) +
     ` You'll get about ${dosesPerVial} dose${dosesPerVial === 1 ? "" : "s"} per vial.` +
     (secondaryOutput
-      ? ` Each draw also delivers ${round(secondaryOutput.companionDoseMcg, 0)} mcg of ${secondaryOutput.peptideName}.`
+      ? ` Each draw also delivers ${formatNumeric(secondaryOutput.companionDoseMcg, 1)} mcg of ${secondaryOutput.peptideName}.`
       : "");
 
-  if (![finalConcentrationMgPerMl, finalConcentrationMcgPerMl, doseVolumeMl, syringeUnits, dosesPerVial].every(Number.isFinite)) {
+  if (![finalConcentrationMgPerMl, finalConcentrationMcgPerMl, doseVolumeMl, syringeUnits, dosesPerVial, ...(secondaryOutput ? [secondaryOutput.vialStrengthMg, secondaryOutput.concentrationMgPerMl, secondaryOutput.companionDoseMcg] : [])].every(Number.isFinite) || finalConcentrationMgPerMl <= 0 || doseVolumeMl <= 0 || dosesPerVial > 10000000) {
     const fallback = calculate({ vialStrengthMg: 1, doseMcg: 1, bacWaterMl: 1, syringeType: "insulin-1ml" });
     return { ...fallback, errors: [...errors, "These values exceed the supported numeric range. Check the units and amounts."], summary: "Correct the input values before using or saving a calculation.", instructions: [] };
   }
   return {
+    calculationVersion: "2026-09-21-v2",
     input: {
       peptideSlug: peptideRef?.slug ?? input.peptideSlug ?? null,
       peptideName,
@@ -526,14 +510,14 @@ export function calculate(input: CalcInput): CalcResult {
     },
     recommendedBacMl,
     usedBacMl,
-    finalConcentrationMgPerMl: round(finalConcentrationMgPerMl, 4),
-    finalConcentrationMcgPerMl: round(finalConcentrationMcgPerMl, 2),
-    doseVolumeMl: round(doseVolumeMl, 4),
-    syringeUnits: round(syringeUnits, 2),
+    finalConcentrationMgPerMl,
+    finalConcentrationMcgPerMl,
+    doseVolumeMl,
+    syringeUnits,
     schedule: {
       injectionsPerWeek,
-      weeklyDoseMcg: round(weeklyDoseMcg, 2),
-      dosePerInjectionMcg: round(doseMcg, 2),
+      weeklyDoseMcg,
+      dosePerInjectionMcg: doseMcg,
       label: `${injectionsPerWeek} equal measurement${injectionsPerWeek === 1 ? "" : "s"} (your input, not a recommended schedule)`,
       halfLifeHours: null,
     },

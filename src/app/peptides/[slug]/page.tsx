@@ -75,8 +75,8 @@ export async function generateMetadata({
     ? "Reconstitution Calculator for Any Compound"
     : `${short} Reconstitution Calculator & Reference`;
   const description = isCustom
-    ? "Work out how much bacteriostatic water to add to a vial and what your measurement is in syringe units. Enter your vial amount and how much you want to measure."
-    : `${short} reconstitution calculator and chart: how much bacteriostatic water to add by vial size, the concentration, and what your measurement is in syringe units. What research looked at, and what nobody knows.`;
+    ? "Check concentration and measurement volume from a stated mass and final volume. No dose, diluent, regimen or product compatibility is selected."
+    : `${short} reconstitution calculator and chart: concentration and U-100 volume conversions from your stated inputs, with formulation limits and linked research references.`;
   const chart = hasChart(p) ? peptideChartDims(p) : null;
   return {
     title,
@@ -116,10 +116,11 @@ export default async function PeptidePage({
   const short = shortName(p.name);
   const content = PEPTIDE_CONTENT[p.slug];
   const isCustom = p.slug === "custom";
-  const rows = isCustom ? [] : dosageRows(p);
+  const rows = isCustom || p.slug === "hcg" ? [] : dosageRows(p);
   const studies = isCustom ? null : studiesFor(p.slug);
-  const steps = reconstitutionSteps(p);
-  const faqs = buildFaqs(p, content?.faqs ?? []);
+  const steps = p.slug === "hcg" ? [] : reconstitutionSteps(p);
+  const faqs = p.slug === "hcg" ? (content?.faqs ?? []) : buildFaqs(p, content?.faqs ?? []);
+  const refs = [...CORE_BACWATER_REFERENCES, ...(content?.sources ?? []).map(url => ({url, title: "Product identity or source reference", source: new URL(url).hostname, note: "Read the exact formulation and study limitations."}))];
   const lead = directAnswer(p);
   const related = PEPTIDES.filter(
     (x) => x.category === p.category && x.slug !== p.slug && x.slug !== "custom"
@@ -146,26 +147,24 @@ export default async function PeptidePage({
           label: "Category",
           value: `${p.category.charAt(0).toUpperCase()}${p.category.slice(1)}`,
         },
-        { label: "Common vial sizes", value: `${p.commonVialStrengthsMg.join(", ")} mg` },
+        { label: "Illustrative vial amounts", value: p.slug === "hcg" ? "Use label IU, not mg" : `${p.commonVialStrengthsMg.join(", ")} mg` },
         {
           label: "Shelf life",
           value: "Product-specific",
           sub: "not calculated",
         },
         {
-          label: "Evidence",
+          label: "Product identity",
           value:
-            evidenceOf(p) === "fda-approved"
-              ? "Approved as a medicine"
-              : "Research only",
+            "Not verified by this site",
         },
       ];
   const railSections = isCustom
     ? []
     : [
         { id: "what-it-is", label: `What is ${short}?` },
-        { id: "reconstitution-chart", label: "How much BAC water" },
-        { id: "how-to", label: "How to reconstitute" },
+        { id: "reconstitution-chart", label: "Arithmetic examples" },
+        { id: "how-to", label: "Check the calculation" },
         { id: "storage", label: "Storage and shelf life" },
         { id: "faq", label: "FAQ" },
       ];
@@ -182,21 +181,14 @@ export default async function PeptidePage({
           { name: "Peptides", url: "/peptides" },
           { name: short, url: `/peptides/${p.slug}` },
         ]}
-        citations={CORE_BACWATER_REFERENCES}
+        citations={refs}
         reviewed
       />
-      {!isCustom && (
+      {steps.length > 0 && (
         <HowToJsonLd
           name={`How to check a ${short} concentration calculation`}
           description={`Check the label inputs and concentration arithmetic for ${short}. Not preparation or medical instructions.`}
           steps={steps}
-          supplies={[
-            `${short} vial`,
-            "Bacteriostatic water",
-            "Insulin syringe",
-            "Alcohol prep pads",
-          ]}
-          tools={["Insulin syringe"]}
         />
       )}
       <FaqJsonLd items={faqs} />
@@ -241,8 +233,8 @@ export default async function PeptidePage({
               value: `${p.category.charAt(0).toUpperCase()}${p.category.slice(1)}`,
             },
             {
-              label: "Common vial sizes",
-              value: `${p.commonVialStrengthsMg.join(", ")} mg`,
+              label: "Illustrative vial amounts",
+              value: p.slug === "hcg" ? "Use label IU, not mg" : `${p.commonVialStrengthsMg.join(", ")} mg`,
             },
             {
               label: "Shelf life",
@@ -251,18 +243,6 @@ export default async function PeptidePage({
             },
           ]}
         />
-      )}
-
-      {/* Labeled TL;DR: a tight, extractable one-liner for AI Overviews. */}
-      {!isCustom && rows.length > 0 && (
-        <div className="mt-5 border-l-2 border-foreground/30 bg-surface px-4 py-3">
-          <p className="text-base leading-relaxed text-foreground/90">
-            <strong>Short answer:</strong> add {rows[0].bacMl} mL of bac water to
-            a {rows[0].vialMg} mg {short} vial. A {rows[0].doseLabel} amount then
-            measures about {rows[0].units} units on a 1 mL (U-100) insulin
-            syringe.
-          </p>
-        </div>
       )}
 
       {/* Direct answer */}
@@ -294,7 +274,7 @@ export default async function PeptidePage({
             <p>{content.what}</p>
             <p>{content.uses}</p>
             <p className="text-muted-foreground">
-              {CATEGORY_CONTEXT[p.category]}
+              This category groups reference pages; it does not establish an approved use or a standard preparation method.
             </p>
           </div>
         </section>
@@ -306,22 +286,21 @@ export default async function PeptidePage({
       {!isCustom && rows.length > 0 && (
         <section id="reconstitution-chart" className="mt-14 scroll-mt-24">
           <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
-            How much bac water for {short}?
+            Illustrative {short} concentration math
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            The chart below is a {short} reconstitution chart: each common vial
-            size, the bac water to add, and where a {rows[0].doseLabel}
-            measurement lands on a 1 mL insulin syringe. Use the calculator above
-            for your exact vial and the amount you want to measure.
+            These are illustrative inputs, not a {short} mixing recipe or dose table.
+            They show how mass and final liquid volume affect concentration.
+            Use the product-specific instructions to establish appropriate inputs.
           </p>
           <div className="mt-5 overflow-x-auto border border-border" role="region" aria-label="Scrollable data table" tabIndex={0}>
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-surface text-left">
                   <th className="px-4 py-3 font-medium">Vial amount</th>
-                  <th className="px-4 py-3 font-medium">Bac water to add</th>
+                  <th className="px-4 py-3 font-medium">Illustrative final volume</th>
                   <th className="px-4 py-3 font-medium">Concentration</th>
-                  <th className="px-4 py-3 font-medium">Amount to measure</th>
+                  <th className="px-4 py-3 font-medium">Illustrative mass</th>
                   <th className="px-4 py-3 font-medium">Syringe units</th>
                 </tr>
               </thead>
@@ -467,7 +446,7 @@ export default async function PeptidePage({
         </section>
       )}
 
-      <References references={CORE_BACWATER_REFERENCES} />
+      <References references={refs} />
 
       {/* Keep learning / internal links */}
       <section className="section-dark mt-14 rounded-2xl p-6 sm:p-8">
