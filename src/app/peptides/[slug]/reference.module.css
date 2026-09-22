@@ -1,0 +1,6 @@
+.reference{min-width:0;overflow-wrap:anywhere;}
+.reference :global(.flex)>:not(svg){min-width:0;}
+.reference :global(.inline-flex){max-width:100%;white-space:normal;}
+.reference button{max-width:100%;white-space:normal;height:auto;min-height:2.75rem;}
+.reference a:global(.inline-flex){height:auto;min-height:2.75rem;}
+.reference :global(.inline-flex) svg{flex-shrink:0;}

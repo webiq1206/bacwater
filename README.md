@@ -1,37 +1,35 @@
 # BACwater.ai
 
-A free concentration and measurement utility built with Next.js, TypeScript, Prisma/PostgreSQL and NextAuth. Public calculators do not require an account. The current public site does not sell products.
+Free concentration and measurement utilities built with Next.js, TypeScript, Prisma/PostgreSQL and NextAuth. Public calculations do not require an account. The website does not sell water or peptides, prescribe a treatment or select a dose.
 
-## Calculation and privacy boundaries
+## Application boundaries
 
-The calculation engine uses deterministic arithmetic. Users provide the amount, final volume, syringe scale and any weekly split from instructions they already have. The tool does not select a treatment, recommend a regimen, establish product compatibility, verify sterility or calculate a safe shelf life.
+The arithmetic uses entered amounts and final liquid volume. The mass converter preserves supported decimal-prefix relationships. U-100 conversion is a scale relationship, not device selection. hCG product IU is separate from milligrams and syringe units. The website does not verify contents, compatibility, sterility or a safe storage period.
 
-Saved links allow anyone who receives the link to read the calculation. Private notes and custom names remain restricted to the account owner or creating device. Guest access requires the device claim secret, not merely the shared URL. Saving a link in another browser does not grant edit permission.
+Saved links allow their recipient to read the calculation. Private notes and custom plan names require the owning account or creating-device secret. Public share identifiers do not grant editing permission. Authorization is enforced at the server and administrator pages check stored roles before reading records.
 
-## Development
+## Development and tests
 
-Use Node.js 22 and npm. The authoritative lockfile is package-lock.json. PostgreSQL is required. Copy .env.example to a local .env and supply your own database and authentication values.
+Use Node.js 22 and the committed npm lockfile. Run npm ci and npx prisma generate with your own local database configuration. Initialize only a disposable development database as appropriate. Never run the production seed as a deployment step.
 
-Run npm ci, npx prisma generate, npm run db:push, then npm run dev. Seeding is optional and is intended only for a new disposable development database. The seed can overwrite content and must not be run automatically against production.
+npm test runs the retained assertion suites. npm run build runs those tests and a Webpack production build. The read-only GitHub workflows additionally exercise publication transactions, conservative editorial revisions, durable rate limits, browser journeys, private PDF content, the known public inventory and responsive browser engines. These results do not constitute clinical, legal, security or WCAG certification.
 
-## Checks
+The pinned Next.js 16.3.5 font loader assumed an upstream font URL always ended in an extension and intermittently failed valid builds. scripts/prepare-font-loader.mjs installs a small checked compatibility change after dependency installation: the extension is read from a recognized binary font header. Downloading and self-hosting remain unchanged. It fails on an unsupported response and requires review when Next.js is upgraded. No font file is included in the audit deliverables.
 
-npm test runs calculation, model-guardrail, workspace and security fixtures. npm run build runs those tests and a production build. CI also runs TypeScript and isolated browser checks. Automated browser evidence is not a WCAG certification or proof of real-device behavior.
+## Replit production deployment
 
-## Replit deployment
+Repository: webiq1206/bacwater. Preserve the existing Next.js deployment and unrelated work. Verify the checkout and origin, fetch and fast-forward main, then use the normal Republish controls. Do not reset over unrelated uncommitted changes.
 
-Repository: webiq1206/bacwater. Keep the existing Next.js deployment; do not convert the application to Vite. Verify the Replit checkout has no unrelated changes, fetch origin and pull main using a fast-forward-only update. The post-merge script installs from npm's lockfile and generates Prisma. It does not seed or migrate the database. Use a pooled PostgreSQL endpoint in autoscaled production.
+Before the first publication of this release, retain a production database backup. The configured build installs the lockfile, generates Prisma, applies the additive schema and runs scripts/apply-editorial-revisions.ts in apply mode before building. That script changes only title/body values that match the recorded legacy default fingerprints; independent edits, publication flags, canonical choices and missing records are preserved. Review its output and any skipped independent content. This is a controlled content update, not a production reseed.
 
-Never use a destructive schema-push flag. Do not seed production as part of a build. Keep AUTH_SECRET stable across deployments. Review the actual production version after publishing; a GitHub push is not proof that Replit pulled or deployed it.
+Keep AUTH_SECRET stable, use an appropriate pooled database connection for autoscaling, and never accept a destructive schema-push flag. /version.json exposes only the release marker and build commit. Compare it after actual publication; GitHub main, the Replit workspace and public deployment are separate states.
 
-## Access and optional integrations
+## Explanation and analytics options
 
-New registrations always receive the user role. An operator must verify account ownership before granting an administrator role in the database or through an existing authorized administrator. Roles are checked from the database on subsequent authenticated requests.
+Built-in explanations recompute trusted arithmetic and do not require an AI provider. Optional external topic routing requires explicit configuration, an authorized model and key, user consent and authentication. It sends the permitted question for selection of a fixed topic, not a saved plan, private notes or model-generated numeric answer. Durable global and account limits apply. Do not enable this optional mode without its approved operational budget and live acceptance test.
 
-Missing Anthropic credentials leave the optional explanation assistant unavailable; calculations still work. Provider acceptance of a support email is not proof of inbox delivery. Contact submissions are stored in the admin support inbox and use a request ID to prevent duplicate records.
+Optional analytics and session replay are off by default. Keep NEXT_PUBLIC_ANALYTICS_MANUAL_CONFIRMED=false until the receiving GA4 property is verified, automatic sensitive collection is disabled, and consent plus actual sanitized event receipt is tested. Private routes are excluded. A contact event is not delivered email; a print event is not proof of physical printing.
 
-Optional analytics and session replay are disabled by default. Before setting NEXT_PUBLIC_ANALYTICS_MANUAL_CONFIRMED=true, disable automatic Enhanced Measurement/history, form, advertising and user-provided-data collection in GA4 and verify sanitized event delivery. Consent is required; private account/plan pages and sensitive query data are not tracked. Clarity replay is not enabled by this release.
+## Audit and remaining acceptance
 
-## Audit records
-
-See audit/2026-09-21 for release evidence, unresolved dependencies and remaining master-audit obligations. Code changes, test verification, production deployment, indexing and ranking are separate statuses.
+See audit/2026-09-22/master-release.md and audit/manual-action-required.md. The private conversation handoff contains the full 115-parent source register, page briefs, evidence, all 28 growth dispositions, actual original demonstrations and reviewable external drafts. No external outreach, social publication, new account, purchase or future scheduled check is claimed by this repository release.
