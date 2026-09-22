@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Verify exact reviewed source transport before writing
+      - name: Verify and recover reviewed source
         run: |
           mkdir -p audit-evidence
           python - <<'PY'
@@ -63,7 +63,7 @@ jobs:
             prepared[name]=new
           for name,new in prepared.items():
             p=Path(name);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(new)
-          print(f'Verified {len(changes)} paths; applied {len(prepared)} source changes.')
+          print(f'Verified {len(changes)} source paths.')
           PY
       - uses: actions/setup-node@v4
         with:
@@ -73,6 +73,7 @@ jobs:
         run: |
           npm ci
           npm audit --json > audit-evidence/dependency-audit.json || true
+          node -e 'const a=require("./audit-evidence/dependency-audit.json");if(!a.metadata||a.metadata.vulnerabilities.critical||a.metadata.vulnerabilities.high)process.exit(1)'
           case "$DATABASE_URL" in
             postgresql://audit:*@127.0.0.1:5432/bacwater_audit) ;;
             *) exit 1 ;;
@@ -89,14 +90,14 @@ jobs:
           npx tsx scripts/audit-remaining.ts 2>&1 | tee audit-evidence/remaining-tests.log
       - name: Build
         run: set -o pipefail; npx next build 2>&1 | tee audit-evidence/build.log
-      - name: Commit tested source to isolated branch
+      - name: Commit application source to isolated branch
         run: |
           test "$GITHUB_REF" = refs/heads/audit/remaining-scope-2026-09-21
-          git add -A -- src prisma scripts package.json package-lock.json .env.example .replit .github/workflows/master-audit.yml audit/2026-09-21
+          git add -A -- src prisma scripts package.json package-lock.json .env.example .replit audit/2026-09-21
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'fix: complete editorial arithmetic and bounded explanation repairs'
+            git commit -m 'fix: editorial arithmetic and bounded explanation repairs'
             git push origin HEAD:audit/remaining-scope-2026-09-21
           fi
       - uses: actions/cache@v4
@@ -109,19 +110,21 @@ jobs:
           npx playwright install --with-deps chromium firefox webkit
           sudo apt-get install -y poppler-utils
       - name: Start local production build
+        id: start
         run: |
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
+          curl -fsS http://127.0.0.1:3000/robots.txt >/dev/null
       - name: Publication journeys
         run: node scripts/audit-publication-browser.mjs
       - name: Converter regression
-        if: success() || failure()
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
         run: node scripts/audit-converters.mjs
       - name: New arithmetic and explanation journeys
-        if: success() || failure()
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
         run: node scripts/audit-remaining-browser.mjs
       - name: Saved-plan, account and PDF regression
-        if: success() || failure()
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
         run: |
           node scripts/audit-journeys.mjs
           pdftotext audit-evidence/journeys/owner.pdf audit-evidence/journeys/owner.txt
@@ -129,10 +132,12 @@ jobs:
           grep -q 'PRIVATE NOTE' audit-evidence/journeys/owner.txt
           if grep -q 'PRIVATE NOTE' audit-evidence/journeys/shared.txt; then exit 1; fi
       - name: Full route and rendering evidence
-        if: success() || failure()
-        run: node scripts/master-audit.mjs
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
+        run: |
+          node scripts/master-audit.mjs
+          node -e 'const s=require("./audit-evidence/after/summary.json");if(s.errors||s.pagesWithOverflow.length||s.violations.length)process.exit(1)'
       - name: Record original calculation demonstrations
-        if: success() || failure()
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
         run: node scripts/record-calculator-demos.mjs
       - name: Preserve source and results
         if: always()
