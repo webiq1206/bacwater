@@ -1,62 +1,16 @@
 {
-  "name": "bacwater",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "test": "tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts && tsx src/lib/__tests__/workspaces.test.ts && tsx src/lib/__tests__/audit-security.test.ts && tsx src/lib/__tests__/audit-calculation.test.ts && tsx src/lib/__tests__/remaining-scope.test.ts",
-    "prebuild": "npm run test",
-    "build": "next build --webpack",
-    "start": "next start",
-    "db:push": "prisma db push --skip-generate",
-    "db:seed": "tsx prisma/seed.ts"
-  },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.109.0",
-    "@auth/prisma-adapter": "^2.11.2",
-    "@hookform/resolvers": "^5.4.0",
-    "@prisma/client": "^6.19.3",
-    "@radix-ui/react-accordion": "^1.2.15",
-    "@radix-ui/react-checkbox": "^1.3.6",
-    "@radix-ui/react-dialog": "^1.1.18",
-    "@radix-ui/react-dropdown-menu": "^2.1.19",
-    "@radix-ui/react-label": "^2.1.11",
-    "@radix-ui/react-popover": "^1.1.18",
-    "@radix-ui/react-select": "^2.3.2",
-    "@radix-ui/react-slot": "^1.3.0",
-    "@radix-ui/react-switch": "^1.3.2",
-    "@radix-ui/react-tabs": "^1.1.16",
-    "@radix-ui/react-toast": "^1.2.18",
-    "@radix-ui/react-tooltip": "^1.2.11",
-    "@react-pdf/renderer": "^4.5.1",
-    "bcryptjs": "^3.0.3",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "date-fns": "^4.4.0",
-    "lucide-react": "^1.22.0",
-    "nanoid": "^5.1.16",
-    "next": "16.3.5",
-    "next-auth": "^5.0.0-beta.32",
-    "prisma": "^6.19.3",
-    "qrcode": "^1.5.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-hook-form": "^7.80.0",
-    "resend": "^6.16.0",
-    "tailwind-merge": "^3.6.0",
-    "zod": "^4.4.3",
-    "zustand": "^5.0.14"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
-    "@types/qrcode": "^1.5.6",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "tailwindcss": "^4",
-    "tsx": "^4.22.4",
-    "typescript": "^5"
-  },
-  "overrides": { "deepmerge-ts": "^8.0.0" }
+ "name":"bacwater","version":"0.1.0","private":true,
+ "scripts":{
+  "postinstall":"node scripts/prepare-font-loader.mjs",
+  "dev":"next dev",
+  "test":"tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts && tsx src/lib/__tests__/workspaces.test.ts && tsx src/lib/__tests__/audit-security.test.ts && tsx src/lib/__tests__/audit-calculation.test.ts && tsx src/lib/__tests__/remaining-scope.test.ts",
+  "prebuild":"npm run test","build":"next build --webpack","start":"next start","db:push":"prisma db push --skip-generate","db:seed":"tsx prisma/seed.ts"
+ },
+ "dependencies":{
+  "@anthropic-ai/sdk":"^0.109.0","@auth/prisma-adapter":"^2.11.2","@hookform/resolvers":"^5.4.0","@prisma/client":"^6.19.3",
+  "@radix-ui/react-accordion":"^1.2.15","@radix-ui/react-checkbox":"^1.3.6","@radix-ui/react-dialog":"^1.1.18","@radix-ui/react-dropdown-menu":"^2.1.19","@radix-ui/react-label":"^2.1.11","@radix-ui/react-popover":"^1.1.18","@radix-ui/react-select":"^2.3.2","@radix-ui/react-slot":"^1.3.0","@radix-ui/react-switch":"^1.3.2","@radix-ui/react-tabs":"^1.1.16","@radix-ui/react-toast":"^1.2.18","@radix-ui/react-tooltip":"^1.2.11","@react-pdf/renderer":"^4.5.1",
+  "bcryptjs":"^3.0.3","class-variance-authority":"^0.7.1","clsx":"^2.1.1","date-fns":"^4.4.0","lucide-react":"^1.22.0","nanoid":"^5.1.16","next":"16.3.5","next-auth":"^5.0.0-beta.32","prisma":"^6.19.3","qrcode":"^1.5.4","react":"19.2.4","react-dom":"19.2.4","react-hook-form":"^7.80.0","resend":"^6.16.0","tailwind-merge":"^3.6.0","zod":"^4.4.3","zustand":"^5.0.14"
+ },
+ "devDependencies":{"@tailwindcss/postcss":"^4","@types/bcryptjs":"^2.4.6","@types/node":"^20","@types/qrcode":"^1.5.6","@types/react":"^19","@types/react-dom":"^19","tailwindcss":"^4","tsx":"^4.22.4","typescript":"^5"},
+ "overrides":{"deepmerge-ts":"^8.0.0"}
 }
