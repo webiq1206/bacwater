@@ -44,3 +44,25 @@ header button[aria-controls="mobile-navigation"] svg {
   flex-shrink: 1;
   flex-wrap: wrap;
 }
+/* Layout choices are allowed to wrap just like the unit choices. Their
+   preferred horizontal grouping must not become a minimum page width. */
+.bac-page-content div:has(> button[aria-pressed]) {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.bac-page-content div:has(> button[aria-pressed]) > button {
+  max-width: 100%;
+  white-space: normal;
+}
+/* Compound names remain readable within their cards at enlarged text sizes. */
+.bac-page-content .grid > a.group {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.bac-page-content .grid > a.group > span {
+  min-width: 0;
+}
+.bac-page-content .grid > a.group > svg {
+  flex-shrink: 0;
+}
