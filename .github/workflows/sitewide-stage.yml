@@ -95,13 +95,13 @@ jobs:
           node scripts/audit-build-type-isolation.mjs seed
           npm run build 2>&1 | tee audit-evidence/build.log
           node scripts/audit-build-type-isolation.mjs verify 2>&1 | tee audit-evidence/build-type-isolation.log
-      - name: Commit verified source only to the isolated design branch
+      - name: Commit source only to the isolated design branch
         run: |
           test "$GITHUB_REF" = refs/heads/design/sitewide-2026-09-23
           python - <<'PY'
           import json,subprocess
           from pathlib import Path
-          paths=json.loads(Path('/tmp/bacwater-changed-paths.json').read_text())
+          paths=[p for p in json.loads(Path('/tmp/bacwater-changed-paths.json').read_text()) if not p.startswith('.github/workflows/')]
           subprocess.run(['git','add','--',*paths],check=True)
           PY
           if ! git diff --cached --quiet; then
