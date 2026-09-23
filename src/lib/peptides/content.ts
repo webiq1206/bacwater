@@ -17,6 +17,7 @@ export interface PeptideContent {
   uses: string;
   /** Peptide-specific mixing, handling, or storage caveat. Optional. */
   caveat?: string;
+  sources?: string[];
   /** Brand names, alternate spellings, or commonly-searched aliases. Optional. */
   aka?: string;
   /** Extra FAQ entries beyond the auto-generated per-strength and storage ones. */
@@ -25,168 +26,239 @@ export interface PeptideContent {
 
 /** Shared framing per category, used as supporting context on each page. */
 export const CATEGORY_CONTEXT: Record<PeptideCategory, string> = {
-  healing:
-    "Healing and recovery peptides are among the most commonly reconstituted research compounds. The reconstitution process is the same as any other peptide: add bacteriostatic water, swirl gently, and refrigerate.",
-  growth:
-    "Growth hormone secretagogues (peptides studied for nudging the body's own growth-hormone signals) are usually mixed at low strength, because the amounts studied are small. Picking the right amount of BAC water keeps each dose on an easy-to-read mark on the syringe.",
-  metabolic:
-    "Metabolic peptides include the GLP-1 class (they act on a body signal called GLP-1, which is studied in research for its role in appetite and blood sugar pathways). They are often reconstituted for research. The amounts studied vary a lot, so working out the BAC water for your exact vial matters more here than almost anywhere.",
-  cognitive:
-    "Cognitive research peptides are typically reconstituted in small volumes. The reconstitution method is standard, and shelf life once mixed follows the same refrigeration rules as other peptides.",
-  cosmetic:
-    "Cosmetic and skin research peptides reconstitute the same way as any other peptide. Some carry a natural color once mixed, which is normal and not a sign of a problem.",
-  reproductive:
-    "Reproductive research peptides are reconstituted with bacteriostatic water using the standard method. Verify the strength and units printed on your vial carefully, since labeling conventions vary in this group.",
-  longevity:
-    "Longevity research peptides are reconstituted using the standard method. Once mixed, they follow the same refrigerated shelf-life rules as other peptides.",
-  other:
-    "Reconstitution works the same way for any peptide: add bacteriostatic water, swirl gently, refrigerate, and calculate the water amount so your dose lands at a clean number on the syringe.",
+  "healing": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication.",
+  "growth": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication.",
+  "metabolic": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication.",
+  "cognitive": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication.",
+  "cosmetic": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication.",
+  "reproductive": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication.",
+  "longevity": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication.",
+  "other": "This grouping is for navigation. It does not identify a preparation method or establish a treatment indication."
 };
-
 export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
   "bpc-157": {
-    what: "BPC-157 is a synthetic peptide derived from a protein found in gastric juice, studied in research settings for tissue repair and recovery.",
-    uses: "In research it is most associated with connective tissue, gut, and general recovery models. It is one of the most commonly reconstituted peptides.",
-    caveat: "BPC-157 is light-sensitive once mixed. Keep the reconstituted vial in its box or wrapped in foil in the refrigerator.",
+    "what": "BPC-157 appears in published preclinical research, including the rat ligament and tendon studies linked below.",
+    "uses": "Those experimental conditions are not a human preparation method. This page separates the research references from concentration arithmetic.",
+    "caveat": "FDA identifies safety uncertainties for BPC-157. A vial name, numerical result or cited animal study cannot resolve the identity and suitability of a specific product.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks",
+      "https://pubmed.ncbi.nlm.nih.gov/20225319/",
+      "https://pubmed.ncbi.nlm.nih.gov/16583442/"
+    ]
   },
   "tb-500": {
-    what: "TB-500 is a synthetic fragment of the protein Thymosin Beta-4, studied in research for tissue repair and flexibility.",
-    uses: "Researchers often pair it conceptually with BPC-157 in recovery models. Because studied amounts are larger than most peptides, doses are measured in milligrams rather than micrograms.",
-    aka: "Also written as Thymosin Beta-4 or TB500.",
-    caveat: "Because a typical research amount is larger, a 1 mL insulin syringe is usually the most practical choice.",
+    "what": "The TB-500 label needs an identity check. Full-length thymosin beta-4 and a peptide fragment are not interchangeable research materials.",
+    "uses": "The cited wound study concerns thymosin beta-4. Its observations should not be silently assigned to a different material sold under a shorthand name.",
+    "caveat": "Confirm the exact sequence or product identity. A correct mg/mL calculation cannot establish that two similarly named materials are the same.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks",
+      "https://pubmed.ncbi.nlm.nih.gov/10469335/"
+    ]
   },
-  ipamorelin: {
-    what: "Ipamorelin is a lab-made peptide. It is a growth hormone secretagogue, which means it is studied for gently nudging the body's own growth-hormone signals.",
-    uses: "It is frequently reconstituted alongside CJC-1295 in growth hormone research. Studied amounts are small, so concentration and syringe choice matter.",
-    caveat: "Small research amounts mean a 0.3 mL insulin syringe with half-unit marks is often easier to read than a 1 mL syringe.",
+  "ipamorelin": {
+    "what": "Ipamorelin was investigated in a published rat bone-growth experiment. The original study record is linked below.",
+    "uses": "That reference describes a specific experimental design, not a current regimen for a reader. A combination-product label also needs each component amount.",
+    "caveat": "Do not choose a syringe or schedule from a research amount on this page. Use the actual concentration and the instructions already supplied for the product.",
+    "sources": [
+      "https://pubmed.ncbi.nlm.nih.gov/10373343/",
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ]
   },
   "cjc-1295-no-dac": {
-    what: "CJC-1295 without DAC, also called Mod GRF 1-29, is a lab-made peptide in the growth-hormone group. It has a short half-life, which means it does not last long in the body once it is used.",
-    uses: "It is often studied together with Ipamorelin. The 'no DAC' version is less stable once reconstituted, so it is typically mixed in smaller batches.",
-    aka: "Also searched as CJC no DAC or Mod GRF 1-29.",
-    caveat: "This version is less stable in solution. Use it within about three weeks and keep it cold and dark.",
+    "what": "This entry preserves the distinct no-DAC label rather than treating it as the long-acting preparation in the linked CJC-1295 research.",
+    "uses": "The long-acting CJC-1295 study is not displayed here as a study of the no-DAC product. Similar names do not establish an identical formulation.",
+    "caveat": "Verify the exact variant and any blend ratio. The former fixed three-week storage claim was removed because it was not tied to an identified formulation.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks",
+      "https://pubmed.ncbi.nlm.nih.gov/17018654/"
+    ],
+    "aka": "Search labels may include CJC no DAC or Mod GRF 1-29; verify the exact identity rather than assuming equivalence."
   },
   "cjc-1295-with-dac": {
-    what: "CJC-1295 with DAC is a lab-made peptide in the growth-hormone group. The 'DAC' part is added so it lasts longer in the body (a longer half-life) than the no-DAC version.",
-    uses: "The DAC extends how long it stays active in research models compared to the no-DAC version, which is the main reason researchers choose one over the other.",
-    aka: "Also searched as CJC with DAC.",
-    caveat: "Studied amounts are larger than the no-DAC version, so verify which variant your vial contains before calculating.",
+    "what": "The long-acting CJC-1295 research below examined hormone secretion after a single administration in healthy adult men.",
+    "uses": "This is a different reference question from a no-DAC product. The experiment does not establish the preparation instructions for an unidentified vial.",
+    "caveat": "Do not borrow an amount, frequency or storage period from a similarly named variant. Preserve the full variant name with your records.",
+    "sources": [
+      "https://pubmed.ncbi.nlm.nih.gov/17018654/",
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ]
   },
-  sermorelin: {
-    what: "Sermorelin is a lab-made peptide in the growth-hormone group. It is one of the shorter pieces studied in this class.",
-    uses: "It is a long-standing research compound in the growth hormone secretagogue group. Reconstitution follows the standard method.",
-    caveat: "Sermorelin is relatively delicate once mixed. Refrigerate it right away and use it within about three weeks.",
+  "sermorelin": {
+    "what": "The sermorelin entry is a label-based calculation reference, not a prescription or a complete evidence review.",
+    "uses": "Distinguish a total vial amount from a solution concentration. An amount written in mg and an amount written in mcg differ by a factor of 1,000.",
+    "caveat": "This page does not assign a fixed storage period or standard mixing method to every sermorelin formulation.",
+    "sources": [
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    ]
   },
-  hexarelin: {
-    what: "Hexarelin is a growth hormone releasing peptide known for its potency in research models.",
-    uses: "It sits in the same secretagogue family as Ipamorelin and GHRP peptides. Studied amounts are small.",
+  "hexarelin": {
+    "what": "This hexarelin reference accepts a stated mass and final solution volume. It does not verify the supplied material.",
+    "uses": "For a small stated amount, retain all relevant decimal places before calculating. A convenient displayed mark does not establish measurable device precision.",
+    "caveat": "No potency comparison or recommended amount follows from this calculator. Match the exact product identity and units in your existing instructions.",
+    "sources": [
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    ]
   },
-  semaglutide: {
-    what: "Semaglutide is a lab-made peptide. It is one of the most studied peptides for how the body handles food and weight. It works on a body signal called GLP-1 (a GLP-1 receptor agonist).",
-    uses: "It is frequently reconstituted for research into metabolic and appetite pathways. Studied amounts start very low and increase slowly.",
-    aka: "Sometimes searched as GLP-3 (a common misspelling of GLP-1) and known by the brand names Ozempic and Wegovy.",
-    caveat: "Research amounts vary widely and are usually very small. Confirm the exact milligram strength printed on your vial before calculating.",
-    faqs: [
-      {
-        q: "Is semaglutide a GLP-1 or GLP-3?",
-        a: "Semaglutide is a GLP-1 receptor agonist. There is no drug called GLP-3, which is almost always a misspelling of GLP-1. If you searched for how to mix GLP-3, this is the page you want.",
-      },
+  "semaglutide": {
+    "what": "Semaglutide products must be distinguished by formulation and actual labeling, not only by a familiar brand or active-ingredient name.",
+    "uses": "FDA warns about unapproved GLP-1 products and differences involving semaglutide salt forms. An unrelated powder cannot be treated as an approved finished product.",
+    "caveat": "An existing liquid may already have a stated concentration. Do not add a vehicle merely because a page is called a reconstitution calculator.",
+    "sources": [
+      "https://www.fda.gov/drugs/drug-alerts-and-statements/fdas-concerns-unapproved-glp-1-drugs-used-weight-loss"
     ],
+    "faqs": [
+      {
+        "q": "Can I transfer syringe units from a different semaglutide product?",
+        "a": "Not from the unit count alone. A different concentration changes the mass represented by the same liquid volume. Confirm the exact label and instructions with the dispensing professional."
+      }
+    ]
   },
-  tirzepatide: {
-    what: "Tirzepatide is a lab-made peptide studied for how the body handles food and weight. It works on two body signals at once, called GIP and GLP-1 (a dual receptor agonist), instead of just one.",
-    uses: "It acts on two receptor pathways rather than one, which is what distinguishes it from single-agonist GLP-1 peptides in research.",
-    aka: "Known by the brand names Mounjaro and Zepbound, and sometimes searched as GLP-3 or GLP-1.",
-    caveat: "Tirzepatide vials come in a wide range of strengths. Never freeze the reconstituted solution, and verify the exact strength on your vial before calculating.",
-    faqs: [
-      {
-        q: "How much BAC water do I add to a 30 mg or 60 mg tirzepatide vial?",
-        a: "Use the calculator above and enter your exact vial strength. Larger vials such as 30 mg or 60 mg simply reach a higher concentration for the same BAC water amount, so your dose lands at fewer syringe units. Confirm the strength printed on your vial.",
-      },
-      {
-        q: "Is tirzepatide the same as Mounjaro or Zepbound?",
-        a: "Mounjaro and Zepbound are brand names for tirzepatide. Research vials are labeled by milligram strength rather than brand, so calculate based on the milligrams printed on your vial.",
-      },
+  "tirzepatide": {
+    "what": "This page checks concentration relationships for numbers associated with a tirzepatide label. It does not select a formulation.",
+    "uses": "A total such as 30 mg or 60 mg is not a final liquid volume. Without the actual volume or concentration, many different numerical solutions are possible.",
+    "caveat": "Do not treat a research-labeled vial as interchangeable with a finished medicine. A larger stated mass also does not establish a safe mixing volume or use period.",
+    "sources": [
+      "https://www.fda.gov/drugs/drug-alerts-and-statements/fdas-concerns-unapproved-glp-1-drugs-used-weight-loss"
     ],
+    "faqs": [
+      {
+        "q": "How much water corresponds to a 30 mg or 60 mg label?",
+        "a": "Mass alone does not specify a volume. Use the exact product instructions or the stated concentration of an existing solution. The calculator checks the arithmetic after those facts are known."
+      }
+    ]
   },
-  retatrutide: {
-    what: "Retatrutide is an emerging triple receptor agonist peptide studied in metabolic research.",
-    uses: "It is one of the newer metabolic research compounds. Because it is emerging, studied amounts and vial strengths vary, so calculating for your specific vial is important.",
-    aka: "Often shortened to reta.",
-    caveat: "As an emerging compound, published references are limited. Verify your vial strength and confirm your intended amount before mixing.",
+  "retatrutide": {
+    "what": "Retatrutide is discussed in ongoing drug-development research, not established here as an approved consumer product.",
+    "uses": "FDA states that retatrutide is not a component of an FDA-approved drug. A trial mention does not verify a product marketed under the same name.",
+    "caveat": "The calculator is not a route to choosing a research regimen or preparing an unapproved product for personal use.",
+    "sources": [
+      "https://www.fda.gov/drugs/drug-alerts-and-statements/fdas-concerns-unapproved-glp-1-drugs-used-weight-loss"
+    ],
+    "aka": "A shortened search label such as reta still needs exact product identification."
   },
-  cagrilintide: {
-    what: "Cagrilintide is a lab-made peptide studied for how the body handles food and weight. It is an amylin analog (a lab-made copy of a natural body signal called amylin) and is often studied next to GLP-1 peptides.",
-    uses: "It is studied for its complementary action to GLP-1 compounds. Reconstitution is standard.",
+  "cagrilintide": {
+    "what": "Cagrilintide is another drug-development name that requires a clear distinction between research and an identified finished product.",
+    "uses": "FDA states that cagrilintide is not a component of an FDA-approved drug. This page does not extend another product's instructions to it.",
+    "caveat": "A combined-product or combination-study name does not supply the individual amounts or establish that separate substances can be mixed.",
+    "sources": [
+      "https://www.fda.gov/drugs/drug-alerts-and-statements/fdas-concerns-unapproved-glp-1-drugs-used-weight-loss"
+    ]
   },
   "mots-c": {
-    what: "MOTS-c is a lab-made copy of a peptide that comes from the mitochondria, the tiny power plants inside cells. It is studied in metabolic and longevity research.",
-    uses: "Studied amounts are relatively large compared with growth peptides, so doses are often measured in milligrams.",
+    "what": "MOTS-c is listed among the substances discussed in FDA's compounding safety-risk information.",
+    "uses": "This reference does not convert a category such as metabolic or longevity research into evidence of a benefit for the reader.",
+    "caveat": "Confirm whether a label states total mg, mg/mL or an amount per container. The calculator will not infer a duration, cycle or storage period.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks",
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    ]
   },
-  epithalon: {
-    what: "Epithalon is a small lab-made peptide (it is made of four building blocks, so it is called a tetrapeptide). It is studied in longevity and cellular research.",
-    uses: "It is commonly researched in cycles. Reconstitution follows the standard method.",
-    aka: "Also spelled Epitalon. Both spellings refer to the same peptide.",
+  "epithalon": {
+    "what": "The spellings epithalon and epitalon can appear in search and product descriptions. Use the exact identity supplied in the product documentation.",
+    "uses": "FDA lists Epitalon in its information about compounding safety uncertainties. Naming similarity is not a quality or compatibility test.",
+    "caveat": "No research cycle is preselected here. A count of portions is an arithmetic result, not a schedule.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ]
   },
   "ghk-cu": {
-    what: "GHK-Cu is a small lab-made peptide (made of three building blocks, so it is called a tripeptide) that holds onto copper. It is studied in skin, hair, and tissue research.",
-    uses: "It is one of the most common cosmetic research peptides and is available in higher vial strengths than most peptides.",
-    aka: "Also called copper peptide.",
-    caveat: "A blue tint after reconstitution is completely normal and comes from the copper. It is not a sign of contamination.",
+    "what": "GHK-Cu is a copper-peptide complex examined in the rat wound-chamber experiment linked below.",
+    "uses": "That experiment concerns a defined material and experimental conditions. It does not verify cosmetic, laboratory or injectable products found under similar names.",
+    "caveat": "Color cannot establish sterility or purity. The earlier claim that a blue tint is not a sign of contamination was too broad and has been removed.",
+    "sources": [
+      "https://pubmed.ncbi.nlm.nih.gov/8227353/",
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ]
   },
   "melanotan-2": {
-    what: "Melanotan II is a lab-made copy of a natural hormone that affects skin color (a melanocyte-stimulating hormone). It is studied in pigmentation research.",
-    uses: "It is studied for its effect on melanin pathways. Researchers typically begin with a very small test amount.",
-    aka: "Often abbreviated MT2 or MT-2.",
-    caveat: "Because responses vary, researchers usually start with a very low test amount and observe before adjusting.",
+    "what": "A small 1998 human experiment investigated Melanotan-II under controlled conditions. Its record is linked as historical research.",
+    "uses": "The published experiment and its reported adverse effects are not instructions to start with a test amount or adjust a personal regimen.",
+    "caveat": "This page does not recommend pigmentation use or a preparation method. A calculator cannot determine whether a product is appropriate for someone.",
+    "sources": [
+      "https://pubmed.ncbi.nlm.nih.gov/9679884/",
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ],
+    "aka": "Also searched as Melanotan II, MT2 or MT-2."
   },
   "ss-31": {
-    what: "SS-31, also known as Elamipretide, is a lab-made peptide that targets the mitochondria (the tiny power plants inside cells). It is studied in cellular energy research.",
-    uses: "It is studied for its interaction with mitochondrial membranes. Reconstitution is standard.",
-    aka: "Also known as Elamipretide.",
+    "what": "SS-31 is also known as elamipretide. FDA approved the specific product Forzinity in September 2025 for a defined indication.",
+    "uses": "An approval of that product does not authenticate any powder or vial carrying the SS-31 name. This site does not transfer the finished product's instructions to an unrelated formulation.",
+    "caveat": "Use the exact formulation and its label. The former blanket research-only classification did not capture the approved-product distinction.",
+    "sources": [
+      "https://www.fda.gov/drugs/drug-trials-snapshots/drug-trials-snapshots-forzinity"
+    ]
   },
-  selank: {
-    what: "Selank is a lab-made peptide based on a natural one that helps steer the immune system. It is studied in cognitive research.",
-    uses: "It is studied in behavioral and cognitive research models. Reconstitution follows the standard method.",
+  "selank": {
+    "what": "The Selank reference is a place to check label units and concentration, not a claim about a cognitive benefit.",
+    "uses": "FDA's compounding information notes safety-data limitations for Selank acetate. The acetate qualifier is part of the identity question.",
+    "caveat": "Do not substitute route or preparation instructions from another cognitive-research entry. The category is navigation, not a protocol.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ]
   },
-  semax: {
-    what: "Semax is a synthetic peptide studied in cognitive and neurological research.",
-    uses: "It is often grouped with Selank in nootropic research. Studied amounts are small.",
+  "semax": {
+    "what": "A 2006 Semax experiment measured molecular and behavioral effects in rats. The source below identifies the species and study setting.",
+    "uses": "That animal experiment cannot establish a human amount or validate all products sold under the same name. This is not a comprehensive review of clinical evidence.",
+    "caveat": "Do not transfer a study's route or formulation to an unrelated vial. The calculator checks numbers, not product equivalence.",
+    "sources": [
+      "https://pubmed.ncbi.nlm.nih.gov/16996037/",
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ]
   },
   "aod-9604": {
-    what: "AOD-9604 is a lab-made piece of the growth-hormone molecule (a fragment, not the whole thing). It is studied in metabolic research.",
-    uses: "It is a fragment rather than a full growth hormone peptide, which is what distinguishes it in research. Studied amounts are small.",
+    "what": "AOD-9604 appears in FDA's discussion of compounding safety uncertainties. The label should identify the exact material.",
+    "uses": "This entry does not infer an amount from the growth-hormone category or present that category as a treatment indication.",
+    "caveat": "A comparison with another fragment or full protein requires identity and formulation evidence; equal milligram totals do not establish equivalent biological effects.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks"
+    ]
   },
   "kisspeptin-10": {
-    what: "Kisspeptin-10 is a peptide studied in reproductive and hormonal signaling research.",
-    uses: "It is studied for its role in hormonal signaling pathways. Vial strengths vary, so verify your label.",
-    caveat: "Strengths in this group vary. Confirm the milligram amount on your vial before calculating.",
+    "what": "The numeric suffix in kisspeptin-10 is part of the name, not a vial mass or a syringe-unit instruction.",
+    "uses": "Keep a product identifier separate from fields for amount and final volume. A number in a compound name must not become a calculator input automatically.",
+    "caveat": "Verify the exact label and units. This page does not choose a reproductive-health intervention or infer a regimen.",
+    "sources": [
+      "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks",
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    ]
   },
   "pt-141": {
-    what: "PT-141, also known as Bremelanotide, is a lab-made peptide that works on a body signal system called melanocortin. It is studied in reproductive research.",
-    uses: "It is related to Melanotan II but studied for different pathways. Reconstitution is standard.",
-    aka: "Also known as Bremelanotide.",
-  },
-  hcg: {
-    what: "HCG is a hormone studied in reproductive research and typically supplied as a lyophilized research powder.",
-    uses: "It is reconstituted the same way as peptides, but its strength is often stated in international units (IU) rather than milligrams.",
-    aka: "Research HCG.",
-    caveat: "HCG strength is frequently labeled in IU, not mg. Confirm the units on your vial before using any milligram-based calculator, since the two are not interchangeable.",
-    faqs: [
-      {
-        q: "My HCG vial is labeled in IU, not mg. What do I do?",
-        a: "HCG is commonly measured in international units rather than milligrams. If your vial is labeled in IU, use the IU value your product documentation provides rather than a milligram-based calculation, since IU and mg are not directly interchangeable for HCG.",
-      },
+    "what": "PT-141 is a search name associated with bremelanotide. A product name and its finished formulation still need to be verified separately.",
+    "uses": "A historical or approved-product reference is not evidence that another supplied material has the same concentration or instructions.",
+    "caveat": "The number 141 is part of the compound label, not an amount. The calculator does not select a route, dose or schedule.",
+    "sources": [
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
     ],
+    "aka": "Also searched as bremelanotide."
+  },
+  "hcg": {
+    "what": "An HCG label may express biological activity in international units, abbreviated IU, rather than mass in mg.",
+    "uses": "Use the matching IU calculation below when that is how the product is labeled. Product IU and U-100 syringe-volume units are different quantities.",
+    "caveat": "There is no universal mg-to-IU conversion. The generic mass-based plan builder must not receive an IU value in its milligram field.",
+    "sources": [
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    ],
+    "faqs": [
+      {
+        "q": "Are 100 IU of a product the same as 100 syringe units?",
+        "a": "No. A product's IU describes activity. U-100 syringe units describe liquid volume. The product concentration in IU/mL is needed to connect an entered activity amount with a volume."
+      }
+    ]
   },
   "glow-blend": {
-    what: "The Glow Blend is a combination product containing GHK-Cu and BPC-157 in a single vial, studied in skin and recovery research.",
-    uses: "Because it is a blend, every draw delivers both peptides in proportion. It is reconstituted as one product using the total vial strength on the label.",
-    caveat: "Reference the label for the exact ratio of each peptide. Verify both component amounts, and expect a blue tint from the copper in GHK-Cu.",
+    "what": "Glow is a blend label, not a guaranteed ingredient list or fixed ratio. Read every component and its stated amount.",
+    "uses": "For a defined, uniformly mixed two-component solution, the mass ratio remains constant across portions. A total mass alone does not identify each component's contribution.",
+    "caveat": "The two-component planner does not validate compatibility and cannot represent an unknown or three-component formula. Do not collapse a blend into one component's amount.",
+    "sources": [
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    ]
   },
-  custom: {
-    what: "This page covers reconstitution for any peptide not listed individually, using the same deterministic math and standard method.",
-    uses: "If your peptide is not in our roster, the reconstitution principles are identical: add bacteriostatic water, swirl gently, refrigerate, and calculate the water amount for a clean dose. Verify every value against your own vial label.",
-    caveat: "Because this is a general page, there is no fixed dosage table. Enter your own vial strength and dose in the calculator, and always confirm against the label on your vial.",
-  },
+  "custom": {
+    "what": "Use the custom reference for a material not listed by name, once its relevant mass and final volume are known.",
+    "uses": "The arithmetic is general, but formulation and compatibility are not. This page does not impose one preparation method on every substance.",
+    "caveat": "The mass fields accept mg or mcg, not biological IU. A name typed into a free-text field does not create verified product facts.",
+    "sources": [
+      "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    ]
+  }
 };

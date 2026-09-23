@@ -18,7 +18,7 @@ const inputSchema = z.object({
   peptideName: z.string().max(160).optional().nullable(),
   vialStrengthMg: z.number().positive(),
   doseMcg: z.number().positive(),
-  bacWaterMl: z.number().positive().optional(),
+  bacWaterMl: z.number().finite().positive(),
   syringeType: z.enum([
     "insulin-0.3ml",
     "insulin-0.5ml",

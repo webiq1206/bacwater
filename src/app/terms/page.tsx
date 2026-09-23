@@ -5,10 +5,10 @@ import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 export const metadata = {
   alternates: { canonical: "/terms" },
   title: "Terms of Service",
-  description: "Terms of service for BACwater.ai. Research use, accuracy, orders, returns, and site usage terms.",
+  description: "Terms of service for BACwater.ai. Educational calculations, accuracy limitations and site usage terms.",
   openGraph: {
     title: "Terms of Service",
-    description: "Terms of service for BACwater.ai. Research use, accuracy, orders, returns, and site usage terms.",
+    description: "Terms of service for BACwater.ai. Educational calculations, accuracy limitations and site usage terms.",
     url: "/terms",
     type: "website",
     siteName: "BACwater.ai",
@@ -36,11 +36,9 @@ export default function TermsPage() {
         </p>
         <h2>1. Research use only</h2>
         <p>
-          Products sold through BACwater.ai are intended for laboratory research
-          and educational purposes only. They are not intended for human or
-          veterinary diagnostic or therapeutic use. You are responsible for
-          complying with all local, state, and federal regulations that apply
-          to your use of these products.
+          The current website provides educational calculations and reference content.
+          It does not sell products or provide diagnostic or therapeutic services.
+          You are responsible for complying with requirements applicable to your use of the website.
         </p>
         <h2>2. No medical advice</h2>
         <p>
@@ -57,10 +55,10 @@ export default function TermsPage() {
           your vial and your syringe. We are not liable for errors resulting
           from mislabeled products or inputs.
         </p>
-        <h2>4. Orders and returns</h2>
+        <h2>4. Current availability</h2>
         <p>
-          Orders ship within 1-2 business days. Sealed items are returnable
-          within 30 days. Opened items are not returnable for safety reasons.
+          There is no active checkout or order fulfillment through this website.
+          Historical references to shipping and returns do not describe the current service.
         </p>
         <h2>5. Changes</h2>
         <p>We may update these terms at any time. Continued use constitutes acceptance.</p>

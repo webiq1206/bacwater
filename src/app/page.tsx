@@ -1,376 +1,43 @@
 import Link from "next/link";
-import { Term } from "@/components/common/term";
-import { RelatedReadingDynamic } from "@/components/learn/related-reading-dynamic";
-import {
-  ArrowRight,
-  Beaker,
-  BookOpen,
-  Calculator,
-  Check,
-  FileText,
-  Timer,
-  Wand2,
-} from "lucide-react";
+import { ArrowRight, Calculator, FileText, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-import { CORE_BACWATER_REFERENCES } from "@/lib/content/references";
+import { SectionReveals } from "@/components/common/section-reveals";
 
 export const metadata = {
   title: "BACwater.ai: Free Calculators, Saved Plans and Vial Labels",
   description: "Check concentration, syringe units and unit conversions. Use the free calculators, save your entered values, and print labels. No product sales or dose recommendations.",
   alternates: { canonical: "/" },
 };
-
-const POPULAR_PEPTIDES = [
-  { slug: "bpc-157", label: "BPC-157" },
-  { slug: "tb-500", label: "TB-500" },
-  { slug: "semaglutide", label: "Semaglutide" },
-  { slug: "tirzepatide", label: "Tirzepatide" },
-  { slug: "ipamorelin", label: "Ipamorelin" },
-  { slug: "ghk-cu", label: "GHK-Cu" },
+const compounds = [["bpc-157","BPC-157"],["tb-500","TB-500"],["semaglutide","Semaglutide"],["tirzepatide","Tirzepatide"],["ipamorelin","Ipamorelin"],["ghk-cu","GHK-Cu"]];
+const tools = [
+  {href:"/tools/bac-water",title:"BAC water and concentration",text:"Enter the stated total amount and final volume. See concentration and the volume for a separately specified amount."},
+  {href:"/tools/syringe-units",title:"U-100 units and mL",text:"Convert in either direction. The scale ratio does not establish the capacity or graduation spacing of your device."},
+  {href:"/tools/mg-to-mcg",title:"Milligrams and micrograms",text:"Convert mass units without confusing them with volume. Small accepted decimals keep their value."},
 ];
-
-const COMMON_COMPARISONS = [
-  { slug: "sterile-water", label: "BAC water vs sterile water" },
-  { slug: "saline", label: "BAC water vs saline" },
-];
-
-const BASICS_QA = [
-  {
-    q: "What is bac water?",
-    a: "Sterile water plus 0.9% benzyl alcohol preservative.",
-  },
-  {
-    q: "How much water for a 5 mg vial?",
-    a: "Follow the exact product instructions. Vial strength alone does not determine a suitable mixing volume.",
-  },
-  {
-    q: "How long can an opened vial be used?",
-    a: "Follow the instructions that came with your product. General advice does not tell you how long yours lasts.",
-  },
-  {
-    q: "Units to mL",
-    a: "100 units = 1 mL on a U-100 syringe.",
-  },
-  {
-    q: "mg to mcg",
-    a: "1 mg = 1,000 mcg.",
-  },
-];
-
-const PATHS = [
-  {
-    href: "/plan",
-    icon: Wand2,
-    title: "Build my plan",
-    body: "Answer a few short questions about the numbers on your vial and get an exact reconstitution plan with every step shown, syringe units, a PDF, and a printable label.",
-    cta: "Start the guided builder",
-  },
-  {
-    href: "/tools",
-    icon: Calculator,
-    title: "Calculators",
-    body: "Already know your numbers? Use a single calculator: how much water to add, how many syringe units, mg to mcg, and more.",
-    cta: "Open the calculators",
-  },
-  {
-    href: "/learn",
-    icon: BookOpen,
-    title: "Learning center",
-    body: "Plain-language guides on bacteriostatic water, how the math works, reading a syringe, and what you cannot know about your vial.",
-    cta: "Read the guides",
-  },
-];
-
-export default async function HomePage() {
-  return (
-    <div>
-      <WebPageJsonLd
-        name="BAC Water Concentration Calculator"
-        description="Work out concentration, how much to measure, and how many syringe units that is, from the numbers on your vial. Every step is shown. Nothing is for sale."
-        url="/"
-        citations={CORE_BACWATER_REFERENCES}
-      />
-      {/* Hero */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-32 pb-16 sm:pb-20 text-center">
-        <div className="eyebrow">Concentration &amp; measurement calculator</div>
-        <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-serif font-medium tracking-tight leading-[1.1] text-balance">
-          BAC Water Calculator and Mixing Guide
-        </h1>
-        <p className="mt-6 mx-auto max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
-          Enter the numbers on your vial. We work out the concentration, how much
-          to measure, and how many syringe units that is. We show every step, and
-          label every number by where it came from.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Button asChild size="xl" variant="brand">
-            <Link href="/plan">
-              Guide me step by step <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild size="xl" variant="outline">
-            <Link href="/peptide-calculator">Enter everything at once</Link>
-          </Button>
-        </div>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5 accent-check" /> Every step shown
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5 accent-check" /> Nothing is guessed
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5 accent-check" /> Every number labeled
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5 accent-check" /> Research use only
-          </span>
-        </div>
-        <div className="mt-10 mx-auto max-w-md bg-surface border border-border rounded-2xl p-4 text-sm text-muted-foreground text-center">
-          <strong className="text-foreground">Not sure where to start?</strong>{" "}
-          The guided builder walks you through it one question at a time, or open
-          your{" "}
-          <Link href="/peptides" className="text-foreground font-medium underline">
-            compound&apos;s calculator
-          </Link>
-          .
-        </div>
-      </section>
-
-      {/* Definition + quick reference (AEO answer block), warm tonal band.
-         Two columns, mirroring the "How it works" band: the definition prose on
-         the left, the quick reference as a card that lifts off the warm band on
-         the right, so the section fills its width rather than trailing off. */}
-      <section className="section-muted">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16 md:items-center">
-          {/* Left: plain-language definition */}
-          <div>
-            <div className="eyebrow">The basics</div>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
-              What is bacteriostatic water?
-            </h2>
-            <p className="mt-4 text-lg text-foreground/90 leading-relaxed">
-              Bacteriostatic water is sterile water with 0.9% benzyl alcohol in
-              it. Sterile means it had no germs in it when it was made. The benzyl
-              alcohol, a{" "}
-              <Term id="preservative">preservative</Term>, slows germs from
-              growing after you open the vial, so you can use the same vial more
-              than once. It is not safe for newborn babies. People use it to turn
-              dried peptide powder into a liquid they can measure. The calculators
-              here work out how much to add.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-              <Link href="/tools/bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Bac water calculator</Link>
-              <Link href="/learn/what-is-bac-water" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">What is bac water?</Link>
-              <Link href="/faq" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
-            </div>
-          </div>
-
-          {/* Right: quick reference card */}
-          <div className="border border-border rounded-2xl p-6 sm:p-8">
-            <div className="eyebrow">Quick reference</div>
-            <dl className="mt-4 divide-y divide-border">
-              {BASICS_QA.map((item) => (
-                <div key={item.q} className="py-3.5 first:pt-0 last:pb-0">
-                  <dt className="text-sm font-medium text-foreground">{item.q}</dt>
-                  <dd className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                    {item.a}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-        </div>
-      </section>
-
-      {/* Three paths (bone) */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
-        <div className="grid gap-0 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
-          {PATHS.map((p) => {
-            const Icon = p.icon;
-            return (
-              <Link key={p.href} href={p.href} className="group py-8 md:py-0 md:px-8 first:pt-0 md:first:pl-0 last:pb-0 md:last:pr-0">
-                <Icon className="h-5 w-5 accent-check" />
-                <h3 className="mt-4 text-lg font-serif font-medium tracking-tight">
-                  {p.title}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                  {p.body}
-                </p>
-                <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
-                  {p.cta} <ArrowRight className="h-4 w-4" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* How it works, charcoal band, the page's dark punctuation */}
-      <section className="section-dark">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16">
-          <div>
-            <div className="eyebrow">How it works</div>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
-              How the math works.
-            </h2>
-            <ul className="mt-8 space-y-6">
-              {[
-                {
-                  icon: Beaker,
-                  t: "Enter your numbers",
-                  b: "Compound, vial amount, how much you want to measure, and your syringe.",
-                },
-                {
-                  icon: FileText,
-                  t: "See every step",
-                  b: "Concentration, how much to measure, syringe units, and how many measurements per vial, with the formula shown.",
-                },
-                {
-                  icon: Timer,
-                  t: "Download, print, save",
-                  b: "A PDF and a printable vial label with a QR code back to the plan.",
-                },
-                {
-                  icon: Check,
-                  t: "Every number labeled",
-                  b: "What you typed, what the site worked out, and what it did not decide.",
-                },
-              ].map((s) => (
-                <li key={s.t} className="flex items-start gap-4">
-                  <s.icon className="h-5 w-5 accent-check mt-0.5 shrink-0" />
-                  <div>
-                    <div className="font-medium">{s.t}</div>
-                    <div className="text-sm text-muted-foreground mt-0.5">{s.b}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild variant="brand">
-                <Link href="/plan">Start the builder</Link>
-              </Button>
-              <Button asChild variant="ghost">
-                <Link href="/learn">Learn first</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="border border-border rounded-2xl p-6 sm:p-8" style={{ background: "var(--color-surface-raised)" }}>
-            <div className="eyebrow">Example</div>
-            <div className="mt-2 text-xl font-serif font-medium">BPC-157</div>
-            <div className="rule my-5" />
-            <dl className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Vial amount</dt>
-                <dd>5 mg</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">BAC water</dt>
-                <dd>2 mL</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Concentration</dt>
-                <dd>2.5 mg/mL</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Amount to measure</dt>
-                <dd>0.25 mg (250 mcg)</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Syringe units</dt>
-                <dd className="font-medium">10 units</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Measurements per vial</dt>
-                <dd>20</dd>
-              </div>
-            </dl>
-            <div className="rule my-5" />
-            <p className="text-sm text-muted-foreground">
-              This measures <b style={{ color: "var(--color-accent-guide)" }}>10 units</b> on a 1 mL insulin syringe.
-            </p>
-          </div>
-        </div>
-        </div>
-      </section>
-
-      {/* Popular peptides + comparisons (hub-and-spoke), warm tonal band */}
-      <section className="section-muted">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
-        <div className="eyebrow">Explore</div>
-        <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
-          Compounds and guides
-        </h2>
-        <p className="mt-4 max-w-2xl text-muted-foreground leading-relaxed">
-          Open the reconstitution calculator and reference for a compound, or
-          compare bacteriostatic water with other diluents.
-        </p>
-        <RelatedReadingDynamic
-          useInterest
-          hideWhenNoSignal
-          topics={["dosage", "reconstitution-method", "storage"]}
-          title="Pick up where you left off"
-          limit={4}
-        />
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {POPULAR_PEPTIDES.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/peptides/${p.slug}`}
-              className="group flex items-center justify-between border border-border rounded-xl p-4 hover:bg-muted transition-colors"
-            >
-              <span className="font-medium">{p.label}</span>
-              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          ))}
-        </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {COMMON_COMPARISONS.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/learn/vs/${c.slug}`}
-              className="group flex items-center justify-between border border-border rounded-xl p-4 hover:bg-muted transition-colors"
-            >
-              <span className="font-medium">{c.label}</span>
-              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          ))}
-        </div>
-        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-          <Link href="/peptides" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">All compounds</Link>
-          <Link href="/learn" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Learning center</Link>
-          <Link href="/tools/reverse-bac" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Reverse bac water calculator</Link>
-        </div>
-        </div>
-      </section>
-
-      {/* How the math works (trust, honest), bone, keeps the closing calm */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
-        <div className="max-w-2xl">
-          <div className="eyebrow">How the math works</div>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-serif font-medium tracking-tight">
-            Here is the formula, your numbers, and how we round.
-          </h2>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Every answer shows its work. Concentration is the vial amount divided
-            by the water you add. We keep full precision inside and round only
-            when we show a number. If an amount lands between the marks on your
-            syringe, we tell you, because you cannot measure it. The AI helper
-            explains the result in plain words. It never does the math itself.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild variant="brand">
-              <Link href="/plan">Start the builder</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/learn">Read the guides</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
+export default function HomePage(){return <div>
+  <WebPageJsonLd name="BAC water calculator" description="Free tools for concentration, mass conversion and U-100 volume arithmetic using numbers supplied by the user." url="/" />
+  <SectionReveals />
+  <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-9 sm:pt-20 pb-10 sm:pb-16 text-center">
+    <p className="eyebrow">Concentration and measurement</p>
+    <h1 className="mt-3 text-3xl sm:text-5xl lg:text-6xl font-serif font-medium tracking-tight text-balance">BAC water calculator</h1>
+    <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">Convert your label values into concentration, mL and syringe units. See the calculation, then save or print it.</p>
+    <div className="mt-6 flex flex-wrap justify-center gap-3"><Button asChild size="xl" variant="brand"><Link href="/peptide-calculator">Calculate now <ArrowRight className="h-4 w-4" /></Link></Button><Button asChild size="xl" variant="outline"><Link href="/plan">Guide me step by step</Link></Button></div>
+    <p className="mt-4 text-sm text-muted-foreground">Free calculations. No account or purchase required.</p>
+    <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed">Use amounts and volume from existing product instructions. This website does not choose a dose, diluent, treatment or safe storage period.</p>
+  </section>
+  <section className="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-12" aria-labelledby="quick-tools">
+    <h2 id="quick-tools" className="text-2xl sm:text-3xl font-serif">Choose the calculation you need</h2>
+    <div className="mt-5 grid gap-4 md:grid-cols-3">{tools.map(tool=><Link data-reveal key={tool.href} href={tool.href} className="rounded-2xl border border-border bg-card p-5 transition-colors hover:bg-muted"><Calculator aria-hidden="true" className="h-5 w-5"/><h3 className="mt-3 text-lg font-semibold">{tool.title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{tool.text}</p><span className="mt-4 inline-flex items-center gap-2 text-sm font-medium">Open calculator <ArrowRight aria-hidden="true" className="h-4 w-4"/></span></Link>)}</div>
+    <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm"><Link className="underline" href="/tools/dose">Known concentration</Link><Link className="underline" href="/tools/reverse-bac">Reverse volume calculation</Link><Link className="underline" href="/tools/supplies">Portion and supply counts</Link><Link className="underline" href="/tools">All calculators</Link></div>
+  </section>
+  <section className="section-muted mt-7" data-reveal><div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 sm:px-6 sm:py-14 md:grid-cols-2">
+    <div><p className="eyebrow">Know what you are entering</p><h2 className="mt-3 text-2xl sm:text-3xl font-serif">A vial amount is not a concentration.</h2><p className="mt-4 leading-relaxed">A label that states 10 mg describes an amount. In a final volume of 2 mL, the concentration would be 5 mg/mL. That arithmetic example does not tell you to add 2 mL to a particular product.</p><p className="mt-3 leading-relaxed">BAC water is a pharmaceutical diluent containing a preservative. Formulation and intended use depend on the exact label. Preservative does not prove a prepared mixture is sterile or stable.</p><p className="mt-4 text-sm"><Link href="/learn/what-is-bac-water" className="underline">Ingredients and intended purpose</Link> · <Link href="/learn/how-to-read-a-peptide-vial" className="underline">Read a vial label</Link></p><p className="mt-3 text-xs text-muted-foreground">Product context: <a href="https://www.pfizermedical.com/bacteriostatic-water" className="underline">Pfizer product labeling</a>. Checked September 22, 2026.</p></div>
+    <div className="rounded-2xl border border-border p-5 sm:p-7"><h3 className="text-lg font-semibold">Three checks before calculating</h3><ol className="mt-4 list-decimal space-y-4 pl-5 text-sm leading-relaxed"><li>Copy each number with its unit. mg and mcg describe mass; mL describes volume.</li><li>Use the final volume from your instructions. Vial strength alone does not determine a suitable dilution.</li><li>Check the actual device scale. U-100 means 100 units per mL; it is not a universal conversion for every syringe.</li></ol><Link href="/methodology" className="mt-5 inline-flex min-h-11 items-center underline">See formulas and repeatable checks</Link></div>
+  </div></section>
+  <section className="mx-auto grid max-w-5xl gap-6 px-4 py-10 sm:px-6 sm:py-14 md:grid-cols-2">
+    <div className="rounded-2xl border p-6" data-reveal><FileText aria-hidden="true" className="h-5 w-5"/><h2 className="mt-3 text-2xl font-serif">Keep the calculation.</h2><p className="mt-3 text-sm leading-relaxed">Save your entered values, download a PDF, or print vial labels. Anyone receiving a shared link can read the calculation, but not your private notes. An account is optional for calculating.</p><div className="mt-4 flex flex-wrap gap-4"><Link href="/plan" className="underline">Build a saved plan</Link><Link href="/tools/vial-labels" className="underline">Printable labels</Link><Link href="/plans" className="underline">My plans</Link></div></div>
+    <div className="rounded-2xl border p-6" data-reveal><BookOpen aria-hidden="true" className="h-5 w-5"/><h2 className="mt-3 text-2xl font-serif">Check the limits.</h2><p className="mt-3 text-sm leading-relaxed">A calculation cannot confirm contents, compatibility or shelf life. The learning center separates these questions from arithmetic.</p><div className="mt-4 space-y-3 text-sm"><p><Link href="/learn/bac-water-shelf-life" className="underline">Storage and expiry</Link></p><p><Link href="/learn/what-you-cannot-know" className="underline">What no calculation can verify</Link></p><p><Link href="/faq" className="underline">Common questions</Link> · <Link href="/learn" className="underline">All guides</Link></p></div></div>
+  </section>
+  <section className="mx-auto max-w-5xl px-4 pb-12 sm:px-6"><h2 className="text-2xl font-serif">Compound references</h2><p className="mt-3 text-sm text-muted-foreground">These pages provide identity and evidence context, not a recommendation to use a compound.</p><div className="mt-4 flex flex-wrap gap-3">{compounds.map(([slug,label])=><Link key={slug} href={`/peptides/${slug}`} className="inline-flex min-h-11 items-center rounded-lg border px-4 text-sm hover:bg-muted">{label}</Link>)}</div><p className="mt-5 text-sm"><Link href="/peptides" className="underline">All compounds</Link> · <Link href="/peptides/compare" className="underline">Compare label context</Link> · <Link href="/learn/vs/sterile-water" className="underline">BAC water vs sterile water</Link> · <Link href="/learn/vs/saline" className="underline">BAC water vs saline</Link></p></section>
+</div>;}

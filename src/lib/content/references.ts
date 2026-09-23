@@ -1,3 +1,4 @@
+import { EDITORIAL_REVISIONS } from "./editorial-revisions";
 /**
  * Curated, verified scientific / regulatory references.
  *
@@ -85,6 +86,13 @@ export const TOPIC_REFERENCES: Record<string, Reference[]> = {
 };
 
 export function guideReferences(slug: string): Reference[] | undefined {
+  const reviewed = EDITORIAL_REVISIONS.find((item) => item.slug === slug);
+  if (reviewed) return reviewed.sources.map((url) => ({
+    title: url.includes("nist.gov") ? "SI prefix definitions" : url.includes("cdc.gov") ? "Injection safety and vial handling" : url.includes("pfizermedical") ? "Bacteriostatic water product labeling" : "FDA product and safety guidance",
+    source: new URL(url).hostname,
+    url,
+    note: "Supports the linked factual context, not a personalized dose or the identity of a user's product. Checked September 21, 2026.",
+  }));
   return GUIDE_REFERENCES[slug];
 }
 

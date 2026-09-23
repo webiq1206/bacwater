@@ -1,10 +1,9 @@
 /**
  * "What published research looked at" (PRD v3 §9.1.3 / §9.1.5).
  *
- * Every row here comes from a real, fetched primary source, with the source URL
+ * Source links identify the historical references reviewed by this release, with the source URL
  * attached. These are STUDY DETAILS, not instructions, an amount given to
- * animals cannot be turned into a safe amount for a person. Only compounds with
- * verified sources appear; the rest render no table (honest by omission).
+ * animals cannot be turned into a safe amount for a person. The selected abstracts are not a comprehensive clinical review.
  *
  * Verify against the linked source before relying on any figure.
  */
@@ -27,9 +26,8 @@ export interface CompoundStudies {
 
 export const STUDIES: Record<string, CompoundStudies> = {
   "bpc-157": {
-    humanEvidence:
-      "No published human clinical trials; the evidence is animal (rat) and cell studies.",
-    fdaStatus: "Not FDA-approved.",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Rats (male Wistar)",
@@ -55,14 +53,13 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   "tb-500": {
-    humanEvidence:
-      "The parent molecule (thymosin beta-4) has entered early human trials; the TB-500 fragment itself has no published human trials.",
-    fdaStatus: "Not FDA-approved.",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Rats (skin wound model) and human keratinocytes",
         amount: "As little as 10 pg was active in cell assays",
-        frequency: "Single application at wounding",
+        frequency: "See the original methods; not resolved from this abstract",
         duration: "Measured at 4 and 7 days",
         route: "Topical and intraperitoneal",
         gloss: "Looked at whether it speeds wound closure and cell migration.",
@@ -72,14 +69,14 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   semaglutide: {
-    humanEvidence: "FDA-approved with large human clinical trials.",
-    fdaStatus: "FDA-approved (Ozempic, semaglutide injection).",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Human (FDA-approved labeling)",
-        amount: "0.25 mg to 2 mg (approved range)",
-        frequency: "Once weekly",
-        duration: "Ongoing chronic use",
+        amount: "Use the current label for the exact product",
+        frequency: "Not selected by this calculator",
+        duration: "Product-specific",
         route: "Subcutaneous",
         gloss: "The approved product's labeling: the reference for amounts, not this site.",
         sourceTitle: "DailyMed: OZEMPIC (semaglutide) Prescribing Information.",
@@ -89,14 +86,14 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   tirzepatide: {
-    humanEvidence: "FDA-approved with large human clinical trials.",
-    fdaStatus: "FDA-approved (Mounjaro, tirzepatide injection).",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Human (FDA-approved labeling)",
-        amount: "2.5 mg to 15 mg (approved range)",
-        frequency: "Once weekly",
-        duration: "Ongoing chronic use",
+        amount: "Use the current label for the exact product",
+        frequency: "Not selected by this calculator",
+        duration: "Product-specific",
         route: "Subcutaneous",
         gloss: "The approved product's labeling: the reference for amounts, not this site.",
         sourceTitle: "DailyMed, MOUNJARO (tirzepatide) Prescribing Information.",
@@ -106,8 +103,8 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   ipamorelin: {
-    humanEvidence: "No published human efficacy trials; the evidence is animal (rat) and cell studies.",
-    fdaStatus: "Not FDA-approved.",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Rats (adult female Sprague-Dawley)",
@@ -122,8 +119,8 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   "cjc-1295": {
-    humanEvidence: "Limited early-phase human pharmacology data; no large efficacy trials.",
-    fdaStatus: "Not FDA-approved.",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Human (healthy adult men)",
@@ -138,9 +135,8 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   "ghk-cu": {
-    humanEvidence:
-      "No large human clinical trials; the primary evidence is animal (rat) and cell/tissue studies.",
-    fdaStatus: "Not FDA-approved as a drug.",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Rats (implanted wound-chamber model)",
@@ -155,14 +151,14 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   "melanotan-2": {
-    humanEvidence: "A few small early human studies; no approved product and no large trials.",
-    fdaStatus: "Not FDA-approved.",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Human (10 men with erectile dysfunction)",
         amount: "0.025 mg/kg",
         frequency: "Single dose per session",
-        duration: "Single-session monitoring",
+        duration: "6-hour monitoring period",
         route: "Subcutaneous",
         gloss: "Looked at whether it initiates erections, measured objectively.",
         sourceTitle: "Wessells H, et al. Melanotropic peptide initiates erections. J Urol, 1998.",
@@ -171,14 +167,14 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   "pt-141": {
-    humanEvidence: "FDA-approved with human clinical trials supporting the approved use.",
-    fdaStatus: "FDA-approved (Vyleesi, bremelanotide injection).",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
       {
         species: "Human (FDA-approved labeling)",
-        amount: "1.75 mg per dose",
-        frequency: "As needed (max 1/24h, 8/month)",
-        duration: "As-needed use",
+        amount: "Use the current label for the exact product",
+        frequency: "Not selected by this calculator",
+        duration: "Product-specific",
         route: "Subcutaneous",
         gloss: "The approved product's labeling: the reference for amounts, not this site.",
         sourceTitle: "DailyMed, VYLEESI (bremelanotide) Prescribing Information.",
@@ -188,21 +184,9 @@ export const STUDIES: Record<string, CompoundStudies> = {
     ],
   },
   semax: {
-    humanEvidence:
-      "Registered/used clinically in Russia; human data are mostly Russian-language, with one small English-published human study. No FDA/EMA review.",
-    fdaStatus: "Not FDA-approved (registered as a drug in Russia only).",
+    humanEvidence: "Selected source context, not a complete literature review. The species and formulation limit what each study can establish.",
+    fdaStatus: "Research details are not product instructions or an approval assessment.",
     studies: [
-      {
-        species: "Human (healthy volunteers)",
-        amount: "0.25–1.0 mg (~4–16 mcg/kg)",
-        frequency: "Single administration",
-        duration: "Assessed over 20–24 hours",
-        route: "Intranasal",
-        gloss: "Looked at attention and EEG measures in healthy adults.",
-        sourceTitle: "Kaplan AY, et al. Semax displays nootropic-like activity in humans. Neurosci Res Comm, 1996.",
-        sourceUrl:
-          "https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291520-6769%28199609%2919%3A2%3C115%3A%3AAID-NRC171%3E3.0.CO%3B2-B",
-      },
       {
         species: "Rats",
         amount: "50 mcg/kg",
@@ -219,7 +203,7 @@ export const STUDIES: Record<string, CompoundStudies> = {
 
 /** Aliased slugs so lookups match the site's peptide slugs. */
 const ALIASES: Record<string, string> = {
-  "cjc-1295-no-dac": "cjc-1295",
+  
   "cjc-1295-with-dac": "cjc-1295",
   bremelanotide: "pt-141",
 };

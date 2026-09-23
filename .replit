@@ -7,7 +7,7 @@ channel = "stable-24_05"
 
 [deployment]
 # Install the reviewed lockfile. Do not run the production seed or accept data loss.
-build = ["sh", "-c", "npm ci --include=dev && npx prisma generate && npx prisma db push --skip-generate && npm run build"]
+build = ["sh", "-c", "npm ci --include=dev && npx prisma generate && npx prisma db push --skip-generate && npx tsx scripts/apply-editorial-revisions.ts --apply && npm run build"]
 run = ["sh", "-c", "npm start"]
 deploymentTarget = "autoscale"
 

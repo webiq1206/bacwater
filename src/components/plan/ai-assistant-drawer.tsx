@@ -10,7 +10,6 @@ interface Msg {
   content: string;
 }
 
-const REPLACE = "[[REPLACE]]";
 
 /* ---- tiny, safe Markdown renderer (bold / italic / code / lists) ------------
    Builds React nodes directly, no dangerouslySetInnerHTML, no HTML injection.
@@ -80,7 +79,7 @@ function Markdown({ text }: { text: string }) {
 function suggestionsFor(plan: CalcResult): string[] {
   const base = [
     "Explain my plan in plain English.",
-    "Why did it pick that BAC water amount?",
+    "What does my entered final volume mean?",
     "What does the unit reading mean on my syringe?",
   ];
   const warns = Array.isArray((plan as unknown as { warnings?: unknown[] }).warnings)
@@ -93,6 +92,11 @@ function suggestionsFor(plan: CalcResult): string[] {
 
 export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
   const [open, setOpen] = useState(false);
+  const [externalAvailable,setExternalAvailable]=useState(false);
+  const [allowExternal,setAllowExternal]=useState(false);
+  const requestSequence=useRef(0);
+  const abortRef=useRef<AbortController | null>(null);
+  useEffect(()=>{fetch("/api/ai/chat").then(r=>r.json()).then(d=>setExternalAvailable(d.externalTopicRouting===true)).catch(()=>{});return ()=>abortRef.current?.abort();},[]);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -100,7 +104,7 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
   const suggestions = useMemo(() => suggestionsFor(plan), [plan]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }, [messages, pending]);
 
   function setLastAssistant(content: string) {
@@ -118,51 +122,33 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
 
   async function send(text: string) {
     if (!text.trim() || pending) return;
-    const next: Msg[] = [...messages, { role: "user", content: text }];
+    const sequence=++requestSequence.current;
+    const next: Msg[] = [...messages.filter(m=>m.content).slice(-22), { role: "user", content: text.slice(0,1200) }];
     setMessages([...next, { role: "assistant", content: "" }]);
     setInput("");
     setPending(true);
     try {
+      abortRef.current=new AbortController();
       const res = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ plan, messages: next }),
+        body: JSON.stringify({ plan: {input: plan.input}, messages: next, allowExternal }),
+        signal:AbortSignal.any([abortRef.current.signal,AbortSignal.timeout(20000)]),
       });
       const ct = res.headers.get("content-type") || "";
       if (ct.includes("application/json") || !res.body) {
         const data = await res.json();
+        if(sequence!==requestSequence.current)return;
         setLastAssistant(data.reply || data.error || "No response.");
       } else {
-        const reader = res.body.getReader();
-        const dec = new TextDecoder();
-        let acc = "";
-        let replaced = false;
-        let tail = "";
-        for (;;) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = dec.decode(value, { stream: true });
-          if (replaced) {
-            tail += chunk;
-            setLastAssistant(tail);
-            continue;
-          }
-          const combined = acc + chunk;
-          const idx = combined.indexOf(REPLACE);
-          if (idx >= 0) {
-            replaced = true;
-            tail = combined.slice(idx + REPLACE.length);
-            setLastAssistant(tail);
-          } else {
-            acc = combined;
-            setLastAssistant(acc);
-          }
-        }
+        throw new Error("Unexpected response format");
       }
     } catch {
-      setLastAssistant("The assistant is unavailable right now. Please try again.");
+      if(sequence!==requestSequence.current)return;
+      setInput(text);
+      setLastAssistant("The connection was interrupted. Your question is still in the input. Please retry.");
     } finally {
-      setPending(false);
+      if(sequence===requestSequence.current)setPending(false);
     }
   }
 
@@ -182,10 +168,9 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
           <Sparkles className="h-4 w-4" style={{ color: "var(--color-accent-guide)" }} />
         </span>
         <div className="min-w-0">
-          <div className="text-sm font-medium">Ask about your plan</div>
+          <div className="text-sm font-medium">Calculation explainer</div>
           <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
-            It explains the numbers in your plan and answers follow-ups. It never does the
-            math itself, and it won&apos;t tell you how much to take or whether something is safe.
+            Built-in explanations use the server-checked numbers. They do not recommend an amount, treatment or preparation. Do not include personal medical information.
           </p>
         </div>
       </div>
@@ -193,7 +178,7 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
       {!open ? (
         <div className="px-5 pb-5">
           <Button className="w-full" variant="brand" size="sm" onClick={() => setOpen(true)}>
-            <Sparkles className="h-4 w-4" /> Open assistant
+            <Sparkles className="h-4 w-4" /> Open explainer
           </Button>
         </div>
       ) : (
@@ -240,7 +225,7 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
                         <Markdown text={m.content} />
                       ) : (
                         <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                          <Loader2 className="h-3 w-3 animate-spin" /> Thinking&hellip;
+                          <Loader2 className="h-3 w-3 animate-spin" /> Checking&hellip;
                         </span>
                       )}
                     </div>
@@ -250,6 +235,9 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
             )}
           </div>
 
+          {externalAvailable && <label className="flex items-start gap-3 px-4 py-3 text-xs"><input type="checkbox" checked={allowExternal} onChange={e=>setAllowExternal(e.target.checked)} /><span>Allow optional AI to categorize an unfamiliar question after sign-in. Only that question is sent to the provider, not the calculation or notes. Replies still use built-in explanations.</span></label>}
+          <div className="px-4 pb-3"><button type="button" className="min-h-11 text-xs underline" onClick={()=>{requestSequence.current++;abortRef.current?.abort();setPending(false);setMessages([]);setInput('');}}>Clear conversation</button></div>
+          <p className="sr-only" role="status" aria-live="polite">{pending ? "Checking calculation" : messages.at(-1)?.role === "assistant" ? messages.at(-1)?.content : ""}</p>
           {/* Composer */}
           <form
             className="flex items-center gap-2 border-t border-border p-3"
@@ -260,10 +248,11 @@ export function AiAssistantDrawer({ plan }: { plan: CalcResult }) {
           >
             <input
               type="text"
+              maxLength={1200}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about your plan…"
-              className="flex-1 rounded-full border border-input bg-card px-4 h-10 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+              className="min-w-0 flex-1 rounded-full border border-input bg-card px-4 h-10 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
               aria-label="Ask about your plan"
             />
             <Button
