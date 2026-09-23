@@ -20,3 +20,27 @@ header button[aria-controls="mobile-navigation"] svg {
   color: #526348;
   font-size: 10px;
 }
+/* The all-at-once calculator is a one-column grid on narrow screens. Its
+   implicit auto track must not expand to a unit switch's minimum width. */
+@media (max-width: 1023px) {
+  .bac-page-content .grid:has(> .lg\:sticky) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .bac-page-content .lg\:sticky {
+    min-width: 0;
+  }
+}
+/* Amount inputs and their pressed-state unit switches may use separate rows
+   when enlarged text leaves too little room. Neither control is hidden. */
+.bac-page-content div:has(> input):has(> div > button[aria-pressed]) {
+  flex-wrap: wrap;
+}
+.bac-page-content div:has(> input):has(> div > button[aria-pressed]) > input {
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+.bac-page-content div:has(> input) > .inline-flex:has(> button[aria-pressed]) {
+  max-width: 100%;
+  flex-shrink: 1;
+  flex-wrap: wrap;
+}
