@@ -30,7 +30,7 @@ jobs:
               new=change['content']
               assert not p.exists() or p.read_text()==new,f'New path conflict: {name}'
             else:
-              old=p.read_text()
+              old=p.read_text() if p.exists() else ''
               if hashlib.sha256(old.encode()).hexdigest()==change['after']: continue
               assert hashlib.sha256(old.encode()).hexdigest()==change['sha256'],f'Baseline mismatch: {name}'
               lines=old.splitlines(keepends=True)
