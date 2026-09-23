@@ -17,7 +17,7 @@ import { AgeGate } from "@/components/common/age-gate";
 import { ADS_ENABLED } from "@/lib/ads";
 import { auth } from "@/lib/auth";
 
-// Montserrat carries the voice (body, labels, and light-weight headings).
+// Montserrat carries the body, labels and clear, medium-weight headings.
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
@@ -25,7 +25,7 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-// Fraunces italic is the accent, used sparingly (a single word, the "Co.").
+// Fraunces is used only for brief display accents.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],

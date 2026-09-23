@@ -152,15 +152,15 @@ body {
   color: var(--color-foreground);
 }
 
-/* Display headings. The brand voice is Montserrat Light; this class name is
-   kept for compatibility with existing markup. Headings never exceed 300. */
+/* Display headings. The brand voice is Montserrat; this class name is
+   kept for compatibility with existing markup. Headings use the shared heading weight. */
 .font-serif {
   font-family: var(--font-sans);
   letter-spacing: -0.01em;
   font-weight: 500;
 }
 
-/* Fraunces italic, the accent, used sparingly for a single word or the "Co." */
+/* Fraunces italic is a brief display accent, not the default reading face. */
 .font-accent {
   font-family: var(--font-serif);
   font-style: italic;
@@ -168,8 +168,7 @@ body {
   letter-spacing: 0;
 }
 
-/* Enforce the brand rule: no heading text is heavier than 300. This wins over
-   utility weights (font-medium / font-semibold) applied on heading elements. */
+/* Use a consistent medium weight for clear headings across older templates. */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
   letter-spacing: -0.01em;

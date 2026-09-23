@@ -241,7 +241,7 @@ export default async function ComparisonPage({
             Have the product instructions?
           </div>
           <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-            Build a step-by-step plan or shop sealed, research-grade bac water.
+            Use the numbers from your instructions to check the math.
           </p>
         </div>
         <div className="flex flex-wrap gap-3 shrink-0">

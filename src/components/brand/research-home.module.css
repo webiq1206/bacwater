@@ -11,3 +11,5 @@
 @media(max-width:380px){.toolCard>p{font-size:11px}.toolExample{font-size:21px}.guide h3{font-size:15px}.guideText{font-size:11px}.guideSymbol{font-size:23px}.guide:nth-child(2) .guideSymbol{font-size:22px}}
 .home{overflow-wrap:anywhere}
 @media(max-width:780px){.savedSection{grid-template-columns:minmax(0,1fr)}.recordScene{width:100%;max-width:340px}.labelCard{right:0}}
+
+.recordHeader :global(.bac-wordmark) img{width:125px;height:auto}.recordHeader{gap:12px}.recordHeader>span:last-child{flex-shrink:0}
