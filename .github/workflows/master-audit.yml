@@ -64,8 +64,12 @@ jobs:
           npm test 2>&1 | tee audit-evidence/tests.log
           npx tsx scripts/audit-publication.ts 2>&1 | tee audit-evidence/publication-tests.log
           npx tsx scripts/audit-remaining.ts 2>&1 | tee audit-evidence/remaining-tests.log
-      - name: Production build
-        run: set -o pipefail; npx next build --webpack 2>&1 | tee audit-evidence/build.log
+      - name: Reproduce stale Replit development artifacts
+        run: node scripts/audit-build-type-isolation.mjs seed
+      - name: Production build with stale development artifacts present
+        run: set -o pipefail; npm run build 2>&1 | tee audit-evidence/build.log
+      - name: Verify production type isolation and genuine error detection
+        run: set -o pipefail; node scripts/audit-build-type-isolation.mjs verify 2>&1 | tee audit-evidence/build-type-isolation.log
       - uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
