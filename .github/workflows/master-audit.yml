@@ -120,7 +120,9 @@ jobs:
           JS
       - name: Verify dedicated calculator screens and full-height homepage
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
-        run: node scripts/audit-calculator-focus.mjs
+        run: |
+          node scripts/audit-calculator-focus.mjs
+          node scripts/audit-calculator-reflow.mjs
       - name: Verify sitewide design and supplier sliders
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/audit-sitewide-design.mjs

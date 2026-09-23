@@ -16,3 +16,10 @@
 
 /* A hidden optional preview must not reserve a second desktop column. */
 .content :global(.bac-focus-step):has(> aside){display:block;max-width:42rem;}
+/* Let enlarged actions move to another row instead of splitting single words
+   into vertical letters. Only spacing changes; text still honors enlargement. */
+.actions{flex-wrap:wrap;}
+.actions>button{padding:12px 16px;min-width:min-content;overflow-wrap:normal;word-break:normal;}
+.actions>button:last-child{min-width:min-content;flex:1 1 auto;}
+.bar a,.guide summary{white-space:nowrap;overflow-wrap:normal;flex-shrink:0;}
+@media(max-width:380px){.bar{gap:8px;}.bar .brand span{display:none;}}
