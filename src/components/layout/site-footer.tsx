@@ -1,4 +1,7 @@
+import { RecommendationsNavLink } from "@/components/partners/amino-recommendations";
 import Link from "next/link";
+import { Wordmark } from "@/components/brand/wordmark";
+import { AminoWaterLink } from "@/components/partners/supplier-context";
 import { POSITIONING_STATEMENT } from "@/lib/positioning";
 import { PreferredSourceButton } from "@/components/common/preferred-source-button";
 
@@ -6,7 +9,7 @@ const FOOTER = {
   Product: [
     { href: "/peptide-calculator", label: "Peptide Calculator" },
     { href: "/plan", label: "Build My Plan" },
-    { href: "/peptides", label: "Compound Reference" },
+    { href: "/peptides", label: "Compound guide" },
     { href: "/tools", label: "Calculators" },
     { href: "/tools/reverse-bac", label: "Reverse Calculator" },
     { href: "/tools/vial-labels", label: "Vial Labels" },
@@ -22,11 +25,11 @@ const FOOTER = {
   ],
   Company: [
     { href: "/about", label: "About" },
-  { href: "/methodology", label: "Calculator methodology" },
+  { href: "/methodology", label: "How the math works" },
     { href: "/preferred-source", label: "Prefer us on Google" },
     { href: "/sitemap", label: "Site map" },
     { href: "/contact", label: "Contact" },
-    { href: "/editorial-policy", label: "Editorial & Sourcing Policy" },
+    { href: "/editorial-policy", label: "How we check content" },
     { href: "/terms", label: "Terms" },
     { href: "/privacy", label: "Privacy" },
     { href: "/disclaimer", label: "Disclaimer" },
@@ -35,22 +38,13 @@ const FOOTER = {
 
 export function SiteFooter() {
   return (
-    <footer className="section-dark mt-20">
+    <footer className="section-dark mt-6 [overflow-wrap:anywhere]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="max-w-sm">
-            <Link href="/" className="flex items-baseline gap-2">
-              <span className="font-serif text-2xl font-medium tracking-tight leading-none">
-                BACwater
-              </span>
-              <span className="font-accent text-sm leading-none pb-0.5" style={{ color: "var(--color-accent-guide)" }}>
-                .ai
-              </span>
-            </Link>
+        <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+          <div className="col-span-2 max-w-sm lg:col-span-1">
+            <Link href="/" aria-label="BACwater.ai home"><Wordmark inverse/></Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              A concentration and measurement calculator for peptide
-              reconstitution. Enter your vial&apos;s numbers, see every step, and
-              download a PDF.
+              Put in your label numbers. See the math. Save a copy. Free tools for clear calculations.
             </p>
             {/* Sitewide preferred-sources entry point. The "link" variant is a
                 plain deeplink to Google's source preferences tool, so the
@@ -64,7 +58,7 @@ export function SiteFooter() {
             />
           </div>
           {Object.entries(FOOTER).map(([title, links]) => (
-            <div key={title}>
+            <div key={title} className="min-w-0">
               <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>{title}</div>
               <ul className="mt-3 space-y-2 text-sm">
                 {links.map((l) => (
@@ -81,6 +75,7 @@ export function SiteFooter() {
             </div>
           ))}
         </div>
+        <div className="mt-8 flex flex-wrap items-start gap-6"><AminoWaterLink compact/><RecommendationsNavLink /></div>
         <div className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
             © {new Date().getFullYear()} BACwater.ai. All rights reserved.

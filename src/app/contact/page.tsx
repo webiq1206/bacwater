@@ -18,7 +18,7 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-8 sm:pt-10 pb-24 sm:pb-32">
       <WebPageJsonLd
         name="Contact BACwater.ai"
         description="Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website."

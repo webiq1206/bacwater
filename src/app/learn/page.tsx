@@ -83,14 +83,14 @@ export async function generateMetadata({
   // No filters: the canonical hub.
   if (activeCount === 0) {
     return {
-      title: "Peptide Reconstitution Guides & BAC Water Learning Center",
+      title: "Peptide Reconstitution Guides & BAC Water Learning center",
       description:
-        "Plain-language guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
+        "Simple guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
       alternates: { canonical: "/learn" },
       openGraph: {
-        title: "Peptide Reconstitution Guides & BAC Water Learning Center",
+        title: "Peptide Reconstitution Guides & BAC Water Learning center",
         description:
-          "Plain-language guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
+          "Simple guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
         url: "/learn",
         type: "website",
         siteName: "BACwater.ai",
@@ -114,7 +114,7 @@ export async function generateMetadata({
   if (collidesWithTopic) {
     const canonical = hrefWith({}, { topic: f.type } as ActiveFilters);
     return {
-      title: `${CONTENT_TYPE_LABEL[f.type!]} guides · BAC Water Learning Center`,
+      title: `${CONTENT_TYPE_LABEL[f.type!]} guides · BAC Water Learning center`,
       robots: { index: false, follow: true },
       alternates: { canonical },
     };
@@ -134,12 +134,12 @@ export async function generateMetadata({
               );
       const canonical = hrefWith({}, { [single]: f[single] } as ActiveFilters);
       return {
-        title: `${label} guides · BAC Water Learning Center`,
-        description: `Bac water and reconstitution content filtered to ${label}. Plain-language guides, comparisons, and FAQs.`,
+        title: `${label} guides · BAC Water Learning center`,
+        description: `Bac water and reconstitution content filtered to ${label}. Simple guides, comparisons, and FAQs.`,
         alternates: { canonical },
         openGraph: {
-          title: `${label} guides · BAC Water Learning Center`,
-          description: `Bac water and reconstitution content filtered to ${label}. Plain-language guides, comparisons, and FAQs.`,
+          title: `${label} guides · BAC Water Learning center`,
+          description: `Bac water and reconstitution content filtered to ${label}. Simple guides, comparisons, and FAQs.`,
           url: canonical,
           type: "website",
           siteName: "BACwater.ai",
@@ -149,9 +149,9 @@ export async function generateMetadata({
   }
 
   return {
-    title: "BAC Water Learning Center",
+    title: "BAC Water Learning center",
     description:
-      "Plain-language guides, comparisons, and FAQs on bac water and peptide reconstitution.",
+      "Simple guides, comparisons, and FAQs on bac water and peptide reconstitution.",
     robots: { index: false, follow: true },
     alternates: { canonical: "/learn" },
   };
@@ -175,9 +175,9 @@ export default async function LearnPage({
   const isIndexableFilter = !!(single && results.length >= 3);
 
   let schemaUrl = `${SITE_URL}/learn`;
-  let schemaName = "BAC Water Learning Center";
+  let schemaName = "BAC Water Learning center";
   let schemaDescription =
-    "Plain-language guides, comparisons, and FAQs on bac water and peptide reconstitution.";
+    "Simple guides, comparisons, and FAQs on bac water and peptide reconstitution.";
 
   if (isIndexableFilter) {
     const label =
@@ -190,8 +190,8 @@ export default async function LearnPage({
             );
     const canonical = hrefWith({}, { [single!]: f[single!] } as ActiveFilters);
     schemaUrl = `${SITE_URL}${canonical}`;
-    schemaName = `${label} guides · BAC Water Learning Center`;
-    schemaDescription = `Bac water and reconstitution content filtered to ${label}. Plain-language guides, comparisons, and FAQs.`;
+    schemaName = `${label} guides · BAC Water Learning center`;
+    schemaDescription = `Bac water and reconstitution content filtered to ${label}. Simple guides, comparisons, and FAQs.`;
   }
 
   return (
@@ -202,7 +202,7 @@ export default async function LearnPage({
         url={schemaUrl}
         breadcrumb={[
           { name: "Home", url: "/" },
-          { name: "Learning Center", url: "/learn" },
+          { name: "Learning center", url: "/learn" },
         ]}
       />
       <script
@@ -229,11 +229,11 @@ export default async function LearnPage({
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Learning Center", href: "/learn" },
+          { label: "Learning center", href: "/learn" },
         ]}
       />
       <div className="max-w-3xl">
-        <div className="eyebrow">Learning Center</div>
+        <div className="eyebrow">Learning center</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
           BAC Water &amp; Peptide Reconstitution Guides
         </h1>

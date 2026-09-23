@@ -1,0 +1,3 @@
+import { cn } from "@/lib/utils";
+export function BrandMark({className}:{className?:string}){return <svg className={className} viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="1" y="1" width="46" height="46" rx="14" fill="currentColor"/><path d="M24 9c-4 6-11 13-11 19a11 11 0 0 0 22 0c0-6-7-13-11-19Z" fill="#dfedb3"/><path d="M19 26h10M19 31h6" stroke="#18382d" strokeWidth="2.2" strokeLinecap="round"/></svg>;}
+export function Wordmark({className,inverse=false}:{className?:string;inverse?:boolean}){return <span className={cn("bac-wordmark",inverse&&"bac-wordmark-inverse",className)}><img src={inverse?"/brand/bacwater-wordmark-light.svg":"/brand/bacwater-wordmark.svg"} width="244" height="48" alt="BACwater.ai"/></span>;}

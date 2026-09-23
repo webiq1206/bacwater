@@ -89,7 +89,7 @@ function FrequencyPicker({
   return (
     <div className="mt-5">
       <Label className="text-xs text-muted-foreground">
-        Split your entered weekly total into how many measurements?
+        How many measurements split that weekly total?
       </Label>
       <div className="mt-1.5 flex flex-wrap gap-1.5">
         {choices.map((c) => (
@@ -202,7 +202,7 @@ function StepBlock({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border border-border bg-card rounded-2xl p-5 sm:p-7">
+    <div className="rounded-xl border border-border bg-card rounded-2xl p-5 sm:p-7">
       <div className="flex items-center gap-3">
         <StepNumber n={n} filled />
         <SectionLabel>{label ?? `Step ${n} of ${total}`}</SectionLabel>
@@ -536,7 +536,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   );
 
   const dosePresets: { mcg: number; label: string; hint: string }[] = [];
-  const weeklyRangeHint = "Enter the total from instructions you already have. This tool does not recommend a dose or treatment schedule.";
+  const weeklyRangeHint = "Copy the weekly total from your own instructions. We do not choose an amount or schedule.";
 
   const primaryName =
     peptideSlug === "custom"
@@ -730,7 +730,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               n={1}
               total={6}
               label="Compound"
-              title="Which peptide are you mixing?"
+              title="What is the name on your vial?"
               hint="Pick from the list, or choose &ldquo;Other&rdquo; if yours isn't shown."
             >
               <Select value={peptideSlug} onValueChange={selectPeptide}>
@@ -850,7 +850,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               n={2}
               total={6}
               label="Vial size"
-              title="What size is your vial?"
+              title="What amount is on the vial?"
               hint={'Look at your label for a number like "5 mg."'}
             >
               <div className="flex flex-wrap gap-2">
@@ -908,7 +908,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               n={3}
               total={6}
               label="Amount"
-              title="How much per week in total?"
+              title="What weekly total do your instructions give?"
               hint={hasPeptide ? weeklyRangeHint : weeklyRangeHint}
             >
               <div className="grid gap-1.5 sm:gap-2">
@@ -1018,8 +1018,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               n={5}
               total={6}
               label="BAC water"
-              title="How much BAC water to add?"
-              hint="BAC water is the sterile liquid that dissolves the powder. More water = larger, easier-to-measure draws."
+              title="What final volume do your instructions give?"
+              hint="Use the liquid and final volume from the exact product instructions. The calculator does not choose them."
             >
               <div className="grid gap-1.5 sm:gap-2">
                 <ChipButton
@@ -1032,7 +1032,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 <ChipButton
                   active={!useRecommendedBac}
                   onClick={() => setUseRecommendedBac(false)}
-                  hint="Enter the product-specified or actual final volume."
+                  hint="Use the final liquid volume from your instructions."
                 >
                   Custom amount
                 </ChipButton>
@@ -1066,8 +1066,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               n={6}
               total={6}
               label="Mixing date"
-              title="When did you (or will you) mix it?"
-              hint="Optional recordkeeping only. This date does not determine shelf life or a safe discard date."
+              title="What is the mix date?"
+              hint="Optional. This saves the date only. It does not tell you when the product goes bad."
             >
               {!showDate ? (
                 <button
@@ -1149,7 +1149,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             {hasValidInputs ? (
               <PlanResults result={result} />
             ) : (
-              <div className="border border-border rounded-2xl p-10 text-center text-sm text-muted-foreground">
+              <div className="rounded-xl border border-border rounded-2xl p-10 text-center text-sm text-muted-foreground">
                 Choose your peptide, vial amount, and the amount you measure to see
                 your plan here.
               </div>
@@ -1195,7 +1195,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
       {step === 0 && (
         <StepPanel
-          title="Which peptide are you mixing?"
+          title="What is the name on your vial?"
           hint="Pick the peptide from the list. If it's not there, choose &ldquo;Other.&rdquo;"
           onNext={() => goToStep(1)}
           onBack={null}
@@ -1234,7 +1234,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
       {step === 1 && (
         <StepPanel
-          title="What size is your vial?"
+          title="What amount is on the vial?"
           hint={`This is the number on your vial label. Common sizes for ${peptide.name}:`}
           onNext={() => goToStep(2)}
           onBack={() => goToStep(0)}
@@ -1301,7 +1301,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
       {step === 2 && (
         <StepPanel
-          title="How much per week in total?"
+          title="What weekly total do your instructions give?"
           hint={weeklyRangeHint}
           onNext={() => goToStep(3)}
           onBack={() => goToStep(1)}
@@ -1377,8 +1377,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
       {step === 3 && (
         <StepPanel
-          title="How much water should we add?"
-          hint="The liquid that dissolves the powder. More water gives a bigger, easier-to-read number on the syringe. We picked a clean one. Change it below."
+          title="What is the final liquid volume?"
+          hint="Use the final amount of liquid from your instructions. This may differ from the water you add."
           onNext={() => goToStep(4)}
           onBack={() => goToStep(2)}
           stepNum={4}
@@ -1387,7 +1387,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             <ChipButton
               active={useRecommendedBac}
               onClick={() => setUseRecommendedBac(true)}
-              hint="Chosen so your amount lands on a clean, easy-to-read number."
+              hint="An example to show the math, not a volume you should use."
             >
               {recommendedBac} mL (arithmetic example)
             </ChipButton>
@@ -1415,7 +1415,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           <div className="mt-3 sm:mt-4 rounded-xl border border-border bg-surface p-3 sm:p-4 text-sm leading-relaxed">
             <span className="text-muted-foreground">With </span>
             <strong>{useRecommendedBac ? recommendedBac : customBacMl || 0} mL</strong>
-            <span className="text-muted-foreground"> of BAC water, each amount you measure is </span>
+            <span className="text-muted-foreground"> final liquid volume, your entered amount equals </span>
             <strong style={{ color: "var(--color-accent-guide)" }}>
               {result.syringeReadout.displayLabel}
             </strong>
@@ -1427,7 +1427,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       {step === 4 && (
         <StepPanel
           title="When did you mix it?"
-          hint="Record the mixing date, or leave it blank. Follow product-specific storage and discard instructions."
+          hint="Add the mix date, or leave it blank. Follow the storage rules on the product label."
           onNext={() => goToStep(5)}
           onBack={() => goToStep(3)}
           stepNum={5}
@@ -1466,7 +1466,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               className="mt-4 text-sm font-medium"
               style={{ color: "var(--color-accent-guide)" }}
             >
-              The date is optional. Continue when you are ready.
+              No date? You can skip this step.
             </p>
           )}
         </StepPanel>
@@ -1673,7 +1673,7 @@ function StepPanel({
   nextDisabled?: boolean;
 }) {
   return (
-    <div className="border border-border bg-card rounded-2xl">
+    <div className="rounded-xl border border-border bg-card rounded-2xl">
       <div className="p-5 sm:p-8">
         <div className="flex items-center gap-3 mb-2 sm:mb-3">
           <StepNumber n={stepNum} filled />
@@ -1770,7 +1770,7 @@ function SmartDefault({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border border-border bg-card p-3 sm:p-4">
+    <div className="rounded-xl border border-border bg-card p-3 sm:p-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="text-xs text-muted-foreground">{label}</div>

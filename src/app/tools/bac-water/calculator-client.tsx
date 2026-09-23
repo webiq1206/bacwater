@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { UnitHelp } from "@/components/tools/unit-help";
+import { SupplyChecklist } from "@/components/tools/supply-checklist";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -53,8 +55,8 @@ export default function BacWaterCalculatorPage() {
       <div className="max-w-3xl">
         <div className="eyebrow">Concentration and volume</div>
         <h1 className="mt-3 text-4xl sm:text-5xl font-serif">BAC water volume calculator</h1>
-        <p className="mt-4 text-lg leading-relaxed">Vial strength alone cannot tell you how much BAC water to add. Enter the final liquid volume from your product instructions or an existing solution to check concentration and measurement units.</p>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">A calculation does not choose a compatible diluent, dose, treatment or safe storage period. Use the instructions for the exact product. No purchase or account is required.</p>
+        <p className="mt-4 text-lg leading-relaxed">Copy the numbers from your label and instructions. We’ll show how much is in each mL and what your entered amount equals.</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">Use the final amount of liquid from your instructions. We do not choose a dose or tell you what to mix. No account or purchase is needed.</p>
       </div>
 
       <div className="mt-8 grid items-start gap-6 lg:grid-cols-2">
@@ -118,6 +120,7 @@ export default function BacWaterCalculatorPage() {
         <p>This calculator cannot establish sterility or stability. Do not treat a preservative, a clear-looking solution or a correct calculation as proof that a mixture remains usable. Follow the exact product's storage and discard instructions.</p>
         <p>The <Link href="/learn/bac-water-shelf-life" className="underline">BAC water storage reference</Link> separates unopened expiry, opened-vial guidance and reconstituted-product instructions. They are different questions.</p>
       </section>
+      <UnitHelp/><SupplyChecklist volumeMl={valid?volume:undefined} measurementMl={valid?measurementMl:undefined}/>
       <section className="mt-9"><h2 className="text-2xl font-serif">Related calculations</h2><div className="mt-4 grid gap-3 sm:grid-cols-3">{[{ href: "/tools/syringe-units", title: "U-100 units and mL", text: "Convert volume units without assuming syringe markings." }, { href: "/tools/mg-to-mcg", title: "mg and mcg", text: "Check milligram and microgram conversions." }, { href: "/tools/dose", title: "Known concentration", text: "Check the amount in a stated liquid volume." }].map(tool => <Link key={tool.href} href={tool.href} className="rounded-xl border border-border p-4 transition-colors hover:bg-muted"><h3 className="font-medium">{tool.title}</h3><p className="mt-2 text-sm text-muted-foreground">{tool.text}</p></Link>)}</div></section>
     </div>
   );

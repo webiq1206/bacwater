@@ -1,21 +1,21 @@
 import { ImageResponse } from "next/og";
 import { loadGoogleFont } from "@/lib/og-font";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export const alt =
   "BACwater.ai: the complete BAC water calculator and reconstitution guide";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const TAGLINE = "The complete BAC water calculator & reconstitution guide";
+const TAGLINE = "Your numbers. Made clear.";
 
 export default async function OGImage() {
-  // Match the header wordmark: "BACwater" in Montserrat (the site's brand
+  // Match the header wordmark: "bacwater" in Montserrat (the site's brand
   // voice), with ".ai" and the tagline in the same family. Brand palette:
   // bone ground, charcoal wordmark, sage accents.
   const [montserratBold, montserratRegular] = await Promise.all([
-    loadGoogleFont("Montserrat", 600, "BACwater"),
+    loadGoogleFont("Montserrat", 600, "bacwater"),
     loadGoogleFont("Montserrat", 400, `${TAGLINE} .aiAI`),
   ]);
 
@@ -51,7 +51,7 @@ export default async function OGImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#f7f5f3",
+          backgroundColor: "#f0f5e4",
         }}
       >
         <div style={{ display: "flex", alignItems: "baseline" }}>
@@ -60,12 +60,12 @@ export default async function OGImage() {
               fontFamily: sans,
               fontSize: "112px",
               fontWeight: 600,
-              color: "#2c302f",
+              color: "#18382d",
               letterSpacing: "-3px",
               lineHeight: 1,
             }}
           >
-            BACwater
+            bacwater
           </span>
           <span
             style={{
@@ -87,7 +87,7 @@ export default async function OGImage() {
             marginTop: "30px",
             width: "120px",
             height: "2px",
-            backgroundColor: "#5d6561",
+            backgroundColor: "#506451",
           }}
         />
         <div
@@ -95,7 +95,7 @@ export default async function OGImage() {
             marginTop: "30px",
             fontFamily: sans,
             fontSize: "27px",
-            color: "#5d6561",
+            color: "#506451",
             letterSpacing: "0.3px",
           }}
         >

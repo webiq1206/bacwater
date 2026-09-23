@@ -1,4 +1,5 @@
 "use client";
+import { SupplyChecklist } from "@/components/tools/supply-checklist";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,5 +25,5 @@ export default function SyringeUnitConverterPage(){
  <div className="mt-4 flex flex-wrap gap-3"><Button type="button" variant="outline" onClick={()=>setStored({direction:"units",text:""})}>Clear values</Button><Button asChild variant="brand"><Link href="/peptide-calculator">Open the full calculator</Link></Button></div><p className="mt-4 text-xs leading-relaxed text-muted-foreground">Up to 12 significant digits are displayed. Very small and large results use scientific notation. A value that would overflow or round down to zero is rejected. Confirm the actual device capacity and markings separately.</p></section>
  <section className="mt-9"><h2 className="text-2xl font-serif">U-100 conversion examples</h2><div className="mt-4 rounded-xl border"><table className="w-full text-left text-sm"><caption className="sr-only">U-100 scale units and liquid volumes</caption><thead><tr><th scope="col" className="p-3">U-100 units</th><th scope="col" className="p-3">Volume</th></tr></thead><tbody>{[5,10,25,30,50,100,200].map(n=><tr key={n} className="border-t"><th scope="row" className="p-3 font-normal">{n}</th><td className="p-3">{n/100} mL</td></tr>)}</tbody></table></div><p className="mt-3 text-sm text-muted-foreground">These are mathematical equivalents. For example, 200 U-100 units equal 2 mL, which exceeds a 1 mL syringe's capacity.</p></section>
  <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Scale, capacity and markings are different</h2><p>U-100 defines the conversion ratio. The capacity states how much liquid a device holds. The graduation spacing describes its printed intervals. Confirm all three from the actual device instructions rather than inferring them from barrel size.</p><p>A converter does not select a dose, an administration device or a treatment. mg and mcg describe mass, not scale markings; converting mass to mL also requires concentration.</p><p><Link href="/tools/dose" className="underline">Known concentration tool</Link> · <Link href="/tools/mg-to-mcg" className="underline">Mass converter</Link> · <Link href="/methodology" className="underline">Formulas and limits</Link></p></section>
- </div>;
+ <SupplyChecklist/></div>;
 }

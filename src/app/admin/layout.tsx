@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Wordmark } from "@/components/brand/wordmark";
 import { prisma } from "@/lib/db";
 import { requireAdminPage } from "@/lib/require-admin";
 import { AdminNav } from "@/components/admin/admin-nav";
@@ -31,12 +32,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr]">
         <aside className="border-b border-border bg-card lg:min-h-screen lg:border-b-0 lg:border-r">
           <div className="p-4">
-            <Link href="/" className="flex items-center gap-2 font-semibold">
-              <span aria-hidden className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand text-[11px] font-bold text-brand-foreground">
-                BW
-              </span>
-              <span>Admin</span>
-            </Link>
+            <Link href="/" aria-label="BACwater.ai home"><Wordmark/></Link><p className="mt-3 text-xs font-medium">Site admin</p>
           </div>
           <AdminNav items={nav} />
           <div className="mt-6 hidden px-4 pb-4 text-xs text-muted-foreground lg:block">
@@ -46,7 +42,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           </div>
         </aside>
-        <main className="p-3 sm:p-4 lg:p-6">{children}</main>
+        <div className="min-w-0 p-3 sm:p-4 lg:p-6">{children}</div>
       </div>
     </div>
   );

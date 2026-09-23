@@ -7,36 +7,36 @@
        Bone     #F7F5F3   Charcoal #2C302F   Sage #5D6561
        Mist     #9AA09B   Line     #E4E1DD
      ---------------------------------------------------------------------- */
-  --color-bone: #f7f5f3;
-  --color-charcoal: #2c302f;
-  --color-sage: #5d6561;
+  --color-bone: #f7f8f2;
+  --color-charcoal: #18382d;
+  --color-sage: #506451;
   --color-mist: #9aa09b;
-  --color-line: #e4e1dd;
+  --color-line: #d7dfce;
 
   /* Bone page ground; pure-white cards lift off it. */
-  --color-background: #f7f5f3;
-  --color-foreground: #2c302f;
-  --color-muted: #efece8;
-  --color-muted-foreground: #5d6561;
-  --color-border: #e4e1dd;
-  --color-border-strong: #d5d0c9;
-  --color-input: #e4e1dd;
-  --color-ring: #2c302f;
+  --color-background: #f7f8f2;
+  --color-foreground: #18382d;
+  --color-muted: #edf2e5;
+  --color-muted-foreground: #506451;
+  --color-border: #d7dfce;
+  --color-border-strong: #a8b79c;
+  --color-input: #859a78;
+  --color-ring: #18382d;
 
   --color-card: #ffffff;
-  --color-card-foreground: #2c302f;
+  --color-card-foreground: #18382d;
 
-  --color-primary: #2c302f;
-  --color-primary-foreground: #f7f5f3;
-  --color-secondary: #efece8;
-  --color-secondary-foreground: #2c302f;
-  --color-accent: #f2f0ed;
-  --color-accent-foreground: #2c302f;
+  --color-primary: #18382d;
+  --color-primary-foreground: #f7f8f2;
+  --color-secondary: #edf2e5;
+  --color-secondary-foreground: #18382d;
+  --color-accent: #eaf0dd;
+  --color-accent-foreground: #18382d;
 
-  --color-brand: #2c302f;
-  --color-brand-foreground: #f7f5f3;
-  --color-brand-soft: #efece8;
-  --color-brand-ink: #2c302f;
+  --color-brand: #18382d;
+  --color-brand-foreground: #f7f8f2;
+  --color-brand-soft: #edf2e5;
+  --color-brand-ink: #18382d;
 
   --color-destructive: #a13a2f;
   --color-destructive-foreground: #ffffff;
@@ -46,8 +46,8 @@
 
   /* Guide accents (callouts, step markers, checks) use sage, quiet and warm,
      distinct from the charcoal used for primary actions. */
-  --color-accent-guide: #5d6561;
-  --color-accent-guide-soft: #eef0ec;
+  --color-accent-guide: #506451;
+  --color-accent-guide-soft: #edf3df;
 
   --color-surface: #ffffff;
   --color-surface-raised: #ffffff;
@@ -56,11 +56,11 @@
   --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
-  --radius-sm: 0.25rem;
-  --radius: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
 
   --shadow-soft: none;
   --shadow-card: none;
@@ -98,25 +98,25 @@ body {
    dark styling needed. Sage is brightened here so it reads as a real accent
    against charcoal; mist carries secondary text. */
 .section-dark {
-  --color-background: #2c302f;
-  --color-foreground: #f7f5f3; /* bone */
-  --color-muted: #363b3a;
-  --color-muted-foreground: #b3b8b0; /* lightened mist, readable on charcoal */
+  --color-background: #18382d;
+  --color-foreground: #f7f8f2; /* bone */
+  --color-muted: #244638;
+  --color-muted-foreground: #c3d2bd; /* lightened mist, readable on charcoal */
   --color-border: rgba(247, 245, 243, 0.14);
   --color-border-strong: rgba(247, 245, 243, 0.26);
   --color-input: rgba(247, 245, 243, 0.18);
-  --color-card: #363b3a;
-  --color-card-foreground: #f7f5f3;
-  --color-surface: #33383700;
-  --color-surface-raised: #363b3a;
-  --color-secondary: #363b3a;
-  --color-secondary-foreground: #f7f5f3;
+  --color-card: #244638;
+  --color-card-foreground: #f7f8f2;
+  --color-surface: #244638;
+  --color-surface-raised: #244638;
+  --color-secondary: #244638;
+  --color-secondary-foreground: #f7f8f2;
   /* Primary/brand buttons invert on dark: bone fill, charcoal label, so they
      stay the high-contrast action rather than vanishing into the ground. */
-  --color-primary: #f7f5f3;
-  --color-primary-foreground: #2c302f;
-  --color-brand: #f7f5f3;
-  --color-brand-foreground: #2c302f;
+  --color-primary: #f7f8f2;
+  --color-primary-foreground: #18382d;
+  --color-brand: #f7f8f2;
+  --color-brand-foreground: #18382d;
   /* Sage, brightened for contrast on charcoal, the accent moment. */
   --color-accent-guide: #97a389;
   --color-accent-guide-soft: rgba(151, 163, 137, 0.16);
@@ -157,7 +157,7 @@ body {
 .font-serif {
   font-family: var(--font-sans);
   letter-spacing: -0.01em;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 /* Fraunces italic, the accent, used sparingly for a single word or the "Co." */
@@ -171,7 +171,7 @@ body {
 /* Enforce the brand rule: no heading text is heavier than 300. This wins over
    utility weights (font-medium / font-semibold) applied on heading elements. */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 
@@ -212,7 +212,7 @@ h1, h2, h3, h4, h5, h6 {
 .result-hero {
   font-size: 2.5rem;
   line-height: 1;
-  font-weight: 300;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   color: var(--color-foreground);
@@ -433,3 +433,24 @@ html { scroll-padding-top: 5rem; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 @media print { .bac-bottom-nav, .bac-bottom-spacer, .bac-privacy-preferences { display: none !important; } }
+
+/* Design 03: shared across tools, references, accounts, and admin workspaces. */
+:root{--bac-ink:#18382d;--bac-sage:#506451;--bac-lime:#dfedb3;--bac-paper:#fffef9;--bac-line:#d7dfce}
+body{line-height:1.65}h1,h2,h3,h4{line-height:1.2;letter-spacing:-.035em}.font-serif{letter-spacing:-.035em;font-weight:500}.eyebrow{letter-spacing:.12em;font-weight:600;font-size:.7rem}
+.bac-wordmark{display:inline-flex;align-items:center;color:#18382d;flex-shrink:0}.bac-wordmark img{width:200px;height:auto;display:block}.bac-wordmark-inverse{color:#dfedb3}
+.bac-site-frame{min-width:0}.bac-page-content{min-width:0}.bac-site-frame:not([data-bac-page="home"]):not([data-bac-page="admin"]){background:linear-gradient(180deg,#edf2e4 0,#f7f8f2 360px)}
+.bac-site-frame:not([data-bac-page="home"]):not([data-bac-page="admin"]) .bac-page-content>div:first-child,.bac-site-frame:not([data-bac-page="home"]):not([data-bac-page="admin"]) .bac-page-content>article:first-child{padding-top:2.75rem;padding-bottom:3rem}
+.bac-site-frame:not([data-bac-page="home"]) h1{font-size:clamp(1.9rem,3.3vw,3.25rem);max-width:24ch;overflow-wrap:anywhere;line-height:1.15}
+.bac-site-frame [role="status"]{overflow-wrap:anywhere}.bac-site-frame :where(input,textarea,select){font-size:1rem}.bac-site-frame :where(input,textarea){background:var(--color-card);border-color:var(--color-input)}
+.bac-site-frame :where(.chip){border-radius:12px;min-height:46px}.bac-site-frame :where(.callout,.callout-panel,.answer-box){border-radius:16px}.bac-site-frame :where(table){border-collapse:collapse;line-height:1.6}.bac-site-frame :where(thead){background:#eef3e6;color:#18382d}.bac-site-frame :where(th,td){vertical-align:top}.bac-site-frame :where([role="status"]){line-height:1.6}
+.bac-site-frame[data-bac-page="reference"] .bac-page-content :where(section:not([id="studies"])){scroll-margin-top:6rem}.bac-site-frame[data-bac-page="reference"] .bac-page-content :where(p){max-width:74ch}.bac-site-frame[data-bac-page="reference"] .bac-page-content :where(h2){margin-bottom:.75rem}.bac-site-frame[data-bac-page="reference"] .bac-page-content :where(article){line-height:1.8}
+.bac-info-card{padding:1.5rem;border:1px solid var(--bac-line);border-radius:20px;background:var(--bac-paper)}.bac-info-card h2{font-size:1.4rem}.bac-info-card p{margin-top:1rem;line-height:1.75}
+.bac-inline-link{font-size:13px;text-decoration:underline;text-underline-offset:4px;display:inline-flex;align-items:center;min-height:44px}.bac-water-link>a{display:inline-flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;border:1px solid #9bb18b;border-radius:10px;padding:11px 15px;font-size:13px;font-weight:600;color:#18382d;background:#e7efcf;text-decoration:none;max-width:100%;line-height:1.5}.bac-water-link>a:hover{background:#dcebb4}.bac-water-link svg{flex-shrink:0}.bac-water-link p{font-size:12px;line-height:1.6;color:#4c624b;margin-top:8px;max-width:65ch}.bac-water-link.compact p{font-size:11px}
+.bac-supply-checklist{border:1px solid #bdccaf;border-radius:20px;background:#f0f5e5;padding:22px;margin-top:24px}.bac-checklist-heading{display:flex;align-items:center;gap:10px}.bac-checklist-heading h3{font-size:1.2rem;font-weight:600}.bac-supply-checklist>p{font-size:13px;margin-top:10px}.bac-supply-checklist ul{list-style:none;margin:16px 0;display:grid;gap:14px}.bac-supply-checklist li{display:flex;gap:10px;font-size:13px;line-height:1.7}.bac-supply-checklist li svg{flex-shrink:0;margin-top:3px;color:#426536}.bac-checklist-limit{color:#4d6250}.section-dark .bac-water-link p{color:#d6e2ce}
+.bac-result-card{background:#e5efc7!important;border:1px solid #bdcf9d!important;color:#18382d;padding:20px!important;border-radius:14px!important}.bac-calc-card{border:1px solid #c4d2b6;border-radius:22px;background:#fffef9;box-shadow:0 10px 32px #18382d07}
+.bac-bottom-nav{background:#fafcf5f5;border-color:#b9c9aa}.bac-bottom-nav a[aria-current="page"]{background:#eaf2d7;border-radius:14px}.bac-bottom-nav a{margin:4px 2px}.bac-page-content :where(details){border-radius:12px}.bac-page-content :where(summary){cursor:pointer;min-height:44px}
+@media(max-width:780px){.bac-wordmark img{width:174px}.bac-site-frame:not([data-bac-page="home"]):not([data-bac-page="admin"]) .bac-page-content>div:first-child,.bac-site-frame:not([data-bac-page="home"]):not([data-bac-page="admin"]) .bac-page-content>article:first-child{padding-top:1.5rem;padding-bottom:2rem}.bac-site-frame:not([data-bac-page="home"]) h1{font-size:1.9rem;max-width:100%}.bac-site-frame h2{line-height:1.25}.bac-supply-checklist{padding:18px}.bac-info-card{padding:20px}.bac-site-frame :where(.text-lg){font-size:1rem}.bac-site-frame :where(.text-xs){font-size:.75rem}.bac-site-frame :where([role="tablist"]){max-width:100%;height:auto;flex-wrap:wrap}.bac-site-frame :where([role="tab"]){white-space:normal;min-height:44px}}
+@media(max-width:359px){.bac-wordmark img{width:151px}.bac-water-link>a{font-size:12px;padding-inline:11px}.bac-site-frame:not([data-bac-page="home"]) h1{font-size:1.7rem}}
+@media print{.bac-site-frame{background:white!important}.bac-water-link,.bac-supply-checklist{display:none!important}.bac-page-content{padding:0!important}}
+
+.bac-featured-tool{margin-top:28px;display:flex;justify-content:space-between;gap:28px;align-items:center;padding:28px;border-radius:22px;background:#18382d;color:#f5f9ee;text-decoration:none}.bac-featured-tool .eyebrow{color:#d1e0bd}.bac-featured-tool h2{font-size:28px;margin:10px 0}.bac-featured-tool p{font-size:14px;color:#dae4d1}.bac-featured-action{display:flex;align-items:center;gap:12px;border:1px solid #adc493;border-radius:11px;padding:13px 16px;background:#dfedb3;color:#18382d;font-size:13px;white-space:nowrap;font-weight:600}.bac-tools-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:24px}.bac-tool-tile{display:flex;flex-direction:column;padding:24px;border:1px solid #ced9c1;border-radius:20px;background:#fffef9;text-decoration:none}.bac-tool-tile:hover{border-color:#8ba275;background:#fbfdf4}.bac-tile-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:27px;color:#5b714a}.bac-tile-top span{font-size:12px;font-family:var(--font-mono)}.bac-tool-tile h2{font-size:22px;font-weight:500}.bac-tool-tile p{font-size:14px;line-height:1.7;margin-top:12px;color:#506451}.bac-tile-action{display:flex;justify-content:space-between;gap:16px;margin-top:auto;padding-top:24px;font-size:13px;font-weight:500}.bac-unit-help{padding:13px 17px;border:1px solid #ccd8c0;background:#f7faef;border-radius:12px;margin-top:20px;font-size:13px}.bac-unit-help summary{font-weight:600;display:list-item;padding-block:8px}.bac-unit-help dl{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0 5px}.bac-unit-help dt{font-weight:600}.bac-unit-help dd{margin-top:5px;color:#506451}.bac-site-frame[data-bac-page="admin"] .bac-wordmark img{width:174px}@media(max-width:900px){.bac-tools-grid{grid-template-columns:1fr 1fr}.bac-featured-tool{align-items:flex-start;flex-direction:column}}@media(max-width:550px){.bac-tools-grid{grid-template-columns:1fr;gap:14px}.bac-tool-tile{padding:21px}.bac-tile-top{margin-bottom:18px}.bac-featured-tool{padding:23px}.bac-featured-tool h2{font-size:24px}.bac-unit-help dl{grid-template-columns:1fr}.bac-featured-action{white-space:normal}}

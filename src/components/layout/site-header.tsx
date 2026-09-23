@@ -1,17 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { Wordmark } from "@/components/brand/wordmark";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { Menu, User, X, LogOut, LayoutGrid, LogIn, UserPlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import styles from "./research-header.module.css";
 
 const NAV = [
-  { href: "/plan", label: "Build My Plan" },
-  { href: "/peptides", label: "Compound Reference" },
-  { href: "/tools", label: "Calculators" },
-  { href: "/learn", label: "Learning Center" },
+  { href: "/peptide-calculator", label: "Calculator" },
+  { href: "/tools", label: "More tools" },
+  { href: "/learn", label: "Learn" },
+  { href: "/recommendations", label: "Research supplies" },
 ];
 
 const ITEM = "flex items-center gap-2.5 px-3.5 min-h-11 py-2.5 text-sm hover:bg-muted transition-colors";
@@ -91,16 +93,9 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
   if (pathname?.startsWith("/admin")) return null;
 
   return (
-    <header onKeyDown={(e) => { if (e.key === "Escape" && open) { e.preventDefault(); setOpen(false); trigger.current?.focus(); } }} className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-sm">
+    <header onKeyDown={(e) => { if (e.key === "Escape" && open) { e.preventDefault(); setOpen(false); trigger.current?.focus(); } }} className={cn(styles.header, "sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-sm")}>
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="flex items-baseline gap-2">
-          <span className="font-serif text-2xl font-medium tracking-tight leading-none">
-            BACwater
-          </span>
-          <span className="text-xs text-muted-foreground tracking-widest uppercase leading-none pb-0.5">
-            .ai
-          </span>
-        </Link>
+        <Link href="/" aria-label="BACwater.ai home"><Wordmark/></Link>
 
         <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-1">
           {NAV.map((n) => {
@@ -109,6 +104,7 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
               <Link
                 key={n.href}
                 href={n.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
                   "px-3 py-1.5 text-sm transition-colors",
                   active ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"
@@ -121,6 +117,7 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link href="/plans" className={styles.plansLink}>My plans</Link>
           <AccountMenu isAuthenticated={isAuthenticated} />
           <button
             type="button"
