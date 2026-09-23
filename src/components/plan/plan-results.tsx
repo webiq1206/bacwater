@@ -175,7 +175,7 @@ export function PlanResults({ result }: Props) {
       <PlanSelfCheck result={result} bacSource={bacSource} doseLabel={doseLabel} />
 
       {/* 3, RECOMMENDED SUPPLIES / SHOP ---------------------------------- */}
-      <SupplyRecommender supplies={result.supplies} />
+      <details className="bac-optional-supplies rounded-xl border p-4"><summary className="cursor-pointer min-h-11 font-medium">Supply counts for this calculation</summary><SupplyRecommender supplies={result.supplies} /></details>
 
       {/* 4, DOSAGE REFERENCE (visual) ------------------------------------ */}
       <DosageReference result={result} />

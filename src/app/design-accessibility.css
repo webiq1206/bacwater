@@ -66,3 +66,18 @@ header button[aria-controls="mobile-navigation"] svg {
 .bac-page-content .grid > a.group > svg {
   flex-shrink: 0;
 }
+
+/* A bounded calculation page has exactly one scroll region, never a website behind it. */
+html:has([data-calculator-workspace]),body:has([data-calculator-workspace]){overflow:hidden;overscroll-behavior:none;}
+body:has([data-calculator-workspace]) #main{padding:0;}
+[data-calculator-workspace] .bac-privacy-preferences{margin-top:24px;}
+
+.bac-mobile-calculation-controls{display:none}
+@media(max-width:767px){
+ .bac-screen-panels[data-active-screen=inputs] [data-screen=result],.bac-screen-panels[data-active-screen=result] [data-screen=inputs]{display:none}
+ .bac-mobile-calculation-controls{display:flex;flex-direction:column;gap:6px;width:100%;}
+ .bac-mobile-calculation-controls>button{width:100%;min-height:48px;}
+ .bac-mobile-calculation-controls>p{font-size:11px;text-align:center;color:#52634f;}
+}
+/* If this dock only contains a mobile action, it must not leave a blank desktop strip. */
+@media(min-width:768px){[data-calculator-actions]:has(.bac-mobile-calculation-controls){display:none}}

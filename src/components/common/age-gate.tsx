@@ -1,4 +1,6 @@
 "use client";
+import { usePathname } from "next/navigation";
+import { isCalculatorWorkspace } from "@/lib/calculator-routes";
 
 import { useEffect, useRef, useState } from "react";
 import { ShieldCheck, FlaskConical } from "lucide-react";
@@ -6,35 +8,24 @@ import { POSITIONING_STATEMENT } from "@/lib/positioning";
 
 const COOKIE = "bacwater_age_ok";
 
-/**
- * 21+ confirmation, shown as a non-blocking bottom banner.
- *
- * This used to be a full-screen overlay that covered the page and locked body
- * scroll until the visitor confirmed. Age verification is a permitted
- * interstitial as far as Google is concerned, so it was not what kept pages
- * out of the index, but it did mean every first-time visitor and every
- * stricter renderer (Bing, several AI crawlers) met a covered page before any
- * content. On a site whose entire job is answering a question on arrival, that
- * is a lot of engagement to spend on a confirmation click.
- *
- * The banner keeps the same confirmation and the same cookie. It just lets the
- * answer stay readable behind it. Declining still blanks the page, so an
- * under-21 visitor does not simply get to dismiss their way in.
- */
+/** The existing age check remains a banner while browsing. A focused calculator
+ * uses a dedicated confirmation screen so its controls never hide behind the app.
+ * The confirmation cookie, minimum age and decline behavior are unchanged. */
 export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
+  const workspace = isCalculatorWorkspace(usePathname() || "/");
   const [verified, setVerified] = useState(initialVerified);
   const [declined, setDeclined] = useState(false);
 
   const declinedButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    if (!declined) return;
+    if (!declined && !(workspace && !verified)) return;
     const prior = document.activeElement as HTMLElement | null;
     const bodyChildren = [...document.body.children].filter((e) => e instanceof HTMLElement && !e.querySelector("#age-gate-title")) as HTMLElement[];
     const previous = bodyChildren.map((e) => e.inert);
     bodyChildren.forEach((e) => { e.inert = true; });
     declinedButton.current?.focus();
     return () => { bodyChildren.forEach((e, i) => { e.inert = previous[i]; }); prior?.focus(); };
-  }, [declined]);
+  }, [declined, workspace, verified]);
   if (verified) return null;
 
   function confirm() {
@@ -48,8 +39,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
     setVerified(true);
   }
 
-  // Declining is the one case that still takes over the screen: someone who
-  // has said they are under 21 should not keep reading.
+  // A visitor who declines cannot continue into the calculator.
   if (declined) {
     return (
       <div
@@ -86,9 +76,17 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
 
   return (
     <div
-      role="region"
+      role={workspace ? "dialog" : "region"}
+      aria-modal={workspace ? true : undefined}
       aria-labelledby="age-gate-title"
-      className="no-print border-b border-border bg-card"
+      data-age-gate
+      onKeyDown={event => {
+        if (!workspace || event.key !== "Tab") return;
+        const controls=[...event.currentTarget.querySelectorAll<HTMLButtonElement>("button")];
+        if(event.shiftKey && document.activeElement===controls[0]) { event.preventDefault(); controls.at(-1)?.focus(); }
+        else if(!event.shiftKey && document.activeElement===controls.at(-1)) { event.preventDefault(); controls[0]?.focus(); }
+      }}
+      className={workspace ? "no-print fixed inset-0 z-[200] flex items-center overflow-auto bg-background p-3" : "no-print border-b border-border bg-card"}
     >
       <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
@@ -117,6 +115,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
         <div className="flex shrink-0 flex-col gap-2.5 sm:flex-row lg:flex-col xl:flex-row">
           <button
             type="button"
+            ref={declinedButton}
             onClick={confirm}
             className="h-12 rounded-xl bg-foreground px-6 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
           >
