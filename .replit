@@ -6,8 +6,9 @@ run = "npm run dev"
 channel = "stable-24_05"
 
 [deployment]
-# Install the reviewed lockfile. Do not run the production seed or accept data loss.
-build = ["sh", "-c", "npm ci --include=dev && npx prisma generate && npx prisma db push --skip-generate && npx tsx scripts/apply-editorial-revisions.ts --apply && npm run build"]
+# Production deploys are read-only with respect to schema/content.
+# Replit's production database migration UI must never be approved for destructive drops.
+build = ["sh", "-c", "npm ci --include=dev && npx prisma generate && npx tsx scripts/verify-deploy-schema.ts && npm run build"]
 run = ["sh", "-c", "npm start"]
 deploymentTarget = "autoscale"
 
