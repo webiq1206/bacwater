@@ -1,3 +1,4 @@
+import { SiteChrome } from "@/components/calculator/site-chrome";
 import { safeJson } from "@/lib/seo/safe-json";
 import type { Metadata } from "next";
 import { AnalyticsPreferences } from "@/components/common/analytics-preferences";
@@ -106,13 +107,13 @@ export default async function RootLayout({
         >
           Skip to content
         </a>
-        <SiteHeader isAuthenticated={isAuthenticated} />
+        <SiteChrome><SiteHeader isAuthenticated={isAuthenticated} /></SiteChrome>
         <AgeGate initialVerified={ageVerified} />
         <main id="main" className="flex-1 min-w-0"><SiteFrame shelf={<ResearchSupplierSection products={catalog}/>}>{children}</SiteFrame></main>
-        <SiteFooter />
-        <MobileBottomNav />
+        <SiteChrome><SiteFooter /></SiteChrome>
+        <SiteChrome><MobileBottomNav /></SiteChrome>
         <Toaster />
-        <AnalyticsPreferences />
+        <SiteChrome><AnalyticsPreferences /></SiteChrome>
         </SupplierProvider>
       </body>
     </html>

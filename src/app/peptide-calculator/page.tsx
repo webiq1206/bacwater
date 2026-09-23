@@ -1,9 +1,9 @@
+import { CalculatorWorkspace } from "@/components/calculator/calculator-workspace";
 import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { PlanForm } from "@/components/plan/plan-form";
-import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { SoftwareAppJsonLd } from "@/components/common/software-app-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
@@ -102,43 +102,7 @@ export default function PeptideCalculatorPage() {
         }}
       />
 
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Peptide Calculator", href: "/peptide-calculator" },
-        ]}
-      />
-
-      <div className="max-w-3xl">
-        <div className="eyebrow">Calculator</div>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          Peptide calculator
-        </h1>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Put in your label numbers. See the result and how we got it.
-        </p>
-
-        {/* Answer-first block: the extractable direct answer for search and AI. */}
-        <AnswerBox className="mt-5" label="In short">
-          Use the amount on your vial and the total liquid volume from your instructions.
-          We show how much is in each mL. Add the amount you want to measure to see its volume.
-          We do not choose a dose or tell you what to mix.
-        </AnswerBox>
-
-        <p className="mt-4 text-sm text-muted-foreground">
-          Want one question at a time?{" "}
-          <Link href="/plan/new" className="text-foreground font-medium underline">
-            Use the guided plan builder
-          </Link>
-          .
-        </p>
-      </div>
-
-      {/* The working calculator. */}
-      <div className="mt-10">
-        <PlanForm mode="advanced" />
-      </div>
-
+      <CalculatorWorkspace title="Peptide calculator" description="One question at a time. Use the numbers from your own instructions." backHref="/" help={<>
       {/* How it works: answer-first teaching, targets long-tail + AI overviews. */}
       <section className="mt-16 max-w-3xl">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
@@ -227,6 +191,9 @@ export default function PeptideCalculatorPage() {
           <Link href="/learn/what-you-cannot-know" className="text-muted-foreground hover:text-foreground underline transition-colors">What you cannot know about your vial</Link>
         </div>
       </section>
+      </>}>
+        <PlanForm mode="beginner" />
+      </CalculatorWorkspace>
     </div>
   );
 }

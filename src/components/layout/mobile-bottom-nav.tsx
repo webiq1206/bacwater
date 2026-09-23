@@ -26,7 +26,7 @@ const ITEMS = [
 /** The wizard and admin have their own navigation and action placement. */
 export function MobileBottomNav() {
   const pathname = usePathname() || "/";
-  const hidden = pathname === "/plan" || pathname === "/plan/new" || pathname.startsWith("/plan/") || pathname.startsWith("/admin");
+  const hidden = pathname === "/" || pathname === "/plan" || pathname === "/plan/new" || pathname.startsWith("/plan/") || pathname.startsWith("/admin");
 
   useEffect(() => {
     let mounted = true;

@@ -1,4 +1,6 @@
 "use client";
+import { useState, useRef } from "react";
+import { CalculatorWorkspace, WorkspaceActions } from "@/components/calculator/calculator-workspace";
 
 import Link from "next/link";
 import { UnitHelp } from "@/components/tools/unit-help";
@@ -23,6 +25,16 @@ function UnitChoice({ value, onChange, label }: { value: MassUnit; onChange: (un
 
 export default function BacWaterCalculatorPage() {
   const vial = useVialContext();
+  const [screen,setScreen] = useState<"inputs"|"result">("inputs");
+  const panels=useRef<HTMLDivElement>(null);
+  function switchScreen(next:"inputs"|"result") {
+    setScreen(next);
+    requestAnimationFrame(()=>{
+      panels.current?.closest<HTMLElement>("[data-calculator-scroll]")?.scrollTo({top:0,behavior:"instant"});
+      const heading=panels.current?.querySelector<HTMLElement>(`[data-screen="${next}"] h2`);
+      if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+    });
+  }
   const [savedMode, setMode] = usePersistentState<"known" | "example">("bacwater.tool.bacwater.mode.v2", "known");
   const [savedVolume, setVolume] = usePersistentState<string>("bacwater.tool.bacwater.volume.v2", "");
   const mode = savedMode === "example" ? "example" : "known";
@@ -50,17 +62,23 @@ export default function BacWaterCalculatorPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24">
-      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Tools", href: "/tools" }, { label: "BAC water calculator", href: "/tools/bac-water" }]} />
-      <div className="max-w-3xl">
-        <div className="eyebrow">Concentration and volume</div>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-serif">BAC water volume calculator</h1>
-        <p className="mt-4 text-lg leading-relaxed">Copy the numbers from your label and instructions. We’ll show how much is in each mL and what your entered amount equals.</p>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">Use the final amount of liquid from your instructions. We do not choose a dose or tell you what to mix. No account or purchase is needed.</p>
-      </div>
-
-      <div className="mt-8 grid items-start gap-6 lg:grid-cols-2">
-        <section className="min-w-0 space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-labelledby="volume-inputs-heading">
+    <CalculatorWorkspace title="BAC water calculator" description="Copy the amounts and final volume from your own instructions." help={<>
+      <section className="mt-10 max-w-3xl space-y-3">
+        <h2 className="text-2xl font-serif">How the volume changes concentration</h2>
+        <p>Concentration in mg/mL equals the total amount in mg divided by the final liquid volume in mL. The volume for an entered measurement equals that measurement in mg divided by the concentration.</p>
+        <p>For a mathematical example, 10 mg in a final 2 mL is 5 mg/mL. An entered 0.4 mg measurement corresponds to 0.08 mL, or 8 U-100 units. In a final 4 mL instead, the concentration would be 2.5 mg/mL and that same amount would correspond to 0.16 mL.</p>
+        <p>These examples demonstrate arithmetic, not product preparation. Changing liquid volume may be incompatible with the product instructions or vial capacity. Read <Link href="/learn/what-you-cannot-know" className="underline">what a calculator cannot verify</Link>.</p>
+      </section>
+      <section className="mt-9 max-w-3xl space-y-3">
+        <h2 className="text-2xl font-serif">Does BAC water establish a shelf life?</h2>
+        <p>This calculator cannot establish sterility or stability. Do not treat a preservative, a clear-looking solution or a correct calculation as proof that a mixture remains usable. Follow the exact product's storage and discard instructions.</p>
+        <p>The <Link href="/learn/bac-water-shelf-life" className="underline">BAC water storage reference</Link> separates unopened expiry, opened-vial guidance and reconstituted-product instructions. They are different questions.</p>
+      </section>
+      <UnitHelp/><SupplyChecklist volumeMl={valid?volume:undefined} measurementMl={valid?measurementMl:undefined}/>
+      <section className="mt-9"><h2 className="text-2xl font-serif">Related calculations</h2><div className="mt-4 grid gap-3 sm:grid-cols-3">{[{ href: "/tools/syringe-units", title: "U-100 units and mL", text: "Convert volume units without assuming syringe markings." }, { href: "/tools/mg-to-mcg", title: "mg and mcg", text: "Check milligram and microgram conversions." }, { href: "/tools/dose", title: "Known concentration", text: "Check the amount in a stated liquid volume." }].map(tool => <Link key={tool.href} href={tool.href} className="rounded-xl border border-border p-4 transition-colors hover:bg-muted"><h3 className="font-medium">{tool.title}</h3><p className="mt-2 text-sm text-muted-foreground">{tool.text}</p></Link>)}</div></section>
+</>}>
+      <div ref={panels} data-active-screen={screen} className="bac-screen-panels grid items-start gap-6 lg:grid-cols-2">
+        <section data-screen="inputs" className="min-w-0 space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-labelledby="volume-inputs-heading">
           <h2 id="volume-inputs-heading" className="text-xl font-semibold">Your label values</h2>
           <CarriedOverNotice visible={vial.carriedOver} onClear={clear} />
           <div>
@@ -89,7 +107,7 @@ export default function BacWaterCalculatorPage() {
           <Button type="button" variant="outline" onClick={clear}>Clear entered values</Button>
         </section>
 
-        <section className="section-dark min-w-0 rounded-2xl p-5 sm:p-7" aria-labelledby="volume-result-heading">
+        <section data-screen="result" className="section-dark min-w-0 rounded-2xl p-5 sm:p-7" aria-labelledby="volume-result-heading">
           <h2 id="volume-result-heading" className="text-xl font-semibold">{mode === "example" ? "Illustrative result" : "Calculated result"}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{mode === "example" ? "Example inputs are not product instructions." : "Based only on the values you entered."}</p>
           <div className="mt-5" role="status" aria-live="polite" aria-atomic="true" id="bac-result">
@@ -105,23 +123,16 @@ export default function BacWaterCalculatorPage() {
             {measurementMl > 1 && <p className="mt-3 rounded-lg border border-border p-3 text-sm">This volume exceeds a 1 mL syringe's capacity. A conversion is not an instruction to use a different device or preparation.</p>}
           </>}
           <p className="mt-5 text-xs leading-relaxed text-muted-foreground">U-100 means 100 units per mL. Confirm the scale, capacity and graduation spacing on the actual device. Display values are rounded; very small or large values use scientific notation. No shelf life or safe-use date is calculated.</p>
-          <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="brand"><Link href="/plan">Build a saved plan</Link></Button><Button asChild variant="outline"><Link href="/editorial-policy">See the methodology</Link></Button></div>
+          <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="brand"><Link href="/plan">Build a saved plan</Link></Button></div>
         </section>
       </div>
 
-      <section className="mt-10 max-w-3xl space-y-3">
-        <h2 className="text-2xl font-serif">How the volume changes concentration</h2>
-        <p>Concentration in mg/mL equals the total amount in mg divided by the final liquid volume in mL. The volume for an entered measurement equals that measurement in mg divided by the concentration.</p>
-        <p>For a mathematical example, 10 mg in a final 2 mL is 5 mg/mL. An entered 0.4 mg measurement corresponds to 0.08 mL, or 8 U-100 units. In a final 4 mL instead, the concentration would be 2.5 mg/mL and that same amount would correspond to 0.16 mL.</p>
-        <p>These examples demonstrate arithmetic, not product preparation. Changing liquid volume may be incompatible with the product instructions or vial capacity. Read <Link href="/learn/what-you-cannot-know" className="underline">what a calculator cannot verify</Link>.</p>
-      </section>
-      <section className="mt-9 max-w-3xl space-y-3">
-        <h2 className="text-2xl font-serif">Does BAC water establish a shelf life?</h2>
-        <p>This calculator cannot establish sterility or stability. Do not treat a preservative, a clear-looking solution or a correct calculation as proof that a mixture remains usable. Follow the exact product's storage and discard instructions.</p>
-        <p>The <Link href="/learn/bac-water-shelf-life" className="underline">BAC water storage reference</Link> separates unopened expiry, opened-vial guidance and reconstituted-product instructions. They are different questions.</p>
-      </section>
-      <UnitHelp/><SupplyChecklist volumeMl={valid?volume:undefined} measurementMl={valid?measurementMl:undefined}/>
-      <section className="mt-9"><h2 className="text-2xl font-serif">Related calculations</h2><div className="mt-4 grid gap-3 sm:grid-cols-3">{[{ href: "/tools/syringe-units", title: "U-100 units and mL", text: "Convert volume units without assuming syringe markings." }, { href: "/tools/mg-to-mcg", title: "mg and mcg", text: "Check milligram and microgram conversions." }, { href: "/tools/dose", title: "Known concentration", text: "Check the amount in a stated liquid volume." }].map(tool => <Link key={tool.href} href={tool.href} className="rounded-xl border border-border p-4 transition-colors hover:bg-muted"><h3 className="font-medium">{tool.title}</h3><p className="mt-2 text-sm text-muted-foreground">{tool.text}</p></Link>)}</div></section>
-    </div>
+      <WorkspaceActions>
+        <div className="bac-mobile-calculation-controls">
+          {screen === "result" ? <Button variant="outline" size="lg" onClick={()=>switchScreen("inputs")}>Edit numbers</Button> : <Button variant="brand" size="lg" disabled={!valid} onClick={()=>switchScreen("result")}>See my result</Button>}
+          <p>{screen === "result" ? "Your numbers stay here. You can change them." : valid ? "Ready. See what your numbers mean." : "Fill in the amounts and volume to continue."}</p>
+        </div>
+      </WorkspaceActions>
+    </CalculatorWorkspace>
   );
 }
