@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import { WorkspaceActions } from "@/components/calculator/calculator-workspace";
 
 import { trackUsage } from "@/lib/analytics";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -375,6 +377,13 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     pendingScrollRef.current = false;
     const el = stepContainerRef.current;
     if (!el) return;
+    const scroller = el.closest<HTMLElement>("[data-calculator-scroll]");
+    if (scroller) {
+      scroller.scrollTo({ top: 0, behavior: "instant" });
+      const heading = el.querySelector<HTMLElement>(".bac-step-panel h2, h2");
+      if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+      return;
+    }
     const HEADER_OFFSET = 88; // sticky header (64px) + breathing room
     const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
     // Only scroll when the step isn't already comfortably in view, so we never
@@ -484,7 +493,11 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
         const d = JSON.parse(raw) as Record<string, unknown>;
         if (typeof d.peptideSlug === "string") setPeptideSlug(d.peptideSlug);
         if (typeof d.customPeptideName === "string") setCustomPeptideName(d.customPeptideName);
-        if (typeof d.vialInput === "number") setVialInput(d.vialInput);
+        if (typeof d.vialInput === "number" && Number.isFinite(d.vialInput)) {
+          setVialInput(d.vialInput);
+          const ref=PEPTIDES.find(p=>p.slug===d.peptideSlug);
+          setShowCustomVial(!ref?.commonVialStrengthsMg.includes(d.vialInput));
+        }
         if (d.vialUnit === "mg" || d.vialUnit === "mcg") setVialUnit(d.vialUnit);
         if (typeof d.doseInput === "number") setDoseInput(d.doseInput);
         if (d.doseUnit === "mg" || d.doseUnit === "mcg") setDoseUnit(d.doseUnit);
@@ -494,6 +507,13 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
         if (typeof d.useRecommendedBac === "boolean") setUseRecommendedBac(d.useRecommendedBac);
         if (typeof d.customBacMl === "number") setCustomBacMl(d.customBacMl);
         if (typeof d.dateMixed === "string") setDateMixed(d.dateMixed);
+        if (Number.isInteger(d.step) && typeof d.step === "number" && d.step >= 0 && d.step < STEPS.length) {
+          const named = typeof d.peptideSlug === "string" && (d.peptideSlug === "custom" ? Boolean(d.customPeptideName) : PEPTIDES.some(p => p.slug === d.peptideSlug));
+          const amount = typeof d.vialInput === "number" && Number.isFinite(d.vialInput) && d.vialInput > 0;
+          const measure = typeof d.doseInput === "number" && Number.isFinite(d.doseInput) && d.doseInput > 0;
+          const water = d.useRecommendedBac === true || (typeof d.customBacMl === "number" && Number.isFinite(d.customBacMl) && d.customBacMl > 0);
+          setStep(Math.min(d.step, d.peptideSlug === "hcg" ? 0 : !named ? 0 : !amount ? 1 : !measure ? 2 : !water ? 3 : 5));
+        }
       }
     } catch {
       /* ignore corrupt/blocked storage */
@@ -507,6 +527,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       localStorage.setItem(
         "bacwater.planDraft",
         JSON.stringify({
+          step,
           peptideSlug,
           customPeptideName,
           vialInput,
@@ -523,7 +544,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     } catch {
       /* ignore */
     }
-  }, [hydrated, init, peptideSlug, customPeptideName, vialInput, vialUnit, doseInput, doseUnit, freqOverride, syringeType, useRecommendedBac, customBacMl, dateMixed]);
+  }, [hydrated, init, step, peptideSlug, customPeptideName, vialInput, vialUnit, doseInput, doseUnit, freqOverride, syringeType, useRecommendedBac, customBacMl, dateMixed]);
 
   // Effective injections per week: user override, else the peptide's typical
   // frequency (from its half-life). The entered dose is the WEEKLY total.
@@ -722,7 +743,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             <ModeToggle mode={mode} onChange={setMode} />
           )}
         </div>
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
+        <div className="bac-focus-advanced grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
           {/* Form: sticky on desktop */}
           <div className="lg:sticky lg:top-24 space-y-4">
             {/* 1. Peptide */}
@@ -1123,6 +1144,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                   className="mt-1 h-11"
                 />
               </div>
+              <WorkspaceActions>
               <Button
                 onClick={handleSave}
                 disabled={saving || !hasValidInputs || result.errors.length > 0}
@@ -1137,6 +1159,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 )}
                 {saveLabel}
               </Button>
+              </WorkspaceActions>
               <p className="mt-3 text-xs text-muted-foreground text-center">
                 {saveHint}
               </p>
@@ -1170,7 +1193,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     // already carries the answers so far.
     <div
       className={cn(
-        "mx-auto pb-24 sm:pb-0",
+        "bac-focus-step mx-auto pb-24 sm:pb-0",
         isReview
           ? // The review step lays out its own panes, so it takes the full width
             // instead of being squeezed into the question column.
@@ -1200,7 +1223,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           onNext={() => goToStep(1)}
           onBack={null}
           stepNum={1}
-          nextDisabled={!hasPeptide}
+          nextDisabled={!hasPeptide || peptideSlug === "hcg"}
         >
           <Select value={peptideSlug} onValueChange={selectPeptide}>
             <SelectTrigger aria-label="Compound" className="h-14 text-base">
@@ -1214,7 +1237,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               ))}
             </SelectContent>
           </Select>
-          {peptideSlug === "custom" ? (
+          {peptideSlug === "hcg" ? <div className="mt-4 rounded-xl border p-4"><p className="text-sm">hCG uses IU, not mg. Use the IU calculator for this label.</p><Button asChild variant="brand" className="mt-3"><Link href="/calculate/hcg">Open hCG IU calculator</Link></Button></div> : peptideSlug === "custom" ? (
             <Input
               className="mt-3"
               aria-label="Custom peptide name"
@@ -1525,21 +1548,20 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           <div className="callout-panel">
             <div className="flex items-center gap-2.5 mb-3">
               <Lightbulb className="h-5 w-5" style={{ color: "var(--color-accent-guide)" }} />
-              <h4 className="text-sm font-semibold">We handled these for you</h4>
+              <h4 className="text-sm font-semibold">Check your device settings</h4>
             </div>
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-              Based on your inputs, we picked this for you. Already have a
-              different syringe on hand? Tap{" "}
+              These are calculator settings, not a device recommendation. Tap{" "}
               <span className="font-medium" style={{ color: "var(--color-accent-guide)" }}>
                 Change
               </span>{" "}
-              to match what you&apos;ve got.
+              to match the scale and marks on your actual device.
             </p>
             <div className="space-y-3">
               <SmartDefault
                 label="Syringe"
                 value={syringe.label}
-                reason="Works for virtually every peptide dose. Most common choice."
+                reason="Confirm the scale, capacity and markings on your device."
                 editing={editingSyringe}
                 onToggle={() => setEditingSyringe(!editingSyringe)}
               >
@@ -1576,21 +1598,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 className="mt-1 h-12"
               />
             </div>
-            {/* Desktop: inline save. On mobile this lives in the sticky bar below. */}
-            <Button
-              variant="brand"
-              size="xl"
-              onClick={handleSave}
-              disabled={saving || !hasValidInputs || result.errors.length > 0}
-              className="w-full hidden sm:flex"
-            >
-              {saving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
-              )}
-              {saveLabel}
-            </Button>
+            {/* The workspace action dock keeps Save reachable. */}
+
             <p className="text-xs text-muted-foreground text-center">
               {saveHint}
             </p>
@@ -1606,8 +1615,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           </aside>
           </div>
 
-          {/* Mobile: sticky Save bar so the primary action is always reachable. */}
-          <div className="sm:hidden fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+          {/* One primary Save action in the viewport-aware workspace dock. */}
+          <WorkspaceActions>
             <Button
               variant="brand"
               size="lg"
@@ -1622,7 +1631,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               )}
               {saveLabel}
             </Button>
-          </div>
+          </WorkspaceActions>
         </div>
       )}
 
@@ -1673,7 +1682,7 @@ function StepPanel({
   nextDisabled?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card rounded-2xl">
+    <div className="bac-step-panel rounded-xl border border-border bg-card rounded-2xl">
       <div className="p-5 sm:p-8">
         <div className="flex items-center gap-3 mb-2 sm:mb-3">
           <StepNumber n={stepNum} filled />
@@ -1690,40 +1699,10 @@ function StepPanel({
         <div className="mt-4 sm:mt-6">{children}</div>
       </div>
 
-      {/* Desktop: footer nav inside the card. */}
-      <div className="hidden sm:flex items-center justify-between border-t border-border px-8 py-4 bg-surface/50 rounded-b-2xl">
-        {onBack ? (
-          <Button variant="ghost" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Button>
-        ) : (
-          <span />
-        )}
-        <Button variant="brand" size="lg" onClick={onNext} disabled={nextDisabled}>
-          Continue <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Mobile: sticky nav pinned to the bottom of the viewport so Continue is
-          always one tap away, never hidden below the fold. */}
-      <div className="sm:hidden fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-border bg-white/95 backdrop-blur-sm px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
-        {onBack ? (
-          <Button variant="outline" size="lg" onClick={onBack} aria-label="Go back">
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Button>
-        ) : (
-          <span className="w-2" />
-        )}
-        <Button
-          variant="brand"
-          size="lg"
-          onClick={onNext}
-          disabled={nextDisabled}
-          className="flex-1"
-        >
-          Continue <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
+      <WorkspaceActions>
+        {onBack ? <Button variant="outline" size="lg" onClick={onBack} aria-label="Go back"><ArrowLeft className="h-4 w-4"/> Back</Button> : <span/>}
+        <Button variant="brand" size="lg" onClick={onNext} disabled={nextDisabled}>Continue <ArrowRight className="h-4 w-4"/></Button>
+      </WorkspaceActions>
     </div>
   );
 }

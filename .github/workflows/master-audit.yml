@@ -118,6 +118,11 @@ jobs:
           if (renders.some(r => !r.title || r.h1?.length !== 1 || r.errors?.length || r.schema?.some(s => s?.parseError))) process.exit(1);
           console.log(`Verified ${summary.httpPages} URLs, ${summary.rendered} renders and ${summary.responsive} responsive/engine checks.`);
           JS
+      - name: Verify dedicated calculator screens and full-height homepage
+        if: ${{ !cancelled() && steps.server.outcome == 'success' }}
+        run: |
+          node scripts/audit-calculator-focus.mjs
+          node scripts/audit-calculator-reflow.mjs
       - name: Verify sitewide design and supplier sliders
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/audit-sitewide-design.mjs

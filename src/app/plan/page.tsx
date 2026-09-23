@@ -1,5 +1,5 @@
+import { CalculatorWorkspace } from "@/components/calculator/calculator-workspace";
 import { PlanForm } from "@/components/plan/plan-form";
-import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
 export const metadata = {
@@ -29,27 +29,9 @@ export default function PlanPage() {
           { name: "Build My Plan", url: "/plan" },
         ]}
       />
-      <div className="hidden sm:block">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Build My Plan", href: "/plan" },
-          ]}
-        />
-      </div>
-      <div className="max-w-3xl mb-6">
-        <div className="eyebrow">Plan builder</div>
-        <h1 className="mt-2 sm:mt-3 text-3xl sm:text-5xl font-serif font-medium tracking-tight">
-          Build your calculation, one step at a time
-        </h1>
-        <p className="mt-3 sm:mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed">
-          Copy the numbers from your label and instructions. We’ll show the math and help you save it.
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground hidden sm:block">
-          Answer one question at a time. You can go back and change an answer.
-        </p>
-      </div>
-      <PlanForm mode="beginner" />
+      <CalculatorWorkspace title="Build your calculation" description="Use your label and instructions. We show the math." backHref="/">
+        <PlanForm mode="beginner" />
+      </CalculatorWorkspace>
     </div>
   );
 }

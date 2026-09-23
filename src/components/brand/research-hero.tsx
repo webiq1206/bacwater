@@ -1,13 +1,25 @@
 import Link from "next/link";
-import { ArrowUpRight, Check, ArrowRight } from "lucide-react";
-import { QuickCalculator } from "./quick-calculator";
+import { ArrowUpRight, Check, Calculator, ArrowRight, Scale, Ruler, ChevronDown } from "lucide-react";
 import styles from "./research-hero.module.css";
-/** Calculator-first composition using the site's existing type families. */
-export function ResearchHero(){return <section className={styles.hero} aria-labelledby="home-title">
-  <div className={styles.copy}><h1 id="home-title"><span className={styles.eyebrow}><span aria-hidden="true"/>THE BAC WATER CALCULATOR</span>Your numbers.<br/>Made <em>clear.</em></h1>
-  <p className={styles.description}>Put in the numbers from your label.<br className={styles.desktopBreak}/> See the math. Save your result.</p>
-  <div className={styles.actions}><Link href="/peptide-calculator" className={styles.primary}>Open calculator <ArrowUpRight size={19} aria-hidden="true"/></Link><Link href="/plan" className={styles.secondary}>Guide me through it <ArrowRight size={17} aria-hidden="true"/></Link></div>
-  <p className={styles.free}><span><Check size={14} aria-hidden="true"/> Free to calculate</span><span><Check size={14} aria-hidden="true"/> No account needed</span></p>
-  <p className={styles.limit}>This checks math. It does not tell you what to take, what to mix, or how long it will keep.</p></div>
-  <div className={styles.visual}><div className={styles.orbit} aria-hidden="true"/><div className={styles.visualLabel} aria-hidden="true">LESS CLUTTER. MORE CLARITY.</div><QuickCalculator/></div>
-</section>;}
+export function ResearchHero(){return <section className={`${styles.hero} ${styles.fullHero}`} aria-labelledby="home-title" data-home-hero>
+ <div className={styles.copy}>
+  <p className={styles.heroKicker}>YOUR NUMBERS. MADE CLEAR.</p>
+  <h1 id="home-title">BAC water<br/><em>calculator.</em></h1>
+  <p className={styles.description}>Enter your numbers.{" "}<br/>Get a clear answer, one step at a time.</p>
+  <p className={styles.free}><span><Check size={15} aria-hidden="true"/>Free to use</span><span><Check size={15} aria-hidden="true"/>No account needed</span></p>
+  <p className={styles.limit}>We check the math. We do not tell you what to take or what to mix.</p>
+ </div>
+ <div className={styles.launcher} id="quick-calculator" aria-label="Open a calculator">
+  <div className={styles.launchTop}><span><Calculator size={22} aria-hidden="true"/>START HERE</span><span>FULL-SCREEN TOOLS</span></div>
+  <h2>Let’s check your numbers.</h2>
+  <p>Use your label and instructions. We’ll guide you through each box.</p>
+  <div className={styles.launchExample} aria-label="Arithmetic example: 12 milligrams divided by 4 milliliters equals 3 milligrams per milliliter"><span>EXAMPLE ONLY</span><p>12 <small>mg</small> ÷ 4 <small>mL</small> <span>=</span> <strong>3 <small>mg/mL</small></strong></p></div>
+  <Link href="/peptide-calculator" className={styles.launchPrimary}>Open calculator <ArrowUpRight size={22} aria-hidden="true"/></Link>
+  <p className={styles.launchNote}>Just the calculator. Nothing in your way.</p>
+  <div className={styles.launchTools} aria-label="Quick converters">
+   <Link href="/tools/mg-to-mcg"><Scale size={17} aria-hidden="true"/><span>mg to mcg</span><ArrowRight size={16} aria-hidden="true"/></Link>
+   <Link href="/tools/syringe-units"><Ruler size={17} aria-hidden="true"/><span>U-100 to mL</span><ArrowRight size={16} aria-hidden="true"/></Link>
+  </div>
+ </div>
+ <a href="#toolkit" className={styles.scrollCue}>Explore the site <ChevronDown size={17} aria-hidden="true"/></a>
+ </section>;}

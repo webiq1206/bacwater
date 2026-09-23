@@ -1,3 +1,4 @@
+import { CalculatorWorkspace } from "@/components/calculator/calculator-workspace";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -44,33 +45,7 @@ export default async function PlanEditPage({ params }: Props) {
     /* keep default */
   }
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
-      <Link
-        href={`/plan/${plan.publicId}`}
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to plan
-      </Link>
-      <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-semibold tracking-tight">Edit plan</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Changes update this plan in place. Its link, PDF and vial labels
-            keep working and will show the new numbers.
-          </p>
-        </div>
-        {/* The alternative to editing in place, offered here rather than
-            described here: this copies the plan and opens the copy, leaving
-            the original exactly as it is. */}
-        <PlanDuplicateButton
-          publicId={plan.publicId}
-          variant="outline"
-          label="Edit a copy instead"
-          className="shrink-0"
-        />
-      </div>
-      <div className="mt-8">
+    <CalculatorWorkspace title="Edit calculation" description="Saving updates this plan, its PDF and its labels." backHref={`/plan/${plan.publicId}`} help={<PlanDuplicateButton publicId={plan.publicId} variant="outline" label="Edit a copy instead" />}>
         <PlanEditor
           initial={{
             publicId: plan.publicId,
@@ -86,7 +61,6 @@ export default async function PlanEditPage({ params }: Props) {
             dateMixed: plan.dateMixed ? plan.dateMixed.toISOString().slice(0, 10) : "",
           }}
         />
-      </div>
-    </div>
+    </CalculatorWorkspace>
   );
 }
