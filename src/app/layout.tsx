@@ -4,6 +4,7 @@ import { AnalyticsPreferences } from "@/components/common/analytics-preferences"
 import { cookies } from "next/headers";
 import { Montserrat, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
+import "./design-accessibility.css";
 import { SiteFrame } from "@/components/brand/site-frame";
 import { SupplierProvider } from "@/components/partners/supplier-context";
 import { ResearchSupplierSection } from "@/components/partners/amino-recommendations";
