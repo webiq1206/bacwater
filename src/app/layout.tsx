@@ -4,6 +4,11 @@ import { AnalyticsPreferences } from "@/components/common/analytics-preferences"
 import { cookies } from "next/headers";
 import { Montserrat, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
+import "./design-accessibility.css";
+import { SiteFrame } from "@/components/brand/site-frame";
+import { SupplierProvider } from "@/components/partners/supplier-context";
+import { ResearchSupplierSection } from "@/components/partners/amino-recommendations";
+import { getAminoCatalog } from "@/lib/partners/amino-club";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -13,7 +18,7 @@ import { AgeGate } from "@/components/common/age-gate";
 import { ADS_ENABLED } from "@/lib/ads";
 import { auth } from "@/lib/auth";
 
-// Montserrat carries the voice (body, labels, and light-weight headings).
+// Montserrat carries the body, labels and clear, medium-weight headings.
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
@@ -21,7 +26,7 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-// Fraunces italic is the accent, used sparingly (a single word, the "Co.").
+// Fraunces is used only for brief display accents.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
@@ -49,6 +54,7 @@ export const metadata: Metadata = {
   description:
     "Work out concentration, how much to measure, and syringe units from the numbers on your vial. Every step is shown.",
   applicationName: "BACwater.ai",
+  icons: { icon: "/brand/bacwater-mark.svg", shortcut: "/brand/bacwater-mark.svg", apple: "/icon" },
   authors: [{ name: "BACwater.ai" }],
   openGraph: {
     type: "website",
@@ -70,6 +76,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const catalog = getAminoCatalog();
   const session = await auth();
   const isAuthenticated = Boolean((session?.user as { id?: string } | undefined)?.id);
   const ageVerified = (await cookies()).get("bacwater_age_ok")?.value === "1";
@@ -79,6 +86,7 @@ export default async function RootLayout({
       className={`${montserrat.variable} ${fraunces.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <SupplierProvider water={catalog[0]}>
         <OrgJsonLd />
         <script
           type="application/ld+json"
@@ -100,11 +108,12 @@ export default async function RootLayout({
         </a>
         <SiteHeader isAuthenticated={isAuthenticated} />
         <AgeGate initialVerified={ageVerified} />
-        <main id="main" className="flex-1">{children}</main>
+        <main id="main" className="flex-1 min-w-0"><SiteFrame shelf={<ResearchSupplierSection products={catalog}/>}>{children}</SiteFrame></main>
         <SiteFooter />
         <MobileBottomNav />
         <Toaster />
         <AnalyticsPreferences />
+        </SupplierProvider>
       </body>
     </html>
   );

@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { Home, Wand2, BookOpen, User } from "lucide-react";
+import { Home, Calculator, BookOpen, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ITEMS = [
   { href: "/", label: "Home", icon: Home, match: (p: string) => p === "/" },
   {
-    href: "/plan",
-    label: "Build",
-    icon: Wand2,
-    match: (p: string) => p === "/plan" || p.startsWith("/plan/") || p.startsWith("/tools"),
+    href: "/peptide-calculator",
+    label: "Calculate",
+    icon: Calculator,
+    match: (p: string) => p === "/peptide-calculator" || p === "/plan" || p.startsWith("/plan/") || p.startsWith("/tools"),
   },
   {
     href: "/learn",

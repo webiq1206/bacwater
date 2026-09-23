@@ -1,3 +1,4 @@
+import { AminoWaterLink } from "@/components/partners/supplier-context";
 import { Package } from "lucide-react";
 import type { SupplyRecommendation } from "@/lib/calc";
 
@@ -5,21 +6,16 @@ interface Props {
   supplies: SupplyRecommendation[];
 }
 
-/**
- * Supply COUNTS (PRD v3 §9.3.6 / §9.5). How many of each item this plan works
- * out to, counts only. The site sells nothing and points to no seller, so
- * there are no prices, no cart, and no links here.
- */
+/** Displays existing arithmetic counts, not personal product or treatment advice. */
 export function SupplyRecommender({ supplies }: Props) {
   return (
     <section className="border border-border bg-card rounded-2xl p-6 sm:p-8">
       <div className="flex items-center gap-2.5">
         <Package className="h-5 w-5 accent-check" />
-        <h3 className="text-lg font-serif tracking-tight">What this plan needs</h3>
+        <h3 className="text-lg font-serif tracking-tight">Supply counts to check</h3>
       </div>
       <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-        How many of each item your plan works out to. These are counts so you
-        can plan. We don&apos;t sell these and don&apos;t point you to a seller.
+        These counts use the numbers in your plan. Check them against your product instructions. They do not choose what you should use or buy.
       </p>
       <ul className="mt-4 divide-y divide-border rounded-xl border border-border overflow-hidden">
         {supplies.map((s) => (
@@ -36,6 +32,7 @@ export function SupplyRecommender({ supplies }: Props) {
           </li>
         ))}
       </ul>
+      <div className="mt-5"><AminoWaterLink/></div>
     </section>
   );
 }

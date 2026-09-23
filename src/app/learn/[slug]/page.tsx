@@ -75,7 +75,7 @@ export default async function GuidePage({ params }: Props) {
       {!guide.canonicalPath && guide.kind !== "faq" && <ArticleJsonLd title={guide.title} body={guide.body} slug={guide.slug} createdAt={guide.createdAt} updatedAt={guide.updatedAt} citations={refs} />}
       <Breadcrumbs items={[
         { label: "Home", href: "/" },
-        { label: "Learning Center", href: "/learn" },
+        { label: "Learning center", href: "/learn" },
         { label: guide.title, href: `/learn/${guide.slug}` },
       ]} />
       <div className="eyebrow">Guide</div>

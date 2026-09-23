@@ -693,7 +693,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
           </Text>
           <Text style={s.disclaimerText}>
             BACwater.ai calculates concentration and measurement values from the numbers you
-            enter. It sells nothing and recommends no vendor. All information and calculations
+            enter. It does not sell products or choose a treatment. All information and calculations
             are provided strictly for laboratory research and educational purposes. Nothing here
             is intended for human or veterinary use, for diagnosis or treatment of any condition,
             or as a substitute for professional medical advice. The calculations in this guide

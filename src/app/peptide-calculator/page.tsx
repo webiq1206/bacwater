@@ -69,7 +69,7 @@ const FAQS = [
 
 export default function PeptideCalculatorPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 sm:pt-10 pb-12">
       <WebPageJsonLd
         name={TITLE}
         description={DESCRIPTION}
@@ -115,19 +115,18 @@ export default function PeptideCalculatorPage() {
           Peptide calculator
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Reconstitution, BAC water, and syringe units, with every step shown.
+          Put in your label numbers. See the result and how we got it.
         </p>
 
         {/* Answer-first block: the extractable direct answer for search and AI. */}
         <AnswerBox className="mt-5" label="In short">
-          A peptide calculator divides the labeled amount by the final liquid
-          volume to find concentration, then converts your entered measurement
-          into mL and syringe units. Use values from the product instructions.
-          No account is needed to calculate; saving a plan is optional.
+          Use the amount on your vial and the total liquid volume from your instructions.
+          We show how much is in each mL. Add the amount you want to measure to see its volume.
+          We do not choose a dose or tell you what to mix.
         </AnswerBox>
 
         <p className="mt-4 text-sm text-muted-foreground">
-          Prefer a guided, one-question-at-a-time walkthrough?{" "}
+          Want one question at a time?{" "}
           <Link href="/plan/new" className="text-foreground font-medium underline">
             Use the guided plan builder
           </Link>
@@ -146,8 +145,7 @@ export default function PeptideCalculatorPage() {
           How the peptide calculator works
         </h2>
         <p className="mt-4 text-foreground/90 leading-relaxed">
-          Reconstitution is one division and one conversion. The calculator does
-          both from your numbers and shows the work:
+          The calculator uses your numbers and shows these steps:
         </p>
         <ol className="mt-5 space-y-4">
           {[

@@ -46,10 +46,7 @@ export function PlanResults({ result }: Props) {
   // a recommended amount most people accept. Label it "we calculated" when it
   // matches that recommendation, "you entered" when it was overridden, so the
   // provenance chip stays honest either way.
-  const bacSource: Provenance =
-    Math.abs(result.usedBacMl - result.recommendedBacMl) < 0.01
-      ? "calculated"
-      : "user";
+  const bacSource: Provenance = "user";
 
   return (
     /*
@@ -76,7 +73,7 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-6 rounded-xl bg-accent-guide-soft p-5 sm:p-6">
           <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
-            Measure this much each time
+            Your entered amount equals
           </div>
           <div className="mt-1 result-hero">
             {syringeReadout.kind === "u100"
@@ -108,7 +105,7 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-5 grid grid-cols-2 gap-px bg-border rounded-xl overflow-hidden @lg:grid-cols-4">
           <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} source="user" />
-          <Stat label="BAC water" value={`${formatMl(result.usedBacMl)} mL`} source={bacSource} />
+          <Stat label="Final volume" value={`${formatMl(result.usedBacMl)} mL`} source={bacSource} />
           <Stat
             label="Concentration"
             value={`${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL`}
