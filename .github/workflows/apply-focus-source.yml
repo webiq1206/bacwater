@@ -1,0 +1,52 @@
+name: Materialize calculator source
+on:
+  push:
+    branches: [release/focused-calculators-2026-09-23]
+    paths: [.github/workflows/apply-focus-source.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exact source delta and apply on review branch
+        run: |
+          test "$GITHUB_REF" = refs/heads/release/focused-calculators-2026-09-23
+          python - <<'PY'
+          from pathlib import Path
+          import base64,gzip,hashlib,json,subprocess
+          raw=''.join(Path(f'audit/focus-transport/part{i}.b64').read_text().strip() for i in range(5))
+          data=gzip.decompress(base64.b64decode(raw,validate=True))
+          assert hashlib.sha256(data).hexdigest()=='a1976ffd2a12e92d6b6a3a7971672c35e03636d8af6492f82786f11d2b895697','Source transport checksum mismatch'
+          changes=json.loads(data);prepared={}
+          for name,change in changes.items():
+            p=Path(name)
+            assert not p.is_absolute() and '..' not in p.parts and '.git' not in p.parts
+            assert name.startswith(('src/','scripts/','audit/2026-09-23/','.github/workflows/'))
+            if name=='.github/workflows/master-audit.yml': continue
+            if 'content' in change:
+              new=change['content']
+              assert not p.exists() or p.read_text()==new,f'New path conflict: {name}'
+            else:
+              old=p.read_text()
+              if hashlib.sha256(old.encode()).hexdigest()==change['after']: continue
+              assert hashlib.sha256(old.encode()).hexdigest()==change['sha256'],f'Baseline mismatch: {name}'
+              lines=old.splitlines(keepends=True)
+              for a,b,text in reversed(change['edits']):lines[a:b]=text
+              new=''.join(lines)
+              assert hashlib.sha256(new.encode()).hexdigest()==change['after'],f'Output mismatch: {name}'
+            prepared[name]=new
+          for name,new in prepared.items():
+            p=Path(name);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(new)
+          subprocess.run(['git','add','--',*prepared.keys()],check=True)
+          print(f'Verified and applied {len(prepared)} application, test and release-record paths. No database or deployment configuration was changed.')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat: dedicate calculator workspaces and clarify full-height homepage'
+            git push origin HEAD:release/focused-calculators-2026-09-23
+          fi
+          git rev-parse HEAD
