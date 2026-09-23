@@ -1,0 +1,55 @@
+name: Partner reference review
+on:
+  push:
+    branches: [feat/research-partner-design-2026-09-23]
+    paths: [.github/workflows/partner-reference-review.yml]
+permissions:
+  contents: read
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prepare browser
+        run: |
+          npm ci
+          npm install --no-save --package-lock=false @playwright/test@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Capture public reference only
+        run: |
+          mkdir -p partner-evidence
+          git archive --format=tar HEAD > partner-evidence/source.tar
+          node --input-type=module <<'JS'
+          import { chromium } from '@playwright/test';
+          import fs from 'node:fs/promises';
+          const browser = await chromium.launch();
+          const rows = [];
+          for (const width of [390, 1440]) {
+            const context = await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce'});
+            await context.route(/google-analytics|googletagmanager|clarity\.ms|doubleclick|facebook\.net/,r=>r.abort());
+            const page = await context.newPage();
+            for (const [name,url] of [['amino-home','https://www.aminoclub.com/'],['amino-partner','https://www.aminoclub.com/us/affiliate'],['amino-account','https://www.aminoclub.com/us/account'],['bac-home','https://bacwater.ai/']]) {
+              try {
+                await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
+                await page.waitForTimeout(1600);
+                await page.screenshot({path:`partner-evidence/${name}-${width}.png`,fullPage:true});
+                rows.push({name,width,url:page.url(),title:await page.title(),observed:await page.evaluate(()=>({text:document.body.innerText,styles:[...document.querySelectorAll('h1,h2,header,main,button,a')].slice(0,70).map(e=>{const s=getComputedStyle(e);return {tag:e.tagName,text:e.textContent?.slice(0,60),background:s.backgroundColor,color:s.color,font:s.fontFamily,fontSize:s.fontSize,fontWeight:s.fontWeight,radius:s.borderRadius};}),fields:[...document.querySelectorAll('input')].map(e=>({name:e.name,type:e.type,placeholder:e.placeholder,required:e.required}))}))});
+              } catch (e) { rows.push({name,width,error:String(e)}); }
+            }
+            await context.close();
+          }
+          await browser.close();
+          await fs.writeFile('partner-evidence/observations.json',JSON.stringify({checkedAt:new Date().toISOString(),rows,scope:'Public GET navigation only; no registration, messages, account tokens, purchases or copied brand assets.'},null,2));
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: partner-design-reference
+          path: partner-evidence/
+          retention-days: 3
