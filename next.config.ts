@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 import { execFileSync } from "node:child_process";
 let buildCommit = "unavailable";
 try { const value = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); if (/^[a-f0-9]{40}$/.test(value)) buildCommit = value; } catch {}
@@ -15,9 +16,14 @@ const APEX_HOST = new URL(
 /** Escaped for the regex `has` matcher, so the dots are literal. */
 const WWW_HOST_PATTERN = `www\\.${APEX_HOST.replace(/\./g, "\\.")}`;
 
-const nextConfig: NextConfig = {
+const nextConfig = (phase: string): NextConfig => ({
   env: { BACWATER_BUILD_COMMIT: buildCommit },
-  typescript: { ignoreBuildErrors: false },
+  typescript: {
+    ignoreBuildErrors: false,
+    // A Replit publish can contain stale .next/dev types from the workspace.
+    // Keep editor types in development without mixing them into production.
+    tsconfigPath: phase === PHASE_DEVELOPMENT_SERVER ? "tsconfig.json" : "tsconfig.build.json",
+  },
   serverExternalPackages: ["@prisma/client", "bcryptjs", "@react-pdf/renderer", "qrcode"],
   async redirects() {
     return [
@@ -121,6 +127,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-};
+});
 
 export default nextConfig;
