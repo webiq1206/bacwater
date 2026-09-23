@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {chromium,webkit,expect} from '@playwright/test';
-const require=createRequire(import.meta.url);
-const origin=process.env.AUDIT_ORIGIN;assert.equal(origin,'http://127.0.0.1:3000','Only test the isolated site.');
+const require=createRequire(import.meta.url),origin=process.env.AUDIT_ORIGIN;
+assert.equal(origin,'http://127.0.0.1:3000');
 const out='audit-evidence/calculator-focus';await fs.mkdir(out,{recursive:true});
 const axe=await fs.readFile(require.resolve('axe-core/axe.min.js'),'utf8');
 const browser=await chromium.launch(),c=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
@@ -12,8 +12,7 @@ await c.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);
 const page=await c.newPage(),results=[],errors=[];page.on('pageerror',e=>errors.push(String(e)));
 async function check(name,fn){try{await fn();results.push({name,status:'passed'});}catch(e){results.push({name,status:'failed',error:String(e)});throw e;}}
 async function fit(p){
- await expect(p.locator('[data-calculator-workspace]')).toBeVisible();
- const geometry=await p.evaluate(()=>{const root=document.querySelector('[data-calculator-workspace]').getBoundingClientRect(),body=document.querySelector('[data-calculator-scroll]').getBoundingClientRect();return {x:root.x,y:root.y,right:root.right,bottom:root.bottom,vh:innerHeight,vw:innerWidth,scroll:document.documentElement.scrollWidth,bodyHeight:body.height};});
+ const geometry=await p.evaluate(()=>{const root=document.querySelector('[data-calculator-workspace]')?.getBoundingClientRect(),body=document.querySelector('[data-calculator-scroll]')?.getBoundingClientRect();return {x:root.x,y:root.y,right:root.right,bottom:root.bottom,vh:innerHeight,vw:innerWidth,scroll:document.documentElement.scrollWidth,bodyHeight:body.height};});
  assert.ok(geometry.x>=-1&&geometry.y>=-1&&geometry.right<=geometry.vw+1&&geometry.bottom<=geometry.vh+2,JSON.stringify(geometry));
  assert.ok(geometry.scroll<=geometry.vw+1&&geometry.bodyHeight>50,JSON.stringify(geometry));
  await expect(p.getByRole('navigation',{name:'Primary navigation',exact:true})).toHaveCount(0);
@@ -79,6 +78,16 @@ try{
   await page.addStyleTag({content:'html{font-size:200%} p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});
   await fit(page);await page.screenshot({path:`${out}/guided-enlarged-320.png`,fullPage:false});
  });
+ await check('Help follows the actual enlarged header and desktop questions remain centered',async()=>{
+  await page.getByLabel('Open calculator help',{exact:true}).click();
+  const bar=await page.locator('[data-calculator-workspace] > header').boundingBox(),help=await page.getByRole('region',{name:'Calculator help and supplies'}).boundingBox();
+  assert.ok(bar&&help&&help.y>=bar.y+bar.height-1,JSON.stringify({bar,help}));
+  await page.getByRole('button',{name:'Return to calculation',exact:true}).click();
+  await page.setViewportSize({width:1440,height:900});await page.goto(origin+'/peptide-calculator');
+  const question=await page.locator('.bac-step-panel').first().boundingBox();
+  assert.ok(question&&Math.abs(question.x+question.width/2-720)<2,JSON.stringify(question));
+  await page.screenshot({path:`${out}/guided-step-1440.png`,fullPage:false});
+ });
  await check('All-at-once is optional and its save control stays in the app action dock',async()=>{
   await page.setViewportSize({width:390,height:844});await page.goto(origin+'/plan');
   await page.getByRole('button',{name:'All at once',exact:true}).click();
@@ -87,7 +96,7 @@ try{
  });
  await check('Compound references launch isolated tools; hCG keeps IU and utilities are noindex',async()=>{
   await page.goto(origin+'/peptides/hcg');await expect(page.locator('main input')).toHaveCount(0);
-  await page.getByRole('link',{name:'Open hCG calculator',exact:true}).click();await expect(page).toHaveURL(origin+'/calculate/hcg');
+  await page.getByRole('link',{name:/^Open hcg calculator$/i}).click();await expect(page).toHaveURL(origin+'/calculate/hcg');
   await expect(page.getByLabel('Total in container (IU)',{exact:true})).toBeVisible();await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute('content',/noindex/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href',origin+'/peptides/hcg');
   await fit(page);await page.screenshot({path:`${out}/hcg-390.png`,fullPage:false});

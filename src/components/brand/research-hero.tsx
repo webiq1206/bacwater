@@ -5,7 +5,7 @@ export function ResearchHero(){return <section className={`${styles.hero} ${styl
  <div className={styles.copy}>
   <p className={styles.heroKicker}>YOUR NUMBERS. MADE CLEAR.</p>
   <h1 id="home-title">BAC water<br/><em>calculator.</em></h1>
-  <p className={styles.description}>Enter your numbers.<br/>Get a clear answer, one step at a time.</p>
+  <p className={styles.description}>Enter your numbers.{" "}<br/>Get a clear answer, one step at a time.</p>
   <p className={styles.free}><span><Check size={15} aria-hidden="true"/>Free to use</span><span><Check size={15} aria-hidden="true"/>No account needed</span></p>
   <p className={styles.limit}>We check the math. We do not tell you what to take or what to mix.</p>
  </div>

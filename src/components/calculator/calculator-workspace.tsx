@@ -19,7 +19,7 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
 }) {
   const [actionsRoot, setActionsRoot] = useState<HTMLDivElement | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
-  const root = useRef<HTMLElement>(null), guide = useRef<HTMLDetailsElement>(null);
+  const root = useRef<HTMLElement>(null), bar = useRef<HTMLElement>(null), guide = useRef<HTMLDetailsElement>(null);
   const pathname = usePathname();
   useEffect(() => { setHelpOpen(false); }, [pathname]);
   useEffect(() => {
@@ -31,6 +31,7 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const el = root.current; if (!el) return;
+        if (bar.current) el.style.setProperty("--calc-bar-height", `${bar.current.getBoundingClientRect().bottom - el.getBoundingClientRect().top}px`);
         if (viewport && Math.abs(viewport.scale - 1) < 0.02) {
           el.style.setProperty("--calc-height", `${viewport.height}px`);
           el.style.setProperty("--calc-top", `${viewport.offsetTop}px`);
@@ -40,9 +41,11 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
         }
       });
     };
+    const barObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver(update) : null;
+    if (bar.current) barObserver?.observe(bar.current);
     update(); viewport?.addEventListener("resize", update); viewport?.addEventListener("scroll", update);
     window.addEventListener("resize", update);
-    return () => { cancelAnimationFrame(raf); viewport?.removeEventListener("resize", update); viewport?.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
+    return () => { cancelAnimationFrame(raf); barObserver?.disconnect(); viewport?.removeEventListener("resize", update); viewport?.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
   }, []);
   function closeHelp() {
     setHelpOpen(false);
@@ -50,7 +53,7 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
   }
   return <ActionsContext.Provider value={actionsRoot}>
     <section ref={root} className={styles.workspace} data-calculator-workspace data-help-open={helpOpen} aria-label={title} onKeyDown={event => { if (event.key === "Escape" && helpOpen) { event.preventDefault(); closeHelp(); } }}>
-      <header className={styles.bar}>
+      <header ref={bar} className={styles.bar}>
         <Link href={backHref} className={styles.back} aria-label={backHref === "/" ? "Back to website" : backHref.startsWith("/peptides/") ? "Back to compound reference" : backHref.startsWith("/plan/") ? "Back to saved calculation" : "Back to calculators"}><ArrowLeft size={19} aria-hidden="true"/><span>Back</span></Link>
         <Link href="/tools" className={styles.brand} aria-label="Choose a calculator"><Calculator size={20} aria-hidden="true"/><span>Calculator</span></Link>
         <details ref={guide} className={styles.guide} open={helpOpen}>
