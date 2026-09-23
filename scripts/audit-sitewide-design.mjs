@@ -17,6 +17,28 @@ try{
  await check('Carousel arrows and keyboard move cards; water link stays outside track',async()=>{await p.goto(origin+'/recommendations');const track=p.getByRole('region',{name:'AminoClub research products'}).getByLabel('Scrollable product cards');await p.getByRole('button',{name:'Next supplier products'}).click();await expect.poll(()=>track.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);await track.focus();await p.keyboard.press('End');await expect(p.getByRole('button',{name:'Next supplier products'})).toBeDisabled();await p.keyboard.press('Home');await expect(p.getByRole('button',{name:'Previous supplier products'})).toBeDisabled();assert.equal(await p.locator('[data-supplier-shelf] [data-bac-water-link]').evaluate(el=>Boolean(el.closest('[aria-label="Scrollable product cards"]'))),false);});
  await check('BAC water link available on every calculator without a result or signup',async()=>{for(const route of ['bac-water','dose','supplies','reverse-bac','mg-to-mcg','syringe-units']){await p.goto(origin+'/tools/'+route);await expect(p.locator('.bac-page-content [data-bac-water-link] a').first()).toBeVisible();}});
  await check('All seven widths preserve page width, logo and sitewide template style',async()=>{for(const width of [320,375,390,430,768,1024,1440]){await p.setViewportSize({width,height:900});for(const route of ['/','/peptide-calculator','/tools/bac-water','/learn','/peptides/hcg','/plans','/signin','/contact','/recommendations']){await p.goto(origin+route,{waitUntil:'networkidle'});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`${route} at ${width}`);await expect(p.locator('header .bac-wordmark img')).toBeVisible();if([390,1440].includes(width))await p.screenshot({path:`${out}/${route==='/'?'home':route.slice(1).replaceAll('/','-')}-${width}.png`,fullPage:true});}}});
- await check('Enlarged text retains calculator and supplier actions',async()=>{await p.setViewportSize({width:390,height:900});await p.goto(origin+'/recommendations');await p.addStyleTag({content:'html{font-size:200%}'});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);await expect(p.getByRole('button',{name:'Next supplier products'})).toBeVisible();await p.screenshot({path:out+'/supplies-text-200.png',fullPage:true});});
+ await check('Enlarged text retains calculator, supplier and privacy actions',async()=>{
+   for(const width of [320,390]) for(const route of ['/','/peptide-calculator','/recommendations']) {
+     await p.setViewportSize({width,height:900});
+     await p.goto(origin+route,{waitUntil:'networkidle'});
+     await p.addStyleTag({content:'html{font-size:200%}'});
+     const layout=await p.evaluate(()=>({
+       viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,
+       overflow:[...document.querySelectorAll('body *')].filter(el=>{
+         const r=el.getBoundingClientRect();
+         return r.width>0&&r.right>innerWidth+1&&!el.closest('[aria-label="Scrollable product cards"]');
+       }).slice(0,20).map(el=>({tag:el.tagName,class:String(el.className),right:el.getBoundingClientRect().right})),
+     }));
+     assert.ok(layout.scrollWidth<=layout.viewport+1,`${route} at ${width}px, 200% text: ${JSON.stringify(layout)}`);
+     await expect(p.getByRole('button',{name:'Next supplier products'})).toBeVisible();
+     const privacy=p.getByRole('region',{name:'Analytics preferences'});
+     const paragraph=await privacy.locator('p').boundingBox();
+     assert.ok(paragraph&&paragraph.x>=0&&paragraph.x+paragraph.width<=width+1,'Privacy explanation must wrap within the viewport.');
+     await privacy.getByRole('button',{name:'Keep analytics off',exact:true}).click();
+     await expect(privacy.getByRole('button',{name:'Keep analytics off',exact:true})).toHaveAttribute('aria-pressed','true');
+     const name=route==='/'?'home':route.slice(1);
+     await p.screenshot({path:`${out}/${name}-text-200-${width}.png`,fullPage:true});
+   }
+ });
  await check('New ordinary links appear in sitemap and no vendor scripts load',async()=>{const r=await c.request.get(origin+'/sitemap-pages.xml');assert.ok((await r.text()).includes('/recommendations</loc>'));assert.equal(external.some(u=>new URL(u).hostname.endsWith('aminoclub.com')),false);assert.deepEqual(errors,[]);});
 }catch(e){process.exitCode=1;console.error(e);await p.screenshot({path:out+'/failure.png',fullPage:true}).catch(()=>{});await fs.writeFile(out+'/failure.html',await p.content());}finally{await browser.close();await fs.writeFile(out+'/results.json',JSON.stringify({date:new Date().toISOString(),results,errors,external,limitations:['Browser engines and viewport emulation only; no physical device or screen reader was used.','No supplier signup, attribution, purchase or live catalog stock check occurs in these tests.']},null,2));}
