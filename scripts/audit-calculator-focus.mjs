@@ -95,7 +95,12 @@ try{
   const bounds=await save.boundingBox();assert.ok(bounds&&bounds.y+bounds.height<=844);await fit(page);
  });
  await check('Compound references launch isolated tools; hCG keeps IU and utilities are noindex',async()=>{
-  await page.goto(origin+'/peptides/hcg');await expect(page.locator('main input')).toHaveCount(0);
+  await page.goto(origin+'/peptides/hcg');
+  // Browsing pages include a shelf search, but never active calculation fields.
+  await expect(page.locator('[data-calculator-workspace]')).toHaveCount(0);
+  await expect(page.locator('main input')).toHaveCount(1);
+  await expect(page.locator('[data-supplier-shelf]').getByRole('searchbox',{name:'Find a product',exact:true})).toHaveCount(1);
+  await expect(page.locator('main input:not([type="search"])')).toHaveCount(0);
   await page.getByRole('link',{name:/^Open hcg calculator$/i}).click();await expect(page).toHaveURL(origin+'/calculate/hcg');
   await expect(page.getByLabel('Total in container (IU)',{exact:true})).toBeVisible();await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute('content',/noindex/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href',origin+'/peptides/hcg');

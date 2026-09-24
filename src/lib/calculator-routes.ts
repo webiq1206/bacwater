@@ -12,5 +12,5 @@ export const CALCULATOR_ROUTES = [
 ] as const;
 export function isCalculatorWorkspace(path: string): boolean {
   return CALCULATOR_ROUTES.some(route => route.href === path) ||
-    /^\/calculate\/[a-z0-9-]+$/.test(path) || /^\/plan\/[A-Za-z0-9_-]+\/edit$/.test(path);
+    /^\/calculate\/product\/[a-z0-9-]+$/.test(path) || /^\/calculate\/[a-z0-9-]+$/.test(path) || /^\/plan\/[A-Za-z0-9_-]+\/edit$/.test(path);
 }

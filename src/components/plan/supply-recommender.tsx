@@ -1,4 +1,4 @@
-import { AminoWaterLink } from "@/components/partners/supplier-context";
+import { SupplierWaterLink } from "@/components/partners/supplier-context";
 import { Package } from "lucide-react";
 import type { SupplyRecommendation } from "@/lib/calc";
 
@@ -32,7 +32,7 @@ export function SupplyRecommender({ supplies }: Props) {
           </li>
         ))}
       </ul>
-      <div className="mt-5"><AminoWaterLink/></div>
+      <div className="mt-5"><SupplierWaterLink/></div>
     </section>
   );
 }

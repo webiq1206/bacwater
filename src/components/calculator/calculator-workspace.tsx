@@ -5,7 +5,9 @@ import { createPortal } from "react-dom";
 import { ArrowLeft, Calculator, HelpCircle, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { AnalyticsPreferences } from "@/components/common/analytics-preferences";
-import { AminoWaterLink } from "@/components/partners/supplier-context";
+import { SupplierWaterLink } from "@/components/partners/supplier-context";
+import { CalculatorProductTools, ProductSelectionContext } from "@/components/partners/calculator-products";
+import { productForCalculatorPath } from "@/lib/partners/supplier-catalog";
 import styles from "./calculator-workspace.module.css";
 const ActionsContext = createContext<HTMLElement | null>(null);
 export function WorkspaceActions({ children }: { children: ReactNode }) {
@@ -21,6 +23,8 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
   const [helpOpen, setHelpOpen] = useState(false);
   const root = useRef<HTMLElement>(null), bar = useRef<HTMLElement>(null), guide = useRef<HTMLDetailsElement>(null);
   const pathname = usePathname();
+  const [selectedProduct,setSelectedProduct]=useState<string|null>(()=>productForCalculatorPath(pathname||"")?.id||null);
+  useEffect(()=>{const product=productForCalculatorPath(pathname||"");if(product)setSelectedProduct(product.id);},[pathname]);
   useEffect(() => { setHelpOpen(false); }, [pathname]);
   useEffect(() => {
     // Keyboard height can change the visual viewport without changing CSS vh.
@@ -51,7 +55,7 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
     setHelpOpen(false);
     guide.current?.querySelector("summary")?.focus();
   }
-  return <ActionsContext.Provider value={actionsRoot}>
+  return <ActionsContext.Provider value={actionsRoot}><ProductSelectionContext.Provider value={setSelectedProduct}>
     <section ref={root} className={styles.workspace} data-calculator-workspace data-help-open={helpOpen} aria-label={title} onKeyDown={event => { if (event.key === "Escape" && helpOpen) { event.preventDefault(); closeHelp(); } }}>
       <header ref={bar} className={styles.bar}>
         <Link href={backHref} className={styles.back} aria-label={backHref === "/" ? "Back to website" : backHref.startsWith("/peptides/") ? "Back to compound reference" : backHref.startsWith("/plan/") ? "Back to saved calculation" : "Back to calculators"}><ArrowLeft size={19} aria-hidden="true"/><span>Back</span></Link>
@@ -61,7 +65,7 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
           <div className={styles.helpBody} role="region" aria-label="Calculator help and supplies" tabIndex={0}>
             <div className={styles.helpHeading}><h2>Help &amp; supplies</h2><button type="button" onClick={closeHelp} aria-label="Return to calculation"><X size={21} aria-hidden="true"/></button></div>
             <p>Use the numbers from your label and instructions. We check the math. We do not tell you what to take or what to mix.</p>
-            <div className={styles.water}><p><strong>Looking for BAC water?</strong></p><AminoWaterLink/><p>Check the product instructions first. A link is not advice to use it.</p></div>
+            <div className={styles.water}><p><strong>Looking for BAC water?</strong></p><SupplierWaterLink/><p>Check the product instructions first. A link is not advice to use it.</p></div>
             {help}
             <p className={styles.helpLinks}><Link href="/methodology">How the math works</Link><Link href="/contact">Report a problem</Link><Link href="/privacy">Privacy</Link></p>
             <AnalyticsPreferences />
@@ -72,10 +76,11 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
       <div className={styles.body} data-calculator-scroll tabIndex={0} role="region" aria-label="Calculation workspace">
         <div className={styles.content}>
           <div className={styles.heading}><h1>{title}</h1><p>{description}</p></div>
+          <CalculatorProductTools selectedId={selectedProduct}/>
           {children}
         </div>
       </div>
       <div ref={setActionsRoot} className={styles.actionDock} data-calculator-actions />
     </section>
-  </ActionsContext.Provider>;
+  </ProductSelectionContext.Provider></ActionsContext.Provider>;
 }

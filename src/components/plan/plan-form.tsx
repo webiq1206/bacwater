@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { AdditionalProductOptions, useCalculatorProductSelection } from "@/components/partners/calculator-products";
+import { productForReference, productCalculatorPath, SUPPLIER_PRODUCTS } from "@/lib/partners/supplier-catalog";
 import { WorkspaceActions } from "@/components/calculator/calculator-workspace";
 
 import { trackUsage } from "@/lib/analytics";
@@ -320,6 +322,7 @@ function ModeToggle({
 
 export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const router = useRouter();
+  const setSelectedProduct=useCalculatorProductSelection();
 
   // Derive first-render values from an optional prefill (edit flow). Computed
   // once; the useState initializers below read from it.
@@ -409,12 +412,20 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   // elsewhere on the site. It does NOT pre-fill vial/dose: the user enters
   // those (or picks a suggestion chip) so nothing is silently pre-populated.
   const selectPeptide = useCallback((slug: string) => {
+    if(slug.startsWith("product:")){
+      const id=slug.slice(8);
+      if(SUPPLIER_PRODUCTS.some(p=>p.id===id))router.push(productCalculatorPath(id));
+      return;
+    }
+    const listing=productForReference(slug);
+    if(listing&&listing.kind!=="single"){router.push(productCalculatorPath(listing.id));return;}
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
     // A frequency override belongs to the peptide it was chosen for; switching
     // peptides re-aligns to the new peptide's typical schedule.
     setFreqOverride(null);
-  }, []);
+  }, [router]);
+  useEffect(()=>{setSelectedProduct(productForReference(peptideSlug)?.id||null);},[peptideSlug,setSelectedProduct]);
 
   const [vialInput, setVialInput] = useState<number>(init?.vialMg ?? 0);
   const [vialUnit, setVialUnit] = useState<Unit>("mg");
@@ -764,6 +775,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                       {p.name}
                     </SelectItem>
                   ))}
+                  <AdditionalProductOptions/>
                 </SelectContent>
               </Select>
               {peptideSlug === "custom" ? (
@@ -1235,6 +1247,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                   {p.name}
                 </SelectItem>
               ))}
+                  <AdditionalProductOptions/>
             </SelectContent>
           </Select>
           {peptideSlug === "hcg" ? <div className="mt-4 rounded-xl border p-4"><p className="text-sm">hCG uses IU, not mg. Use the IU calculator for this label.</p><Button asChild variant="brand" className="mt-3"><Link href="/calculate/hcg">Open hCG IU calculator</Link></Button></div> : peptideSlug === "custom" ? (

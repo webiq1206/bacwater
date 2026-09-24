@@ -123,6 +123,9 @@ jobs:
         run: |
           node scripts/audit-calculator-focus.mjs
           node scripts/audit-calculator-reflow.mjs
+      - name: Verify full product catalog and calculator selection
+        if: ${{ !cancelled() && steps.server.outcome == 'success' }}
+        run: node scripts/audit-product-catalog.mjs
       - name: Verify sitewide design and supplier sliders
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/audit-sitewide-design.mjs
