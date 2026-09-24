@@ -4,7 +4,7 @@ import styles from "./research-hero-restored.module.css";
 
 /** The approved editorial hero, with real links into distraction-free tools. */
 export function ResearchHero() {
-  return <section className={styles.hero} aria-labelledby="home-title" data-home-hero data-hero-design="editorial-restored">
+  return <section id="quick-calculator" className={styles.hero} aria-labelledby="home-title" data-home-hero data-hero-design="editorial-restored">
     <div className={styles.copy}>
       <h1 id="home-title">
         <span className={styles.eyebrow}><span aria-hidden="true" />The BAC water calculator</span>
