@@ -43,7 +43,12 @@ jobs:
           subprocess.run(['git', 'add', '--', *paths], check=True)
           tree = subprocess.check_output(['git', 'write-tree'], text=True).strip()
           assert tree == expected, f'Unexpected source tree: {tree}'
-          print('Verified full source tree:', tree)
+          print('Verified full reviewed source tree:', tree)
+          # The workflow edit is applied separately through the authorized connector.
+          # This ordinary contents token never changes workflow files.
+          subprocess.run(['git', 'restore', '--source', base, '--staged', '--worktree', '.github/workflows/hero-acceptance.yml'], check=True)
+          tree = subprocess.check_output(['git', 'write-tree'], text=True).strip()
+          assert tree == 'a6744eea461b1b3f9258a844c384e81ec2d8313e'
           subprocess.run(['git', 'config', 'user.name', 'webIQ'], check=True)
           subprocess.run(['git', 'config', 'user.email', 'info@webiq.co'], check=True)
           commit = subprocess.check_output(['git', 'commit-tree', tree, '-p', base], input='fix: preserve calculator sessions and clarify each-time and weekly amounts\n', text=True).strip()
