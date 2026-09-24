@@ -123,6 +123,7 @@ jobs:
         run: |
           node scripts/audit-calculator-focus.mjs
           node scripts/audit-calculator-reflow.mjs
+          node scripts/audit-session-schedule.mjs
       - name: Verify full product catalog and calculator selection
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/audit-product-catalog.mjs

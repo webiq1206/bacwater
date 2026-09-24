@@ -31,7 +31,9 @@ export function productCalculation(product:SupplierProduct,values:ProductValues)
   const total=per*count;if(!Number.isSafeInteger(Math.ceil(total/bottle)))return need("The bottle count is too large to count exactly. Check the units.");return done([`${numberLabel(total)} mL total`,`${Math.ceil(total/bottle)} bottle${Math.ceil(total/bottle)===1?"":"s"} by volume, before any loss`]);
  }
  const total=n(values.total),v=n(values.volume),amount=n(values.amount);
- if(!total||!v||!amount)return need("Enter all three label values using positive numbers.");
+ if(!total||!v)return need("Enter the total amount in the vial and the final liquid volume to see concentration.");
+ if (!values.amount.trim()) return done([`${numberLabel(total/v)} mg/mL`, "Add an amount for one time to also see mL and U-100 scale units."]);
+ if(!amount)return need("Enter a positive amount from your instructions.");
  if(amount/1000>total)return need("The amount to measure is larger than the stated total. Check mg and mcg.");
  const c=total/v,ml=amount/1000/c;
  if(![c,ml,ml*100].every(x=>Number.isFinite(x)&&x>0))return need("These values are outside the supported numeric range.");

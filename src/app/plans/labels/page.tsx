@@ -80,6 +80,7 @@ export default async function BatchLabelsPage({ searchParams }: Props) {
       doseReading = formatSyringeReading(parsed.syringeReadout);
       concentration = `${formatConcentration(parsed.finalConcentrationMgPerMl)} mg/mL`;
       if (
+        parsed.schedule?.frequencyKnown !== false &&
         typeof parsed.schedule?.injectionsPerWeek === "number" &&
         parsed.schedule.injectionsPerWeek >= 1
       ) {

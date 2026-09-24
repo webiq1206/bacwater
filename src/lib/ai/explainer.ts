@@ -3,7 +3,7 @@ import { calculate, type CalcResult } from "@/lib/calc";
 export const BODY_LIMIT = 32768;
 export const TOPICS = ["overview", "concentration", "volume", "units", "portions", "storage", "rounding", "inputs", "limits"] as const;
 export type Topic = typeof TOPICS[number];
-const input = z.object({vialStrengthMg:z.number().finite().positive(),doseMcg:z.number().finite().positive(),bacWaterMl:z.number().finite().positive(),injectionsPerWeek:z.number().int().min(1).max(28).optional(),syringeType:z.enum(["insulin-0.3ml","insulin-0.5ml","insulin-1ml","tuberculin-1ml","syringe-3ml"])});
+const input = z.object({vialStrengthMg:z.number().finite().positive(),doseMcg:z.number().finite().positive(),amountBasis:z.enum(["each","week"]).optional(),bacWaterMl:z.number().finite().positive(),injectionsPerWeek:z.number().int().min(1).max(28).optional(),syringeType:z.enum(["insulin-0.3ml","insulin-0.5ml","insulin-1ml","tuberculin-1ml","syringe-3ml"])});
 const bodySchema = z.object({plan:z.object({input}),messages:z.array(z.object({role:z.enum(["user","assistant"]),content:z.string().min(1).max(1200)})).min(1).max(24),allowExternal:z.boolean().optional()});
 /** Trust only bounded numerical inputs; never trust a client-supplied result, name or note. */
 export function parseExplanation(raw:unknown) {
