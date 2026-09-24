@@ -32,3 +32,17 @@
 .content :global(.text-center):has(> :global(.eyebrow) + h2 + p)>h2{font-size:24px;line-height:1.25;margin:0 0 8px}
 .content :global(.text-center):has(> :global(.eyebrow) + h2 + p)>p{font-size:13px;line-height:1.6;margin:0}
 }
+
+/* An active guided step needs room for the question, not repeated introductory copy. */
+@media(max-width:780px){
+.content:has([data-guided-step]:not([data-guided-step="0"]))>.heading{margin-bottom:12px}
+.content:has([data-guided-step]:not([data-guided-step="0"]))>.heading h1{font-size:20px}
+.content:has([data-guided-step]:not([data-guided-step="0"]))>.heading p{display:none}
+.content :global(.bac-mode-row){gap:8px;margin-bottom:12px}
+.content :global(.bac-mode-toggle){min-height:44px}
+.content :global(.bac-mode-toggle)>button{padding:8px;font-size:.8rem;min-height:36px}
+.content :global(.bac-session-note){font-size:.68rem;line-height:1.5;margin-bottom:12px}
+.content :global(.bac-step-progress){margin-bottom:12px}
+.content :global(.bac-step-progress)>div:last-child{margin-top:6px}
+.content :global(.bac-step-context){font-size:.78rem;margin-bottom:12px}
+}

@@ -2,6 +2,7 @@
 import { CalculatorWorkspace } from "@/components/calculator/calculator-workspace";
 import { SupplyChecklist } from "@/components/tools/supply-checklist";
 import Link from "next/link";
+import { useSessionState } from "@/lib/calculator-session";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,16 +13,7 @@ type Entry = { unit: MassUnit; text: string };
 const empty: Entry = { unit: "mg", text: "" };
 export default function MgMcgConverterPage() {
   const recorded=useRef("");
-  const [entry, setEntry] = useState<Entry>(empty);
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    try {
-      const stored: unknown = JSON.parse(localStorage.getItem(KEY) || "null");
-      if (stored && typeof stored === "object" && "unit" in stored && "text" in stored && (stored.unit === "mg" || stored.unit === "mcg") && typeof stored.text === "string" && stored.text.length <= 64) setEntry({ unit: stored.unit, text: stored.text });
-    } catch { /* Unavailable or damaged local storage must not prevent calculation. */ }
-    setLoaded(true);
-  }, []);
-  useEffect(() => { if (loaded) { try { localStorage.setItem(KEY, JSON.stringify(entry)); } catch { /* Optional persistence only. */ } } }, [loaded, entry]);
+  const [entry, setEntry] = useSessionState<Entry>("converter.mass", empty);
   const result = convertMassText(entry.text, entry.unit);
   const value = (unit: MassUnit) => unit === entry.unit ? entry.text : result.kind === "value" ? result[unit] : "";
   return <CalculatorWorkspace title="mg to mcg converter" description="Type in either box. The other number updates right away." help={<>    <section className="mt-10"><h2 className="text-2xl font-serif">Check the relationship</h2><div className="mt-4 overflow-x-auto rounded-xl border border-border" role="region" tabIndex={0} aria-label="Mass conversion examples"><table className="w-full text-left text-sm"><caption className="sr-only">Equivalent amounts in milligrams and micrograms</caption><thead><tr><th scope="col" className="p-3">Milligrams</th><th scope="col" className="p-3">Micrograms</th></tr></thead><tbody>{[["0", "0"], ["0.000001", "0.001"], ["0.125", "125"], ["0.5", "500"], ["1", "1000"], ["12", "12000"]].map(([mg, mcg]) => <tr key={mg} className="border-t border-border"><td className="p-3">{mg} mg</td><td className="p-3">{mcg} mcg</td></tr>)}</tbody></table></div></section>
@@ -37,7 +29,7 @@ export default function MgMcgConverterPage() {
             onBlur={() => { if (result.kind === "value" && recorded.current!==result.mg) { recorded.current=result.mg; trackUsage("calculation_completed"); } }} className="mt-2 min-h-12 text-base" />
         </div>)}
       </div>
-      <p id="mass-help" className="mt-3 text-sm text-muted-foreground">Use a decimal point, without commas. Your last entry stays on this device when local storage is available. No account is needed.</p>
+      <p id="mass-help" className="mt-3 text-sm text-muted-foreground">Use a decimal point, without commas. Your last entry stays in this browser tab. No account is needed.</p>
       <div id="mass-status" role="status" aria-live="polite" aria-atomic="true" className="mt-5 rounded-xl border border-border p-4 break-words [overflow-wrap:anywhere]">
         {result.kind === "value" ? <><p className="font-semibold">{result.mg} mg = {result.mcg} mcg</p><p className="mt-2 text-sm">{entry.unit === "mg" ? "Multiply mg by 1,000." : "Divide mcg by 1,000."} This changes the unit, not the amount.</p></> : <p>{result.kind === "error" ? result.message : "Enter a mass in either field."}</p>}
       </div>

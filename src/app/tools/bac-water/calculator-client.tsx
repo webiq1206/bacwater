@@ -1,4 +1,6 @@
 "use client";
+import { useMassSession } from "@/lib/calculator-session";
+import { AmountScheduleFields } from "@/components/calculator/amount-schedule-fields";
 import { useState, useRef } from "react";
 import { CalculatorWorkspace, WorkspaceActions } from "@/components/calculator/calculator-workspace";
 
@@ -25,6 +27,7 @@ function UnitChoice({ value, onChange, label }: { value: MassUnit; onChange: (un
 
 export default function BacWaterCalculatorPage() {
   const vial = useVialContext();
+  const [draft, patch] = useMassSession();
   const [screen,setScreen] = useState<"inputs"|"result">("inputs");
   const panels=useRef<HTMLDivElement>(null);
   function switchScreen(next:"inputs"|"result") {
@@ -36,7 +39,8 @@ export default function BacWaterCalculatorPage() {
     });
   }
   const [savedMode, setMode] = usePersistentState<"known" | "example">("bacwater.tool.bacwater.mode.v2", "known");
-  const [savedVolume, setVolume] = usePersistentState<string>("bacwater.tool.bacwater.volume.v2", "");
+  const savedVolume = draft.volume;
+  const setVolume = (volume: string) => patch({ volume });
   const mode = savedMode === "example" ? "example" : "known";
   const volumeText = typeof savedVolume === "string" ? savedVolume : "";
   const vialAmount = Number(vial.vialInput);
@@ -84,18 +88,11 @@ export default function BacWaterCalculatorPage() {
           <div>
             <label htmlFor="bac-vial-amount" className="block text-sm font-medium">Total amount in the vial</label>
             <div className="mt-2 flex gap-2">
-              <Input id="bac-vial-amount" type="number" inputMode="decimal" min="0" step="any" value={vial.vialInput || ""} onChange={e => vial.setVialInput(e.target.value === "" ? 0 : Number(e.target.value))} placeholder="Amount from the label" className="min-w-0 flex-1" aria-describedby="bac-input-error" aria-invalid={vialAmount < 0 || !Number.isFinite(vialAmount)} />
+              <Input id="bac-vial-amount" type="text" inputMode="decimal" maxLength={64} value={draft.total} onChange={e => patch({ total: e.target.value })} placeholder="Amount from the label" className="min-w-0 flex-1" aria-describedby="bac-input-error" aria-invalid={vialAmount < 0 || !Number.isFinite(vialAmount)} />
               <UnitChoice value={vial.vialUnit} onChange={vial.setVialUnit} label="Vial amount unit" />
             </div>
           </div>
-          <div>
-            <label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount to measure</label>
-            <div className="mt-2 flex gap-2">
-              <Input id="bac-measured-amount" type="number" inputMode="decimal" min="0" step="any" value={vial.doseInput || ""} onChange={e => vial.setDoseInput(e.target.value === "" ? 0 : Number(e.target.value))} placeholder="Amount from your instructions" className="min-w-0 flex-1" aria-describedby="bac-measurement-help bac-input-error" aria-invalid={measurementAmount < 0 || !Number.isFinite(measurementAmount)} />
-              <UnitChoice value={vial.doseUnit} onChange={vial.setDoseUnit} label="Measurement amount unit" />
-            </div>
-            <p id="bac-measurement-help" className="mt-2 text-xs text-muted-foreground">This is an input you supply, not an amount recommended by the website.</p>
-          </div>
+          <AmountScheduleFields value={draft} onChange={value => patch(value)} />
           <div className="border-t border-border pt-5">
             <div className="flex flex-wrap gap-2" role="group" aria-label="Volume calculation mode">
               <Button type="button" variant={mode === "known" ? "brand" : "outline"} aria-pressed={mode === "known"} onClick={() => setMode("known")}>Use a known volume</Button>
