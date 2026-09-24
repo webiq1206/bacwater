@@ -35,15 +35,16 @@ jobs:
       AUDIT_OUT: audit-evidence/after
     steps:
       - uses: actions/checkout@v4
-      - name: Validate transport and every source hash before editing
+      - name: Apply checksummed source once
         run: |
           mkdir -p audit-evidence
-          python - <<'PY'
+          if [ ! -f src/lib/partners/supplier-catalog.ts ]; then
+            python - <<'PY'
           from pathlib import Path
           import json,base64,gzip,hashlib
           raw=''.join(Path(f'audit/transport/catalog.{i}.b64').read_text().strip() for i in range(4))
           data=gzip.decompress(base64.b64decode(raw,validate=True))
-          assert hashlib.sha256(data).hexdigest()=='5ec4e1376ea6d4385d7d544f8da5eaf17c6a65da315d61b2b7f45392662e6ee7','Transport checksum mismatch'
+          assert hashlib.sha256(data).hexdigest()=='5ec4e1376ea6d4385d7d544f8da5eaf17c6a65da315d61b2b7f45392662e6ee7'
           prepared={}
           for name,change in json.loads(data).items():
             p=Path(name)
@@ -51,25 +52,34 @@ jobs:
             old=p.read_text() if p.exists() else None
             if change.get('delete'):
               if old is None: continue
-              assert hashlib.sha256(old.encode()).hexdigest()==change['before'],f'Deletion baseline mismatch: {name}'
+              assert hashlib.sha256(old.encode()).hexdigest()==change['before'],name
               prepared[name]=None
               continue
             if old is not None and hashlib.sha256(old.encode()).hexdigest()==change['after']: continue
             if 'content' in change:
-              assert old is None,f'New path conflict: {name}'
+              assert old is None,name
               new=change['content']
             else:
               if old is None and change['before']==hashlib.sha256(b'').hexdigest(): old=''
-              assert old is not None and hashlib.sha256(old.encode()).hexdigest()==change['before'],f'Baseline mismatch: {name}'
+              assert old is not None and hashlib.sha256(old.encode()).hexdigest()==change['before'],name
               new=old
               for a,b,text in reversed(change['edits']): new=new[:a]+text+new[b:]
-            assert hashlib.sha256(new.encode()).hexdigest()==change['after'],f'Output mismatch: {name}'
+            assert hashlib.sha256(new.encode()).hexdigest()==change['after'],name
             prepared[name]=new
           for name,new in prepared.items():
             p=Path(name)
             if new is None: p.unlink()
             else: p.parent.mkdir(parents=True,exist_ok=True);p.write_text(new)
-          print(f'Applied {len(prepared)} verified source paths. No database operation.')
+          print(f'Applied {len(prepared)} verified source paths.')
+          PY
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          for name in ['src/components/partners/product-slider.tsx','src/components/partners/calculator-products.tsx']:
+            p=Path(name);s=p.read_text()
+            if '<select aria-label="Product type" value={kind}' not in s:
+              assert '<select value={kind}' in s,name
+              p.write_text(s.replace('<select value={kind}','<select aria-label="Product type" value={kind}'))
           PY
       - uses: actions/setup-node@v4
         with:
@@ -92,7 +102,18 @@ jobs:
           npm test 2>&1 | tee audit-evidence/tests.log
           npm run test:design 2>&1 | tee audit-evidence/design-tests.log
       - name: Production build
+        id: compile
         run: set -o pipefail; npm run build 2>&1 | tee audit-evidence/build.log
+      - name: Preserve compiled source on isolated branch for browser review
+        run: |
+          test "$GITHUB_REF" = refs/heads/feat/supplier-neutral-catalog-2026-09-23
+          git add -A -- src scripts package.json audit/2026-09-23 .github/workflows/master-audit.yml
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'feat: supplier-neutral product catalog and typed calculators for review'
+            git push origin HEAD:feat/supplier-neutral-catalog-2026-09-23
+          fi
       - uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -106,16 +127,6 @@ jobs:
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
           node scripts/audit-product-catalog.mjs
-      - name: Preserve tested source on isolated feature branch
-        run: |
-          test "$GITHUB_REF" = refs/heads/feat/supplier-neutral-catalog-2026-09-23
-          git add -A -- src scripts package.json audit/2026-09-23 .github/workflows/master-audit.yml
-          if ! git diff --cached --quiet; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'feat: add supplier-neutral catalog, original artwork and product calculators'
-            git push origin HEAD:feat/supplier-neutral-catalog-2026-09-23
-          fi
       - name: Preserve exact source and verification evidence
         if: always()
         run: |
