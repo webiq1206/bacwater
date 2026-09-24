@@ -1,0 +1,62 @@
+name: Assemble reviewed session source
+on:
+  push:
+    branches: [delivery/session-source-2026-09-24]
+permissions:
+  contents: write
+concurrency:
+  group: session-source-delivery-2026-09-24
+  cancel-in-progress: false
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact source and push only the clean review commit
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, os, pathlib, subprocess, tempfile, zlib
+          assert os.environ['GITHUB_REPOSITORY'] == 'webiq1206/bacwater'
+          assert os.environ['GITHUB_REF'] == 'refs/heads/delivery/session-source-2026-09-24'
+          base = '070f21e76c996672d91934fe4fa0593f1b1d13eb'
+          expected = '24ed239692d24db3d373b444c6d1572e0aaef79d'
+          branch = 'fix/session-schedule-continuity-2026-09-24'
+          def git(*args, text=None):
+              return subprocess.run(['git', *args], input=text, text=True, check=True, capture_output=True).stdout.strip()
+          assert git('ls-remote', 'origin', 'refs/heads/main').split()[0] == base, 'Main changed; reconcile before publishing.'
+          assert git('ls-remote', 'origin', 'refs/heads/' + branch).split()[0] == base, 'Review branch changed; do not overwrite.'
+          pieces = sorted(pathlib.Path('.github/session-delivery').glob('part-*.b64'))
+          assert len(pieces) == 7
+          encoded = ''.join(p.read_text().strip() for p in pieces)
+          assert len(encoded) == 28888
+          compressed = base64.b64decode(encoded, validate=True)
+          decoder = zlib.decompressobj()
+          patch = decoder.decompress(compressed, 100000)
+          assert decoder.eof and not decoder.unused_data and not decoder.unconsumed_tail
+          assert len(patch) == 90323
+          assert hashlib.sha256(patch).hexdigest() == '909d581c3f9376671b37ba0731ae8dc6df8d182d456c0db59341ce49cc347391'
+          with tempfile.NamedTemporaryFile(suffix='.patch') as handle:
+              handle.write(patch)
+              handle.flush()
+              git('apply', '--check', handle.name)
+              git('apply', handle.name)
+          for path in pieces:
+              git('rm', str(path))
+          git('rm', '.github/workflows/session-source-delivery.yml')
+          git('add', '-A')
+          actual = git('write-tree')
+          assert actual == expected, 'Unexpected source tree: ' + actual
+          git('config', 'user.name', 'github-actions[bot]')
+          git('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com')
+          # The delivery commit and its temporary files are not in this ancestry.
+          commit = git('commit-tree', expected, '-p', base, text='fix: preserve calculation sessions and clarify amount schedules\n\nTransfer the reviewed 34-file source exactly. Keep compatible values across calculator navigation, distinguish each-time and daily/weekly totals, and retain isolated saved-plan edits. Production publication is separate.\n')
+          git('push', 'origin', commit + ':refs/heads/' + branch)
+          print('CLEAN_REVIEW_COMMIT=' + commit)
+          print('VERIFIED_SOURCE_TREE=' + actual)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('Exact prepared source pushed to review branch.\n\nCommit: `' + commit + '`\n\nTree: `' + actual + '`\n\nNo main update, production operation, dependency install or database operation was performed.\n')
+          PY
