@@ -28,19 +28,22 @@ export default async function PlanEditPage({ params }: Props) {
 
   // Frequency lives in the CalcResult snapshot; plans saved before weekly
   // splitting have none and default to 1 (no split) so their math is unchanged.
-  let injectionsPerWeek = 1;
+  let injectionsPerWeek: number | undefined = 1;
+  let amountBasis: "each" | "week" | undefined;
   let secondary: import("@/lib/calc").CalcInput["secondary"];
   try {
     const snapshot = JSON.parse(plan.data) as {
-      schedule?: { injectionsPerWeek?: number };
+      schedule?: { injectionsPerWeek?: number; frequencyKnown?: boolean };
+      input?: { amountBasis?: "each" | "week" };
       secondary?: import("@/lib/calc").CalcInput["secondary"];
     };
     secondary = snapshot.secondary;
+    amountBasis = snapshot.input?.amountBasis;
     if (
       typeof snapshot.schedule?.injectionsPerWeek === "number" &&
       snapshot.schedule.injectionsPerWeek >= 1
     )
-      injectionsPerWeek = snapshot.schedule.injectionsPerWeek;
+      injectionsPerWeek = snapshot.schedule.frequencyKnown === false ? undefined : snapshot.schedule.injectionsPerWeek;
   } catch {
     /* keep default */
   }
@@ -55,6 +58,7 @@ export default async function PlanEditPage({ params }: Props) {
             vialStrengthMg: plan.vialStrengthMg,
             doseMcg: plan.doseMcg,
             injectionsPerWeek,
+            amountBasis,
             secondary,
             bacWaterMl: plan.bacWaterMl,
             syringeType: plan.syringeType as never,

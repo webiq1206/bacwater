@@ -63,6 +63,7 @@ export interface PlanSummary {
   /** Pre-formatted on the server from the stored snapshot, so it matches the PDF. */
   readout: string;
   injectionsPerWeek: number | null;
+  amountBasis?: "each" | "week";
   archived: boolean;
   dateMixed: string | null;
   expirationDate: string | null;
@@ -210,7 +211,8 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
             fields.peptideSlug === "custom" ? fields.peptideName || "Custom" : null,
           vialStrengthMg: fields.vialStrengthMg,
           doseMcg: fields.doseMcg,
-          injectionsPerWeek: fields.injectionsPerWeek,
+          amountBasis: fields.amountBasis,
+          injectionsPerWeek: fields.injectionsPerWeek ?? undefined,
           bacWaterMl: fields.bacWaterMl,
           syringeType: fields.syringeType,
           dateMixed: fields.dateMixed || null,
@@ -239,7 +241,8 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
                   dosesPerVial: fresh.plan.dosesPerVial,
                   dateMixed: fresh.plan.dateMixed,
                   expirationDate: fresh.plan.expirationDate,
-                  injectionsPerWeek: fresh.plan.injectionsPerWeek,
+                  injectionsPerWeek: fresh.plan.frequencyKnown === false ? null : fresh.plan.injectionsPerWeek,
+                  amountBasis: fresh.plan.amountBasis,
                   readout: readoutOf(fresh.plan.result) ?? r.readout,
                 }
               : r
@@ -480,7 +483,7 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
               <PaneLabel>At a glance</PaneLabel>
               <div className="border-y border-border">
                 <FieldRow label="Vial">{current.vialStrengthMg} mg</FieldRow>
-                <FieldRow label="Amount">{formatDose(current.doseMcg)}</FieldRow>
+                <FieldRow label={current.amountBasis === "each" ? "Amount each time" : current.amountBasis === "week" ? "Total per week" : "Entered amount"}>{formatDose(current.doseMcg)}</FieldRow>
                 <FieldRow label="Measure">{current.readout}</FieldRow>
                 <FieldRow label="Measures left">{current.dosesPerVial}</FieldRow>
                 <FieldRow label="Mixed">
@@ -602,7 +605,8 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
               peptideName: detail.peptideName ?? "",
               vialStrengthMg: detail.vialStrengthMg,
               doseMcg: detail.doseMcg,
-              injectionsPerWeek: detail.injectionsPerWeek,
+              injectionsPerWeek: detail.frequencyKnown === false ? null : detail.injectionsPerWeek,
+              amountBasis: detail.amountBasis,
               bacWaterMl: detail.bacWaterMl,
               syringeType: detail.syringeType as SyringeType,
               dateMixed: detail.dateMixed ? detail.dateMixed.slice(0, 10) : "",
@@ -646,7 +650,7 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
                   The saved calculation for this plan could not be read. The figures in
                   the right rail come from the plan&apos;s own record and are still
                   correct: {current.vialStrengthMg} mg vial,{" "}
-                  {formatDose(current.doseMcg)} per measure,{" "}
+                  {formatDose(current.doseMcg)} entered amount,{" "}
                   {formatUnits(current.syringeUnits)} units.
                 </p>
               </div>
