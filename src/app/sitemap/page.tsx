@@ -1,3 +1,4 @@
+import { SUPPLIER_PRODUCTS, productDetailPath } from "@/lib/partners/supplier-catalog";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -142,6 +143,7 @@ export default async function HtmlSitemapPage() {
   // so an overlap between sources can never produce two links to one URL.
   const sections: { heading: string; links: SiteLink[] }[] = [
     { heading: "Calculators & tools", links: staticByBucket.tools },
+    { heading: "Research products", links: [{href:"/products",label:"Explore the product directory"},...SUPPLIER_PRODUCTS.map(product=>({href:productDetailPath(product.id),label:product.name}))] },
     { heading: "Peptide reference", links: peptideLinks },
     { heading: "Learning Center", links: [...staticByBucket.learn, ...guideLinks] },
     { heading: "Compare bacteriostatic water", links: comparisonLinks },

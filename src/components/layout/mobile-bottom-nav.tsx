@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { Home, Calculator, BookOpen, User } from "lucide-react";
+import { Home, Calculator, BookOpen, User, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ITEMS = [
@@ -14,6 +14,7 @@ const ITEMS = [
     icon: Calculator,
     match: (p: string) => p === "/peptide-calculator" || p === "/plan" || p.startsWith("/plan/") || p.startsWith("/tools"),
   },
+  { href: "/products", label: "Products", icon: Layers, match: (p: string) => p === "/products" || p.startsWith("/products/") },
   {
     href: "/learn",
     label: "Learn",
@@ -60,7 +61,7 @@ export function MobileBottomNav() {
     <>
       <div className="bac-bottom-spacer lg:hidden" aria-hidden />
       <nav aria-label="Mobile primary navigation" className="bac-bottom-nav lg:hidden no-print fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
-        <div className="mx-auto grid max-w-md grid-cols-4">
+        <div className="mx-auto grid max-w-md grid-cols-5">
           {ITEMS.map(item => {
             const active = item.match(pathname);
             return (

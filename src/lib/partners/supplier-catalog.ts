@@ -1,12 +1,13 @@
+import { productAffiliateUrl } from "./affiliate";
 /**
  * Curated supplier references, not a live inventory feed or product endorsement.
- * Public destinations checked 2026-09-23. Never infer affiliate parameters.
- * Populate exact links supplied by the approved partner dashboard, then verify
- * attribution there before setting the approval flag. No customer data is used.
+ * Public destinations checked 2026-09-23. Referral parameters supplied by the
+ * owner 2026-09-24. Merchant-side commission attribution is verified separately.
+ * Explicit environment flags can suspend referrals. No customer data is used.
  */
 export const SUPPLIER_SOURCES = {
   program: "https://www.aminoclub.com/us/affiliate",
-  terms: "https://www.aminoclub.com/shop/affiliate-terms",
+  terms: "https://www.aminoclub.com/us/affiliate-terms",
   coa: "https://www.aminoclub.com/us/coa",
   researchUse: "https://www.aminoclub.com/us/research-use",
 } as const;
@@ -124,9 +125,11 @@ export function validateSupplierLink(input: unknown, product: SupplierProduct): 
 }
 
 export function getSupplierPartner(settings: SupplierSettings = {
-  AMINO_CLUB_ENABLED: process.env.AMINO_CLUB_ENABLED,
-  AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED: process.env.AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED,
-  AMINO_CLUB_PRODUCT_LINKS_JSON: process.env.AMINO_CLUB_PRODUCT_LINKS_JSON,
+  AMINO_CLUB_ENABLED: process.env.AMINO_CLUB_ENABLED ?? "true",
+  AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED: process.env.AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED ?? "true",
+  AMINO_CLUB_PRODUCT_LINKS_JSON: process.env.AMINO_CLUB_PRODUCT_LINKS_JSON || JSON.stringify(
+    Object.fromEntries(SUPPLIER_PRODUCTS.map(product => [product.id, productAffiliateUrl(product.sourceUrl)])),
+  ),
 }): SupplierPartnerState {
   if (settings.AMINO_CLUB_ENABLED !== "true") return { active: false, reason: "disabled" };
   if (settings.AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED !== "true") return { active: false, reason: "approval-pending" };
@@ -149,6 +152,8 @@ export function getSupplierPartner(settings: SupplierSettings = {
 }
 
 export type DisplaySupplierProduct = SupplierProduct & { href: string; paid: boolean };
+export function productDetailPath(id: string) { return `/products/${encodeURIComponent(id)}`; }
+
 /** Fixed ordering is independent of health information, calculation inputs and accounts. */
 export function getSupplierCatalog(settings?: SupplierSettings): DisplaySupplierProduct[] {
   const partner = settings ? getSupplierPartner(settings) : getSupplierPartner();

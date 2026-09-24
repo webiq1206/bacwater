@@ -4,12 +4,15 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import type { DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
 import Link from "next/link";
 import { ProductArtwork } from "./product-artwork";
-import { productCalculatorPath } from "@/lib/partners/supplier-catalog";
+import { AFFILIATE_DISCLOSURE } from "@/lib/partners/affiliate";
+import { restrictedProductQuery, RESEARCH_SEARCH_BOUNDARY } from "@/lib/partners/catalog-search";
+import { productCalculatorPath, productDetailPath } from "@/lib/partners/supplier-catalog";
 import styles from "./recommendations.module.css";
 /** Every card is in server HTML. Native scrolling works without scripts or a drag. */
 export function ProductSlider({products}:{products:readonly DisplaySupplierProduct[]}) {
   const [query,setQuery]=useState(""),[kind,setKind]=useState("all");
-  const filtered=products.filter(p=>(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.mark} ${p.reference}`.toLowerCase().includes(query.trim().toLowerCase()));
+  const blocked=restrictedProductQuery(query);
+  const filtered=products.filter(p=>!blocked&&(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.mark} ${p.reference}`.toLowerCase().includes(query.trim().toLowerCase()));
   const id=useId(),track=useRef<HTMLDivElement>(null);
   const [range,setRange]=useState({first:1,last:products.length,start:true,end:false});
   useEffect(()=>{
@@ -22,13 +25,13 @@ export function ProductSlider({products}:{products:readonly DisplaySupplierProdu
   function move(direction:number){const el=track.current;if(!el)return;const card=el.firstElementChild as HTMLElement|null;el.scrollBy({left:direction*((card?.offsetWidth||260)+parseFloat(getComputedStyle(el).columnGap||"20")),behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}
   function key(e:KeyboardEvent<HTMLDivElement>){if(e.target!==e.currentTarget)return;if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault();move(e.key==="ArrowRight"?1:-1);}if(e.key==="Home"||e.key==="End"){e.preventDefault();track.current?.scrollTo({left:e.key==="Home"?0:track.current.scrollWidth,behavior:"auto"});}}
   return <div className={styles.slider} role="region" aria-roledescription="carousel" aria-label="Research products">
-    <div className={styles.filters}><label>Find a product<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search all products" /></label><label>Product type<select aria-label="Product type" value={kind} onChange={e=>setKind(e.target.value)}><option value="all">All products</option><option value="single">Single compounds</option><option value="blend">Blends</option><option value="spray">Sprays and solutions</option><option value="water">Lab water</option></select></label></div>
+    <div className={styles.filters}><label>Find a product<input type="search" maxLength={240} autoComplete="off" data-clarity-mask="true" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search all products" /></label><label>Product type<select aria-label="Product type" value={kind} onChange={e=>setKind(e.target.value)}><option value="all">All products</option><option value="single">Single compounds</option><option value="blend">Blends</option><option value="spray">Sprays and solutions</option><option value="water">Lab water</option></select></label></div>
     <div className={styles.sliderTools}><p id={`${id}-help`}>Swipe the cards, or use the arrows.</p><div><button type="button" aria-label="Previous supplier products" aria-controls={`${id}-track`} disabled={!filtered.length||range.start} onClick={()=>move(-1)}><ArrowLeft size={20} aria-hidden="true"/></button><button type="button" aria-label="Next supplier products" aria-controls={`${id}-track`} disabled={!filtered.length||range.end} onClick={()=>move(1)}><ArrowRight size={20} aria-hidden="true"/></button></div></div>
     <div id={`${id}-track`} ref={track} className={styles.track} role="group" tabIndex={0} aria-label="Scrollable product cards" aria-describedby={`${id}-help`} onKeyDown={key}>
       {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} role="group" aria-roledescription="slide" aria-label={`${index+1} of ${filtered.length}: ${product.name}`}>
         <div className={styles.art}><ProductArtwork product={product}/></div>
-        <div className={styles.cardBody}><p className={styles.label}>{product.label}</p><h3>{product.name}</h3><p className={styles.summary}>{product.summary}</p><p className={styles.notice}>Lab research only.<br/>Not for people or animals.</p><p className={styles.disclosure}>{product.paid?"Paid link. We may earn a fee.":"Supplier link. No referral fee is active."}</p><a className={styles.action} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View product <ArrowUpRight size={17} aria-hidden="true"/></a><Link className={styles.calculate} href={productCalculatorPath(product.id)}>Use in calculator</Link></div>
+        <div className={styles.cardBody}><p className={styles.label}>{product.label}</p><h3><Link href={productDetailPath(product.id)}>{product.name}</Link></h3><p className={styles.summary}>{product.summary}</p><p className={styles.notice}>Laboratory research only.<br/>Not for human consumption or animal use.</p><p className={styles.disclosure} data-affiliate-disclosure>{product.paid?AFFILIATE_DISCLOSURE:"Supplier link. No referral fee is active."}</p><a className={styles.action} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View supplier listing <ArrowUpRight size={17} aria-hidden="true"/></a><Link className={styles.calculate} href={productDetailPath(product.id)}>Explore product details</Link><Link className={styles.calculate} href={productCalculatorPath(product.id)}>Use in calculator</Link></div>
       </article>)}
-    </div><p className={styles.range} role="status" aria-live="polite">{filtered.length?`Showing ${range.first} to ${range.last} of ${filtered.length}`:"No products match. Try another name or product type."}</p>
+    </div><p className={styles.range} role="status" aria-live="polite">{filtered.length?`Showing ${range.first} to ${range.last} of ${filtered.length}`:blocked?RESEARCH_SEARCH_BOUNDARY:"No products match. Try another name or product type."}</p>
   </div>;
 }

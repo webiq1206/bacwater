@@ -57,7 +57,7 @@ try{
   await page.getByLabel('Open calculator help',{exact:true}).click();
   await expect(page.getByRole('region',{name:'Calculation workspace',exact:true})).not.toBeVisible();
   const help=page.getByRole('region',{name:'Calculator help and supplies'});
-  await expect(help).toBeVisible();await expect(help.locator('[data-bac-water-link] a').first()).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o');
+  await expect(help).toBeVisible();await expect(help.locator('[data-bac-water-link] a').first()).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o?utm_source=affiliate_marketing&code=WEBIQ');
   await accessibility(page);await page.screenshot({path:`${out}/help-390.png`,fullPage:false});
   await page.keyboard.press('Escape');await expect(page.getByLabel('Open calculator help',{exact:true})).toBeFocused();
   await expect(page.getByLabel('Vial strength',{exact:true})).toHaveValue('12');await fit(page);
@@ -96,10 +96,10 @@ try{
  });
  await check('Compound references launch isolated tools; hCG keeps IU and utilities are noindex',async()=>{
   await page.goto(origin+'/peptides/hcg');
-  // Browsing pages include a shelf search, but never active calculation fields.
+  // Clinical reference pages keep calculation launchers but no paid product shelf.
   await expect(page.locator('[data-calculator-workspace]')).toHaveCount(0);
-  await expect(page.locator('main input')).toHaveCount(1);
-  await expect(page.locator('[data-supplier-shelf]').getByRole('searchbox',{name:'Find a product',exact:true})).toHaveCount(1);
+  await expect(page.locator('main input')).toHaveCount(0);
+  await expect(page.locator('[data-supplier-shelf]')).toHaveCount(0);
   await expect(page.locator('main input:not([type="search"])')).toHaveCount(0);
   await page.getByRole('link',{name:/^Open hcg calculator$/i}).click();await expect(page).toHaveURL(origin+'/calculate/hcg');
   await expect(page.getByLabel('Total in container (IU)',{exact:true})).toBeVisible();await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute('content',/noindex/);

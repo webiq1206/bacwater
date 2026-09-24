@@ -4,7 +4,7 @@ import { BASE_SEARCH_ITEMS, searchItems, productChoices, referenceArtwork } from
 import { SUPPLIER_PRODUCTS } from "../src/lib/partners/supplier-catalog";
 import { searchScore } from "../src/lib/search/matching";
 let count=0;const test=(name:string,run:()=>void)=>{run();count++;console.log(`PASS search: ${name}`);};
-test("all 50 supplier listings have real internal calculator destinations",()=>{const p=BASE_SEARCH_ITEMS.filter(i=>i.kind==="product");assert.equal(p.length,50);assert.ok(p.every(i=>i.href.startsWith("/calculate/product/")));});
+test("all 50 supplier listings have real internal research-profile destinations",()=>{const p=BASE_SEARCH_ITEMS.filter(i=>i.kind==="product");assert.equal(p.length,50);assert.ok(p.every(i=>i.href.startsWith("/products/")));});
 test("normalization handles case, spacing and punctuation",()=>{assert.ok(searchScore("bpc157","BPC-157")>0);assert.ok(searchScore("ghk cu","GHK-Cu")>0);assert.ok(searchScore("tirzepetide","Tirzepatide")>0);});
 test("broad peptide synonyms still require choosing the exact product",()=>{assert.equal(searchItems(BASE_SEARCH_ITEMS,"glp 1")[0]?.productId,"glp-1");assert.ok(searchItems(BASE_SEARCH_ITEMS,"cjc1295 with dac").some(i=>i.reference==="cjc-1295-with-dac"));});
 test("a beginner question can find the unit glossary",()=>assert.equal(searchItems(BASE_SEARCH_ITEMS,"what does mcg mean?")[0]?.href,"/learn/glossary"));
