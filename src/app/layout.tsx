@@ -8,8 +8,8 @@ import "./globals.css";
 import "./design-accessibility.css";
 import { SiteFrame } from "@/components/brand/site-frame";
 import { SupplierProvider } from "@/components/partners/supplier-context";
-import { ResearchSupplierSection } from "@/components/partners/amino-recommendations";
-import { getAminoCatalog } from "@/lib/partners/amino-club";
+import { ResearchSupplierSection } from "@/components/partners/supplier-recommendations";
+import { getSupplierCatalog } from "@/lib/partners/supplier-catalog";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const catalog = getAminoCatalog();
+  const catalog = getSupplierCatalog();
   const session = await auth();
   const isAuthenticated = Boolean((session?.user as { id?: string } | undefined)?.id);
   const ageVerified = (await cookies()).get("bacwater_age_ok")?.value === "1";
@@ -87,7 +87,7 @@ export default async function RootLayout({
       className={`${montserrat.variable} ${fraunces.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <SupplierProvider water={catalog[0]}>
+        <SupplierProvider water={catalog[0]} products={catalog}>
         <OrgJsonLd />
         <script
           type="application/ld+json"

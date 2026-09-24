@@ -1,7 +1,7 @@
-import { RecommendationsNavLink } from "@/components/partners/amino-recommendations";
+import { RecommendationsNavLink } from "@/components/partners/supplier-recommendations";
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/wordmark";
-import { AminoWaterLink } from "@/components/partners/supplier-context";
+import { SupplierWaterLink } from "@/components/partners/supplier-context";
 import { POSITIONING_STATEMENT } from "@/lib/positioning";
 import { PreferredSourceButton } from "@/components/common/preferred-source-button";
 
@@ -75,7 +75,7 @@ export function SiteFooter() {
             </div>
           ))}
         </div>
-        <div className="mt-8 flex flex-wrap items-start gap-6"><AminoWaterLink compact/><RecommendationsNavLink /></div>
+        <div className="mt-8 flex flex-wrap items-start gap-6"><SupplierWaterLink compact/><RecommendationsNavLink /></div>
         <div className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
             © {new Date().getFullYear()} BACwater.ai. All rights reserved.
