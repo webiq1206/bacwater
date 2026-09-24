@@ -12,6 +12,7 @@ import { CopyButton } from "@/components/common/copy-button";
 import { CarriedOverNotice } from "@/components/tools/carried-over-notice";
 import { useVialContext, type MassUnit } from "@/lib/tools/vial-context";
 import { usePersistentState } from "@/lib/use-persistent-state";
+import { positiveDecimal } from "@/lib/calc/number-text";
 import { recommendBacWaterMl } from "@/lib/calc";
 
 function display(value: number): string {
@@ -45,7 +46,7 @@ export default function BacWaterCalculatorPage() {
   const measurementMg = vial.doseUnit === "mcg" ? measurementAmount / 1000 : measurementAmount;
   const amountsValid = [vialMg, measurementMg].every(n => Number.isFinite(n) && n > 0);
   const exampleVolume = amountsValid ? recommendBacWaterMl(vialMg, measurementMg * 1000) : 0;
-  const volume = mode === "example" ? exampleVolume : Number(volumeText);
+  const volume = mode === "example" ? exampleVolume : volumeText.trim() === "" ? 0 : positiveDecimal(volumeText) ?? NaN;
   const concentration = amountsValid && volume > 0 ? vialMg / volume : 0;
   const measurementMl = concentration > 0 ? measurementMg / concentration : 0;
   const units = measurementMl * 100;
@@ -89,12 +90,12 @@ export default function BacWaterCalculatorPage() {
             </div>
           </div>
           <div>
-            <label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount to measure</label>
+            <label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount for one time</label>
             <div className="mt-2 flex gap-2">
               <Input id="bac-measured-amount" type="number" inputMode="decimal" min="0" step="any" value={vial.doseInput || ""} onChange={e => vial.setDoseInput(e.target.value === "" ? 0 : Number(e.target.value))} placeholder="Amount from your instructions" className="min-w-0 flex-1" aria-describedby="bac-measurement-help bac-input-error" aria-invalid={measurementAmount < 0 || !Number.isFinite(measurementAmount)} />
               <UnitChoice value={vial.doseUnit} onChange={vial.setDoseUnit} label="Measurement amount unit" />
             </div>
-            <p id="bac-measurement-help" className="mt-2 text-xs text-muted-foreground">This is an input you supply, not an amount recommended by the website.</p>
+            <p id="bac-measurement-help" className="mt-2 text-xs text-muted-foreground">This tool checks one amount each time. A weekly total is divided by the schedule you entered before carrying it here. Changing this field sets the amount each time.</p>
           </div>
           <div className="border-t border-border pt-5">
             <div className="flex flex-wrap gap-2" role="group" aria-label="Volume calculation mode">

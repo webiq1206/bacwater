@@ -71,10 +71,13 @@ export default async function PlansPage() {
   const summaries: PlanSummary[] = plans.map((p) => {
     let readout: string;
     let injectionsPerWeek: number | null = null;
+    let amountBasis: "each" | "week" | undefined;
     try {
       const parsed = JSON.parse(p.data) as CalcResult;
       readout = formatSyringeReading(parsed.syringeReadout);
+      amountBasis = parsed.input?.amountBasis;
       if (
+        parsed.schedule?.frequencyKnown !== false &&
         typeof parsed.schedule?.injectionsPerWeek === "number" &&
         parsed.schedule.injectionsPerWeek >= 1
       ) {
@@ -93,6 +96,7 @@ export default async function PlansPage() {
       syringeUnits: p.syringeUnits,
       readout,
       injectionsPerWeek,
+      amountBasis,
       archived: p.archived,
       dateMixed: p.dateMixed?.toISOString() ?? null,
       expirationDate: null,
@@ -113,12 +117,13 @@ function EmptyState() {
     <div className="mt-6 border border-border p-8 sm:p-12">
       <div className="mx-auto max-w-md text-center">
         <div className="font-serif text-xl font-medium tracking-tight">
-          You&apos;re just 3 questions away from your first plan
+          Build a plan from your own numbers
         </div>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Pick your peptide, vial strength, and dose. We&apos;ll calculate
-          everything else (BAC water, syringe units, step-by-step instructions,
-          and a printable vial label).
+          Copy the product name, vial amount, final liquid volume, and amount
+          from your instructions. Choose whether that amount is for each time
+          or the whole week. The calculator checks the math; it does not choose
+          an amount, schedule, or mixing method.
         </p>
         <div className="mt-6">
           <Button asChild variant="brand" size="lg">

@@ -3,14 +3,8 @@
 import { useState } from "react";
 import { formatConcentration, formatUnits } from "@/lib/calc/format";
 
-/**
- * An interactive "what if" for the results page. The saved plan is fixed; this
- * lets a reader drag the BAC water amount and watch the concentration, the
- * volume to measure, and the syringe units change for the SAME target amount,
- * so the water -> strength -> units relationship becomes something you can feel.
- * It computes nothing new about the plan (measurements per vial depend only on
- * the vial and the amount, not the water); it only re-expresses the same dose at
- * a different dilution.
+/** Compare hypothetical final volumes without changing the saved calculation.
+ * This arithmetic does not supply liquid choice or preparation instructions.
  */
 export function WhatIfExplorer({
   vialStrengthMg,
@@ -32,9 +26,9 @@ export function WhatIfExplorer({
   return (
     <div>
       <p className="text-muted-foreground leading-relaxed mb-4">
-        Your plan uses{" "}
-        <strong className="text-foreground">{actualBacMl} mL</strong> of BAC
-        water. Drag the slider to see how a different amount would change the same{" "}
+        Your calculation uses a final liquid volume of{" "}
+        <strong className="text-foreground">{actualBacMl} mL</strong>.
+        Move the slider to compare the volume needed for the same{" "}
         <strong className="text-foreground">
           {doseMcg >= 1000 ? `${doseMcg / 1000} mg` : `${doseMcg} mcg`}
         </strong>{" "}
@@ -44,7 +38,7 @@ export function WhatIfExplorer({
       <div className="rounded-xl border border-border bg-surface p-5">
         <div className="flex items-baseline justify-between gap-3">
           <label htmlFor="whatif-water" className="text-sm font-medium text-foreground">
-            BAC water added
+            Hypothetical final volume
           </label>
           <span className="tabular-nums text-lg font-medium">
             {bacMl.toFixed(2)} mL
@@ -58,17 +52,17 @@ export function WhatIfExplorer({
         <input
           id="whatif-water"
           type="range"
-          min={0.5}
-          max={5}
+          min={Math.min(0.5, actualBacMl)}
+          max={Math.max(5, actualBacMl)}
           step={0.25}
           value={bacMl}
           onChange={(e) => setBacMl(parseFloat(e.target.value))}
           className="mt-3 w-full accent-[var(--color-accent-guide)]"
-          aria-label="BAC water in milliliters"
+          aria-label="Hypothetical final volume in milliliters"
         />
         <div className="mt-1 flex justify-between text-[11px] text-muted-foreground tabular-nums">
-          <span>0.5 mL</span>
-          <span>5 mL</span>
+          <span>{Math.min(0.5, actualBacMl)} mL</span>
+          <span>{Math.max(5, actualBacMl)} mL</span>
         </div>
 
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-px bg-border rounded-lg overflow-hidden">
@@ -86,17 +80,17 @@ export function WhatIfExplorer({
           {overFull ? (
             <>
               At <strong className="text-foreground">{bacMl.toFixed(2)} mL</strong>{" "}
-              the solution is weak enough that one measurement is more than a full
-              1 mL syringe. Add less water for a stronger solution and a smaller
-              draw.
+              of final liquid, this calculation exceeds a 1 mL device. Check the
+              actual device and your product instructions. This example does not
+              tell you to change the preparation.
             </>
           ) : (
             <>
-              More water makes the solution weaker, so you measure{" "}
+              A larger final volume means less material per mL. The same amount then takes{" "}
               <strong className="text-foreground">more</strong> for the same
-              amount. Less water makes it stronger, so you measure{" "}
-              <strong className="text-foreground">less</strong>. Pick an amount
-              that lands on a mark you can read.
+              liquid. A smaller final volume means it takes{" "}
+              <strong className="text-foreground">less</strong> liquid. This is a comparison,
+              not advice about how much water to add.
             </>
           )}
         </p>

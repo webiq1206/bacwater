@@ -5,14 +5,15 @@
   "scripts": {
     "postinstall": "node scripts/prepare-font-loader.mjs",
     "dev": "next dev",
-    "test": "tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts && tsx src/lib/__tests__/workspaces.test.ts && tsx src/lib/__tests__/audit-security.test.ts && tsx src/lib/__tests__/audit-calculation.test.ts && tsx src/lib/__tests__/remaining-scope.test.ts && npm run test:partners && tsx scripts/test-research-design.ts && tsx scripts/test-supplier-catalog.ts",
+    "test": "tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts && tsx src/lib/__tests__/workspaces.test.ts && tsx src/lib/__tests__/audit-security.test.ts && tsx src/lib/__tests__/audit-calculation.test.ts && tsx src/lib/__tests__/remaining-scope.test.ts && npm run test:partners && tsx scripts/test-research-design.ts && tsx scripts/test-supplier-catalog.ts && npm run test:session",
     "test:partners": "tsx scripts/test-amino-partner.ts",
     "prebuild": "npm run test",
     "build": "next build --webpack",
     "start": "next start",
     "db:push": "prisma db push --skip-generate",
     "db:seed": "tsx prisma/seed.ts",
-    "test:design": "tsx scripts/test-amino-partner.ts && tsx scripts/test-research-design.ts && tsx scripts/test-sitewide-design.ts"
+    "test:design": "tsx scripts/test-amino-partner.ts && tsx scripts/test-research-design.ts && tsx scripts/test-sitewide-design.ts",
+    "test:session": "tsx scripts/test-calculator-session.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.109.0",
