@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { quickCalculation, QUICK_EXAMPLE, type QuickValues } from "../src/lib/brand/quick-calculation";
-import { getAminoPartner } from "../src/lib/partners/amino-club";
+import { getSupplierPartner } from "../src/lib/partners/supplier-catalog";
 let count=0;
 function check(name:string,fn:()=>void){fn();count++;console.log(`PASS ${name}`);}
 const withValues=(values:Partial<QuickValues>)=>({...QUICK_EXAMPLE,...values});
@@ -21,8 +21,8 @@ check("U-100 example is a volume ratio",()=>assert.equal(quickCalculation("units
 check("U-100 does not cap arithmetic at a device capacity",()=>assert.equal(quickCalculation("units",withValues({units:"200"}))?.value,"2"));
 check("U-100 alternate-base notation is rejected",()=>assert.equal(quickCalculation("units",withValues({units:"0x10"})),null));
 check("Rendering does not mutate example defaults",()=>{const old=JSON.stringify(QUICK_EXAMPLE);quickCalculation("mass",QUICK_EXAMPLE);assert.equal(JSON.stringify(QUICK_EXAMPLE),old);});
-check("Paid referrals remain disabled by default",()=>assert.deepEqual(getAminoPartner({}),{active:false,reason:"disabled"}));
-check("An enabled flag does not bypass account/link verification",()=>assert.deepEqual(getAminoPartner({AMINO_CLUB_ENABLED:"true"}),{active:false,reason:"approval-pending"}));
-check("The homepage composes supplier listings, not preview fixtures",()=>{const src=fs.readFileSync("src/app/page.tsx","utf8");assert.ok(src.includes("<AminoRecommendations/>"));assert.equal(src.includes("AMINO_PRODUCTS"),false);assert.equal(src.includes("preview"),false);});
-check("New public copy avoids em dashes",()=>{for(const path of ["src/components/brand/research-home.tsx","src/components/brand/research-hero.tsx","src/components/brand/quick-calculator.tsx","src/components/partners/amino-recommendations.tsx"]){assert.equal(fs.readFileSync(path,"utf8").includes("\u2014"),false,path);}});
+check("Paid referrals remain disabled by default",()=>assert.deepEqual(getSupplierPartner({}),{active:false,reason:"disabled"}));
+check("An enabled flag does not bypass account/link verification",()=>assert.deepEqual(getSupplierPartner({AMINO_CLUB_ENABLED:"true"}),{active:false,reason:"approval-pending"}));
+check("The homepage composes supplier listings, not preview fixtures",()=>{const src=fs.readFileSync("src/app/page.tsx","utf8");assert.ok(src.includes("<SupplierRecommendations/>"));assert.equal(src.includes("SUPPLIER_PRODUCTS"),false);assert.equal(src.includes("preview"),false);});
+check("New public copy avoids em dashes",()=>{for(const path of ["src/components/brand/research-home.tsx","src/components/brand/research-hero.tsx","src/components/brand/quick-calculator.tsx","src/components/partners/supplier-recommendations.tsx"]){assert.equal(fs.readFileSync(path,"utf8").includes("\u2014"),false,path);}});
 console.log(`${count} focused design and calculator checks passed.`);
