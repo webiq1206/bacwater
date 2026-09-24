@@ -1,0 +1,133 @@
+/* Keep the V2 composition. The calculator itself still has a dedicated route. */
+.hero {
+  --ink: #18382d;
+  --muted: #53664e;
+  --line: #d1ddc7;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 76px);
+  max-width: 1280px;
+  margin-inline: auto;
+  min-height: calc(100vh - 79px);
+  min-height: calc(100dvh - 79px);
+  padding: 52px 40px 78px;
+  color: var(--ink);
+  font-family: var(--font-montserrat), Arial, sans-serif;
+}
+.hero * { box-sizing: border-box; }
+.copy, .scene { min-width: 0; overflow-wrap: anywhere; }
+.hero h1 { margin: 0; font-weight: 400; }
+.eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; font-size: .68rem; line-height: 1.6; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.eyebrow > span { width: 7px; height: 7px; border-radius: 50%; background: #687d49; flex-shrink: 0; }
+.headline { display: block; font-size: clamp(3.25rem, 5.65vw, 5rem); line-height: 1.06; letter-spacing: -.067em; }
+.headline em { font-family: var(--font-fraunces), Georgia, serif; font-weight: 300; color: #496543; letter-spacing: -.055em; }
+.description { margin: 29px 0 0; font-size: 1rem; line-height: 1.8; color: #4b6052; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; margin-top: 29px; }
+.hero a { text-decoration: none; }
+.primary { max-width: 100%; display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; min-height: 56px; padding: 15px 23px; background: var(--ink); color: #fff; border: 1px solid var(--ink); border-radius: 10px; font-size: .88rem; font-weight: 500; transition: background .16s ease; }
+.primary:hover { background: #2d513c; }
+.secondary { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; border-bottom: 1px solid #8ba17c; font-size: .8rem; }
+.free { display: flex; flex-wrap: wrap; gap: 19px; margin: 19px 0 0; color: var(--muted); font-size: .72rem; line-height: 1.6; }
+.free > span { display: inline-flex; align-items: center; gap: 7px; }
+.limit { max-width: 365px; margin: 25px 0 0; color: var(--muted); font-size: .75rem; line-height: 1.7; }
+.scene { position: relative; isolation: isolate; padding: 18px 0 26px; }
+.scene::before { content: ""; position: absolute; z-index: -1; inset: 52px -13px 7px 23px; border-radius: 24px; background: #e0e9c6; transform: rotate(4deg); pointer-events: none; }
+.orbit { position: absolute; z-index: -2; width: 105%; aspect-ratio: 1; border: 1px solid #c5d6b5; border-radius: 50%; left: -5%; top: -8px; pointer-events: none; }
+.orbit::after { content: ""; position: absolute; inset: 34px; border: 1px solid #d0ddc2; border-radius: 50%; }
+.preview { position: relative; min-width: 0; background: #fffef9; border: 1px solid #cedbc5; border-radius: 20px; box-shadow: 0 20px 50px #233b2014; }
+.previewTop { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 23px 23px 17px; color: #47613f; font-size: .6rem; font-weight: 600; letter-spacing: .1em; line-height: 1.6; }
+.previewTop > span:first-child { display: inline-flex; align-items: center; gap: 8px; }
+.previewTop > span:last-child { font-size: .52rem; letter-spacing: .11em; }
+.tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 20px; padding: 4px; gap: 3px; border: 1px solid #d7dfd0; border-radius: 9px; background: #eff3e9; }
+.tools a { display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 44px; padding: 7px 4px; border-radius: 6px; font-size: .65rem; line-height: 1.4; text-align: center; color: #506447; overflow-wrap: anywhere; }
+.tools .featuredTool { background: #fffef9; color: var(--ink); box-shadow: 0 1px 4px #233b2012; }
+.tools a:hover { background: #e1ebd2; }
+.example { padding: 24px 23px 0; }
+.values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; }
+.values > div { min-width: 0; }
+.values dt { font-size: .72rem; line-height: 1.5; color: var(--muted); margin-bottom: 7px; }
+.values dd { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 0; padding: 10px 13px; border: 1px solid #bdcbb3; border-radius: 8px; background: #fff; font-size: 1.75rem; line-height: 1.25; letter-spacing: -.045em; }
+.values dd > span { font-size: .72rem; letter-spacing: 0; color: #556c4a; }
+.result { margin-top: 19px; padding: 18px 20px; background: #e0edb4; border-radius: 12px; }
+.resultTop { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: .73rem; line-height: 1.5; }
+.resultValue { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; margin: 2px 0 0; }
+.resultValue strong { font-weight: 400; font-size: 4.9rem; line-height: 1.05; letter-spacing: -.07em; }
+.resultValue > span { font-size: .9rem; }
+.formula { margin: 8px 0 0; font-family: var(--font-jetbrains), monospace; font-size: .7rem; line-height: 1.6; overflow-wrap: anywhere; }
+.exampleNote { margin: 12px 0 0; font-size: .67rem; line-height: 1.6; color: #536447; }
+.cardAction { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 54px; margin: 19px 23px 0; padding: 13px 16px; border: 1px solid #adc196; border-radius: 10px; background: #f1f5e7; font-size: .82rem; font-weight: 500; }
+.cardAction:hover { background: #e5efcf; }
+.focusNote { display: flex; align-items: center; justify-content: center; gap: 7px; flex-wrap: wrap; margin: 12px 18px 18px; color: #52664b; font-size: .64rem; line-height: 1.5; }
+.sceneLabel { position: absolute; bottom: 0; right: 15px; font-size: .55rem; letter-spacing: .14em; color: #506447; margin: 0; }
+.scrollCue { position: absolute; bottom: 19px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--muted); font-size: .72rem; white-space: nowrap; }
+.hero a:focus-visible { outline: 2px solid #315f47; outline-offset: 4px; }
+.hero svg { flex-shrink: 0; }
+/* min-height keeps later sections below the fold; no fixed height clips text. */
+@media (max-width: 1100px) and (min-width: 781px) {
+  .hero { gap: 32px; padding-inline: 32px; }
+  .headline { font-size: clamp(2.85rem, 5.8vw, 4rem); }
+  .actions { gap: 14px; }
+  .primary { padding-inline: 17px; gap: 17px; }
+  .description { font-size: .9rem; }
+}
+@media (max-width: 780px) {
+  .hero { grid-template-columns: minmax(0, 1fr); max-width: 620px; min-height: calc(100vh - 67px); min-height: calc(100dvh - 67px); padding: 23px 24px 57px; gap: 18px; align-content: center; }
+  .copy { text-align: center; }
+  .eyebrow { justify-content: center; margin-bottom: 13px; font-size: .59rem; }
+  .headline { font-size: clamp(2.35rem, 10.5vw, 3.2rem); }
+  .description { margin-top: 15px; font-size: .86rem; line-height: 1.65; }
+  .actions { justify-content: center; margin-top: 17px; gap: 19px; }
+  .primary { min-height: 51px; padding: 12px 18px; font-size: .8rem; }
+  .secondary { font-size: .73rem; }
+  .free { justify-content: center; margin-top: 11px; font-size: .64rem; gap: 16px; }
+  .limit { max-width: 330px; margin: 10px auto 0; font-size: .67rem; line-height: 1.6; }
+  .scene { width: 100%; max-width: 440px; justify-self: center; padding: 10px 0 16px; }
+  .scene::before { transform: rotate(2deg); inset: 30px -4px 5px 13px; }
+  .orbit { width: 96%; left: 1%; top: -8px; }
+  .previewTop { padding: 15px 17px 10px; font-size: .54rem; }
+  .previewTop > span:last-child { font-size: .46rem; }
+  .tools { margin-inline: 14px; }
+  .tools a { font-size: .59rem; }
+  .example { padding: 14px 17px 0; }
+  .values { gap: 12px; }
+  .values dt { font-size: .62rem; margin-bottom: 5px; }
+  .values dd { font-size: 1.5rem; padding: 8px 10px; }
+  .result { margin-top: 12px; padding: 12px 15px; }
+  .resultTop { font-size: .65rem; }
+  .resultValue strong { font-size: 3.75rem; }
+  .formula { margin-top: 3px; font-size: .65rem; }
+  .exampleNote { margin: 8px 0 12px; font-size: .6rem; }
+  /* The prominent main action is already immediately above the visual. */
+  .cardAction, .focusNote, .sceneLabel { display: none; }
+  .scrollCue { bottom: 9px; font-size: .65rem; }
+}
+@media (max-width: 380px) {
+  .hero { padding-inline: 18px; gap: 13px; }
+  .headline { font-size: 2.35rem; }
+  .actions { gap: 12px; }
+  .primary { gap: 17px; }
+}
+@media (max-width: 780px) and (max-height: 700px) {
+  .hero { padding-top: 16px; padding-bottom: 50px; gap: 11px; }
+  .eyebrow { margin-bottom: 8px; }
+  .headline { font-size: 2.1rem; }
+  .description { margin-top: 10px; font-size: .78rem; }
+  .description br { display: none; }
+  .actions { margin-top: 11px; }
+  .free { margin-top: 8px; }
+  .limit { font-size: .64rem; margin-top: 8px; }
+  .scene { padding-top: 4px; padding-bottom: 8px; }
+  .previewTop { padding: 10px 14px 3px; }
+  .previewTop > span:last-child { display: none; }
+  .tools, .values { display: none; }
+  .example { padding: 6px 12px 0; }
+  .result { margin-top: 0; padding: 10px 14px; }
+  .resultValue strong { font-size: 2.75rem; }
+  .resultValue { margin-top: 0; }
+  .formula { margin-top: 0; }
+  .exampleNote { margin-block: 6px 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .hero a { transition: none; } }
