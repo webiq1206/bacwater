@@ -236,7 +236,7 @@ function ModeToggle({
   onChange: (m: Mode) => void;
 }) {
   return (
-    <div className="flex items-center gap-1 border border-border bg-muted p-1">
+    <div className="bac-mode-toggle flex items-center gap-1 border border-border bg-muted p-1">
       <button
         type="button"
         onClick={() => onChange("beginner")}
@@ -407,7 +407,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const injectionsPerWeek = schedule.count ?? 1;
   const dosePerInjectionMcg = schedule.ready ? schedule.eachMcg : 0;
   const secondaryVialMg = secondaryVialUnit === "mg" ? secondaryVialInput : secondaryVialInput / 1000;
-  const hasPeptide = peptideSlug === "custom" ? customPeptideName.trim().length > 0 : peptideSlug !== "" && peptideSlug !== "hcg";
+  const hasPeptide = peptideSlug === "custom" ? customPeptideName.trim().length > 0 : peptideSlug !== "hcg" && PEPTIDES.some(p => p.slug === peptideSlug);
   const hasValidInputs = hasPeptide && Number.isFinite(vialStrengthMg) && vialStrengthMg > 0 && schedule.ready;
   useEffect(() => {
     if (init) return;
@@ -572,7 +572,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     { label: "Final liquid volume", value: `${customBacMl} mL` },
     { label: "Mix date", value: dateMixed || "Not set" },
   ];
-  const sessionNotice = !init && (draft.total || draft.amount || draft.volume) ? <p className="mb-4 rounded-xl border bg-surface px-4 py-3 text-xs leading-relaxed" data-session-notice>Your numbers stay with you in this tab. Check them against the label when you change products.</p> : null;
+  const sessionNotice = !init && (draft.total || draft.amount || draft.volume) ? <p className="bac-session-note mb-4 text-xs leading-relaxed text-muted-foreground" data-session-notice>Your numbers stay in this tab. Check the label when changing products.</p> : null;
   function resetDraft() {
     if (!window.confirm("Clear this calculation? Saved plans will not be deleted.")) return;
     if (init) setEditDraft({ ...EMPTY_MASS }); else clearMassSession();
@@ -583,9 +583,9 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     return (
       <div>
         {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={(open) => { if (!open) setSavedPlan(null); }} />}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="bac-mode-row mb-6 flex flex-wrap items-center justify-between gap-3">
           {hasMounted && (
-            <><ModeToggle mode={mode} onChange={setMode} /><button type="button" className="min-h-11 px-3 text-xs underline" onClick={resetDraft}>Clear calculation</button></>
+            <><ModeToggle mode={mode} onChange={setMode} /><button type="button" className="min-h-11 px-3 text-xs underline" aria-label="Clear calculation" onClick={resetDraft}>Clear</button></>
           )}
         </div>
         {sessionNotice}
@@ -901,7 +901,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     // previously empty, so the plan being built is visible while it is built.
     // Below xl there is no room for it, and the WizardContext breadcrumb
     // already carries the answers so far.
-    <div
+    <div data-guided-step={step}
       className={cn(
         "bac-focus-step mx-auto pb-24 sm:pb-0",
         isReview
@@ -912,9 +912,9 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       )}
     >
       <div ref={stepContainerRef} className="min-w-0">
-      <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="bac-mode-row mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
         {hasMounted && (
-          <><ModeToggle mode={mode} onChange={setMode} /><button type="button" className="min-h-11 px-3 text-xs underline" onClick={resetDraft}>Clear calculation</button></>
+          <><ModeToggle mode={mode} onChange={setMode} /><button type="button" className="min-h-11 px-3 text-xs underline" aria-label="Clear calculation" onClick={resetDraft}>Clear</button></>
         )}
       </div>
 
@@ -1026,8 +1026,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       )}
 
       {step === 2 && (
-        <StepPanel title="How much each time?" hint="Start with the amount in your instructions. Is it for one time, or the whole week?" onNext={() => goToStep(3)} onBack={() => goToStep(1)} stepNum={3} nextDisabled={!schedule.ready}>
-          <AmountScheduleFields value={draft} onChange={value => patch(value)} />
+        <StepPanel title="How much each time?" hint="Copy your amount. Is it for one time, or the whole week?" onNext={() => goToStep(3)} onBack={() => goToStep(1)} stepNum={3} nextDisabled={!schedule.ready}>
+          <AmountScheduleFields value={draft} onChange={value => patch(value)} compactQuestion />
           <BeginnerHelp kind="units" />
         </StepPanel>
       )}
@@ -1318,7 +1318,7 @@ function StepPanel({
 
 function StepBar({ step, total }: { step: number; total: number }) {
   return (
-    <div className="mb-5 sm:mb-8">
+    <div className="bac-step-progress mb-5 sm:mb-8">
       <div className="flex items-center gap-1">
         {Array.from({ length: total }, (_, i) => (
           <div
@@ -1398,11 +1398,11 @@ function WizardContext({
   if (step >= 3)
     items.push({
       label: "Each time",
-      value: `${(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg`,
+      value: `${amountText(doseMcg, "mg")} mg`,
     });
   if (items.length === 0) return null;
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm mb-4 sm:mb-6 px-1">
+    <div className="bac-step-context flex flex-wrap items-center gap-x-2 gap-y-1 text-sm mb-4 sm:mb-6 px-1">
       {items.map((item, i) => (
         <span key={item.label} className="inline-flex items-center gap-1.5">
           {i > 0 && (

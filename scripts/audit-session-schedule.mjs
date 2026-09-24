@@ -57,6 +57,7 @@ for (const [engine, driver] of [['chromium', chromium], ['webkit', webkit]]) {
    await p.getByRole('combobox',{name:'Product',exact:true}).click();await p.getByLabel('Search products',{exact:true}).fill('bpc');await p.getByRole('option',{name:'BPC-157',exact:true}).click();
    await p.getByRole('button',{name:'Continue',exact:false}).click();await p.getByLabel('Vial strength',{exact:true}).fill('40');await p.getByRole('button',{name:'Continue',exact:false}).click();
    await expect(p.getByRole('heading',{name:'How much each time?',exact:true})).toBeVisible();
+   const firstAmount=await p.getByLabel('Amount each time',{exact:true}).boundingBox();assert.ok(firstAmount&&firstAmount.y+firstAmount.height<770,'The amount field must appear before the mobile action dock.');
    await p.getByLabel('Amount each time',{exact:true}).fill('0.4');await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('7');
    await expect(p.locator('[data-amount-schedule] [role="status"]').first()).toContainText('2.8 mg per week');
    await p.getByRole('radio',{name:/Whole week/}).check();
@@ -71,6 +72,18 @@ for (const [engine, driver] of [['chromium', chromium], ['webkit', webkit]]) {
    await expect(p.getByRole('heading',{name:'Here are your numbers.',exact:true})).toBeVisible();
    assert.match(await p.locator('[data-calculator-scroll]').innerText(),/0\.010 mL/);
    await expect(p.getByRole('button',{name:'Save my plan',exact:true})).toBeEnabled();
+  }));
+  await check(`${engine}: custom schedules require a count and never silently become one amount`,async()=>journey(390,844,async p=>{
+   await p.goto(origin+'/calculate/product/glp-3',{waitUntil:'networkidle'});
+   await p.getByLabel('Total amount in the vial',{exact:true}).fill('40');await p.getByLabel('Final liquid volume (mL)',{exact:true}).fill('2');
+   await p.getByLabel('Amount each time',{exact:true}).fill('0.4');await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('custom');
+   await expect(p.getByRole('alert')).toContainText('whole number');await expect(p.getByRole('button',{name:'Copy result',exact:true})).toHaveCount(0);
+   await p.reload({waitUntil:'networkidle'});await expect(p.getByLabel('Times per week',{exact:true})).toHaveValue('');
+   await p.getByLabel('Times per week',{exact:true}).fill('4');await expect(p.locator('[data-amount-schedule] [role="status"]').first()).toContainText('1.6 mg per week');
+   await p.getByLabel('Times per week',{exact:true}).fill('');await expect(p.getByRole('alert')).toContainText('whole number');
+   await p.getByLabel('Times per week',{exact:true}).fill('29');await expect(p.getByRole('alert')).toContainText('1 to 28');
+   await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('');await expect(p.getByLabel('Amount each time',{exact:true})).toHaveValue('0.4');
+   await expect(p.getByRole('button',{name:'Copy result',exact:true})).toBeVisible();
   }));
   await check(`${engine}: incompatible product types and IU keep separate drafts`,async()=>journey(390,844,async p=>{
    await p.goto(origin+'/calculate/product/glp-3',{waitUntil:'networkidle'});await p.getByLabel('Total amount in the vial',{exact:true}).fill('40');await p.getByLabel('Final liquid volume (mL)',{exact:true}).fill('2');
@@ -94,6 +107,7 @@ for (const [engine, driver] of [['chromium', chromium], ['webkit', webkit]]) {
    await hero.getByText('Amount each time & schedule',{exact:true}).click();await hero.getByLabel('Amount each time',{exact:true}).fill('0.4');
    await p.goto(origin+'/tools/supplies',{waitUntil:'networkidle'});await expect(p.getByLabel('Mass per vial (mg)',{exact:true})).toHaveValue('40');await expect(p.getByLabel('Amount each time (mcg)',{exact:true})).toHaveValue('400');
    await p.goto(origin+'/tools/dose',{waitUntil:'networkidle'});await expect(p.getByLabel('Known concentration (mg/mL)',{exact:true})).toHaveValue('20');
+   await p.goto(origin+'/tools/reverse-bac',{waitUntil:'networkidle'});await p.getByLabel('Amount each time (mcg)',{exact:true}).fill('');await p.getByLabel('Amount each time (mcg)',{exact:true}).pressSequentially('0.125');await expect(p.getByLabel('Amount each time (mcg)',{exact:true})).toHaveValue('0.125');
    await p.goto(origin+'/tools/mg-to-mcg',{waitUntil:'networkidle'});await p.getByLabel('Milligrams (mg)',{exact:true}).fill('0.125');
    await p.goto(origin,{waitUntil:'networkidle'});await p.locator('[data-hero-calculator]').getByRole('tab',{name:'mg to mcg',exact:true}).click();await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in milligrams',{exact:true})).toHaveValue('0.125');
   }));

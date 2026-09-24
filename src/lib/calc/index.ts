@@ -415,7 +415,7 @@ export function calculate(input: CalcInput): CalcResult {
   );
   if (injectionsPerWeek > 1) {
     assumptions.push(
-      `The dose you entered (${round(weeklyDoseMcg, 1)} mcg) is treated as a weekly total and split into ${injectionsPerWeek} injections of ${formatNumeric(doseMcg, 1)} mcg each. You can change the injections per week.`
+      `Weekly total: ${round(weeklyDoseMcg, 1)} mcg. There are ${injectionsPerWeek} equal amounts of ${formatNumeric(doseMcg, 1)} mcg each. This uses your selected frequency, not a recommended schedule.`
     );
   }
   // V-11 (PRD §9.4): compatibility is never assumed, and it is stated every time.

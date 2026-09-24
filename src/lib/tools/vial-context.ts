@@ -1,4 +1,5 @@
 "use client";
+import { positiveDecimal } from "@/lib/calc/number-text";
 import { useMassSession, clearMassSession, massText } from "@/lib/calculator-session";
 import { resolveAmountSchedule, amountText } from "@/lib/calc/amount-schedule";
 export type MassUnit = "mg" | "mcg";
@@ -10,9 +11,9 @@ export function useVialContext() {
   const [draft, patch] = useMassSession();
   const schedule = resolveAmountSchedule(draft);
   return {
-    peptideSlug: draft.peptideSlug, vialInput: Number(draft.total), vialUnit: draft.totalUnit,
+    peptideSlug: draft.peptideSlug, vialInput: draft.total ? positiveDecimal(draft.total) ?? Number.NaN : 0, vialUnit: draft.totalUnit,
     doseInput: schedule.ready ? Number(amountText(schedule.eachMcg, draft.amountUnit)) : 0, doseUnit: draft.amountUnit,
-    vialMg: Number(massText(draft.total, draft.totalUnit, "mg")), doseMcg: schedule.ready ? schedule.eachMcg : 0,
+    vialMg: draft.total ? positiveDecimal(massText(draft.total, draft.totalUnit, "mg")) ?? Number.NaN : 0, doseMcg: schedule.ready ? schedule.eachMcg : 0,
     setPeptideSlug: (peptideSlug: string) => patch({ peptideSlug }),
     setVialInput: (n: number) => patch({ total: n ? String(n) : "" }),
     setVialUnit: (u: MassUnit) => patch({ total: massText(draft.total, draft.totalUnit, u), totalUnit: u }),
