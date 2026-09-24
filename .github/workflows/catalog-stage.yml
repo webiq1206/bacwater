@@ -104,10 +104,10 @@ jobs:
       - name: Production build
         id: compile
         run: set -o pipefail; npm run build 2>&1 | tee audit-evidence/build.log
-      - name: Preserve compiled source on isolated branch for browser review
+      - name: Preserve application source on isolated branch
         run: |
           test "$GITHUB_REF" = refs/heads/feat/supplier-neutral-catalog-2026-09-23
-          git add -A -- src scripts package.json audit/2026-09-23 .github/workflows/master-audit.yml
+          git add -A -- src scripts package.json audit/2026-09-23
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
