@@ -9,7 +9,6 @@ import { SiteSearchButton } from "@/components/search/site-search";
 import { SupplierWaterLink } from "@/components/partners/supplier-context";
 import { CalculatorProductTools, ProductSelectionContext } from "@/components/partners/calculator-products";
 import { productForCalculatorPath } from "@/lib/partners/supplier-catalog";
-import { useCalculationSession, resumeMassCalculation, chooseCalculationProduct } from "@/lib/session/calculation-session";
 import styles from "./calculator-workspace.module.css";
 const ActionsContext = createContext<HTMLElement | null>(null);
 export function WorkspaceActions({ children }: { children: ReactNode }) {
@@ -25,13 +24,6 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
   const [helpOpen, setHelpOpen] = useState(false);
   const root = useRef<HTMLElement>(null), bar = useRef<HTMLElement>(null), guide = useRef<HTMLDetailsElement>(null);
   const pathname = usePathname();
-  const session=useCalculationSession();
-  const routeProduct=productForCalculatorPath(pathname||"");
-  useEffect(()=>{
-    if(routeProduct)chooseCalculationProduct(routeProduct.id,routeProduct.kind,routeProduct.reference||"");
-    else if(pathname==="/calculate/hcg")chooseCalculationProduct("hcg","iu","hcg");
-    else if(/^\/tools\/(bac-water|reverse-bac|supplies|dose)$/.test(pathname||""))resumeMassCalculation();
-  },[pathname,routeProduct]);
   const hasOwnProductPicker = ["/peptide-calculator", "/plan", "/plan/new"].includes(pathname || "") || /^\/plan\/[^/]+\/edit$/.test(pathname || "");
   const [selectedProduct,setSelectedProduct]=useState<string|null>(()=>productForCalculatorPath(pathname||"")?.id||null);
   useEffect(()=>{const product=productForCalculatorPath(pathname||"");if(product)setSelectedProduct(product.id);},[pathname]);
@@ -87,7 +79,7 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
       <div className={styles.body} data-calculator-scroll tabIndex={0} role="region" aria-label="Calculation workspace">
         <div className={styles.content}>
           <div className={styles.heading}><h1>{title}</h1><p>{description}</p></div>
-          {!hasOwnProductPicker && <CalculatorProductTools selectedId={routeProduct?.id||(session.kind==="single"?session.productId:null)}/>}
+          {!hasOwnProductPicker && <CalculatorProductTools selectedId={selectedProduct}/>}
           {children}
         </div>
       </div>
