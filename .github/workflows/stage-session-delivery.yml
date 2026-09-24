@@ -1,0 +1,52 @@
+name: Isolated reviewed session source assembly
+on:
+  push:
+    branches: [delivery/session-clarity-2026-09-24]
+    paths: [.delivery/**]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Assemble only the checksum-reviewed source on this temporary branch
+        env:
+          EXPECTED_REF: refs/heads/delivery/session-clarity-2026-09-24
+        run: |
+          test "$GITHUB_REF" = "$EXPECTED_REF"
+          python3 - <<'PY'
+          import hashlib, json, lzma, pathlib, subprocess
+          base = '070f21e76c996672d91934fe4fa0593f1b1d13eb'
+          expected = '13ea69f49add473939985e448568d3b627a3a66c'
+          root = pathlib.Path.cwd()
+          raw = lzma.decompress((root/'.delivery/session-a.bin').read_bytes() + (root/'.delivery/session-b.bin').read_bytes())
+          assert hashlib.sha256(raw).hexdigest() == '5d5135f90f2561fbca7df39b90639c9130214d576de64b22e9a814a218028016'
+          entries = json.loads(raw)
+          assert len(entries) == 40
+          for name, edits in entries:
+              path = pathlib.PurePosixPath(name)
+              assert not path.is_absolute() and '..' not in path.parts
+              assert name.startswith(('src/', 'scripts/', 'audit/')) or name in ('package.json', '.github/workflows/hero-acceptance.yml')
+              result = subprocess.run(['git','show',f'{base}:{name}'],capture_output=True)
+              text = result.stdout.decode('utf-8') if result.returncode == 0 else ''
+              last = len(text)
+              for start,end,replacement in reversed(edits):
+                  assert isinstance(start,int) and isinstance(end,int) and 0 <= start <= end <= last
+                  text = text[:start] + replacement + text[end:]
+                  last = start
+              target = root/name
+              target.parent.mkdir(parents=True,exist_ok=True)
+              target.write_text(text,encoding='utf-8')
+          for name in ('.delivery/session-a.bin','.delivery/session-b.bin','.github/workflows/stage-session-delivery.yml'):
+              (root/name).unlink()
+          subprocess.run(['git','add','-A'],check=True)
+          tree = subprocess.check_output(['git','write-tree'],text=True).strip()
+          assert tree == expected, (tree, expected)
+          print('Exact reviewed source tree:',tree)
+          PY
+          git -c user.name='webIQ' -c user.email='info@webiq.co' commit -m 'stage: assemble checksum-verified session and timing source'
+          git push origin HEAD:refs/heads/delivery/session-clarity-2026-09-24
