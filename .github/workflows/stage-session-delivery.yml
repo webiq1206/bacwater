@@ -2,7 +2,7 @@ name: Isolated reviewed session source assembly
 on:
   push:
     branches: [delivery/session-clarity-2026-09-24]
-    paths: [.delivery/**]
+    paths: [.delivery/**, .github/workflows/stage-session-delivery.yml]
 permissions:
   contents: write
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Assemble only the checksum-reviewed source on this temporary branch
+      - name: Assemble only reviewed application files on the temporary branch
         env:
           EXPECTED_REF: refs/heads/delivery/session-clarity-2026-09-24
         run: |
@@ -41,12 +41,21 @@ jobs:
               target = root/name
               target.parent.mkdir(parents=True,exist_ok=True)
               target.write_text(text,encoding='utf-8')
-          for name in ('.delivery/session-a.bin','.delivery/session-b.bin','.github/workflows/stage-session-delivery.yml'):
+          transport = ['.delivery/session-a.bin','.delivery/session-b.bin','.github/workflows/stage-session-delivery.yml']
+          for name in transport:
               (root/name).unlink()
           subprocess.run(['git','add','-A'],check=True)
           tree = subprocess.check_output(['git','write-tree'],text=True).strip()
           assert tree == expected, (tree, expected)
-          print('Exact reviewed source tree:',tree)
+          print('Exact reviewed release tree:',tree)
+          # The Actions token cannot modify workflows. Leave every workflow unchanged
+          # here; the authorized GitHub connector will deliver the reviewed test file
+          # and remove the isolated transport when making the clean release commit.
+          subprocess.run(['git','restore','--source=HEAD','--staged','--worktree','--',*transport],check=True)
+          subprocess.run(['git','restore',f'--source={base}','--staged','--worktree','--','.github/workflows/hero-acceptance.yml'],check=True)
+          workflow_changes = subprocess.check_output(['git','diff','--cached','--name-only','--','.github/workflows'],text=True).strip()
+          assert not workflow_changes
+          print('Application-only staged tree:',subprocess.check_output(['git','write-tree'],text=True).strip())
           PY
-          git -c user.name='webIQ' -c user.email='info@webiq.co' commit -m 'stage: assemble checksum-verified session and timing source'
+          git -c user.name='webIQ' -c user.email='info@webiq.co' commit -m 'stage: assemble reviewed application files without workflow changes'
           git push origin HEAD:refs/heads/delivery/session-clarity-2026-09-24
