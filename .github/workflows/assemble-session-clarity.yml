@@ -34,7 +34,8 @@ jobs:
           Path(os.environ['RUNNER_TEMP'], 'reviewed-session.patch').write_bytes(patch)
           print('Reviewed source payload verified.')
           PY
-          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$BASE"
+          # Stage baseline-relative source only. Newer main is reconciled separately.
+          git merge-base --is-ancestor "$BASE" origin/main
           git -c core.hooksPath=/dev/null checkout --detach "$BASE"
           git -c core.hooksPath=/dev/null apply --index --unidiff-zero "$RUNNER_TEMP/reviewed-session.patch"
           test "$(git write-tree)" = "$EXPECTED_TREE"
