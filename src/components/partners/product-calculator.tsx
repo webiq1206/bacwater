@@ -1,7 +1,12 @@
 "use client";
-import { useId } from "react";
+import { useEffect, useId } from "react";
 import type { SupplierProduct } from "@/lib/partners/supplier-catalog";
 import { emptyProductValues, readProductValues, productCalculation, type ProductValues } from "@/lib/partners/product-calculation";
+import { useMassDraft } from "@/lib/use-calculator-session";
+import { massText, selectMassProduct, clearMassNumbers } from "@/lib/calculator-session";
+import { AmountSchedule } from "@/components/plan/amount-schedule";
+import { SessionNotice } from "@/components/calculator/session-notice";
+import { amountSchedule, amountScheduleText } from "@/lib/calc/amount-schedule";
 import { usePersistentState } from "@/lib/use-persistent-state";
 import { CalculatorWorkspace, WorkspaceActions } from "@/components/calculator/calculator-workspace";
 import { UnitHelp } from "@/components/tools/unit-help";
@@ -10,25 +15,36 @@ import { CopyButton } from "@/components/common/copy-button";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 export function ProductCalculator({product}:{product:SupplierProduct}){
- const id=useId(),[raw,set]=usePersistentState(`bacwater.product.${product.id}.v1`,emptyProductValues());
- const values=readProductValues(raw),result=productCalculation(product,values);
+ const id=useId(),[raw,setRaw]=usePersistentState(`bacwater.product.${product.id}.v1`,emptyProductValues());
+ const [draft, patch] = useMassDraft();
+ useEffect(() => { if (product.kind === "single") selectMassProduct(product.id, product.reference || "custom", product.reference ? "" : product.name); }, [product.id, product.kind, product.reference, product.name]);
+ const schedule = amountSchedule({ amount: draft.amount, unit: draft.amountUnit, basis: draft.basis, frequency: draft.frequency });
+ const values = product.kind === "single" ? { ...emptyProductValues(), total: massText(draft.vial, draft.vialUnit, "mg"), volume: draft.volume, amount: schedule.kind === "value" ? String(schedule.eachMcg) : "" } : readProductValues(raw);
+ function set(next: ProductValues) {
+   if (product.kind === "single") patch({ vial: next.total, vialUnit: "mg", volume: next.volume });
+   else setRaw(next);
+ }
+ const calculated = productCalculation(product, values);
+ const result = product.kind === "single" && schedule.kind === "error" ? { ready: false, text: schedule.message, lines: [] as string[] } : calculated;
  const field=(key:keyof Omit<ProductValues,"ingredients">,label:string,hint?:string)=><div key={key} className="min-w-0"><label htmlFor={`${id}-${key}`} className="block text-sm font-medium">{label}</label><Input id={`${id}-${key}`} type="text" inputMode={key==="ingredient"?"text":key==="count"?"numeric":"decimal"} value={values[key]} maxLength={key==="ingredient"?80:32} onChange={e=>set({...values,[key]:e.target.value})} aria-describedby={hint?`${id}-${key}-help`:undefined} className="mt-2 min-h-12"/>{hint&&<p id={`${id}-${key}-help`} className="mt-2 text-xs text-muted-foreground">{hint}</p>}</div>;
  const description=product.kind==="water"?"Add up liquid volumes you already know.":product.kind==="spray"?"This is a ready-made solution. Check its label, not a mixing recipe.":product.kind==="blend"?"Keep each ingredient separate. Copy its amount from the label.":"Enter your label numbers. We show the concentration and volume.";
  return <CalculatorWorkspace title={`${product.name} calculator`} description={description} backHref="/recommendations" help={<p>All products are listed for lab research only, not for people or animals. This calculation does not verify a product or tell you what to use. The supplier link opens the exact product page. Images are our own artwork, not packaging.</p>}>
+  {product.kind === "single" && <SessionNotice />}
   <section className="bac-calc-card p-5 sm:p-7" aria-label="Product calculation inputs" style={{maxWidth:760,marginInline:"auto"}}>
    <div className="grid gap-5 sm:grid-cols-2">
     {product.kind==="water"?<>{field("volume","Liquid volume per container (mL)","The amount needed in each container, from your own instructions.")}{field("count","Number of containers")}{field("total","Volume per bottle (mL)","The liquid amount printed on the supply bottle.")}</>:product.kind==="spray"?<>{product.id==="bpc-tb-spray"&&field("ingredient","Ingredient from the label")}{field("total","Label concentration (mg/mL)","For a blend, use the concentration of one named ingredient, not a combined total.")}{field("amount","Sample volume (mL)","The amount of liquid you want to calculate, not a dose chosen by this tool.")}</>:product.kind==="blend"?<>
      {values.ingredients.map((ingredient,index)=><fieldset className="min-w-0 rounded-lg border p-3" key={index}><legend className="px-1 text-sm">Ingredient {index+1}</legend><label htmlFor={`${id}-name-${index}`} className="text-sm">Ingredient {index+1} name</label><Input id={`${id}-name-${index}`} value={ingredient.name} maxLength={80} onChange={e=>set({...values,ingredients:values.ingredients.map((row,i)=>i===index?{...row,name:e.target.value}:row)})}/><label htmlFor={`${id}-mass-${index}`} className="mt-3 block text-sm">Ingredient {index+1} amount (mg)</label><Input id={`${id}-mass-${index}`} type="text" inputMode="decimal" value={ingredient.mass} maxLength={32} onChange={e=>set({...values,ingredients:values.ingredients.map((row,i)=>i===index?{...row,mass:e.target.value}:row)})}/></fieldset>)}
      <div className="flex flex-wrap gap-3 sm:col-span-2"><Button type="button" variant="outline" disabled={values.ingredients.length>=6} onClick={()=>set({...values,ingredients:[...values.ingredients,{name:"",mass:""}]})}>Add ingredient</Button>{values.ingredients.length>2&&<Button type="button" variant="outline" onClick={()=>set({...values,ingredients:values.ingredients.slice(0,-1)})}>Remove last ingredient</Button>}</div>
      {field("volume","Final volume (mL)")}{field("amount","Sample volume (mL)","The amount of liquid you want to calculate, not a dose chosen by this tool.")}
-    </>:<>{field("total","Total in container (mg)","Copy the total amount printed on the vial label.")}{field("volume","Final volume (mL)","Use your product instructions. Final volume is not always the amount of water added.")}{field("amount","Amount to measure (mcg)","Use an amount from instructions you already have. 1 mg = 1,000 mcg.")}</>}
+    </>:<>{field("total","Total in container (mg)","Copy the total amount printed on the vial label.")}{field("volume","Final volume (mL)","Use your product instructions. Final volume is not always the amount of water added.")}</>}
    </div>
+   {product.kind === "single" && <div className="mt-6"><AmountSchedule value={{ amount: draft.amount, unit: draft.amountUnit, basis: draft.basis, frequency: draft.frequency }} onChange={p => patch({ ...(p.amount !== undefined ? { amount: p.amount } : {}), ...(p.unit ? { amountUnit: p.unit } : {}), ...(p.basis ? { basis: p.basis } : {}), ...(p.frequency !== undefined ? { frequency: p.frequency } : {}) })}/></div>}
    <UnitHelp/>
-   {product.kind==="single"&&<BeginnerHelp kind="amount"/>}
+
    <div className="bac-result-card mt-5 break-words [overflow-wrap:anywhere]" role="status" aria-live="polite" aria-atomic="true">{result.ready?result.lines.map((line,i)=><p className="mt-2 first:mt-0" key={i}>{line}</p>):result.text}</div>
    <p className="mt-4 text-sm text-muted-foreground">{product.kind==="spray"?"Do not add BAC water based on this tool. It does not calculate spray counts or injection units.":product.kind==="blend"?"No ratio is guessed. Each result uses that ingredient’s entered mass and the same final volume.":product.kind==="water"?"This only adds your entered volumes. It does not tell you which liquid to use.":"U-100 means 100 scale units per mL. Check the actual device and its capacity. These are not product activity units."}</p>
-   <p className="mt-3 text-xs text-muted-foreground">No dose, treatment, or storage period is selected. Entries stay on this device when storage is available. Results show up to eight significant digits.</p>
+   <p className="mt-3 text-xs text-muted-foreground">No dose, treatment, or storage period is selected. Entries stay in this browser tab when storage is available. Results show up to eight significant digits.</p>
   </section>
-  <WorkspaceActions><Button type="button" variant="outline" onClick={()=>set(emptyProductValues())}>Clear inputs</Button>{result.ready&&<CopyButton value={result.text+". Arithmetic only; check product instructions."} label="Copy result"/>}</WorkspaceActions>
+  <WorkspaceActions><Button type="button" variant="outline" onClick={()=>{if(product.kind==="single")clearMassNumbers();else setRaw(emptyProductValues());}}>Clear inputs</Button>{result.ready&&<CopyButton value={result.text+". "+(product.kind === "single" ? amountScheduleText({amount:draft.amount,unit:draft.amountUnit,basis:draft.basis,frequency:draft.frequency})+" " : "")+"Arithmetic only; check product instructions."} label="Copy result"/>}</WorkspaceActions>
  </CalculatorWorkspace>;
 }

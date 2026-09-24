@@ -73,7 +73,7 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-6 rounded-xl bg-accent-guide-soft p-5 sm:p-6">
           <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
-            Your entered amount equals
+            For one time, your entered amount equals
           </div>
           <div className="mt-1 result-hero">
             {syringeReadout.kind === "u100"
@@ -88,7 +88,7 @@ export function PlanResults({ result }: Props) {
             syringe · that&apos;s {doseLabel} ={" "}
             {result.doseVolumeMl.toFixed(3)} mL
           </div>
-          {schedule && schedule.injectionsPerWeek > 1 && (
+          {schedule && schedule.frequencyKnown !== false && (schedule.injectionsPerWeek > 1 || result.input.amountBasis != null) && (
             <div className="mt-3 rounded-lg border border-border bg-card px-4 py-3 text-sm">
               <span className="font-medium text-foreground">
                 {syringeReadout.kind === "u100"
@@ -245,7 +245,7 @@ export function PlanResults({ result }: Props) {
             <AccordionTrigger>
               <span className="flex items-center gap-2.5">
                 <SlidersHorizontal className="h-4 w-4 accent-check" />
-                What if I used more or less water?
+                How does final volume affect the math?
               </span>
             </AccordionTrigger>
             <AccordionContent>
@@ -338,8 +338,8 @@ function PlanSelfCheck({
     source?: Provenance;
   }[] = [
     {
-      q: "How much water do I add?",
-      a: `${formatMl(result.usedBacMl)} mL of BAC water`,
+      q: "What final liquid volume did I enter?",
+      a: `${formatMl(result.usedBacMl)} mL total liquid, not an instruction to add water`,
       source: bacSource,
     },
     {
@@ -349,8 +349,8 @@ function PlanSelfCheck({
     },
     {
       q: "How much do I measure each time?",
-      a: `${doseLabel}, which is ${result.doseVolumeMl.toFixed(3)} mL`,
-      source: "user",
+      a: `${doseLabel} each time, which calculates to ${formatMl(result.doseVolumeMl)} mL`,
+      source: "calculated",
     },
     {
       q: "Where does that land on my syringe?",
@@ -393,9 +393,10 @@ function PlanSelfCheck({
 
       <div className="mt-5 pt-5 border-t border-border text-sm text-muted-foreground leading-relaxed">
         <span className="font-medium text-foreground">Which numbers are mine?</span>{" "}
-        You entered the vial amount, how much to measure, and your syringe. The
-        site worked out the concentration, the syringe units, and the measurements
-        per vial. Shelf life is not calculated. Use the product-specific instructions.
+        You supplied the vial amount, final liquid volume, measurement amount,
+        its meaning (each time or per week), and the device scale. Any schedule
+        comes from you. The site worked out the amount each time, concentration,
+        volume, scale units, and measurements per vial. Shelf life is not calculated. Use the product-specific instructions.
       </div>
 
       <Callout variant="note" className="mt-5" title="What this plan does not decide">

@@ -19,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { positiveDecimal } from "@/lib/calc/number-text";
+import { AmountSchedule } from "./amount-schedule";
 import { PlanResults } from "@/components/plan/plan-results";
 import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 import { cn } from "@/lib/utils";
@@ -29,7 +31,8 @@ export interface PlanEditableFields {
   peptideName: string;
   vialStrengthMg: number;
   doseMcg: number;
-  injectionsPerWeek: number;
+  injectionsPerWeek: number | null;
+  amountBasis?: "each" | "week";
   bacWaterMl: number;
   syringeType: SyringeType;
   dateMixed: string;
@@ -70,6 +73,7 @@ export function PlanInlineEditor({
   onCancel: () => void;
 }) {
   const [fields, setFields] = useState<PlanEditableFields>(initial);
+  const [amountUnit, setAmountUnit] = useState<"mg" | "mcg">("mcg");
 
   // A name that just restates the plan's numbers keeps restating them as they
   // are edited, so the field shows the name that will be saved. A name the
@@ -98,7 +102,7 @@ export function PlanInlineEditor({
   }
 
   const dirty = useMemo(
-    () => (Object.keys(initial) as Array<keyof PlanEditableFields>).some((k) => fields[k] !== initial[k]),
+    () => (Array.from(new Set([...Object.keys(initial), ...Object.keys(fields)])) as Array<keyof PlanEditableFields>).some((k) => fields[k] !== initial[k]),
     [fields, initial]
   );
 
@@ -117,7 +121,8 @@ export function PlanInlineEditor({
         fields.peptideSlug === "custom" ? fields.peptideName || "Custom" : undefined,
       vialStrengthMg: fields.vialStrengthMg,
       doseMcg: fields.doseMcg,
-      injectionsPerWeek: fields.injectionsPerWeek,
+      amountBasis: fields.amountBasis,
+      injectionsPerWeek: fields.injectionsPerWeek ?? undefined,
       bacWaterMl: fields.bacWaterMl,
       syringeType: fields.syringeType,
       dateMixed: fields.dateMixed || null,
@@ -203,42 +208,14 @@ export function PlanInlineEditor({
             />
           </div>
 
-          <div>
-            <Label className="text-xs text-muted-foreground">Weekly total (mcg)</Label>
-            <Input
-              type="number"
-              inputMode="decimal"
-              min={0}
-              step="any"
-              value={fields.doseMcg || ""}
-              onChange={(e) => patch({ doseMcg: Number(e.target.value) || 0 })}
-              className="mt-1 h-10"
-            />
-          </div>
+          <div className="sm:col-span-2"><AmountSchedule value={{ amount: fields.doseMcg ? String(fields.doseMcg / (amountUnit === "mg" ? 1000 : 1)) : "", unit: amountUnit, basis: fields.amountBasis ?? "week", frequency: fields.injectionsPerWeek }} onChange={p => {
+            const unit = p.unit ?? amountUnit;
+            if (p.unit) setAmountUnit(p.unit);
+            patch({ ...(p.amount !== undefined ? { doseMcg: (positiveDecimal(p.amount) ?? 0) * (unit === "mg" ? 1000 : 1) } : {}), ...(p.basis ? { amountBasis: p.basis } : {}), ...(p.frequency !== undefined ? { injectionsPerWeek: p.frequency } : {}) });
+          }} /></div>
 
           <div>
-            <Label className="text-xs text-muted-foreground">Injections per week</Label>
-            <div className="mt-1 flex flex-wrap gap-1.5">
-              {FREQUENCIES.map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => patch({ injectionsPerWeek: n })}
-                  className={cn(
-                    "h-10 min-w-10 rounded-lg border px-3 text-sm font-medium transition-colors",
-                    fields.injectionsPerWeek === n
-                      ? "border-foreground bg-muted"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {n}×
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-xs text-muted-foreground">BAC water (mL)</Label>
+            <Label className="text-xs text-muted-foreground">Final liquid volume (mL)</Label>
             <div className="mt-1 flex gap-1.5">
               <Input
                 type="number"
@@ -249,18 +226,6 @@ export function PlanInlineEditor({
                 onChange={(e) => patch({ bacWaterMl: Number(e.target.value) || 0 })}
                 className="h-10"
               />
-              {recommendedBac > 0 && fields.bacWaterMl !== recommendedBac ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="shrink-0"
-                  onClick={() => patch({ bacWaterMl: recommendedBac })}
-                  title="Use the amount we'd recommend for these numbers"
-                >
-                  Use {recommendedBac} mL
-                </Button>
-              ) : null}
             </div>
           </div>
 
@@ -315,7 +280,7 @@ export function PlanInlineEditor({
         ) : null}
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <Button onClick={() => onSave(fields)} disabled={saving || !valid || !dirty} variant="brand">
+          <Button onClick={() => onSave(fields)} disabled={saving || !valid || !dirty || !!preview?.errors.length} variant="brand">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Save changes
           </Button>

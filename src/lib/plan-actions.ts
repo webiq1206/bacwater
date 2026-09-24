@@ -9,7 +9,7 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { hasPlanAccess, rememberPlanAccess } from "@/lib/plan-access";
 import { ownsPlan, planCookieName, planWriteWhere } from "@/lib/security/authorization";
-import { calculate, type CalcInput, type SyringeType } from "@/lib/calc";
+import { calculate, type CalcInput, type CalcResult, type SyringeType } from "@/lib/calc";
 import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 
 const inputSchema = z.object({
@@ -18,6 +18,7 @@ const inputSchema = z.object({
   peptideName: z.string().max(160).optional().nullable(),
   vialStrengthMg: z.number().positive(),
   doseMcg: z.number().positive(),
+  amountBasis: z.enum(["each", "week"]).optional(),
   bacWaterMl: z.number().finite().positive(),
   syringeType: z.enum([
     "insulin-0.3ml",
@@ -42,6 +43,7 @@ export async function computePlanAction(raw: unknown) {
     peptideName: parsed.data.peptideName ?? undefined,
     vialStrengthMg: parsed.data.vialStrengthMg,
     doseMcg: parsed.data.doseMcg,
+    amountBasis: parsed.data.amountBasis,
     injectionsPerWeek: parsed.data.injectionsPerWeek ?? undefined,
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
@@ -63,6 +65,7 @@ export async function savePlanAction(raw: unknown, notes?: string) {
     peptideName: parsed.data.peptideName ?? undefined,
     vialStrengthMg: parsed.data.vialStrengthMg,
     doseMcg: parsed.data.doseMcg,
+    amountBasis: parsed.data.amountBasis,
     injectionsPerWeek: parsed.data.injectionsPerWeek ?? undefined,
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
@@ -333,6 +336,8 @@ export async function getPlanDetailAction(publicId: string) {
       // Frequency lives only in the snapshot; plans saved before weekly
       // splitting have none and default to 1, leaving their math unchanged.
       injectionsPerWeek: injectionsPerWeekOf(result),
+      amountBasis: (result as CalcResult | null)?.input?.amountBasis,
+      frequencyKnown: (result as CalcResult | null)?.schedule?.frequencyKnown,
       dosesPerVial: plan.dosesPerVial,
       dateMixed: plan.dateMixed?.toISOString() ?? null,
       expirationDate: null,
@@ -395,6 +400,7 @@ export async function updatePlanAction(
     peptideName: parsed.data.peptideName ?? undefined,
     vialStrengthMg: parsed.data.vialStrengthMg,
     doseMcg: parsed.data.doseMcg,
+    amountBasis: parsed.data.amountBasis,
     injectionsPerWeek: parsed.data.injectionsPerWeek ?? undefined,
     bacWaterMl: parsed.data.bacWaterMl,
     syringeType: parsed.data.syringeType as SyringeType,
