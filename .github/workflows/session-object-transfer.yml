@@ -1,0 +1,27 @@
+name: Transfer reviewed session merge objects
+on:
+  push:
+    branches: [delivery/session-objects-20260924]
+    paths:
+      - .github/workflows/session-object-transfer.yml
+      - .delivery/session-merge-objects.py
+permissions:
+  contents: write
+jobs:
+  assemble:
+    if: github.repository == 'webiq1206/bacwater'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify merged file contents without executing application code or updating refs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .delivery/session-merge-objects.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-session-merge-objects
+          path: /tmp/session-merge-objects.json
+          retention-days: 7
