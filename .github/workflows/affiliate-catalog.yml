@@ -1,22 +1,76 @@
 name: Affiliate catalog acceptance
 on:
+  pull_request:
   push:
-    branches: [codex/amino-affiliate-catalog-20260924]
-  workflow_dispatch:
+    branches: [main]
 permissions:
   contents: read
+concurrency:
+  group: affiliate-catalog-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  snapshot:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: audit
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: bacwater_audit
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U audit -d bacwater_audit"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://audit:isolated-ci-only@127.0.0.1:5432/bacwater_audit
+      AUTH_SECRET: ci-placeholder-not-a-real-secret
+      AUTH_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      NEXT_TELEMETRY_DISABLED: '1'
+      AUDIT_ORIGIN: http://127.0.0.1:3000
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Archive tracked source only
-        run: git archive --format=tar HEAD > /tmp/bacwater-source.tar
-      - uses: actions/upload-artifact@v4
+      - uses: actions/setup-node@v4
         with:
-          name: bacwater-source
-          path: /tmp/bacwater-source.tar
-          retention-days: 2
+          node-version: 22
+          cache: npm
+      - name: Prepare test build without production credentials
+        run: |
+          mkdir -p audit-evidence
+          git rev-parse HEAD > audit-evidence/source-commit.txt
+          npm ci
+          npx prisma generate
+          case "$DATABASE_URL" in
+            postgresql://audit:*@127.0.0.1:5432/bacwater_audit) ;;
+            *) exit 1 ;;
+          esac
+          npx prisma db push --skip-generate
+          npx tsx prisma/seed.ts
+          npm run build
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.63.0
+      - name: Install test-only browser tools
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
+          npx playwright install --with-deps chromium webkit
+      - name: Verify affiliate catalog, research boundaries and responsive layouts
+        run: |
+          npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
+          for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
+          result=0
+          node scripts/audit-affiliate-catalog.mjs || result=1
+          exit "$result"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: affiliate-catalog-${{ github.sha }}
+          path: audit-evidence/
+          retention-days: 14

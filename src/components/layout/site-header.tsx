@@ -14,7 +14,7 @@ const NAV = [
   { href: "/peptide-calculator", label: "Calculator" },
   { href: "/tools", label: "More tools" },
   { href: "/learn", label: "Learn" },
-  { href: "/recommendations", label: "Research supplies" },
+  { href: "/products", label: "Research products" },
 ];
 
 const ITEM = "flex items-center gap-2.5 px-3.5 min-h-11 py-2.5 text-sm hover:bg-muted transition-colors";
