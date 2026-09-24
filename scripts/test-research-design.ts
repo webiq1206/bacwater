@@ -1,3 +1,4 @@
+import "./test-live-hero";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { quickCalculation, QUICK_EXAMPLE, type QuickValues } from "../src/lib/brand/quick-calculation";
