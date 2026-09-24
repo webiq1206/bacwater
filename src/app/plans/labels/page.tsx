@@ -3,7 +3,7 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { findPeptide, type CalcResult } from "@/lib/calc";
-import { formatMl, formatSyringeReading, formatUnits } from "@/lib/calc/format";
+import { formatMl, formatSyringeReading, formatUnits, formatConcentration } from "@/lib/calc/format";
 import {
   BatchLabelSheet,
   type BatchLabelPlan,
@@ -67,17 +67,18 @@ export default async function BatchLabelsPage({ searchParams }: Props) {
   }
 
   const labelPlans: BatchLabelPlan[] = ordered.map((plan) => {
-    // Shelf life from the plan's own dates when it has them, else the
-    // peptide's refrigerated default. Same derivation as /plan/[id]/label.
+    // Do not infer a storage period from a compound name or legacy snapshot.
     const shelfDays = null;
 
     // Read the syringe reading from the stored snapshot so the printed label
     // matches the plan page and the PDF exactly.
     let doseReading: string;
+    let concentration: string | undefined;
     let injectionsPerWeek: number | null = null;
     try {
       const parsed = safeResultDisplay(JSON.parse(plan.data) as CalcResult);
       doseReading = formatSyringeReading(parsed.syringeReadout);
+      concentration = `${formatConcentration(parsed.finalConcentrationMgPerMl)} mg/mL`;
       if (
         typeof parsed.schedule?.injectionsPerWeek === "number" &&
         parsed.schedule.injectionsPerWeek >= 1
@@ -97,6 +98,7 @@ export default async function BatchLabelsPage({ searchParams }: Props) {
       doseReading,
       injectionsPerWeek,
       shelfDays,
+      concentration,
       defaultMixDate: plan.dateMixed
         ? plan.dateMixed.toISOString().slice(0, 10)
         : "",

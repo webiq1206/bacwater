@@ -23,3 +23,5 @@
 .actions>button:last-child{min-width:min-content;flex:1 1 auto;}
 .bar a,.guide summary{white-space:nowrap;overflow-wrap:normal;flex-shrink:0;}
 @media(max-width:380px){.bar{gap:8px;}.bar .brand span{display:none;}}
+
+.headerActions{display:flex;align-items:center;gap:6px}.headerActions>a{padding:7px;min-width:44px}.headerActions .guide summary{padding-inline:5px}@media(max-width:380px){.bar{gap:4px}.back span,.guide summary span{font-size:12px}.headerActions{gap:2px}}

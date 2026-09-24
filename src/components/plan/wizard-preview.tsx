@@ -47,12 +47,12 @@ export function WizardPreview({
   const knowsDose = doseMcg > 0;
   // Every downstream number needs both the vial contents and the amount being
   // measured; until then there is nothing honest to show.
-  const solved = knowsVial && knowsDose;
+  const solved = knowsVial && knowsDose && result.usedBacMl > 0 && result.errors.length === 0;
   const syringe = findSyringe(syringeType);
 
   const steps = [
-    { label: "Peptide", done: hasPeptide },
-    { label: "Vial strength", done: knowsVial },
+    { label: "Product", done: hasPeptide },
+    { label: "Amount on label", done: knowsVial },
     { label: "Amount", done: knowsDose },
   ];
 
@@ -104,12 +104,12 @@ export function WizardPreview({
 
             <dl className="mt-4 space-y-0 text-sm">
               <Row
-                label="Add BAC water"
+                label="Final liquid volume"
                 value={`${formatMl(result.usedBacMl)} mL`}
                 emphasis
               />
               <Row
-                label="Draw to"
+                label="Matching scale reading"
                 value={formatSyringeReading(result.syringeReadout)}
                 emphasis
               />
@@ -118,7 +118,7 @@ export function WizardPreview({
                 value={formatConcentration(result.finalConcentrationMgPerMl)}
               />
               <Row
-                label="Per injection"
+                label="Amount per measurement"
                 value={formatDose(
                   result.schedule?.dosePerInjectionMcg ?? result.input.doseMcg
                 )}
@@ -136,8 +136,7 @@ export function WizardPreview({
 
             {result.syringeReadout.exceedsSyringe ? (
               <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
-                This draw is larger than the {syringe.label} holds. Pick a bigger
-                syringe, or add less BAC water, on the coming steps.
+                The calculated volume is larger than the selected device holds. Check your inputs and actual device. The calculator does not choose a replacement or dilution.
               </p>
             ) : null}
 

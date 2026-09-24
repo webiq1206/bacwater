@@ -181,7 +181,7 @@ const STATIC_ENTRIES: LearnEntry[] = [
     url: "/learn/bac-water-for-peptides",
     title: "BAC water for peptides",
     excerpt:
-      "Why bacteriostatic water is the standard solution for reconstituting peptides, how much to add, and what to use instead of sterile water or saline.",
+      "What the product label can tell you about the liquid to use, and why the exact instructions matter.",
     contentType: "guide",
     peptideTags: [],
     topicTags: ["reconstitution-method", "ingredients"],
@@ -203,7 +203,7 @@ const STATIC_ENTRIES: LearnEntry[] = [
     url: "/learn/bac-water-shelf-life",
     title: "BAC water and peptide shelf life",
     excerpt:
-      "How long reconstituted peptides and opened bac water last, why refrigeration and clean technique both matter, and when to discard a vial.",
+      "How to read expiry, opening and storage instructions. A calculator cannot set the shelf life of a prepared mixture.",
     contentType: "safety",
     peptideTags: [],
     topicTags: ["storage", "safety"],

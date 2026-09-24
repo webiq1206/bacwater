@@ -366,8 +366,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
     }
   }
 
-  const bacSource: Provenance =
-    Math.abs(result.usedBacMl - result.recommendedBacMl) < 0.01 ? "calculated" : "user";
+  const bacSource: Provenance = "user";
   const srcColor: Record<Provenance, string> = {
     user: C.muted,
     calculated: C.teal,
@@ -376,7 +375,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
 
   const figures: { label: string; value: string; sub?: string; src: Provenance }[] = [
     { label: "VIAL STRENGTH", value: `${result.input.vialStrengthMg} mg`, src: "user" },
-    { label: "BAC WATER ADDED", value: `${formatMl(result.usedBacMl)} mL`, src: bacSource },
+    { label: "TOTAL LIQUID VOLUME", value: `${formatMl(result.usedBacMl)} mL`, src: bacSource },
     {
       label: "CONCENTRATION",
       value: `${formatConcentration(conc)} mg/mL`,
@@ -384,7 +383,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
       src: "calculated",
     },
     {
-      label: result.schedule && result.schedule.injectionsPerWeek > 1 ? "AMOUNT PER INJECTION" : "AMOUNT",
+      label: result.schedule && result.schedule.injectionsPerWeek > 1 ? "AMOUNT PER MEASUREMENT" : "AMOUNT",
       value: formatDose(result.schedule?.dosePerInjectionMcg ?? result.input.doseMcg),
       sub:
         result.schedule && result.schedule.injectionsPerWeek > 1
@@ -522,9 +521,9 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
 
       {/* ---------------- PAGE 2, Preparation ---------------- */}
       <Page size="LETTER" style={s.page}>
-        <Text style={s.sectionTitleFirst}>Step-by-step laboratory preparation</Text>
+        <Text style={s.sectionTitleFirst}>Check your calculation</Text>
         <Text style={{ fontSize: 9.5, color: C.muted, marginBottom: 6 }}>
-          Work on a clean surface. Do each step in order. There is no rush.
+          Compare the entered numbers with your product label and instructions. This is a calculation record, not a preparation method.
         </Text>
         {result.instructions.map((step, i) => (
           <View key={i} style={s.step}>
@@ -535,7 +534,7 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
 
         {result.warnings.length > 0 ? (
           <View style={s.calloutWarn}>
-            <Text style={s.calloutTitle}>Before you mix, double-check these</Text>
+            <Text style={s.calloutTitle}>Check these before relying on the result</Text>
             {result.warnings.map((w, i) => (
               <Text key={i} style={s.calloutItem}>
                 • {w}
@@ -545,25 +544,24 @@ export function PlanPdfDocument({ plan, result, qrDataUrl }: PlanPdfProps) {
         ) : null}
 
         <View wrap={false}>
-          <Text style={s.sectionTitle}>Mixing tips</Text>
+          <Text style={s.sectionTitle}>What this record cannot tell you</Text>
           <View style={s.card}>
             <View style={s.bullet}>
               <Text style={s.bulletDot}>›</Text>
               <Text style={s.bulletText}>
-                Aim the BAC water at the glass wall, not directly onto the powder. A gentle
-                stream protects the peptide.
+                The calculation does not choose a liquid, mixing amount, or preparation method. Follow the exact product instructions.
               </Text>
             </View>
             <View style={s.bullet}>
               <Text style={s.bulletDot}>›</Text>
               <Text style={s.bulletText}>
-                Roll or swirl it. Do not shake it, if your product&apos;s instructions say so.
+                The total liquid volume is not automatically the amount of water to add.
               </Text>
             </View>
             <View style={s.bullet}>
               <Text style={s.bulletDot}>›</Text>
               <Text style={s.bulletText}>
-                Wait until the solution is completely clear before measuring your first amount.
+                Appearance alone does not verify identity, sterility, stability, or suitability for use.
               </Text>
             </View>
           </View>

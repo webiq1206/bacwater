@@ -107,12 +107,12 @@ export function PlanResults({ result }: Props) {
           <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} source="user" />
           <Stat label="Final volume" value={`${formatMl(result.usedBacMl)} mL`} source={bacSource} />
           <Stat
-            label="Concentration"
+            label="Amount in each mL"
             value={`${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL`}
             sub={`${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`}
             source="calculated"
           />
-          <Stat label="Measures / vial" value={`${result.dosesPerVial}`} source="calculated" />
+          <Stat label="Equal measurements" value={`${result.dosesPerVial}`} source="calculated" />
         </div>
 
         <div className="mt-6">
@@ -149,9 +149,8 @@ export function PlanResults({ result }: Props) {
             <strong>
               {result.input.vialStrengthMg} mg
             </strong>{" "}
-            of {result.input.peptideName || "peptide"} powder. Add{" "}
-            <strong>{formatMl(result.usedBacMl)} mL of BAC water</strong> and
-            swirl gently until it&apos;s clear.
+            of {result.input.peptideName || "the product"}, with a final liquid volume of{" "}
+            <strong>{formatMl(result.usedBacMl)} mL</strong>. Those are the values you entered, not instructions to add that much water.
           </p>
           <p>
             Measuring{" "}
@@ -172,13 +171,13 @@ export function PlanResults({ result }: Props) {
       </section>
 
       {/* 2b, UNDERSTAND YOUR PLAN (the §15 clarity self-check) ----------- */}
-      <PlanSelfCheck result={result} bacSource={bacSource} doseLabel={doseLabel} />
+      <details className="rounded-xl border p-4"><summary className="cursor-pointer min-h-11 font-medium">Check my numbers</summary><PlanSelfCheck result={result} bacSource={bacSource} doseLabel={doseLabel} /></details>
 
       {/* 3, RECOMMENDED SUPPLIES / SHOP ---------------------------------- */}
       <details className="bac-optional-supplies rounded-xl border p-4"><summary className="cursor-pointer min-h-11 font-medium">Supply counts for this calculation</summary><SupplyRecommender supplies={result.supplies} /></details>
 
       {/* 4, DOSAGE REFERENCE (visual) ------------------------------------ */}
-      <DosageReference result={result} />
+      <details className="rounded-xl border p-4"><summary className="cursor-pointer min-h-11 font-medium">Compare other entered amounts (optional)</summary><DosageReference result={result} /></details>
 
       {/* 5, SECONDARY INFO (collapsed by default) ------------------------ */}
       <section className="border border-border bg-card rounded-2xl px-6 sm:px-8">
@@ -187,12 +186,12 @@ export function PlanResults({ result }: Props) {
             <AccordionTrigger>
               <span className="flex items-center gap-2.5">
                 <ListChecks className="h-4 w-4 accent-check" />
-                Step-by-step mixing instructions
+                How to check these numbers
               </span>
             </AccordionTrigger>
             <AccordionContent>
               <p className="text-muted-foreground mb-4">
-                Follow these in order. Take your time. There&apos;s no rush.
+                Check your entries against the exact product instructions. These steps explain the calculation.
               </p>
               <ol className="space-y-4">
                 {result.instructions.map((s, i) => (
