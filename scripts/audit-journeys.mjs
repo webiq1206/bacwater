@@ -34,7 +34,7 @@ try {
     await page.getByLabel('Custom peptide name',{exact:true}).fill(`${prefix} compound`);
     await page.getByRole('button',{name:'Other size...',exact:true}).click();
     await page.getByLabel('Vial strength',{exact:true}).fill('10');
-    await page.getByLabel('Dose amount',{exact:true}).fill('0.4');
+    await page.getByLabel('Amount each time',{exact:true}).fill('0.4');
     await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('2');
     await page.getByRole('button',{name:'Save my plan',exact:true}).click();
     await expect(page.getByRole('dialog')).toContainText('Plan saved');

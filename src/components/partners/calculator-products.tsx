@@ -28,7 +28,7 @@ export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
     <DialogTrigger asChild><button className={styles.choose} type="button"><Search size={16} aria-hidden="true"/>{product?"Change product":"Choose product"}<ChevronDown size={15} aria-hidden="true"/></button></DialogTrigger>
     <DialogContent className={styles.dialog}>
      <DialogTitle className={styles.title}>Choose a product</DialogTitle>
-     <DialogDescription>Pick the exact product. Your current calculation stays saved on this device. No amounts are filled in for you.</DialogDescription>
+     <DialogDescription>Pick the exact product. Your own numbers follow you to compatible calculators. Check the new label. Blends, solutions, water and IU keep separate entries.</DialogDescription>
      <label className={styles.search}>Find a product<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search by name" autoComplete="off" /></label>
      <label className={styles.search}>Product type<select aria-label="Product type" value={kind} onChange={e=>setKind(e.target.value)}><option value="all">All products</option><option value="single">Single compounds</option><option value="blend">Blends</option><option value="spray">Sprays and solutions</option><option value="water">Lab water</option></select></label>
      <p className={styles.count} role="status">{filtered.length} of {catalog.length} products</p>

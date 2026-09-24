@@ -73,7 +73,7 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-6 rounded-xl bg-accent-guide-soft p-5 sm:p-6">
           <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
-            Your entered amount equals
+            Each time, your amount equals
           </div>
           <div className="mt-1 result-hero">
             {syringeReadout.kind === "u100"
