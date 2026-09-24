@@ -4,3 +4,5 @@
 @media(prefers-reduced-motion:reduce){.dialog,.result{animation:none!important;transition:none!important}}
 
 .openLabel{font-size:11px;line-height:1.5;font-weight:500;color:#355b39}.supplierAction{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-left:97px;font-size:12px;text-decoration:underline;text-underline-offset:3px;color:#365e40}@media(max-width:780px){.supplierAction{margin-left:76px}}
+/* One clear button and one enclosing focus ring, including WebKit search inputs. */
+.searchBox input:focus-visible{outline:none}.searchBox input::-webkit-search-cancel-button{appearance:none;-webkit-appearance:none}

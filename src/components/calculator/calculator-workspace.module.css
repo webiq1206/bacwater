@@ -25,3 +25,10 @@
 @media(max-width:380px){.bar{gap:8px;}.bar .brand span{display:none;}}
 
 .headerActions{display:flex;align-items:center;gap:6px}.headerActions>a{padding:7px;min-width:44px}.headerActions .guide summary{padding-inline:5px}@media(max-width:380px){.bar{gap:4px}.back span,.guide summary span{font-size:12px}.headerActions{gap:2px}}
+/* The review answer should precede decorative confirmation copy on a phone. */
+@media(max-width:780px){
+.content :global(.text-center):has(> :global(.eyebrow) + h2 + p){text-align:left;margin-bottom:16px}
+.content :global(.text-center):has(> :global(.eyebrow) + h2 + p)>:global(.eyebrow){display:none}
+.content :global(.text-center):has(> :global(.eyebrow) + h2 + p)>h2{font-size:24px;line-height:1.25;margin:0 0 8px}
+.content :global(.text-center):has(> :global(.eyebrow) + h2 + p)>p{font-size:13px;line-height:1.6;margin:0}
+}
