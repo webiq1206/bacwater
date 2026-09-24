@@ -77,11 +77,11 @@ for (const [engine, driver] of [['chromium', chromium], ['webkit', webkit]]) {
    await p.goto(origin+'/calculate/product/glp-3',{waitUntil:'networkidle'});
    await p.getByLabel('Total amount in the vial',{exact:true}).fill('40');await p.getByLabel('Final liquid volume (mL)',{exact:true}).fill('2');
    await p.getByLabel('Amount each time',{exact:true}).fill('0.4');await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('custom');
-   await expect(p.getByRole('alert')).toContainText('whole number');await expect(p.getByRole('button',{name:'Copy result',exact:true})).toHaveCount(0);
+   await expect(p.locator('[data-amount-schedule]').getByRole('alert')).toContainText('whole number');await expect(p.getByRole('button',{name:'Copy result',exact:true})).toHaveCount(0);
    await p.reload({waitUntil:'networkidle'});await expect(p.getByLabel('Times per week',{exact:true})).toHaveValue('');
    await p.getByLabel('Times per week',{exact:true}).fill('4');await expect(p.locator('[data-amount-schedule] [role="status"]').first()).toContainText('1.6 mg per week');
-   await p.getByLabel('Times per week',{exact:true}).fill('');await expect(p.getByRole('alert')).toContainText('whole number');
-   await p.getByLabel('Times per week',{exact:true}).fill('29');await expect(p.getByRole('alert')).toContainText('1 to 28');
+   await p.getByLabel('Times per week',{exact:true}).fill('');await expect(p.locator('[data-amount-schedule]').getByRole('alert')).toContainText('whole number');
+   await p.getByLabel('Times per week',{exact:true}).fill('29');await expect(p.locator('[data-amount-schedule]').getByRole('alert')).toContainText('1 to 28');
    await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('');await expect(p.getByLabel('Amount each time',{exact:true})).toHaveValue('0.4');
    await expect(p.getByRole('button',{name:'Copy result',exact:true})).toBeVisible();
   }));

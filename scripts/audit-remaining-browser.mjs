@@ -26,7 +26,7 @@ try{
  });
  await step('Compound calculator keeps compatible amounts and distinguishes hCG IU from mass',async()=>{
   await page.goto(`${origin}/peptides/bpc-157`);await page.getByRole('link',{name:'Open BPC-157 calculator',exact:true}).click();await expect(page.getByLabel('Total amount in the vial',{exact:true})).toHaveValue('10');await page.getByLabel('Total amount in the vial',{exact:true}).fill('10');await page.getByLabel('Final liquid volume (mL)',{exact:true}).fill('2');await page.getByRole('button',{name:'mcg',exact:true}).click();await page.getByLabel('Amount each time',{exact:true}).fill('400');await expect(page.getByRole('status').filter({hasText:'5 mg/mL'})).toContainText('8 U-100');
-  await page.getByLabel('Total amount in the vial',{exact:true}).fill('0x10');await expect(page.getByRole('alert')).toContainText('Check the total on the vial');await expect(page.getByRole('status').filter({hasText:'5 mg/mL'})).toHaveCount(0);
+  await page.getByLabel('Total amount in the vial',{exact:true}).fill('0x10');await expect(page.locator('[data-calculator-scroll]').getByRole('alert')).toContainText('Check the total on the vial');await expect(page.getByRole('status').filter({hasText:'5 mg/mL'})).toHaveCount(0);
   await page.goto(`${origin}/calculate/hcg`);await page.getByLabel('Total in container (IU)',{exact:true}).fill('1000');await page.getByLabel('Final volume (mL)',{exact:true}).fill('2');await page.getByLabel('Entered amount (IU)',{exact:true}).fill('50');await expect(page.getByRole('status').filter({hasText:'500 IU/mL'})).toContainText('10 U-100');
  });
  await step('Explainer endpoint recomputes values, rejects oversized/cross-origin requests and works without a provider',async()=>{
