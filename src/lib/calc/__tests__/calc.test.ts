@@ -203,7 +203,7 @@ const w4 = calculate({
 eq(w4.schedule?.injectionsPerWeek, 7, "explicit seven-measurement split is preserved");
 near(w4.syringeUnits, 10, 0.001, "1.75 mg/week daily = 10 units per draw");
 eq(w4.dosesPerVial, 20, "vial duration counts per-injection draws");
-hasAssumption(w4, /split into 7 injections/, "split is stated in the assumptions");
+hasAssumption(w4, /across 7 equal uses/, "split is stated in the assumptions");
 
 if (process.exitCode !== 1) {
   console.log("\nAll calculation tests passed.");

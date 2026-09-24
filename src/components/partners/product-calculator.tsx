@@ -2,15 +2,20 @@
 import { useId } from "react";
 import type { SupplierProduct } from "@/lib/partners/supplier-catalog";
 import { emptyProductValues, readProductValues, productCalculation, type ProductValues } from "@/lib/partners/product-calculation";
-import { usePersistentState } from "@/lib/use-persistent-state";
+import { useSessionDraft } from "@/lib/session/use-session-draft";
+import { MassCalculator } from "@/components/calculator/mass-calculator";
 import { CalculatorWorkspace, WorkspaceActions } from "@/components/calculator/calculator-workspace";
 import { UnitHelp } from "@/components/tools/unit-help";
 import { BeginnerHelp } from "@/components/plan/beginner-help";
 import { CopyButton } from "@/components/common/copy-button";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-export function ProductCalculator({product}:{product:SupplierProduct}){
- const id=useId(),[raw,set]=usePersistentState(`bacwater.product.${product.id}.v1`,emptyProductValues());
+export function ProductCalculator({product}:{product:SupplierProduct}) {
+ if (product.kind === "single") return <MassCalculator title={`${product.name} calculator`} productId={product.id} peptideSlug={product.reference || ""} backHref="/recommendations"/>;
+ return <OtherProductCalculator product={product}/>;
+}
+function OtherProductCalculator({product}:{product:SupplierProduct}){
+ const id=useId(),[raw,set]=useSessionDraft(`product.${product.id}`,emptyProductValues(),readProductValues);
  const values=readProductValues(raw),result=productCalculation(product,values);
  const field=(key:keyof Omit<ProductValues,"ingredients">,label:string,hint?:string)=><div key={key} className="min-w-0"><label htmlFor={`${id}-${key}`} className="block text-sm font-medium">{label}</label><Input id={`${id}-${key}`} type="text" inputMode={key==="ingredient"?"text":key==="count"?"numeric":"decimal"} value={values[key]} maxLength={key==="ingredient"?80:32} onChange={e=>set({...values,[key]:e.target.value})} aria-describedby={hint?`${id}-${key}-help`:undefined} className="mt-2 min-h-12"/>{hint&&<p id={`${id}-${key}-help`} className="mt-2 text-xs text-muted-foreground">{hint}</p>}</div>;
  const description=product.kind==="water"?"Add up liquid volumes you already know.":product.kind==="spray"?"This is a ready-made solution. Check its label, not a mixing recipe.":product.kind==="blend"?"Keep each ingredient separate. Copy its amount from the label.":"Enter your label numbers. We show the concentration and volume.";
@@ -27,7 +32,7 @@ export function ProductCalculator({product}:{product:SupplierProduct}){
    {product.kind==="single"&&<BeginnerHelp kind="amount"/>}
    <div className="bac-result-card mt-5 break-words [overflow-wrap:anywhere]" role="status" aria-live="polite" aria-atomic="true">{result.ready?result.lines.map((line,i)=><p className="mt-2 first:mt-0" key={i}>{line}</p>):result.text}</div>
    <p className="mt-4 text-sm text-muted-foreground">{product.kind==="spray"?"Do not add BAC water based on this tool. It does not calculate spray counts or injection units.":product.kind==="blend"?"No ratio is guessed. Each result uses that ingredient’s entered mass and the same final volume.":product.kind==="water"?"This only adds your entered volumes. It does not tell you which liquid to use.":"U-100 means 100 scale units per mL. Check the actual device and its capacity. These are not product activity units."}</p>
-   <p className="mt-3 text-xs text-muted-foreground">No dose, treatment, or storage period is selected. Entries stay on this device when storage is available. Results show up to eight significant digits.</p>
+   <p className="mt-3 text-xs text-muted-foreground">No dose, treatment, or storage period is selected. Entries stay in this tab for this session. Product types keep separate numbers to prevent unit mix-ups. Results show up to eight significant digits.</p>
   </section>
   <WorkspaceActions><Button type="button" variant="outline" onClick={()=>set(emptyProductValues())}>Clear inputs</Button>{result.ready&&<CopyButton value={result.text+". Arithmetic only; check product instructions."} label="Copy result"/>}</WorkspaceActions>
  </CalculatorWorkspace>;

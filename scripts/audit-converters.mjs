@@ -45,57 +45,43 @@ try {
   });
   await page.screenshot({ path: `${out}/u100-mobile-320.png`, fullPage: true });
   await page.goto(`${origin}/tools/bac-water`);
-  await step('BAC calculator starts with known-volume mode and no assumed answer', async () => {
-    await expect(page.getByRole('button', { name: 'Use a known volume' })).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('');
-    await expect(page.getByRole('button',{name:'See my result',exact:true})).toBeDisabled();
-    await expect(page.locator('#bac-result')).not.toBeVisible();
+  await step('BAC calculator starts blank without an assumed amount or schedule', async()=>{
+    await expect(page.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('');
+    await expect(page.locator('[data-amount-timing] input[type=radio]:checked')).toHaveCount(0);
+    await expect(page.locator('[data-mass-result]')).not.toContainText('U-100 units each time');
   });
-  await step('Known label values produce the expected concentration and measurement', async () => {
-    await page.getByLabel('Total amount in the vial', { exact: true }).fill('10');
-    await page.getByLabel('Amount to measure', { exact: true }).fill('0.4');
-    await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('2');
-    await page.getByRole('button',{name:'See my result',exact:true}).click();
-    await expect(page.locator('#bac-result')).toBeVisible();
-    await expect(page.locator('#bac-result')).toContainText('5 mg/mL');
-    await expect(page.locator('#bac-result')).toContainText('0.08 mL');
-    await expect(page.locator('#bac-result')).toContainText('8 U-100 units');
+  await step('Known label values produce concentration and per-use measurement', async()=>{
+    await page.getByLabel('Total amount in the vial',{exact:true}).fill('10');
+    await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('2');
+    await page.getByRole('radio',{name:/^Each time/}).check();
+    await page.getByLabel('Amount from your instructions',{exact:true}).fill('0.4');
+    await expect(page.locator('[data-concentration]')).toContainText('5 mg/mL');
+    await expect(page.locator('[data-mass-result]')).toContainText('0.08 mL');
+    await expect(page.locator('[data-mass-result]')).toContainText('8 U-100 units');
   });
-  await step('Changed volume recalculates and persisted inputs survive refresh', async () => {
-    await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('4');
-    await page.getByRole('button',{name:'See my result',exact:true}).click();
-    await expect(page.locator('#bac-result')).toContainText('2.5 mg/mL');
-    await expect(page.locator('#bac-result')).toContainText('0.16 mL');
-    await page.reload();
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('4');
-    await page.getByRole('button',{name:'See my result',exact:true}).click();
-    await expect(page.locator('#bac-result')).toContainText('16 U-100 units');
+  await step('Changed volume recalculates and inputs survive refresh', async()=>{
+    await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('4');
+    await expect(page.locator('[data-concentration]')).toContainText('2.5 mg/mL');
+    await expect(page.locator('[data-mass-result]')).toContainText('0.16 mL');
+    await page.reload();await expect(page.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('4');
+    await expect(page.locator('[data-mass-result]')).toContainText('16 U-100 units');
   });
-  await step('An explicit math example does not replace the entered volume', async () => {
-    await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByRole('button', { name: 'Show a math example' }).click();
-    await page.getByRole('button',{name:'See my result',exact:true}).click();
-    await expect(page.getByRole('heading', { name: 'Illustrative result' })).toBeVisible();
-    await expect(page.locator('#bac-result')).toContainText('2.5 mL');
-    await expect(page.locator('#bac-result')).toContainText('10 U-100 units');
-    await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByRole('button', { name: 'Use a known volume' }).click();
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('4');
-    await expect(page.locator('#bac-result')).toContainText('16 U-100 units');
+  await step('Timing changes weekly totals but not per-use volumes', async()=>{
+    await page.getByRole('button',{name:'Once a day',exact:true}).click();
+    await expect(page.locator('[data-mass-result]')).toContainText('0.16 mL');
+    await expect(page.locator('[data-mass-result]')).toContainText('2.8 mg for the week');
+    await page.getByRole('radio',{name:/^Whole week/}).check();
+    await page.getByLabel('Amount from your instructions',{exact:true}).fill('2.8');
+    await expect(page.locator('[data-mass-result]')).toContainText('0.16 mL');
   });
-  await step('Invalid volume blocks the result and clear removes saved inputs', async () => {
-    await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('-1');
-    await expect(page.locator('#bac-input-error')).toHaveAttribute('role', 'alert');
-    await expect(page.locator('#bac-input-error')).toContainText('greater than zero');
-    await expect(page.locator('#bac-result')).not.toContainText('mg/mL');
-    await page.getByRole('button', { name: 'Clear entered values' }).click();
-    await expect(page.getByLabel('Total amount in the vial', { exact: true })).toHaveValue('');
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('');
-    await page.reload();
-    await expect(page.getByLabel('Amount to measure', { exact: true })).toHaveValue('');
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
-    assert.deepEqual(errors, []);
+  await step('Invalid volume blocks stale results and clear stays blank after reload', async()=>{
+    await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('-1');
+    await expect(page.getByRole('alert')).toContainText('Use positive numbers');
+    await expect(page.locator('[data-mass-result]')).not.toContainText('0.16 mL');
+    await page.getByRole('button',{name:'Clear inputs',exact:true}).click();
+    await page.reload();await expect(page.getByLabel('Total amount in the vial',{exact:true})).toHaveValue('');
+    await expect(page.getByLabel('Amount from your instructions',{exact:true})).toHaveValue('');
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
   });
   await page.screenshot({ path: `${out}/bac-mobile-320.png`, fullPage: true });
   await step('Updated tools show their heading first without duplicate legacy wrappers', async () => {

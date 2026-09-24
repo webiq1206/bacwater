@@ -67,6 +67,7 @@ jobs:
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
           result=0
           node scripts/audit-small-labels.mjs || result=1
+          node scripts/audit-session-timing.mjs || result=1
           node scripts/audit-hero-restoration.mjs || result=1
           node scripts/audit-search-clarity.mjs || result=1
           exit "$result"

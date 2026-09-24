@@ -44,7 +44,7 @@ try{
   }
  });
  await check('Guided calculation keeps one step and one Continue action in view',async()=>{
-  await page.goto(origin+'/peptide-calculator');await page.evaluate(()=>localStorage.removeItem('bacwater.planDraft'));await page.reload();
+  await page.goto(origin+'/peptide-calculator');await page.evaluate(()=>Object.keys(sessionStorage).filter(k=>k.startsWith('bacwater.session.v2.')).forEach(k=>sessionStorage.removeItem(k)));await page.reload();
   await page.getByRole('combobox',{name:'Product',exact:true}).click();await page.getByRole('option',{name:/Other.*Custom/}).click();
   await page.getByLabel('Custom peptide name',{exact:true}).fill('Viewport test compound');
   const next=page.getByRole('button',{name:'Continue',exact:false});await expect(next).toHaveCount(1);await expect(next).toBeEnabled();
