@@ -8,6 +8,8 @@ import { SelectItem } from "@/components/ui/select";
 import { SUPPLIER_PRODUCTS, productCalculatorPath } from "@/lib/partners/supplier-catalog";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { useSupplierCatalog } from "./supplier-context";
+import { useMassDraft } from "@/lib/use-calculator-session";
+import { selectMassProduct } from "@/lib/calculator-session";
 import { ProductArtwork } from "./product-artwork";
 import styles from "./calculator-products.module.css";
 const ignoreSelection = (_id: string | null) => {};
@@ -18,9 +20,13 @@ export function AdditionalProductOptions(){
  return <>{SUPPLIER_PRODUCTS.filter(p=>!p.reference||!PEPTIDES.some(ref=>ref.slug===p.reference)).map(p=><SelectItem key={p.id} value={`product:${p.id}`}>{p.name}{p.kind==="blend"?" (blend)":""}{p.kind==="water"?" (supply)":""}</SelectItem>)}</>;
 }
 export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
- const catalog=useSupplierCatalog(),product=catalog.find(p=>p.id===selectedId),water=catalog[0];
+ const [draft] = useMassDraft();
+ const path=usePathname();
+ const savedRecord = path?.startsWith("/plan/") && path !== "/plan/new";
+ const inheritedId=path?.startsWith("/calculate/") || savedRecord ? null : draft.productId;
+ const catalog=useSupplierCatalog(),product=catalog.find(p=>p.id===(selectedId || inheritedId)),water=catalog[0];
  const [open,setOpen]=useState(false),[query,setQuery]=useState(""),[kind,setKind]=useState("all");
- const path=usePathname();useEffect(()=>{setOpen(false);},[path]);
+ useEffect(()=>{setOpen(false);},[path]);
  const filtered=catalog.filter(p=>(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.reference}`.toLowerCase().includes(query.trim().toLowerCase()));
  return <div className={styles.tools} data-calculator-products>
   <div className={styles.toolbar}>
@@ -28,13 +34,13 @@ export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
     <DialogTrigger asChild><button className={styles.choose} type="button"><Search size={16} aria-hidden="true"/>{product?"Change product":"Choose product"}<ChevronDown size={15} aria-hidden="true"/></button></DialogTrigger>
     <DialogContent className={styles.dialog}>
      <DialogTitle className={styles.title}>Choose a product</DialogTitle>
-     <DialogDescription>Pick the exact product. Your current calculation stays saved on this device. No amounts are filled in for you.</DialogDescription>
+     <DialogDescription>Pick the exact product. Your entered numbers follow you to compatible calculators. Check them against the new label. Blends, solutions, water and IU keep separate values.</DialogDescription>
      <label className={styles.search}>Find a product<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search by name" autoComplete="off" /></label>
      <label className={styles.search}>Product type<select aria-label="Product type" value={kind} onChange={e=>setKind(e.target.value)}><option value="all">All products</option><option value="single">Single compounds</option><option value="blend">Blends</option><option value="spray">Sprays and solutions</option><option value="water">Lab water</option></select></label>
      <p className={styles.count} role="status">{filtered.length} of {catalog.length} products</p>
      <div className={styles.list} role="region" aria-label="Product choices" tabIndex={0}>
       {filtered.length?<ul>{filtered.map(p=><li key={p.id}>
-       <Link className={styles.option} href={productCalculatorPath(p.id)} onClick={()=>setOpen(false)} data-product-choice={p.id}>
+       <Link className={styles.option} href={productCalculatorPath(p.id)} onClick={()=>{if(p.kind==="single")selectMassProduct(p.id,p.reference||"custom",p.reference?"":p.name);setOpen(false);}} data-product-choice={p.id}>
         <span className={styles.thumb}><ProductArtwork product={p} compact/></span>
         <span><strong>{p.name}</strong><small>{p.label}</small></span><ChevronDown size={15} aria-hidden="true" style={{transform:"rotate(-90deg)"}}/>
        </Link>

@@ -64,8 +64,7 @@ export function WizardPreview({
         {!solved ? (
           <>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              As soon as we know what&apos;s in your vial and how much you want
-              to measure, the full plan appears here and updates with every
+              As soon as we know what&apos;s in your vial and the amount for one time, the full plan appears here and updates with every
               answer.
             </p>
             <ul className="mt-4 space-y-2">
@@ -118,7 +117,7 @@ export function WizardPreview({
                 value={formatConcentration(result.finalConcentrationMgPerMl)}
               />
               <Row
-                label="Amount per measurement"
+                label="Amount for one time"
                 value={formatDose(
                   result.schedule?.dosePerInjectionMcg ?? result.input.doseMcg
                 )}
@@ -151,7 +150,7 @@ export function WizardPreview({
             ) : null}
 
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Updates as you answer. Nothing is saved until you choose to save.
+              Entries are kept in this tab. Choose Save my plan to keep a separate record.
             </p>
           </>
         )}

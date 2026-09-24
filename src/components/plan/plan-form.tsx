@@ -2,6 +2,11 @@
 import Link from "next/link";
 import { useCalculatorProductSelection } from "@/components/partners/calculator-products";
 import { productForReference, productCalculatorPath, SUPPLIER_PRODUCTS } from "@/lib/partners/supplier-catalog";
+import { useMassDraft, useMassField, useMassNumber, useSessionState } from "@/lib/use-calculator-session";
+import { selectMassProduct, type AmountBasis } from "@/lib/calculator-session";
+import { AmountSchedule } from "./amount-schedule";
+import { SessionNotice } from "@/components/calculator/session-notice";
+import { amountSchedule, scheduleLabel, scheduleNumber } from "@/lib/calc/amount-schedule";
 import { ProductPicker } from "./product-picker";
 import { BeginnerHelp } from "./beginner-help";
 import { WorkspaceActions } from "@/components/calculator/calculator-workspace";
@@ -60,67 +65,11 @@ export interface PlanFormInitial {
   doseMcg?: number;
   /** Plans saved before weekly splitting existed default to 1 (no split). */
   injectionsPerWeek?: number | null;
+  amountBasis?: AmountBasis;
   bacWaterMl?: number;
   syringeType?: SyringeType;
   dateMixed?: string | null;
   secondary?: CalcInput["secondary"];
-}
-
-/** Frequency choices offered alongside the peptide's own default. */
-const FREQUENCY_CHOICES: { perWeek: number; label: string }[] = [
-  { perWeek: 1, label: "Once a week" },
-  { perWeek: 2, label: "Twice a week" },
-  { perWeek: 3, label: "3x a week" },
-  { perWeek: 7, label: "Once a day" },
-  { perWeek: 14, label: "Twice a day" },
-];
-
-function FrequencyPicker({
-  value,
-  defaultPerWeek,
-  scheduleNote,
-  onChange,
-}: {
-  value: number;
-  defaultPerWeek: number;
-  scheduleNote?: string;
-  onChange: (n: number) => void;
-}) {
-  const choices = FREQUENCY_CHOICES.some((c) => c.perWeek === defaultPerWeek)
-    ? FREQUENCY_CHOICES
-    : [
-        { perWeek: defaultPerWeek, label: `${defaultPerWeek}x a week` },
-        ...FREQUENCY_CHOICES,
-      ].sort((a, b) => a.perWeek - b.perWeek);
-  return (
-    <div className="mt-5">
-      <Label className="text-xs text-muted-foreground">
-        How many measurements split that weekly total?
-      </Label>
-      <div className="mt-1.5 flex flex-wrap gap-1.5">
-        {choices.map((c) => (
-          <button
-            key={c.perWeek}
-            type="button"
-            onClick={() => onChange(c.perWeek)}
-            className={cn(
-              "min-h-11 rounded-full border px-3 py-1.5 text-sm transition-colors",
-              value === c.perWeek
-                ? "border-transparent bg-foreground text-background font-medium"
-                : "border-border bg-card hover:bg-surface"
-            )}
-            aria-pressed={value === c.perWeek}
-          >
-            {c.label}
-            
-          </button>
-        ))}
-      </div>
-      {scheduleNote && value === defaultPerWeek && (
-        <p className="mt-1.5 text-xs text-muted-foreground">{scheduleNote}</p>
-      )}
-    </div>
-  );
 }
 
 interface Props {
@@ -339,8 +288,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     const doseMcg = initial.doseMcg ?? 0;
     // Plans saved before weekly splitting existed carry no frequency; treat
     // them as one draw per week so their numbers don't silently change.
-    const injectionsPerWeek = initial.injectionsPerWeek ?? 1;
-    const recommended = recommendBacWaterMl(vialMg, doseMcg / injectionsPerWeek);
+    const injectionsPerWeek = initial.amountBasis === "each" ? initial.injectionsPerWeek ?? null : initial.injectionsPerWeek ?? 1;
+    const recommended = recommendBacWaterMl(vialMg, doseMcg / (injectionsPerWeek ?? 1));
     const bac = initial.bacWaterMl;
     const dosePresetValues = ref
       ? [ref.typicalDoseMcgRange[0], ref.suggestedDoseMcg, ref.typicalDoseMcgRange[1]]
@@ -352,6 +301,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       showCustomVial: !(ref?.commonVialStrengthsMg ?? []).includes(vialMg),
       doseMcg,
       injectionsPerWeek,
+      amountBasis: initial.amountBasis ?? "week",
       showCustomDose: true,
       syringeType: initial.syringeType ?? "insulin-1ml",
       useRecommendedBac: false,
@@ -361,13 +311,14 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     };
   }, [initial]);
 
-  const [mode, setMode] = useState<Mode>(initialMode);
+  const [mode, setMode] = useSessionState<Mode>("bacwater.plan.layout", initialMode, !init);
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
   }, []);
 
-  const [step, setStep] = useState<number>(0);
+  const [draft] = useMassDraft();
+  const [step, setStep] = useMassField("step", 0, !init);
   const stepContainerRef = useRef<HTMLDivElement>(null);
   // Set when the user navigates steps, so we only auto-scroll on real step
   // changes (not on the first render or when editing an already-visible field).
@@ -405,14 +356,11 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     setStep(n);
   }
 
-  // Nothing is pre-populated for a new visitor (PRD: no example plan on first
-  // load). Values come from the user's own device cache (see the hydrate/save
-  // effects below) or from `init` when editing an existing plan.
-  const [peptideSlug, setPeptideSlug] = useState<string>(init?.slug ?? "");
-  const [customPeptideName, setCustomPeptideName] = useState(init?.customName ?? "");
-  // Picking a peptide is an interest signal used to personalize panels
-  // elsewhere on the site. It does NOT pre-fill vial/dose: the user enters
-  // those (or picks a suggestion chip) so nothing is silently pre-populated.
+  // Fresh sessions start blank. Compatible fields share one tab-scoped draft;
+  // saved-plan edits use their own isolated values.
+  const [peptideSlug, setPeptideSlug] = useMassField("peptideSlug", init?.slug ?? "", !init);
+  const [customPeptideName, setCustomPeptideName] = useMassField("customName", init?.customName ?? "", !init);
+  // Switching products retains user-entered values, never suggested amounts.
   const selectPeptide = useCallback((slug: string) => {
     if(slug.startsWith("product:")){
       const id=slug.slice(8);
@@ -421,41 +369,37 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     }
     const listing=productForReference(slug);
     if(listing&&listing.kind!=="single"){router.push(productCalculatorPath(listing.id));return;}
-    if(peptideSlug && slug !== peptideSlug){setVialInput(0);setDoseInput(0);setCustomBacMl(0);setUseRecommendedBac(false);setStep(0);}
+    if (!init) selectMassProduct(listing?.id ?? null, slug);
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
-    // A frequency override belongs to the peptide it was chosen for; switching
-    // peptides re-aligns to the new new selection without choosing a schedule.
-    setFreqOverride(null);
-  }, [router,peptideSlug]);
-  useEffect(()=>{setSelectedProduct(productForReference(peptideSlug)?.id||null);},[peptideSlug,setSelectedProduct]);
+    // Retain entered values and the explicit schedule. Show the review notice on product changes.
+  }, [router,peptideSlug,init]);
+  useEffect(()=>{setSelectedProduct(productForReference(peptideSlug)?.id || (!init ? draft.productId : null));},[peptideSlug,setSelectedProduct,draft.productId,init]);
 
-  const [vialInput, setVialInput] = useState<number>(init?.vialMg ?? 0);
-  const [vialUnit, setVialUnit] = useState<Unit>("mg");
+  const [vialInput, setVialInput] = useMassNumber("vial", init?.vialMg ?? 0, !init);
+  const [vialUnit, setVialUnit] = useMassField("vialUnit", "mg", !init);
   const [showCustomVial, setShowCustomVial] = useState(init?.showCustomVial ?? false);
 
-  const [doseInput, setDoseInput] = useState<number>(init?.doseMcg ?? 0);
-  const [doseUnit, setDoseUnit] = useState<Unit>(init ? "mcg" : "mg");
+  const [doseInput, setDoseInput, doseText, setDoseText] = useMassNumber("amount", init?.doseMcg ?? 0, !init);
+  const [doseUnit, setDoseUnit] = useMassField("amountUnit", init ? "mcg" : "mg", !init);
   const [showCustomDose, setShowCustomDose] = useState(init?.showCustomDose ?? true);
-  // null = follow the selected peptide's typical frequency.
-  const [freqOverride, setFreqOverride] = useState<number | null>(
-    init ? init.injectionsPerWeek : null
-  );
-
-  const [syringeType, setSyringeType] = useState<SyringeType>(init?.syringeType ?? "insulin-1ml");
+  const [amountBasis, setAmountBasis] = useMassField("basis", init?.amountBasis ?? "each", !init);
+  const [freqOverride, setFreqOverride] = useMassField("frequency", init?.injectionsPerWeek ?? null, !init);
+  const [storedSyringe, setSyringeType] = useMassField("syringe", init?.syringeType ?? "insulin-1ml", !init);
+  const syringeType = storedSyringe as SyringeType;
 
   const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(init?.useRecommendedBac ?? false);
-  const [customBacMl, setCustomBacMl] = useState<number>(init?.customBacMl ?? 0);
+  const [customBacMl, setCustomBacMl] = useMassNumber("volume", init?.customBacMl ?? 0, !init);
 
-  const [dateMixed, setDateMixed] = useState<string>(init?.dateMixed ?? "");
-  const [showDate, setShowDate] = useState<boolean>(init?.showDate ?? false);
+  const [dateMixed, setDateMixed] = useMassField("dateMixed", init?.dateMixed ?? "", !init);
+  const [showDate, setShowDate] = useSessionState<boolean>("bacwater.plan.showDate", init?.showDate ?? false, !init);
 
   // Blend
-  const [showBlend, setShowBlend] = useState<boolean>(!!initial?.secondary);
-  const [secondarySlug, setSecondarySlug] = useState<string>(initial?.secondary?.peptideSlug || "custom");
-  const [customSecondaryName, setCustomSecondaryName] = useState(initial?.secondary?.peptideName || "");
-  const [secondaryVialInput, setSecondaryVialInput] = useState<number>(initial?.secondary?.vialStrengthMg || 0);
-  const [secondaryVialUnit, setSecondaryVialUnit] = useState<Unit>("mg");
+  const [showBlend, setShowBlend] = useSessionState<boolean>("bacwater.plan.showBlend", !!initial?.secondary, !init);
+  const [secondarySlug, setSecondarySlug] = useSessionState<string>("bacwater.plan.secondarySlug", initial?.secondary?.peptideSlug || "custom", !init);
+  const [customSecondaryName, setCustomSecondaryName] = useSessionState("bacwater.plan.secondaryName", initial?.secondary?.peptideName || "", !init);
+  const [secondaryVialInput, setSecondaryVialInput] = useSessionState<number>("bacwater.plan.secondaryMass", initial?.secondary?.vialStrengthMg || 0, !init);
+  const [secondaryVialUnit, setSecondaryVialUnit] = useSessionState<Unit>("bacwater.plan.secondaryUnit", "mg", !init);
 
   const [saving, setSaving] = useState(false);
   // Set after a successful save; opens the post-save dialog (PDF download +
@@ -465,17 +409,18 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   // as the numbers change. When editing, a name the user typed is pinned here
   // so it survives; a name we generated stays null so it follows the numbers,
   // and the field shows the new one before it is saved rather than after.
-  const [planName, setPlanName] = useState<string | null>(() => {
+  const initialPlanName = useMemo(() => {
     const stored = editing?.name?.trim();
-    if (!stored) return null;
+    if (!stored) return "";
     return isGeneratedPlanName(stored, {
       peptideName: initial?.peptideName,
       vialStrengthMg: initial?.vialStrengthMg,
       dateMixed: initial?.dateMixed ?? null,
     })
-      ? null
+      ? ""
       : stored;
-  });
+  }, [editing, initial]);
+  const [planName, setPlanName] = useSessionState("bacwater.plan.name", initialPlanName, !init);
   const [editingSyringe, setEditingSyringe] = useState(false);
 
   const peptide = PEPTIDES.find((p) => p.slug === peptideSlug) ?? PEPTIDES[0];
@@ -484,7 +429,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   const vialStrengthMg = vialUnit === "mg" ? vialInput : vialInput / 1000;
   // Round the mg→mcg conversion so 0.3 mg doesn't become 300.00000000000006.
-  const doseMcg = doseUnit === "mcg" ? doseInput : Math.round(doseInput * 100000) / 100;
+  const doseMcg = doseUnit === "mcg" ? doseInput : Number((doseInput * 1000).toPrecision(15));
   const secondaryVialMg =
     secondaryVialUnit === "mg" ? secondaryVialInput : secondaryVialInput / 1000;
 
@@ -492,86 +437,23 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     peptideSlug === "custom" ? customPeptideName.trim().length > 0 : peptideSlug !== "";
   const hasValidInputs = hasPeptide && Number.isFinite(vialStrengthMg) && vialStrengthMg > 0 && Number.isFinite(doseMcg) && doseMcg > 0;
 
-  // Per-user draft cache: nothing is pre-populated for a new visitor, but their
-  // own in-progress inputs persist on this device so returning resumes where
-  // they left off. Only for new plans (edits are driven by `init`).
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => {
-    if (init) {
-      setHydrated(true);
-      return;
-    }
-    try {
-      const raw = localStorage.getItem("bacwater.planDraft");
-      if (raw) {
-        const d = JSON.parse(raw) as Record<string, unknown>;
-        if (typeof d.peptideSlug === "string") setPeptideSlug(d.peptideSlug);
-        if (typeof d.customPeptideName === "string") setCustomPeptideName(d.customPeptideName);
-        if (typeof d.vialInput === "number" && Number.isFinite(d.vialInput)) {
-          setVialInput(d.vialInput);
-          const ref=PEPTIDES.find(p=>p.slug===d.peptideSlug);
-          setShowCustomVial(!ref?.commonVialStrengthsMg.includes(d.vialInput));
-        }
-        if (d.vialUnit === "mg" || d.vialUnit === "mcg") setVialUnit(d.vialUnit);
-        if (typeof d.doseInput === "number") setDoseInput(d.doseInput);
-        if (d.doseUnit === "mg" || d.doseUnit === "mcg") setDoseUnit(d.doseUnit);
-        if (typeof d.injectionsPerWeek === "number" && d.injectionsPerWeek >= 1)
-          setFreqOverride(d.injectionsPerWeek);
-        if (typeof d.syringeType === "string") setSyringeType(d.syringeType as SyringeType);
-        if (typeof d.useRecommendedBac === "boolean") setUseRecommendedBac(d.useRecommendedBac);
-        if (typeof d.customBacMl === "number") setCustomBacMl(d.customBacMl);
-        if (typeof d.dateMixed === "string") setDateMixed(d.dateMixed);
-        if (Number.isInteger(d.step) && typeof d.step === "number" && d.step >= 0 && d.step < STEPS.length) {
-          const named = typeof d.peptideSlug === "string" && (d.peptideSlug === "custom" ? Boolean(d.customPeptideName) : PEPTIDES.some(p => p.slug === d.peptideSlug));
-          const amount = typeof d.vialInput === "number" && Number.isFinite(d.vialInput) && d.vialInput > 0;
-          const measure = typeof d.doseInput === "number" && Number.isFinite(d.doseInput) && d.doseInput > 0;
-          const water = d.useRecommendedBac !== true && typeof d.customBacMl === "number" && Number.isFinite(d.customBacMl) && d.customBacMl > 0;
-          setStep(Math.min(d.step, d.peptideSlug === "hcg" ? 0 : !named ? 0 : !amount ? 1 : !measure ? 2 : !water ? 3 : 5));
-        }
-      }
-    } catch {
-      /* ignore corrupt/blocked storage */
-    }
-    setHydrated(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    if (!hydrated || init) return;
-    try {
-      localStorage.setItem(
-        "bacwater.planDraft",
-        JSON.stringify({
-          step,
-          peptideSlug,
-          customPeptideName,
-          vialInput,
-          vialUnit,
-          doseInput,
-          doseUnit,
-          injectionsPerWeek: freqOverride,
-          syringeType,
-          useRecommendedBac,
-          customBacMl,
-          dateMixed,
-        })
-      );
-    } catch {
-      /* ignore */
-    }
-  }, [hydrated, init, step, peptideSlug, customPeptideName, vialInput, vialUnit, doseInput, doseUnit, freqOverride, syringeType, useRecommendedBac, customBacMl, dateMixed]);
-
-  // Effective injections per week: user override, else the peptide's typical
-  // count. One means a single measurement; larger counts explicitly split a weekly total.
+  const hydrated = hasMounted;
+  const schedule = amountSchedule({ amount: doseText, unit: doseUnit, basis: amountBasis, frequency: freqOverride });
   const injectionsPerWeek = freqOverride ?? 1;
-  const dosePerInjectionMcg = doseMcg / Math.max(1, injectionsPerWeek);
-
+  const dosePerInjectionMcg = schedule.kind === "value" ? schedule.eachMcg : 0;
+  const amountEntry = <AmountSchedule value={{ amount: doseText, unit: doseUnit, basis: amountBasis, frequency: freqOverride }} onChange={p => {
+    if (p.amount !== undefined) setDoseText(p.amount);
+    if (p.unit) setDoseUnit(p.unit);
+    if (p.basis) setAmountBasis(p.basis);
+    if (p.frequency !== undefined) setFreqOverride(p.frequency);
+  }} />;
   const recommendedBac = useMemo(
-    () => recommendBacWaterMl(vialStrengthMg, doseMcg / Math.max(1, injectionsPerWeek)),
-    [vialStrengthMg, doseMcg, injectionsPerWeek]
+    () => recommendBacWaterMl(vialStrengthMg, dosePerInjectionMcg),
+    [vialStrengthMg, dosePerInjectionMcg]
   );
 
   const dosePresets: { mcg: number; label: string; hint: string }[] = [];
-  const weeklyRangeHint = "Copy the amount from your own instructions. This is not the total in the vial. The calculator cannot choose an amount for you.";
+  const weeklyRangeHint = "Use the amount and timing from your own instructions.";
 
   const primaryName =
     peptideSlug === "custom"
@@ -588,7 +470,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     peptideName: primaryName,
     vialStrengthMg,
     doseMcg,
-    injectionsPerWeek,
+    injectionsPerWeek: freqOverride ?? undefined,
+    amountBasis,
     bacWaterMl: useRecommendedBac ? undefined : customBacMl,
     syringeType,
     dateMixed: dateMixed || null,
@@ -610,6 +493,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       vialStrengthMg,
       doseMcg,
       injectionsPerWeek,
+      amountBasis,
+      freqOverride,
       syringeType,
       useRecommendedBac,
       customBacMl,
@@ -627,7 +512,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     ? `${primaryName} + ${secondaryName}`
     : primaryName;
   const nameValue =
-    planName ??
+    planName ||
     defaultPlanName({ peptideName: peptideNameForPlan, vialStrengthMg, dateMixed });
 
   // Editing and creating share this form, so the primary action has to say
@@ -637,11 +522,11 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const saveHint = editing
     ? "Updates this plan in place. Its link, PDF and vial labels keep working and will show the new numbers."
     : !hasValidInputs || result.errors.length > 0
-      ? "Enter the compound, vial amount, amount to measure and final liquid volume before saving."
+      ? "Enter the product, vial amount, amount each time or per week, and final liquid volume before saving."
       : "Saves your calculation with a shareable link, downloadable PDF and printable labels.";
 
   async function handleSave() {
-    if (saving || !hasValidInputs || result.errors.length) return;
+    if (saving || !hasValidInputs || schedule.kind !== "value" || result.errors.length) return;
     setSaving(true);
     try {
       const payload = {
@@ -650,7 +535,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
         peptideName: peptideNameForPlan,
         vialStrengthMg,
         doseMcg,
-        injectionsPerWeek,
+        injectionsPerWeek: freqOverride ?? undefined,
+        amountBasis,
         bacWaterMl: useRecommendedBac ? recommendedBac : customBacMl,
         syringeType,
         dateMixed: dateMixed || null,
@@ -682,13 +568,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
       const res = await savePlanAction(payload, undefined);
       if (res.ok) {
-        // The plan is saved; clear the in-progress draft so the builder starts
-        // blank next time (the saved plan lives under My Plans).
-        try {
-          localStorage.removeItem("bacwater.planDraft");
-        } catch {
-          /* ignore */
-        }
+        // Keep session entries after saving; the user can explicitly start with blank numbers.
         // Remember on this device right away so the plan shows under My Plans
         // even if the visitor never opens the plan page or signs in. If they
         // sign in later, the claim step attaches it to their account.
@@ -718,15 +598,12 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     { label: "Product", value: primaryName },
     { label: "Vial", value: `${vialStrengthMg} mg` },
     {
-      label: injectionsPerWeek > 1 ? "Weekly total" : "Amount to measure",
-      value: `${(doseMcg / 1000).toFixed(doseMcg % 1000 === 0 ? 0 : 2)} mg (${doseMcg.toLocaleString()} mcg)`,
+      label: amountBasis === "week" ? "Total for the week" : "Amount each time",
+      value: `${scheduleNumber(doseMcg / 1000)} mg (${scheduleNumber(doseMcg)} mcg)`,
     },
     {
-      label: "Split into",
-      value:
-        injectionsPerWeek > 1
-          ? `${injectionsPerWeek}x per week: ${(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection`
-          : "One measurement (no schedule chosen)",
+      label: "Your schedule",
+      value: `${scheduleLabel(freqOverride)}. ${dosePerInjectionMcg > 0 ? scheduleNumber(dosePerInjectionMcg / 1000) + " mg each time" : "Enter an amount"}`,
     },
     { label: "Syringe", value: syringe.label },
     {
@@ -752,6 +629,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     return (
       <div>
         {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={(open) => { if (!open) setSavedPlan(null); }} />}
+        {!init && <SessionNotice />}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           {hasMounted && (
             <ModeToggle mode={mode} onChange={setMode} />
@@ -912,82 +790,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             </StepBlock>
 
             {/* 3. Dose */}
-            <StepBlock
-              n={3}
-              total={6}
-              label="Amount"
-              title={injectionsPerWeek > 1 ? "What weekly total do your instructions give?" : "What amount do you need to measure?"}
-              hint={hasPeptide ? weeklyRangeHint : weeklyRangeHint}
-            >
-              <div className="grid gap-1.5 sm:gap-2">
-                {hasPeptide && dosePresets.map((d) => (
-                  <ChipButton
-                    key={d.mcg}
-                    active={!showCustomDose && doseMcg === d.mcg}
-                    onClick={() => {
-                      setShowCustomDose(false);
-                      setDoseInput(d.mcg);
-                      setDoseUnit("mcg");
-                    }}
-                    hint={d.hint}
-                  >
-                    {d.label}
-                  </ChipButton>
-                ))}
-                <ChipButton
-                  active={showCustomDose}
-                  onClick={() => {
-                    setShowCustomDose(true);
-                    setDoseUnit("mg");
-                    setDoseInput(doseMcg / 1000);
-                  }}
-                >
-                  Custom amount...
-                </ChipButton>
-              </div>
-              {showCustomDose ? (
-                <div className="mt-4">
-                  <Label className="text-xs text-muted-foreground">
-                    Enter the amount from your instructions
-                  </Label>
-                  <div className="mt-1 flex items-center gap-2">
-                    <Input
-                      type="number"
-                      inputMode="decimal"
-                      step="any"
-                      value={doseInput || ""}
-                      onChange={(e) =>
-                        setDoseInput(parseFloat(e.target.value) || 0)
-                      }
-                      className="flex-1"
-                      autoFocus
-                      aria-label="Dose amount"
-                    />
-                    <UnitToggle
-                      value={doseUnit}
-                      onChange={unit=>{if(unit!==doseUnit)setDoseInput(v=>unit==="mg"?v/1000:v*1000);setDoseUnit(unit);}}
-                      options={["mg", "mcg"]}
-                    />
-                  </div>
-                  <ConversionHint value={doseInput} unit={doseUnit} />
-                </div>
-              ) : null}
-              {hasPeptide && (
-                <details className="mt-4 rounded-xl border p-3" open={injectionsPerWeek > 1 ? true : undefined}><summary className="cursor-pointer min-h-11 text-sm">Weekly splitting (optional)</summary><p className="text-sm text-muted-foreground">Only use this if your instructions give a weekly total to divide into several measurements.</p><FrequencyPicker
-                  value={injectionsPerWeek}
-                  defaultPerWeek={1}
-                  scheduleNote={undefined}
-                  onChange={(n) => setFreqOverride(n)}
-                /></details>
-              )}
-              {doseMcg > 0 && injectionsPerWeek > 1 && (
-                <p className="mt-3 text-sm text-muted-foreground">
-                  {(doseMcg / 1000).toLocaleString()} mg per week ÷ {injectionsPerWeek} injections ={" "}
-                  <strong className="text-foreground">
-                    {(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection
-                  </strong>
-                </p>
-              )}
+            <StepBlock n={3} total={6} label="Amount & schedule" title="How much each time, and how often?" hint={weeklyRangeHint}>
+              {amountEntry}
             </StepBlock>
 
             {/* 4. Syringe */}
@@ -1014,10 +818,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 </SelectContent>
               </Select>
               <div className="mt-3 bg-surface px-3 py-2 text-xs text-muted-foreground leading-relaxed">
-                <strong className="text-foreground">Quick tip:</strong> Insulin
-                syringes are marked in <b>units</b>. 100 units = 1 mL,
-                so 10 units = 0.1 mL. We&apos;ll tell you exactly how many
-                units to draw.
+                <strong className="text-foreground">Check the scale:</strong> On a U-100 scale, 100 units = 1 mL. Other scales are different. Match the actual device and its markings.
               </div>
             </StepBlock>
 
@@ -1029,26 +830,10 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               title="What final volume do your instructions give?"
               hint="Use the liquid and final volume from the exact product instructions. The calculator does not choose them."
             >
-              <div className="grid gap-1.5 sm:gap-2">
-                <ChipButton
-                  active={useRecommendedBac}
-                  onClick={() => setUseRecommendedBac(true)}
-                  hint="An arithmetic example only. Follow the product instructions and vial capacity."
-                >
-                  {recommendedBac} mL (arithmetic example)
-                </ChipButton>
-                <ChipButton
-                  active={!useRecommendedBac}
-                  onClick={() => setUseRecommendedBac(false)}
-                  hint="Use the final liquid volume from your instructions."
-                >
-                  Custom amount
-                </ChipButton>
-              </div>
               {!useRecommendedBac ? (
                 <div className="mt-4">
                   <Label className="text-xs text-muted-foreground">
-                    BAC water amount
+                    Final liquid volume (mL)
                   </Label>
                   <div className="mt-1 flex items-center gap-2">
                     <Input aria-label="Final liquid volume in mL"
@@ -1134,7 +919,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               <WorkspaceActions>
               <Button
                 onClick={handleSave}
-                disabled={saving || !hasValidInputs || result.errors.length > 0}
+                disabled={saving || !hasValidInputs || schedule.kind !== "value" || result.errors.length > 0}
                 variant="brand"
                 size="lg"
                 className="w-full"
@@ -1188,7 +973,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           : "grid max-w-2xl gap-10 xl:max-w-6xl xl:grid-cols-[minmax(0,38rem)_minmax(0,24rem)] xl:justify-center"
       )}
     >
-      <div ref={stepContainerRef} className="min-w-0">
+      <div ref={stepContainerRef} className="min-w-0" data-guided-step={step}>
       <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
         {hasMounted && (
           <ModeToggle mode={mode} onChange={setMode} />
@@ -1203,6 +988,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
         doseMcg={doseMcg}
       />
 
+      {!init && <SessionNotice />}
       {step === 0 && (
         <StepPanel
           title="What is the name on your vial?"
@@ -1302,54 +1088,8 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       )}
 
       {step === 2 && (
-        <StepPanel
-          title={injectionsPerWeek > 1 ? "What weekly total do your instructions give?" : "What amount do you need to measure?"}
-          hint={weeklyRangeHint}
-          onNext={() => goToStep(3)}
-          onBack={() => goToStep(1)}
-          stepNum={3}
-          nextDisabled={!(doseMcg > 0) || !Number.isFinite(doseMcg)}
-        >
-          {(
-            <div className="mt-4">
-              <Label className="text-xs text-muted-foreground">
-                Amount from your instructions
-              </Label>
-              <div className="mt-1 flex items-center gap-2">
-                <Input aria-label="Dose amount"
-                  type="number"
-                  step="0.05"
-                  value={doseInput || ""}
-                  onChange={(e) =>
-                    setDoseInput(parseFloat(e.target.value) || 0)
-                  }
-                  className="flex-1"
-                />
-                <UnitToggle
-                  value={doseUnit}
-                  onChange={unit=>{if(unit!==doseUnit)setDoseInput(v=>unit==="mg"?v/1000:v*1000);setDoseUnit(unit);}}
-                  options={["mg", "mcg"]}
-                />
-              </div>
-              <ConversionHint value={doseInput} unit={doseUnit} />
-            </div>
-          )}
-          <BeginnerHelp kind="amount"/>
-          <BeginnerHelp kind="units"/>
-          <details className="mt-4 rounded-xl border p-3" open={injectionsPerWeek > 1 ? true : undefined}><summary className="cursor-pointer min-h-11 text-sm">Weekly splitting (optional)</summary><p className="text-sm text-muted-foreground">Only use this if your instructions give a weekly total to divide into several measurements.</p><FrequencyPicker
-            value={injectionsPerWeek}
-            defaultPerWeek={1}
-            scheduleNote={undefined}
-            onChange={(n) => setFreqOverride(n)}
-          /></details>
-          {doseMcg > 0 && injectionsPerWeek > 1 && (
-            <p className="mt-3 text-sm text-muted-foreground">
-              {(doseMcg / 1000).toLocaleString()} mg per week ÷ {injectionsPerWeek} injections ={" "}
-              <strong className="text-foreground">
-                {(dosePerInjectionMcg / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} mg per injection
-              </strong>
-            </p>
-          )}
+        <StepPanel title="How much each time, and how often?" hint={weeklyRangeHint} onNext={() => goToStep(3)} onBack={() => goToStep(1)} stepNum={3} nextDisabled={schedule.kind !== "value"}>
+          {amountEntry}
         </StepPanel>
       )}
 
@@ -1551,7 +1291,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               variant="brand"
               size="lg"
               onClick={handleSave}
-              disabled={saving || !hasValidInputs || result.errors.length > 0}
+              disabled={saving || !hasValidInputs || schedule.kind !== "value" || result.errors.length > 0}
               className="w-full"
             >
               {saving ? (
