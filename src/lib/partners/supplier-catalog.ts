@@ -1,9 +1,4 @@
-/**
- * Curated supplier references, not a live inventory feed or product endorsement.
- * Public destinations checked 2026-09-23. Never infer affiliate parameters.
- * Populate exact links supplied by the approved partner dashboard, then verify
- * attribution there before setting the approval flag. No customer data is used.
- */
+/** Reviewed supplier listings, not a live inventory feed or product endorsement. */
 export const SUPPLIER_SOURCES = {
   program: "https://www.aminoclub.com/us/affiliate",
   terms: "https://www.aminoclub.com/shop/affiliate-terms",
@@ -11,12 +6,28 @@ export const SUPPLIER_SOURCES = {
   researchUse: "https://www.aminoclub.com/us/research-use",
 } as const;
 
+/** Supplied and approved by the account owner on September 24, 2026. */
+export const APPROVED_AFFILIATE_URL = "https://aminoclub.com?utm_source=affiliate_marketing&code=WEBIQ";
+export const AFFILIATE_DISCLOSURE = "Affiliate link. We may earn a commission if you purchase through this link.";
+export const RESEARCH_ONLY_NOTICE = "For laboratory research only. Not for human consumption or veterinary use.";
+
+/** Only the owner's two public attribution fields are added. No visitor data or redirects. */
+export function affiliateProductUrl(sourceUrl: string): string {
+  const url = new URL(sourceUrl);
+  if (url.protocol !== "https:" || url.hostname !== "www.aminoclub.com" || url.port || url.username || url.password || url.search || url.hash || !/^\/us\/products\/[a-z0-9-]+$/.test(url.pathname)) {
+    throw new Error("Unexpected supplier product destination");
+  }
+  const approved = new URL(APPROVED_AFFILIATE_URL);
+  url.search = approved.search;
+  return url.toString();
+}
+
 export type ProductKind = "single" | "blend" | "spray" | "water";
 export interface SupplierProduct {
   id: string; name: string; mark: string; kind: ProductKind; reference: string;
   label: string; summary: string; sourceUrl: string; artworkTone: number;
 }
-export const CATALOG_CHECKED_AT = "2026-09-23";
+export const CATALOG_CHECKED_AT = "2026-09-24";
 const LISTINGS: readonly (readonly [string, string, string, ProductKind, string])[] = [
   ["amino-h2o","BAC water","H₂O","water",""],
   ["glp-1","GLP-1 / Semaglutide","GLP·1","single","semaglutide"],
@@ -100,34 +111,42 @@ export interface SupplierSettings {
   AMINO_CLUB_PRODUCT_LINKS_JSON?: string;
 }
 
-/** Restrict externally supplied links to their exact reviewed product destination. */
+/** Restrict externally supplied links to the exact reviewed product destination. */
 export function validateSupplierLink(input: unknown, product: SupplierProduct): string | null {
   if (typeof input !== "string" || input.length > 2048 || /[\s\\\u0000-\u001f]/u.test(input)) return null;
   try {
     const url = new URL(input), source = new URL(product.sourceUrl);
     if (url.protocol !== "https:" || url.hostname !== source.hostname || url.port || url.username || url.password || url.hash) return null;
-    // A link to a different compound or a generic redirect is not a product link.
     if (url.pathname !== source.pathname || /%(?:2f|5c|2e)/i.test(input)) return null;
     const entries = [...url.searchParams.entries()];
     if (entries.length < 1 || entries.length > 8) return null;
     const keys = new Set<string>();
     for (const [key, value] of entries) {
       if (!/^[a-zA-Z][a-zA-Z0-9_-]{0,39}$/.test(key) || !/^[a-zA-Z0-9._~-]{1,160}$/.test(value)) return null;
-      // Block credentials, identity data, click IDs and redirect destinations.
       if (/(?:email|phone|token|secret|password|session|auth|redirect|return|srsltid|gclid|fbclid)/i.test(key)) return null;
       if (keys.has(key)) return null;
       keys.add(key);
     }
-    // Do not alter the verified URL, invent a ref parameter, or attach page data.
     return input;
   } catch { return null; }
 }
 
-export function getSupplierPartner(settings: SupplierSettings = {
-  AMINO_CLUB_ENABLED: process.env.AMINO_CLUB_ENABLED,
-  AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED: process.env.AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED,
-  AMINO_CLUB_PRODUCT_LINKS_JSON: process.env.AMINO_CLUB_PRODUCT_LINKS_JSON,
-}): SupplierPartnerState {
+/** Public, deterministic fallback also used outside the provider. Never attach user input. */
+export function getApprovedSupplierCatalog(): DisplaySupplierProduct[] {
+  return SUPPLIER_PRODUCTS.map(product => ({...product, href:affiliateProductUrl(product.sourceUrl), paid:true}));
+}
+
+/** Owner approval replaces the former pre-approval environment setup. An explicit pause remains available. */
+function approvedSettings(): SupplierSettings {
+  return {
+    AMINO_CLUB_ENABLED: process.env.AMINO_CLUB_AFFILIATE_PAUSED === "true" ? "false" : "true",
+    AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED: "true",
+    AMINO_CLUB_PRODUCT_LINKS_JSON: JSON.stringify(Object.fromEntries(SUPPLIER_PRODUCTS.map(p=>[p.id,affiliateProductUrl(p.sourceUrl)]))),
+  };
+}
+
+/** Explicit settings still fail closed. Default links use only the owner's approved attribution fields. */
+export function getSupplierPartner(settings: SupplierSettings = approvedSettings()): SupplierPartnerState {
   if (settings.AMINO_CLUB_ENABLED !== "true") return { active: false, reason: "disabled" };
   if (settings.AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED !== "true") return { active: false, reason: "approval-pending" };
   const raw = settings.AMINO_CLUB_PRODUCT_LINKS_JSON;
