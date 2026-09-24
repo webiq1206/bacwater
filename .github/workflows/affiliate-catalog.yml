@@ -1,0 +1,22 @@
+name: Affiliate catalog acceptance
+on:
+  push:
+    branches: [codex/amino-affiliate-catalog-20260924]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Archive tracked source only
+        run: git archive --format=tar HEAD > /tmp/bacwater-source.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bacwater-source
+          path: /tmp/bacwater-source.tar
+          retention-days: 2
