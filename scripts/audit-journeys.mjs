@@ -25,11 +25,11 @@ let publicId, notesRequest;
 try {
   await step('Load blank wizard and switch to all-at-once layout',async()=>{
     await page.goto(`${origin}/plan`); await page.getByRole('button',{name:'All at once',exact:true}).click();
-    await expect(page.getByRole('combobox',{name:'Primary compound',exact:true})).toBeVisible();
+    await expect(page.getByRole('combobox',{name:'Product',exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:'Save my plan',exact:true})).toBeDisabled();
   });
   await step('Enter label inputs and save a guest plan',async()=>{
-    await page.getByRole('combobox',{name:'Primary compound',exact:true}).click();
+    await page.getByRole('combobox',{name:'Product',exact:true}).click();
     await page.getByRole('option',{name:/Other.*Custom/}).click();
     await page.getByLabel('Custom peptide name',{exact:true}).fill(`${prefix} compound`);
     await page.getByRole('button',{name:'Other size...',exact:true}).click();

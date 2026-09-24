@@ -45,12 +45,12 @@ try{
  });
  await check('Guided calculation keeps one step and one Continue action in view',async()=>{
   await page.goto(origin+'/peptide-calculator');await page.evaluate(()=>localStorage.removeItem('bacwater.planDraft'));await page.reload();
-  await page.getByRole('combobox',{name:'Compound',exact:true}).click();await page.getByRole('option',{name:/Other.*Custom/}).click();
+  await page.getByRole('combobox',{name:'Product',exact:true}).click();await page.getByRole('option',{name:/Other.*Custom/}).click();
   await page.getByLabel('Custom peptide name',{exact:true}).fill('Viewport test compound');
   const next=page.getByRole('button',{name:'Continue',exact:false});await expect(next).toHaveCount(1);await expect(next).toBeEnabled();
   const bounds=await next.boundingBox();assert.ok(bounds&&bounds.y+bounds.height<=844);
   await next.click();await expect(page.getByRole('heading',{name:'What amount is on the vial?',exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'Other size',exact:true}).click();await page.getByLabel('Vial strength',{exact:true}).fill('12');
+  await page.getByLabel('Vial strength',{exact:true}).fill('12');
   await page.screenshot({path:`${out}/guided-step-390.png`,fullPage:false});
  });
  await check('Help is deliberate, retains the BAC water link and returns to the same entries',async()=>{

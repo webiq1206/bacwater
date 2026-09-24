@@ -1,166 +1,35 @@
 "use client";
-
-import { PlanQr } from "@/components/plan/plan-qr";
-import { formatDate } from "@/lib/utils";
-
-/**
- * One 2.5 × 1.5 inch vial label, and the print CSS that lays a sheet of them
- * out. Shared by the single-plan sheet at /plan/[id]/label and the multi-plan
- * sheet at /plans/labels: two sheets, one label design, so a batch print and
- * a single print never disagree about what a label looks like.
- */
-
-export const LABEL_SHEET_STYLES = `
-  .label-sheet {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 2.5in);
-    gap: 0.2in;
-    justify-content: center;
-  }
-  .vial-label {
-    width: 2.5in;
-    min-height: 1.5in;
-    box-sizing: border-box;
-    padding: 0.12in 0.14in;
-    border: 1px dashed var(--color-border);
-    border-radius: 0.08in;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 4px;
-    overflow: hidden;
-    background: #ffffff;
-  }
-  .vl-date-input {
-    font-size: 9px;
-    line-height: 1.1;
-    border: none;
-    border-bottom: 1px solid #9aa09b;
-    padding: 0 2px;
-    width: 1in;
-    background: transparent;
-    color: #2c302f;
-    font-family: inherit;
-  }
-  .vl-date-input::-webkit-calendar-picker-indicator {
-    transform: scale(0.7);
-    opacity: 0.5;
-    padding: 0;
-    margin-left: 1px;
-  }
-  .vl-write {
-    border-bottom: 1px solid #9ca3af;
-    min-width: 0.9in;
-    display: inline-block;
-    height: 0.9em;
-  }
-  .print-only-inline { display: none; }
-  @media print {
-    /*
-      The on-screen layout puts the controls in a column beside the sheet. On
-      paper the controls are hidden, so the wrapper has to stop being a grid or
-      the labels would print into the narrow second column. This lives here
-      rather than in a Tailwind print: utility because an inline <style> block
-      reliably wins over the responsive lg: grid rule regardless of how the
-      generated stylesheet happens to order those two variants.
-    */
-    .label-layout { display: block !important; }
-    .label-sheet { gap: 0.1in; justify-content: flex-start; }
-    .vial-label {
-      height: 1.5in;
-      min-height: 0;
-      border: 1px solid #9ca3af;
-      border-radius: 0;
-      break-inside: avoid;
-    }
-    .print-only-inline { display: inline; }
-  }
-`;
-
-export function fmtLabelDate(iso: string): string {
-  return formatDate(new Date(iso + "T12:00:00"));
-}
-
-export function addDaysIso(iso: string, days: number): string {
-  const d = new Date(iso + "T12:00:00");
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
-}
-
+import type { CSSProperties } from "react";
+import { formatLabelDate, labelTypography, type LabelSize, type LabelPrintData, DEFAULT_LABEL_SIZE } from "@/lib/labels/layout";
 export interface VialLabelData {
   publicId: string;
   peptideName: string;
   vialStrengthMg: number;
-  /** Pre-formatted BAC water volume, e.g. "2" or "1.33". */
+  /** Legacy property name; this is the recorded final liquid volume, not an instruction to add water. */
   bacWaterMl: string;
-  /** Pre-formatted syringe reading, e.g. "10 units" or "0.25 mL". */
   doseReading: string;
-  /** Injections per week; null for older plans saved without a schedule. */
   injectionsPerWeek?: number | null;
+  /** Legacy values are deliberately not used to infer stability. */
   shelfDays: number | null;
+  concentration?: string;
+  defaultMixDate?: string;
 }
-
-export function VialLabel({
-  data,
-  mixDate,
-  onMixDateChange,
-  ariaLabel,
-}: {
-  data: VialLabelData;
-  mixDate: string;
-  onMixDateChange: (v: string) => void;
-  ariaLabel: string;
-}) {
-  const exp = "";
-  return (
-    <div className="vial-label">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <div className="text-[7px] uppercase tracking-widest leading-none text-muted-foreground">
-            BACwater.ai
-          </div>
-          <div className="mt-0.5 truncate text-[13px] font-semibold leading-tight">
-            {data.peptideName || "Peptide"}
-          </div>
-          <div className="mt-0.5 text-[8px] leading-tight text-muted-foreground">
-            {`${data.vialStrengthMg} mg vial · ${data.bacWaterMl} mL BAC · ${data.doseReading}/dose${
-              data.injectionsPerWeek ? ` · ${data.injectionsPerWeek}x/week` : ""
-            }`}
-          </div>
-        </div>
-        <div className="shrink-0">
-          <PlanQr publicId={data.publicId} size={54} />
-        </div>
-      </div>
-
-      <div className="text-[8px] leading-relaxed">
-        <div className="flex items-center gap-1">
-          <span className="text-muted-foreground">Mixed</span>
-          <input
-            type="date"
-            value={mixDate}
-            onChange={(e) => onMixDateChange(e.target.value)}
-            className="vl-date-input no-print"
-            aria-label={ariaLabel}
-          />
-          <span className="print-only-inline">
-            {mixDate ? fmtLabelDate(mixDate) : <span className="vl-write" />}
-          </span>
-        </div>
-        <div className="mt-1 flex items-center gap-1">
-          <span className="text-muted-foreground">Exp</span>
-          <span className="tabular-nums">
-            {exp ? fmtLabelDate(exp) : <span className="vl-write" />}
-          </span>
-          <span className="whitespace-nowrap text-muted-foreground">
-            per product label
-          </span>
-        </div>
-      </div>
-
-      <div className="text-[8px] leading-tight text-muted-foreground">
-        Storage and discard: follow product instructions
-      </div>
+export function VialLabel({ data, size = DEFAULT_LABEL_SIZE }: { data: LabelPrintData; size?: LabelSize }) {
+  const font = labelTypography(size);
+  const style = { "--label-width": `${size.width}mm`, "--label-height": `${size.height}mm`, "--label-pad": `${font.padding}mm`, "--label-title": `${font.title}pt`, "--label-body": `${font.body}pt`, "--label-date": `${font.date}pt` } as CSSProperties;
+  return <div className="vial-label" style={style} data-vial-label data-expiry={data.useBy} aria-label={`Label for ${data.name}`}>
+    <div className="vial-label-content"><strong className="vl-name">{data.name}</strong><div className="vl-concentration">{data.concentration}</div>
+      <div className="vl-dates"><div>Mixed: <strong>{formatLabelDate(data.mixDate)}</strong></div><div>Use by: <strong>{data.useBy ? formatLabelDate(data.useBy) : "NOT SET"}</strong></div></div>
     </div>
-  );
+  </div>;
 }
+export const LABEL_SHEET_STYLES = `
+.label-composer{color:#18382d}.label-controls{display:grid;gap:18px}.label-controls h1{font-size:28px;line-height:1.2;margin:0}.label-controls p{font-size:14px;line-height:1.65;margin:0}.label-settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;padding:18px;border:1px solid #cbd8c1;border-radius:14px;background:#f5f8ee}.label-settings label,.label-plan-settings label{display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.5;min-width:0}.label-settings input,.label-settings select,.label-plan-settings input{width:100%;min-width:0;min-height:44px;padding:9px 11px;border:1px solid #b7c7aa;border-radius:8px;background:white;color:#18382d;font-size:16px}.label-plan-settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}.label-plan-block{border:1px solid #cbd8c1;border-radius:14px;padding:18px}.label-plan-block h2{margin:0 0 12px;font-size:19px}.label-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.label-tools button{min-height:46px;border:1px solid #a8ba97;border-radius:10px;padding:11px 17px;font-size:14px;cursor:pointer}.label-tools .label-primary{background:#18382d;color:white}.label-tools button:disabled{opacity:.5;cursor:not-allowed}.label-message{font-size:13px;line-height:1.6}.label-error{color:#8b3729}.label-sheet{display:grid;grid-template-columns:repeat(auto-fill,calc(var(--label-width) * var(--preview-scale,2)));gap:20px;justify-content:center;margin-top:20px;--preview-scale:2}.label-tile{min-width:0}.label-tile>label{display:flex;flex-direction:column;gap:5px;margin-top:12px;font-size:12px}.label-tile input{min-height:42px;width:100%;max-width:100%;padding:8px;border:1px solid #b7c7aa;border-radius:7px;background:white;font-size:15px}.vial-label{width:calc(var(--label-width) * var(--preview-scale,1));height:calc(var(--label-height) * var(--preview-scale,1));box-sizing:border-box;padding:calc(var(--label-pad) * var(--preview-scale,1));border:.15mm dashed #8a9383;background:white;color:#101810;overflow:hidden;font-family:Arial,Helvetica,sans-serif}.vial-label-content{display:flex;flex-direction:column;gap:calc(.3mm * var(--preview-scale,1));min-width:0}.vl-name{display:block;font-size:calc(var(--label-title) * var(--preview-scale,1));line-height:1.1;font-weight:700;overflow-wrap:anywhere;flex-shrink:0}.vl-concentration{font-size:calc(var(--label-body) * var(--preview-scale,1));line-height:1.12;overflow-wrap:anywhere;flex-shrink:0}.vl-dates{font-size:calc(var(--label-date) * var(--preview-scale,1));line-height:1.2;flex-shrink:0}.vl-dates strong{font-weight:600}.label-calibration{width:20mm;border-bottom:.25mm solid black;font:8pt Arial;padding-top:3mm;margin:4mm 0 0}.label-composer :is(input,select,button):focus-visible{outline:3px solid #527144;outline-offset:2px}
+@media(max-width:480px){.label-settings{grid-template-columns:minmax(0,1fr)}.label-controls h1{font-size:25px}.label-plan-settings{grid-template-columns:minmax(0,1fr)}.label-tools button{flex:1}.label-sheet{grid-template-columns:repeat(auto-fit,calc(var(--label-width) * var(--preview-scale,2)))}}
+@media print{
+body:has(.label-composer){margin:0!important;padding:0!important;display:block!important;background:white!important}
+body:has(.label-composer) header,body:has(.label-composer) footer,body:has(.label-composer) [data-age-gate],body:has(.label-composer) .bac-privacy-preferences,body:has(.label-composer) .bac-bottom-nav,body:has(.label-composer) .bac-bottom-spacer,body:has(.label-composer) .no-print{display:none!important}
+body:has(.label-composer) #main > div,body:has(.label-composer) .bac-page-content > div,body:has(.label-composer) #main,body:has(.label-composer) .bac-site-frame,body:has(.label-composer) .bac-page-content{margin:0!important;padding:0!important;max-width:none!important;min-height:0!important;display:block!important}
+.label-composer{position:absolute;left:0;top:0;width:100%;margin:0!important;padding:0!important}.label-sheet{--preview-scale:1!important;grid-template-columns:repeat(auto-fill,var(--label-width));gap:2mm;justify-content:start;margin:0!important}.label-tile,.vial-label{break-inside:avoid;page-break-inside:avoid}.label-tile{margin:0!important}.vial-label{border:.15mm solid #88907f}.label-sheet[data-paper=label]{display:block}.label-sheet[data-paper=label] .label-tile{break-after:page;page-break-after:always}.label-sheet[data-paper=label] .label-tile:last-child{break-after:auto;page-break-after:auto}.label-sheet[data-paper=label] .vial-label{border:0}.label-sheet[data-paper=label]~.label-calibration{display:none}
+}
+`;

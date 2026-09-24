@@ -1,12 +1,19 @@
+import type { Metadata } from "next";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { SoftwareAppJsonLd } from "@/components/common/software-app-json-ld";
+import { HeroMathContext } from "@/components/brand/hero-math-context";
 import { ResearchHome } from "@/components/brand/research-home";
 import { SupplierRecommendations } from "@/components/partners/supplier-recommendations";
-export const metadata = {
- title: "BACwater.ai: Free Calculators, Saved Plans and Vial Labels",
- description: "Check concentration, syringe units and unit conversions. Use the free calculators, save your entered values, and print labels. No product sales or dose recommendations.",
- alternates: { canonical: "/" }
+const title = "BAC Water Calculator | Peptide Reconstitution | BACwater.ai";
+const description = "Free BAC water and peptide reconstitution calculator. Check concentration, mL and U-100 units from your own numbers. Live results, no signup.";
+export const metadata: Metadata = {
+  title: { absolute: title }, description, alternates: { canonical: "/" },
+  openGraph: { title, description, url: "/", type: "website", siteName: "BACwater.ai" },
+  twitter: { card: "summary_large_image", title, description }
 };
-export default function HomePage(){return <>
- <WebPageJsonLd name="BAC water calculator" description="Free tools for concentration, mass conversion and U-100 volume arithmetic using numbers supplied by the user." url="/"/>
- <ResearchHome supplier={<SupplierRecommendations/>}/>
-</>;}
+export default function HomePage() { return <>
+  <WebPageJsonLd name="BAC Water Calculator" description={description} url="/" />
+  <SoftwareAppJsonLd name="BAC Water Calculator" description="Free peptide reconstitution math: concentration, entered-amount volume and U-100 scale conversion. No dose or mixing instructions are selected." url="/" />
+  <ResearchHome supplier={<SupplierRecommendations/>} />
+  <HeroMathContext />
+</>; }

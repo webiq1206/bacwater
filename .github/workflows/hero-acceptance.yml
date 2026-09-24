@@ -11,7 +11,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     services:
       postgres:
         image: postgres:16
@@ -65,7 +65,11 @@ jobs:
         run: |
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
-          node scripts/audit-hero-restoration.mjs
+          result=0
+          node scripts/audit-small-labels.mjs || result=1
+          node scripts/audit-hero-restoration.mjs || result=1
+          node scripts/audit-search-clarity.mjs || result=1
+          exit "$result"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

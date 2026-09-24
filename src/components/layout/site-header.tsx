@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SiteSearchButton } from "@/components/search/site-search";
 import { Wordmark } from "@/components/brand/wordmark";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -118,6 +119,7 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
 
         <div className="flex items-center gap-2">
           <Link href="/plans" className={styles.plansLink}>My plans</Link>
+          <SiteSearchButton compact/>
           <AccountMenu isAuthenticated={isAuthenticated} />
           <button
             type="button"

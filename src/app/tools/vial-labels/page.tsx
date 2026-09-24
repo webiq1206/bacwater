@@ -215,8 +215,8 @@ export default function VialLabelsPage() {
             <div className="font-medium">Save, then print or download</div>
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
               From your saved plan you can open the printable vial-label sheet or
-              download the plan PDF. Both include a QR code that links back to
-              the plan.
+              download a small-label PDF with exact dimensions. Tiny labels keep
+              the product name, concentration and dates; the full plan PDF keeps the QR code.
             </p>
           </div>
         </li>
@@ -229,7 +229,7 @@ export default function VialLabelsPage() {
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
               The vial labels print on standard paper or label sheets. Print at
               100% scale, cut along the outlines, and stick them on your vials.
-              You can print several at once and set the mix date per label.
+              Choose 25 × 13 mm, 30 × 15 mm, 40 × 20 mm or a custom size. Set the mix date per label. A use-by date is calculated only from a period you enter from the product instructions.
             </p>
           </div>
         </li>

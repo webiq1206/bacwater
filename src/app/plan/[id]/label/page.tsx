@@ -2,7 +2,7 @@ import { safeResultDisplay } from "@/lib/calc/display";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { findPeptide, type CalcResult } from "@/lib/calc";
-import { formatMl, formatSyringeReading, formatUnits } from "@/lib/calc/format";
+import { formatMl, formatSyringeReading, formatUnits, formatConcentration } from "@/lib/calc/format";
 import { LabelSheet } from "@/components/plan/label-sheet";
 
 interface Props {
@@ -24,10 +24,12 @@ export default async function LabelPage({ params }: Props) {
   // Use the stored result's syringe reading so the label matches the plan page
   // and PDF exactly (same rounding, correct units-vs-mL label).
   let doseReading: string;
+  let concentration: string | undefined;
   let injectionsPerWeek: number | null = null;
   try {
     const parsed = safeResultDisplay(JSON.parse(plan.data) as CalcResult);
     doseReading = formatSyringeReading(parsed.syringeReadout);
+    concentration = `${formatConcentration(parsed.finalConcentrationMgPerMl)} mg/mL`;
     if (
       typeof parsed.schedule?.injectionsPerWeek === "number" &&
       parsed.schedule.injectionsPerWeek >= 1
@@ -48,6 +50,8 @@ export default async function LabelPage({ params }: Props) {
         doseReading={doseReading}
         injectionsPerWeek={injectionsPerWeek}
         shelfDays={shelfDays}
+        concentration={concentration}
+        defaultMixDate={plan.dateMixed ? plan.dateMixed.toISOString().slice(0, 10) : ""}
       />
     </div>
   );

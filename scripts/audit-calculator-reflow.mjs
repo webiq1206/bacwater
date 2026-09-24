@@ -18,8 +18,8 @@ async function compactDock(){
 }
 try{
  await check('Enlarged guided controls keep complete words and leave space for the form',async()=>{
-  await p.goto(origin+'/peptide-calculator');await p.getByRole('combobox',{name:'Compound',exact:true}).click();await p.getByRole('option',{name:/Other.*Custom/}).click();await p.getByLabel('Custom peptide name',{exact:true}).fill('Reflow fixture');
-  await p.getByRole('button',{name:'Continue',exact:false}).click();await p.getByRole('button',{name:'Other size',exact:true}).click();await p.getByLabel('Vial strength',{exact:true}).fill('12');
+  await p.goto(origin+'/peptide-calculator');await p.getByRole('combobox',{name:'Product',exact:true}).click();await p.getByRole('option',{name:/Other.*Custom/}).click();await p.getByLabel('Custom peptide name',{exact:true}).fill('Reflow fixture');
+  await p.getByRole('button',{name:'Continue',exact:false}).click();await p.getByLabel('Vial strength',{exact:true}).fill('12');
   await p.addStyleTag({content:'html{font-size:200%} p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});
   await compactDock();await p.getByLabel('Vial strength',{exact:true}).scrollIntoViewIfNeeded();
   const input=await p.getByLabel('Vial strength',{exact:true}).boundingBox(),body=await p.locator('[data-calculator-scroll]').boundingBox();assert.ok(input&&body&&input.y>=body.y-1&&input.y+input.height<=body.y+body.height+1,JSON.stringify({input,body}));
