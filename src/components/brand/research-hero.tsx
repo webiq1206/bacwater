@@ -10,7 +10,7 @@ export function ResearchHero() {
         <span className={styles.eyebrow}><span aria-hidden="true" />The BAC water calculator</span>
         <span className={styles.headline}>Your numbers.<br />Made <em>clear.</em></span>
       </h1>
-      <p className={styles.description}>Put in the numbers from your label.<br />See the math. Keep your result.</p>
+      <p className={styles.description}>Put in the numbers from your label. <br />See the math. Keep your result.</p>
       <div className={styles.actions}>
         <Link href="/peptide-calculator" className={styles.primary}>Open calculator <ArrowUpRight size={21} aria-hidden="true" /></Link>
         <Link href="/tools" className={styles.secondary}>More tools <ArrowRight size={18} aria-hidden="true" /></Link>

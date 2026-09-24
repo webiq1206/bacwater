@@ -9,6 +9,8 @@ await fs.mkdir(out, { recursive: true });
 const require = createRequire(import.meta.url);
 const axe = await fs.readFile(require.resolve('axe-core/axe.min.js'), 'utf8');
 const results = [], errors = [];
+// Let real route transitions and their prefetches settle before replacing a document.
+// Keep all pageerror assertions; navigation teardown is not a runtime test fixture.
 async function check(name, run) {
   try { await run(); results.push({ name, status: 'passed' }); }
   catch (error) { results.push({ name, status: 'failed', error: String(error) }); throw error; }
@@ -46,25 +48,27 @@ for (const [engine, driver] of [['chromium', chromium], ['webkit', webkit]]) {
     await check(`${engine}: calculator links enter the existing focused workspaces`, async () => {
       await page.setViewportSize({ width: 390, height: 844 });
       for (const [name, path] of [['Concentration','/tools/bac-water'], ['mg to mcg','/tools/mg-to-mcg'], ['U-100 to mL','/tools/syringe-units']]) {
-        await page.goto(origin);
+        await page.goto(origin, { waitUntil: 'networkidle' });
         const link = page.locator('[data-home-hero]').getByRole('link', { name, exact: true });
         await expect(link).toHaveAttribute('href', path);
         await link.click(); await expect(page).toHaveURL(origin + path);
+        await page.waitForLoadState('networkidle');
         await expect(page.locator('[data-calculator-workspace]')).toBeVisible();
         await expect(page.locator('[data-supplier-shelf]')).toHaveCount(0);
         await expect(page.getByRole('contentinfo')).toHaveCount(0);
       }
-      await page.goto(origin);
+      await page.goto(origin, { waitUntil: 'networkidle' });
       await page.locator('[data-home-hero]').getByRole('link', { name: 'Open calculator', exact: true }).click();
       await expect(page).toHaveURL(origin + '/peptide-calculator');
+      await page.waitForLoadState('networkidle');
       await expect(page.getByRole('combobox', { name: 'Compound', exact: true })).toBeVisible();
-      await page.goBack(); await expect(page.locator('[data-home-hero]')).toBeVisible();
+      await page.goBack({ waitUntil: 'networkidle' }); await expect(page.locator('[data-home-hero]')).toBeVisible();
     });
     if (engine === 'chromium') {
       await check('Default and enlarged typography remain readable without horizontal page overflow', async () => {
         for (const width of [320,390,1440]) {
           await page.setViewportSize({ width, height: width < 768 ? 844 : 900 });
-          await page.goto(origin);
+          await page.goto(origin, { waitUntil: 'networkidle' });
           await page.evaluate(axe);
           const violations = await page.evaluate(async () => (await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a','wcag2aa','wcag21aa','wcag22aa'] } })).violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) })));
           assert.deepEqual(violations, []);
