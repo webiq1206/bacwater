@@ -15,11 +15,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Verify reviewed payload and publish only source objects
+      - name: Reconcile exact reviewed source with the verified affiliate baseline
         env:
           BASE: 070f21e76c996672d91934fe4fa0593f1b1d13eb
+          CURRENT: 694f0ccd3024e2cd15b31ba2c93a3fec590498fb
           EXPECTED_TREE: bdf272c68cae7dc261cdfd74405b64abc8e52f25
-          INTERMEDIATE_TREE: 442ebcf72ad5190668b48ad5a0daa61af866652d
+          COMBINED_TREE: c2f39fd4d133269fb23cf0f30fb1f1e4ae24f4e7
+          INTERMEDIATE_TREE: ca33fcd6f124b6d3b46fde251ac23bfbd3ff9680
         shell: bash
         run: |
           set -euo pipefail
@@ -34,22 +36,59 @@ jobs:
           Path(os.environ['RUNNER_TEMP'], 'reviewed-session.patch').write_bytes(patch)
           print('Reviewed source payload verified.')
           PY
-          # Stage baseline-relative source only. Newer main is reconciled separately.
-          git merge-base --is-ancestor "$BASE" origin/main
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$CURRENT"
+          git config user.name 'webIQ'
+          git config user.email 'info@webiq.co'
           git -c core.hooksPath=/dev/null checkout --detach "$BASE"
           git -c core.hooksPath=/dev/null apply --index --unidiff-zero "$RUNNER_TEMP/reviewed-session.patch"
           test "$(git write-tree)" = "$EXPECTED_TREE"
-          # The connector separately installs the reviewed CI file. The job's
-          # contents token is not used to create or modify any workflow file.
-          git restore --source="$BASE" --staged --worktree .github/workflows/master-audit.yml
+          SOURCE=$(git -c core.hooksPath=/dev/null commit-tree "$EXPECTED_TREE" -p "$BASE" -m 'Local reviewed source for three-way reconciliation')
+          export SOURCE
+          git -c core.hooksPath=/dev/null checkout --detach "$SOURCE"
+          git -c core.hooksPath=/dev/null checkout --detach "$CURRENT"
+          if git -c core.hooksPath=/dev/null merge --no-commit --no-ff "$SOURCE"; then
+            echo 'Unexpected conflict-free result; manual source review required.'
+            exit 1
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, re, os
+          def git(*args): return subprocess.check_output(['git', *args], text=True)
+          expected = {'scripts/audit-hero-restoration.mjs', 'scripts/audit-product-catalog.mjs', 'src/components/partners/calculator-products.tsx'}
+          assert set(git('diff', '--name-only', '--diff-filter=U').splitlines()) == expected
+          def version(ref, path): return git('show', f'{ref}:{path}')
+          p = 'scripts/audit-hero-restoration.mjs'
+          s = version(os.environ['SOURCE'], p)
+          old = r'/\/products\/amino-h2o$/'
+          new = "'https://www.aminoclub.com/us/products/amino-h2o?utm_source=affiliate_marketing&code=WEBIQ'"
+          assert old in s
+          Path(p).write_text(s.replace(old, new))
+          p = 'scripts/audit-product-catalog.mjs'
+          s = version(os.environ['CURRENT'], p)
+          s = s.replace("{name:'Choose product',exact:true}", "{name:/^(Choose|Change) product$/}")
+          s = s.replace("getByLabel('Amount to measure (mcg)',{exact:true})", "getByLabel('Amount for one time',{exact:true})")
+          s = s.replace("localStorage.removeItem('bacwater.planDraft')", "sessionStorage.removeItem('bacwater.calculatorSession.v1')")
+          assert "await import('./audit-affiliate-directory.mjs')" in s
+          Path(p).write_text(s)
+          p = 'src/components/partners/calculator-products.tsx'
+          s = Path(p).read_text()
+          s = re.sub(r'<<<<<<< HEAD\n.*?=======\n(.*?)>>>>>>> [^\n]+\n', lambda m: m.group(1), s, flags=re.S)
+          s = s.replace('Blends, solutions, water and IU keep separate values.</DialogDescription>', 'Blends, solutions, water and IU keep separate values. {RESEARCH_ONLY_NOTICE}</DialogDescription>')
+          assert 'AFFILIATE_DISCLOSURE' in s and 'selectMassProduct(p.id' in s and '<<<<<<<' not in s
+          Path(p).write_text(s)
+          PY
+          git add -A
+          git diff --cached --check
+          test "$(git write-tree)" = "$COMBINED_TREE"
+          # The connector separately creates the modified verification workflow.
+          # This repository token publishes no new or modified workflow files.
+          git restore --source="$CURRENT" --staged --worktree .github/workflows/master-audit.yml
           tree=$(git write-tree)
           test "$tree" = "$INTERMEDIATE_TREE"
-          test -z "$(git diff --cached --name-only "$BASE" -- .github/workflows)"
+          test -z "$(git diff --cached --name-only "$CURRENT" -- .github/workflows)"
           test -z "$(git ls-tree -r --name-only "$tree" | grep '^.delivery/' || true)"
-          git config user.name 'webIQ'
-          git config user.email 'info@webiq.co'
-          commit=$(git -c core.hooksPath=/dev/null commit-tree "$tree" -p "$BASE" -m 'Stage reviewed session continuity and clear amount semantics')
-          git -c core.hooksPath=/dev/null push origin "$commit:refs/heads/delivery/session-source-20260924"
-          printf 'Source object commit: %s\nSource tree: %s\n' "$commit" "$tree"
-          # No production database, deployment, secrets, package scripts, or
-          # external supplier action is accessed by this delivery-only job.
+          commit=$(git -c core.hooksPath=/dev/null commit-tree "$tree" -p "$CURRENT" -m 'Stage reconciled session continuity and clear schedules, retaining affiliate directory')
+          git -c core.hooksPath=/dev/null push origin "$commit:refs/heads/delivery/session-reconciled-source-20260924"
+          printf 'Reconciled source object commit: %s\nSource tree: %s\n' "$commit" "$tree"
+          # This delivery-only job does not mutate main, dependencies, production
+          # databases, Replit, supplier accounts or deployment settings.
