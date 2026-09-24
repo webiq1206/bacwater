@@ -4,11 +4,12 @@ import { SupplyChecklist } from "@/components/tools/supply-checklist";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { usePersistentState } from "@/lib/use-persistent-state";
+import { useSessionDraft } from "@/lib/session/use-session-draft";
+import { EMPTY_VOLUME_ENTRY, readVolumeEntry } from "@/lib/session/converter-drafts";
 interface ConversionInput{direction:"units"|"ml";text:string}
 function display(n:number){return n!==0&&(n<0.000001||n>=1e9)?n.toExponential(11).replace(/\.?0+e/,"e"):new Intl.NumberFormat("en-US",{maximumSignificantDigits:12,useGrouping:false}).format(n);}
 export default function SyringeUnitConverterPage(){
- const [stored,setStored]=usePersistentState<ConversionInput>("bacwater.tool.syringe.conversion.v2",{direction:"units",text:""});
+ const [stored,setStored]=useSessionDraft("conversion.u100",EMPTY_VOLUME_ENTRY,readVolumeEntry);
  const text=typeof stored?.text==="string"?stored.text:"",direction=stored?.direction==="ml"?"ml":"units";
  const value=Number(text),hasInput=text.trim().length>0;
  const other=direction==="units"?value/100:value*100;
