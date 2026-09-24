@@ -36,3 +36,6 @@ yarn-error.log*
 .vscode/
 .claude/local/
 prisma/prisma/
+
+# Local and CI verification output is generated, not application source.
+audit-evidence/

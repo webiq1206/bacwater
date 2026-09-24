@@ -53,7 +53,7 @@ try {
   });
   await step('Known label values produce the expected concentration and measurement', async () => {
     await page.getByLabel('Total amount in the vial', { exact: true }).fill('10');
-    await page.getByLabel('Amount to measure', { exact: true }).fill('0.4');
+    await page.getByLabel('Amount for one time', { exact: true }).fill('0.4');
     await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('2');
     await page.getByRole('button',{name:'See my result',exact:true}).click();
     await expect(page.locator('#bac-result')).toBeVisible();
@@ -93,7 +93,7 @@ try {
     await expect(page.getByLabel('Total amount in the vial', { exact: true })).toHaveValue('');
     await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('');
     await page.reload();
-    await expect(page.getByLabel('Amount to measure', { exact: true })).toHaveValue('');
+    await expect(page.getByLabel('Amount for one time', { exact: true })).toHaveValue('');
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
     assert.deepEqual(errors, []);
   });
