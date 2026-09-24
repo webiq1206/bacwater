@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import type { DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
+import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, productCalculatorPath, type DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
 import Link from "next/link";
 import { ProductArtwork } from "./product-artwork";
-import { productCalculatorPath } from "@/lib/partners/supplier-catalog";
+import { ProductQuickView } from "./product-quick-view";
 import styles from "./recommendations.module.css";
 /** Every card is in server HTML. Native scrolling works without scripts or a drag. */
 export function ProductSlider({products}:{products:readonly DisplaySupplierProduct[]}) {
@@ -27,7 +27,7 @@ export function ProductSlider({products}:{products:readonly DisplaySupplierProdu
     <div id={`${id}-track`} ref={track} className={styles.track} role="group" tabIndex={0} aria-label="Scrollable product cards" aria-describedby={`${id}-help`} onKeyDown={key}>
       {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} role="group" aria-roledescription="slide" aria-label={`${index+1} of ${filtered.length}: ${product.name}`}>
         <div className={styles.art}><ProductArtwork product={product}/></div>
-        <div className={styles.cardBody}><p className={styles.label}>{product.label}</p><h3>{product.name}</h3><p className={styles.summary}>{product.summary}</p><p className={styles.notice}>Lab research only.<br/>Not for people or animals.</p><p className={styles.disclosure}>{product.paid?"Paid link. We may earn a fee.":"Supplier link. No referral fee is active."}</p><a className={styles.action} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View product <ArrowUpRight size={17} aria-hidden="true"/></a><Link className={styles.calculate} href={productCalculatorPath(product.id)}>Use in calculator</Link></div>
+        <div className={styles.cardBody}><p className={styles.label}>{product.label}</p><h3>{product.name}</h3><p className={styles.summary}>{product.summary}</p><ProductQuickView product={product} className={styles.calculate}/><p className={styles.notice}>{RESEARCH_ONLY_NOTICE}</p><p className={styles.disclosure} style={{fontSize:13,lineHeight:1.6}}>{product.paid?AFFILIATE_DISCLOSURE:"Supplier link. No referral fee is active."}</p><a className={styles.action} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View product <ArrowUpRight size={17} aria-hidden="true"/></a><Link className={styles.calculate} href={productCalculatorPath(product.id)}>Use in calculator</Link></div>
       </article>)}
     </div><p className={styles.range} role="status" aria-live="polite">{filtered.length?`Showing ${range.first} to ${range.last} of ${filtered.length}`:"No products match. Try another name or product type."}</p>
   </div>;
