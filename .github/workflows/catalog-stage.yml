@@ -59,6 +59,7 @@ jobs:
               assert old is None,f'New path conflict: {name}'
               new=change['content']
             else:
+              if old is None and change['before']==hashlib.sha256(b'').hexdigest(): old=''
               assert old is not None and hashlib.sha256(old.encode()).hexdigest()==change['before'],f'Baseline mismatch: {name}'
               new=old
               for a,b,text in reversed(change['edits']): new=new[:a]+text+new[b:]
