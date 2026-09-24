@@ -36,7 +36,8 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
     </div>
     {!filtered.length?<div className={styles.empty} data-search-scope={match.scope}><h3>{match.scope==="restricted"?"Research listings, not personal-use advice.":"No matching listings."}</h3><p>{match.message}</p><button type="button" onClick={reset}>Browse all products</button></div>:<>
       <div className={styles.grid}>
-        {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} hidden={index<start||index>=start+PAGE_SIZE}>
+        {/* Avoid native hidden: the CSS reset gives it layered !important priority over the no-script fallback. */}
+        {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} data-page-hidden={index<start||index>=start+PAGE_SIZE?"true":undefined} style={index<start||index>=start+PAGE_SIZE?{display:"none"}:undefined}>
           <div className={styles.art}><ProductArtwork product={product}/></div>
           <div className={styles.cardBody}><p className={styles.eyebrow}>{product.label}</p><h3>{product.name}</h3><p className={styles.summary}>{product.summary}</p><p className={styles.researchNote}>{RESEARCH_ONLY_NOTICE}</p><ProductQuickView product={product}/><p className={styles.disclosure}>{product.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."}</p><a className={styles.cardSupplier} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View product <ArrowUpRight size={17} aria-hidden="true"/></a></div>
         </article>)}
@@ -44,6 +45,6 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
       {pages>1&&<nav className={styles.pagination} aria-label="Product pages"><button type="button" disabled={current===1} onClick={()=>turn(current-1)}><ArrowLeft size={18} aria-hidden="true"/>Previous</button><span>Page {current} of {pages}</span><button type="button" disabled={current===pages} onClick={()=>turn(current+1)}>Next<ArrowRight size={18} aria-hidden="true"/></button></nav>}
     </>}
     <p className={styles.matchNote}>{match.scope==="catalog"?match.message:"No search text is sent to the supplier or added to affiliate links."}</p>
-    <noscript><style>{'[data-product-directory] [data-product][hidden]{display:flex!important}[data-product-directory] nav[aria-label="Product pages"]{display:none!important}'}</style><p>All listings are shown when JavaScript is unavailable. Product links still open the supplier website; interactive search and detail panels require JavaScript.</p></noscript>
+    <noscript><style>{'[data-product-directory] [data-page-hidden="true"]{display:flex!important}[data-product-directory] nav[aria-label="Product pages"], [data-product-directory] .directory-interactive-only{display:none!important}'}</style><p>All listings are shown when JavaScript is unavailable. Product links still open the supplier website; interactive search and detail panels require JavaScript.</p></noscript>
   </section>;
 }
