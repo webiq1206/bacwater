@@ -3,10 +3,10 @@ import {createRequire} from 'node:module';
 import assert from 'node:assert/strict';
 const require=createRequire(import.meta.url);
 const version=require('next/package.json').version;
-// Next 16.3.5 assumes every upstream font URL ends with a file extension.
-// A valid font behind a query-style URL otherwise throws on a null regex match.
-// Keep download/self-hosting unchanged; derive its extension from the font header.
-// This is a narrow, removable compatibility patch for the pinned release.
+// Reviewed against packages/font/src/google/loader.ts at the v16.3.6 tag.
+// That release still assumes every upstream font URL ends with a file extension.
+// Keep download/self-hosting unchanged; derive the extension from the font header.
+// This narrow compatibility patch never touches next/og or security dependencies.
 export function fontExtension(buffer){
  if(!Buffer.isBuffer(buffer)||buffer.length<4)throw new Error('Invalid font response: missing binary header.');
  const tag=buffer.subarray(0,4).toString('ascii');
@@ -20,14 +20,15 @@ for(const [tag,ext]of [['wOF2','woff2'],['wOFF','woff'],['OTTO','otf'],['true','
 assert.equal(fontExtension(Buffer.from([0,1,0,0])),'ttf');
 assert.throws(()=>fontExtension(Buffer.from('<htm')));
 assert.throws(()=>fontExtension(Buffer.alloc(0)));
+assert.equal(version,'16.3.6','Next version changed. Review the pinned font compatibility patch and the security release before installing.');
 const file=require.resolve('next/dist/compiled/@next/font/dist/google/loader.js');
 const old='const ext = /\\.(woff|woff2|eot|ttf|otf)$/.exec(googleFontFileUrl)[1];';
 const marker='// BAC-FONT-HEADER-COMPAT';
 const text=fs.readFileSync(file,'utf8');
 if(text.includes(marker)){console.log('Font response compatibility is already installed.');}
-else if(version==='16.3.5'){
+else{
  assert.equal(text.split(old).length,2,'Unexpected font loader source. Review the pinned compatibility patch before installing.');
  const replacement=`${marker}\n            const ext = (${fontExtension.toString()})(fontFileBuffer);`;
  fs.writeFileSync(file,text.replace(old,replacement));
- console.log('Installed tested font-header compatibility for Next 16.3.5. Font files, families and hosting are unchanged.');
-}else{throw new Error('Next version changed. Review and remove or update the font loader compatibility patch.');}
+ console.log('Installed tested font-header compatibility for Next 16.3.6. Font files, families and hosting are unchanged.');
+}
