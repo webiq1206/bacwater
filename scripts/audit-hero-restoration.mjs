@@ -59,7 +59,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true}).click();const focus=p.locator('[data-hero-focus]');await expect(focus).toBeVisible();await expect(p.getByRole('navigation',{name:'Primary navigation',exact:true})).toHaveCount(0);
    await focus.getByLabel('Amount in vial',{exact:true}).fill('12');await focus.getByLabel('Final liquid volume',{exact:true}).fill('4');await expect(focus.locator('[data-hero-result]')).toContainText('3 mg/mL');
    await focus.getByText('Also find mL and U-100 units',{exact:true}).click();await focus.getByLabel('Amount for one time',{exact:true}).fill('300');await expect(focus.locator('[data-hero-result]')).toContainText('0.1 mL');
-   await expect(focus.getByRole('link',{name:'View BAC water, opens a new tab',exact:true})).toHaveAttribute('href',/\/products\/amino-h2o$/);
+   await expect(focus.getByRole('link',{name:'View BAC water, opens a new tab',exact:true})).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o?utm_source=affiliate_marketing&code=WEBIQ');
    const r=await focus.boundingBox();assert.ok(r&&r.x>=0&&r.y>=0&&r.y+r.height<=846);await p.screenshot({path:`${out}/${engine}-mobile-focus.png`,fullPage:false});
    await focus.getByRole('button',{name:'Return to homepage',exact:true}).click();await expect(focus).toHaveCount(0);await expect(p.getByRole('button',{name:'Open hero calculator full screen'})).toBeFocused();await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('12');
    await p.reload({waitUntil:'networkidle'});await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('12');await p.getByRole('button',{name:'Open hero calculator full screen'}).click();await expect(focus.getByLabel('Amount for one time',{exact:true})).toHaveValue('300');
@@ -86,5 +86,5 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
  }finally{await browser.close();}
 }
 if(errors.length)process.exitCode=1;
-await fs.writeFile(`${out}/results.json`,JSON.stringify({results,errors,teardownErrors,limitations:['Isolated localhost fixtures, not a live deployment.','Chromium/WebKit viewport emulation, not physical phone keyboard or screen-reader certification.','Enlarged text may extend the hero vertically to keep controls usable.','No supplier purchase, account registration, product inventory or affiliate attribution is tested.']},null,2));
+await fs.writeFile(`${out}/results.json`,JSON.stringify({results,errors,teardownErrors,limitations:['Isolated localhost fixtures, not a live deployment.','Chromium/WebKit viewport emulation, not physical phone keyboard or screen-reader certification.','Enlarged text may extend the hero vertically to keep controls usable.','No supplier purchase, account registration, product inventory or conversion attribution is tested.']},null,2));
 console.log(JSON.stringify({results,errors,teardownErrors}));

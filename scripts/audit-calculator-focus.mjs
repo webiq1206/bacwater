@@ -53,16 +53,16 @@ try{
   await page.getByLabel('Vial strength',{exact:true}).fill('12');
   await page.screenshot({path:`${out}/guided-step-390.png`,fullPage:false});
  });
- await check('Help is deliberate, retains the BAC water link and returns to the same entries',async()=>{
+ await check('Help retains the attributed BAC water link and returns to the same entries',async()=>{
   await page.getByLabel('Open calculator help',{exact:true}).click();
   await expect(page.getByRole('region',{name:'Calculation workspace',exact:true})).not.toBeVisible();
   const help=page.getByRole('region',{name:'Calculator help and supplies'});
-  await expect(help).toBeVisible();await expect(help.locator('[data-bac-water-link] a').first()).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o');
+  await expect(help).toBeVisible();await expect(help.locator('[data-bac-water-link] a').first()).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o?utm_source=affiliate_marketing&code=WEBIQ');
   await accessibility(page);await page.screenshot({path:`${out}/help-390.png`,fullPage:false});
   await page.keyboard.press('Escape');await expect(page.getByLabel('Open calculator help',{exact:true})).toBeFocused();
   await expect(page.getByLabel('Vial strength',{exact:true})).toHaveValue('12');await fit(page);
  });
- await check('Draft values and the current guided step survive refresh, Back and return',async()=>{
+ await check('Draft values and current guided step survive refresh, Back and return',async()=>{
   await page.reload();await expect(page.getByRole('heading',{name:'What amount is on the vial?',exact:true})).toBeVisible();await expect(page.getByLabel('Vial strength',{exact:true})).toHaveValue('12');
   await page.getByRole('link',{name:'Back to website',exact:true}).click();await expect(page).toHaveURL(origin+'/');
   await page.goBack();await expect(page.getByLabel('Vial strength',{exact:true})).toHaveValue('12');
@@ -78,7 +78,7 @@ try{
   await page.addStyleTag({content:'html{font-size:200%} p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});
   await fit(page);await page.screenshot({path:`${out}/guided-enlarged-320.png`,fullPage:false});
  });
- await check('Help follows the actual enlarged header and desktop questions remain centered',async()=>{
+ await check('Help follows the enlarged header and desktop questions remain centered',async()=>{
   await page.getByLabel('Open calculator help',{exact:true}).click();
   const bar=await page.locator('[data-calculator-workspace] > header').boundingBox(),help=await page.getByRole('region',{name:'Calculator help and supplies'}).boundingBox();
   assert.ok(bar&&help&&help.y>=bar.y+bar.height-1,JSON.stringify({bar,help}));
@@ -96,7 +96,6 @@ try{
  });
  await check('Compound references launch isolated tools; hCG keeps IU and utilities are noindex',async()=>{
   await page.goto(origin+'/peptides/hcg');
-  // Browsing pages include a shelf search, but never active calculation fields.
   await expect(page.locator('[data-calculator-workspace]')).toHaveCount(0);
   await expect(page.locator('main input')).toHaveCount(1);
   await expect(page.locator('[data-supplier-shelf]').getByRole('searchbox',{name:'Find a product',exact:true})).toHaveCount(1);
@@ -107,13 +106,13 @@ try{
   await fit(page);await page.screenshot({path:`${out}/hcg-390.png`,fullPage:false});
   const r=await c.request.get(origin+'/calculate/not-a-compound');assert.equal(r.status(),404);
  });
- await check('Direct first visit presents age confirmation above the calculator, not behind it',async()=>{
+ await check('Direct first visit presents age confirmation above the calculator',async()=>{
   const fresh=await browser.newContext({viewport:{width:390,height:844}});await fresh.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());const p=await fresh.newPage();
   await p.goto(origin+'/tools/mg-to-mcg');const gate=p.getByRole('dialog',{name:'Age check: are you 21 or older?'});await expect(gate).toBeVisible();
   await expect(p.locator('main')).toHaveAttribute('inert','');await gate.getByRole('button',{name:'Yes, I am 21 or older',exact:true}).click();await expect(gate).toHaveCount(0);await fit(p);
   await p.getByLabel('Milligrams (mg)',{exact:true}).fill('0.125');await expect(p.getByLabel('Micrograms (mcg)',{exact:true})).toHaveValue('125');await fresh.close();
  });
- await check('WebKit engine uses the dedicated screen and preserves a converter result',async()=>{
+ await check('WebKit uses the dedicated screen and preserves a converter result',async()=>{
   const b=await webkit.launch(),ctx=await b.newContext({viewport:{width:390,height:844}});await ctx.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());await ctx.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);const p=await ctx.newPage();
   await p.goto(origin+'/tools/mg-to-mcg');await fit(p);await p.getByLabel('Milligrams (mg)',{exact:true}).fill('0.125');await expect(p.getByLabel('Micrograms (mcg)',{exact:true})).toHaveValue('125');await p.reload();await expect(p.getByLabel('Milligrams (mg)',{exact:true})).toHaveValue('0.125');await p.screenshot({path:`${out}/converter-webkit-390.png`,fullPage:false});await b.close();
  });
