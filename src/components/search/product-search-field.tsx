@@ -24,7 +24,11 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
   const uid = useId(), fallbackInput = useRef<HTMLInputElement>(null), root = useRef<HTMLDivElement>(null);
   const input = inputRef || fallbackInput, id = inputId || `${uid}-product-search`;
   const [limit, setLimit] = useState(previewCount);
-  useEffect(() => { setLimit(previewCount); }, [query, previewCount]);
+  useEffect(() => {
+    setLimit(previewCount);
+    const results = root.current?.querySelector<HTMLElement>("[data-product-search-matches]");
+    if (results) results.scrollTop = 0;
+  }, [query, previewCount]);
   const showResults = showInitial || Boolean(query.trim());
   const visible = match.products.slice(0, limit);
   function firstResult() { return root.current?.querySelector<HTMLButtonElement>("[data-product-match] > button"); }
