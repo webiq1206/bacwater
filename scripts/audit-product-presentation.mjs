@@ -13,13 +13,19 @@ const link=id=>`https://www.aminoclub.com/us/products/${id}?utm_source=affiliate
 async function a11y(p){await p.evaluate(axe);assert.deepEqual(await p.evaluate(async()=>(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);}
 async function fit(p,d){const geom=await d.evaluate(el=>{const r=el.getBoundingClientRect(),scroll=el.querySelector('[data-product-detail-scroll]').getBoundingClientRect(),a=el.querySelector('footer a').getBoundingClientRect(),close=el.querySelector('button:last-child')?.getBoundingClientRect();return{left:r.x,top:r.y,right:r.right,bottom:r.bottom,vw:innerWidth,vh:innerHeight,overflow:document.documentElement.scrollWidth>innerWidth+1,scrollHeight:scroll.height,action:{y:a.y,bottom:a.bottom},close:close?{y:close.y,bottom:close.bottom}:null}});assert.ok(geom.left>=-1&&geom.top>=-1&&geom.right<=geom.vw+1&&geom.bottom<=geom.vh+2,JSON.stringify(geom));assert.equal(geom.overflow,false,JSON.stringify(geom));assert.ok(geom.scrollHeight>45,JSON.stringify(geom));assert.ok(geom.action.y>=0&&geom.action.bottom<=geom.vh+1,JSON.stringify(geom));}
 for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
- const b=await driver.launch(),c=await b.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
- await c.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);
- await c.route('**/*',r=>{if(new URL(r.request().url()).origin===origin)return r.continue();external.push(r.request().url());return r.abort();});
- const p=await c.newPage();let closing=false;
- p.on('pageerror',e=>(closing?teardownErrors:errors).push({engine,error:String(e),url:p.url()}));
- // Drain automatic prefetches before deliberate document replacement; do not attribute teardown aborts to a new page.
- async function visit(path){await p.waitForLoadState('networkidle');await p.goto(origin+path,{waitUntil:'networkidle'});}
+ const b=await driver.launch(),closing=new WeakSet();let c,p,viewport={width:1440,height:1000};
+ // Independent entry-point checks get independent contexts. Actual clicks below stay in the same context.
+ // Closing a test context can abort scheduled framework prefetches; record that lifecycle separately.
+ async function finishPage(){if(!p)return;await p.waitForLoadState('networkidle');closing.add(p);await c.close();}
+ async function visit(path){
+  if(p)viewport=p.viewportSize();await finishPage();
+  c=await b.newContext({viewport,reducedMotion:'reduce'});
+  await c.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);
+  await c.route('**/*',r=>{if(new URL(r.request().url()).origin===origin)return r.continue();external.push(r.request().url());return r.abort();});
+  p=await c.newPage();const current=p;
+  current.on('pageerror',e=>(closing.has(current)?teardownErrors:errors).push({engine,error:String(e),url:current.url()}));
+  await p.goto(origin+path,{waitUntil:'networkidle'});
+ }
  try{
   await check(`${engine}: canonical names and complete readable details for every product`,async()=>{
    await visit('/recommendations');
@@ -44,6 +50,12 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await expect(p.locator('[data-product="glp-3"] h3')).toHaveText('GLP-3 (RT)');
    await visit('/search');await p.getByRole('searchbox',{name:'What are you looking for?'}).fill('tirzepetide');
    await expect(p.locator('[data-search-result="product:glp-2"] strong')).toHaveText('GLP-2 (TR)');
+   // Follow a real result with client navigation instead of replacing a live document with page.goto.
+   await p.getByRole('searchbox',{name:'What are you looking for?'}).fill('Retatrutide');
+   const result=p.locator('[data-search-result="product:glp-3"]');
+   await expect(result.locator('strong')).toHaveText('GLP-3 (RT)');await result.click();
+   await expect(p).toHaveURL(origin+'/calculate/product/glp-3');await expect(p.locator('h1')).toContainText('GLP-3 (RT)');
+   await p.waitForLoadState('networkidle');
    await visit('/peptide-calculator');await p.getByRole('combobox',{name:'Product',exact:true}).click();
    await p.getByLabel('Search products',{exact:true}).fill('Retatrutide');await p.getByRole('option',{name:'GLP-3 (RT)',exact:true}).click();
    await expect(p.locator('[data-selected-product="glp-3"]')).toContainText('GLP-3 (RT)');
@@ -67,7 +79,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await fit(p,d);await d.getByRole('heading',{name:'How it works',exact:true}).scrollIntoViewIfNeeded();await expect(d.getByRole('heading',{name:'How it works',exact:true})).toBeInViewport();
    await d.getByRole('button',{name:'Close',exact:true}).click();assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
   });
- }catch(e){process.exitCode=1;console.error(e);await p.screenshot({path:`${out}/${engine}-failure.png`,fullPage:true}).catch(()=>{});await fs.writeFile(`${out}/${engine}-failure.html`,await p.content().catch(()=>''));}finally{try{await p.waitForLoadState('networkidle');}finally{closing=true;await b.close();}}
+ }catch(e){process.exitCode=1;console.error(e);await p.screenshot({path:`${out}/${engine}-failure.png`,fullPage:true}).catch(()=>{});await fs.writeFile(`${out}/${engine}-failure.html`,await p.content().catch(()=>''));}finally{try{await finishPage();}finally{await b.close();}}
 }
 if(errors.length||external.some(u=>new URL(u).hostname.endsWith('aminoclub.com')))process.exitCode=1;
 await fs.writeFile(`${out}/results.json`,JSON.stringify({date:new Date().toISOString(),results,errors,teardownErrors,external,limitations:['Test database and browser emulation only, not the live deployment or physical devices.','External requests are blocked; no referral clicks, purchases, stock checks or conversion-credit claims.','Readability checks are editorial and structural, not a certified school reading-grade assessment.']},null,2));
