@@ -59,6 +59,7 @@ export function LivePlanPreview({ preview, result, expanded, onExpand, onEdit, c
       </> : <>
         <div className={styles.next}><h3>{preview.issues.length ? "Check your entries" : "Still needed"}</h3><p>{preview.concentrationText ? "Concentration is ready. Complete the remaining fields to calculate the amount to measure." : "Your entries appear above as you type. No missing numbers are assumed."}</p>
           {preview.remaining.map(entry => <button type="button" key={entry.field} onClick={() => onEdit(entry.field)}>{entry.field === "product" ? "Choose a product" : entry.field === "amount" ? "Enter the amount to measure" : entry.field === "vial" ? "Enter vial amount" : "Enter final liquid volume"}<ArrowRight size={15} aria-hidden="true" /></button>)}
+          {preview.secondaryPending && <button type="button" onClick={() => onEdit("blend")}>Complete blend details<ArrowRight size={15} aria-hidden="true" /></button>}
           {preview.issues.length > 0 && <ul>{preview.issues.map(issue => <li key={issue}>{issue}</li>)}</ul>}
           {result.input.peptideSlug === "hcg" && <Link href="/calculate/hcg">Open the IU calculator</Link>}
         </div>

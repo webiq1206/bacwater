@@ -83,6 +83,19 @@ for (const [name, engine, width, height] of process.env.AUDIT_QUICK ? configurat
     await expect(amount).toHaveValue('250');
     await expect(preview.locator('[data-preview-answer] strong')).toHaveText('10 units');
     report.checks.push('Immediate updates, partial concentration, clearing, invalid values and equivalent unit changes');
+    await builder.getByRole('button', { name: /Is this a blend/ }).click();
+    await expect(preview).toHaveAttribute('data-preview-state', 'incomplete');
+    await expect(save).toBeDisabled();
+    await preview.getByRole('button', { name: 'Complete blend details', exact: true }).click();
+    const companionName = builder.getByRole('textbox', { name: 'Name of the second peptide', exact: true });
+    await expect(companionName).toBeFocused();
+    await companionName.fill('QA companion');
+    await builder.getByLabel('Second compound amount', { exact: true }).fill('2.5');
+    await expect(preview).toHaveAttribute('data-preview-state', 'ready');
+    await expect(preview).toContainText('125 mcg of QA companion');
+    await builder.getByRole('button', { name: 'Remove second peptide', exact: true }).click();
+    await expect(preview).toHaveAttribute('data-preview-state', 'ready');
+    report.checks.push('Incomplete blends identify missing details and cannot save; complete blends show companion arithmetic');
     if (width >= 1024) {
       const scroller = page.locator('[data-calculator-scroll]');
       await scroller.evaluate(el => { el.scrollTop = 650; });

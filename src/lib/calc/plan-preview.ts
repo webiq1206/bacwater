@@ -43,7 +43,7 @@ export function planPreviewState(p: PlanPreviewInput) {
   const ratio = hasVial && hasVolume ? input.vialStrengthMg / input.bacWaterMl! : null;
   const concentration = ratio !== null && Number.isFinite(ratio) && ratio > 0 ? ratio : null;
   return {
-    entries, completed, ready, schedule, concentration,
+    entries, completed, ready, schedule, concentration, secondaryPending: !p.secondaryReady,
     issues: [...new Set(issues)],
     remaining: entries.filter(entry => !entry.complete),
     concentrationText: concentration === null ? null : `${formatNumeric(concentration, 4)} mg/mL`,

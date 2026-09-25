@@ -649,7 +649,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     const section = { product: 1, vial: 2, amount: 3, volume: 5, blend: 1 }[field];
     const panel = advancedRef.current?.querySelector<HTMLElement>(`[data-plan-section="${section}"]`);
     panel?.scrollIntoView({ block: "start", behavior: "auto" });
-    const selector = field === "product" ? '[role="combobox"]' : field === "blend" ? 'input[aria-label="Second compound amount"]' : 'input';
+    const selector = field === "product" ? '[role="combobox"]' : field === "blend" ? (secondarySlug === "custom" && !customSecondaryName.trim() ? 'input[aria-label="Name of the second peptide"]' : 'input[aria-label="Second compound amount"]') : 'input';
     panel?.querySelector<HTMLElement>(selector)?.focus({ preventScroll: true });
   }
   function showLivePreview() {

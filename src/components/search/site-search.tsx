@@ -14,7 +14,7 @@ import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE } from "@/lib/partners/suppl
 import { SearchThumbnail } from "./search-thumbnail";
 import styles from "./search.module.css";
 
-const SearchContext = createContext<(() => void) | null>(null);
+const SearchContext = createContext<((opener?: HTMLElement) => void) | null>(null);
 const categories: [SearchKind | "all", string][] = [["all", "All"], ["product", "Products"], ["calculator", "Calculators"], ["guide", "Guides"], ["reference", "References"]];
 function Highlight({ text, query }: { text: string; query: string }) {
   const start = query.trim() ? text.toLowerCase().indexOf(query.trim().toLowerCase()) : -1;
@@ -102,7 +102,7 @@ export function SiteSearchProvider({ children }: { children: ReactNode }) {
   const previous = useRef<HTMLElement | null>(null), dialogRef = useRef<HTMLDivElement>(null), activeProduct = useRef<string | null>(null), pathname = usePathname();
   const selectProduct = useCallback((id: string | null) => { activeProduct.current = id; setActiveProductId(id); }, []);
   useSearchViewport(open, dialogRef);
-  function launch() { previous.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setOpen(true); }
+  function launch(opener?: HTMLElement) { previous.current = opener || (document.activeElement instanceof HTMLElement ? document.activeElement : null); setOpen(true); }
   useEffect(() => { setOpen(false); selectProduct(null); }, [pathname, selectProduct]);
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
@@ -118,7 +118,7 @@ export function SiteSearchProvider({ children }: { children: ReactNode }) {
     <DialogContent ref={dialogRef} className={styles.dialog} data-unified-search-dialog
       onEscapeKeyDown={event => { if (activeProduct.current !== null) { event.preventDefault(); selectProduct(null); } }}
       onInteractOutside={event => { if (activeProduct.current !== null) event.preventDefault(); }}
-      onCloseAutoFocus={event => { event.preventDefault(); if (previous.current?.isConnected) previous.current.focus(); }}>
+      onCloseAutoFocus={event => { event.preventDefault(); if (previous.current?.isConnected) previous.current.focus({ preventScroll: true }); }}>
       <DialogTitle>Find what you need</DialogTitle><DialogDescription>Search products, calculators and simple guides.</DialogDescription>
       <SiteSearchResults onNavigate={() => { selectProduct(null); setOpen(false); }} activeProductId={activeProductId} onActiveProductChange={selectProduct} />
     </DialogContent>
@@ -127,6 +127,6 @@ export function SiteSearchProvider({ children }: { children: ReactNode }) {
 export function SiteSearchButton({ compact = false, onActivate }: { compact?: boolean; onActivate?: () => void }) {
   const open = useContext(SearchContext);
   return <Link href="/search" className={styles.trigger} data-compact={compact} aria-label="Search site" onClick={event => {
-    if (open && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); open(); onActivate?.(); }
+    if (open && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); open(event.currentTarget); onActivate?.(); }
   }}><Search size={19} aria-hidden="true" /><span>Search</span></Link>;
 }
