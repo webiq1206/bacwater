@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { chooseCalculationProduct } from "@/lib/session/calculation-session";
 import { createContext, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Search, ArrowUpRight, ChevronDown, Droplets } from "lucide-react";
@@ -28,13 +29,13 @@ export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
     <DialogTrigger asChild><button className={styles.choose} type="button"><Search size={16} aria-hidden="true"/>{product?"Change product":"Choose product"}<ChevronDown size={15} aria-hidden="true"/></button></DialogTrigger>
     <DialogContent className={styles.dialog}>
      <DialogTitle className={styles.title}>Choose a product</DialogTitle>
-     <DialogDescription>Pick the exact product. Your current calculation stays saved on this device. No amounts are filled in for you. {RESEARCH_ONLY_NOTICE}</DialogDescription>
+     <DialogDescription>Pick the exact product. Your entered numbers follow you between matching calculator types in this tab. Check them against the new label. Blends, solutions, water and IU use separate fields. {RESEARCH_ONLY_NOTICE}</DialogDescription>
      <label className={styles.search}>Find a product<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search by name" autoComplete="off" /></label>
      <label className={styles.search}>Product type<select aria-label="Product type" value={kind} onChange={e=>setKind(e.target.value)}><option value="all">All products</option><option value="single">Single compounds</option><option value="blend">Blends</option><option value="spray">Sprays and solutions</option><option value="water">Lab water</option></select></label>
      <p className={styles.count} role="status">{filtered.length} of {catalog.length} products</p>
      <div className={styles.list} role="region" aria-label="Product choices" tabIndex={0}>
       {filtered.length?<ul>{filtered.map(p=><li key={p.id}>
-       <Link className={styles.option} href={productCalculatorPath(p.id)} onClick={()=>setOpen(false)} data-product-choice={p.id}>
+       <Link className={styles.option} href={productCalculatorPath(p.id)} onClick={()=>{chooseCalculationProduct(p.id,p.kind,p.reference||"");setOpen(false);}} data-product-choice={p.id}>
         <span className={styles.thumb}><ProductArtwork product={p} compact/></span>
         <span><strong>{p.name}</strong><small>{p.label}</small></span><ChevronDown size={15} aria-hidden="true" style={{transform:"rotate(-90deg)"}}/>
        </Link>

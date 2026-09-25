@@ -89,7 +89,7 @@ export default function BacWaterCalculatorPage() {
             </div>
           </div>
           <div>
-            <label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount to measure</label>
+            <label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount for one time</label>
             <div className="mt-2 flex gap-2">
               <Input id="bac-measured-amount" type="number" inputMode="decimal" min="0" step="any" value={vial.doseInput || ""} onChange={e => vial.setDoseInput(e.target.value === "" ? 0 : Number(e.target.value))} placeholder="Amount from your instructions" className="min-w-0 flex-1" aria-describedby="bac-measurement-help bac-input-error" aria-invalid={measurementAmount < 0 || !Number.isFinite(measurementAmount)} />
               <UnitChoice value={vial.doseUnit} onChange={vial.setDoseUnit} label="Measurement amount unit" />

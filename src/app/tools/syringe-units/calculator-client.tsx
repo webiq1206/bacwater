@@ -8,7 +8,7 @@ import { usePersistentState } from "@/lib/use-persistent-state";
 interface ConversionInput{direction:"units"|"ml";text:string}
 function display(n:number){return n!==0&&(n<0.000001||n>=1e9)?n.toExponential(11).replace(/\.?0+e/,"e"):new Intl.NumberFormat("en-US",{maximumSignificantDigits:12,useGrouping:false}).format(n);}
 export default function SyringeUnitConverterPage(){
- const [stored,setStored]=usePersistentState<ConversionInput>("bacwater.tool.syringe.conversion.v2",{direction:"units",text:""});
+ const [stored,setStored]=usePersistentState<ConversionInput>("scale-conversion",{direction:"units",text:""});
  const text=typeof stored?.text==="string"?stored.text:"",direction=stored?.direction==="ml"?"ml":"units";
  const value=Number(text),hasInput=text.trim().length>0;
  const other=direction==="units"?value/100:value*100;
