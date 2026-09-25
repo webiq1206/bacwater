@@ -39,7 +39,9 @@ export function matchDirectory<T extends SupplierProduct>(products:readonly T[],
     if(desired&&p.kind!==desired)return false;
     const aliases=[p.name,p.id,p.mark,p.reference,...(p.aliases||[])];
     const words=normalize(aliases.join(" ")).split(" ");
-    return tokens.every(t=>words.some(w=>w.startsWith(t))||aliases.some(a=>compact(a).includes(t)));
+    // Short aliases must match word prefixes: RT should not also match caRTalax.
+    // Longer joined names such as GHKCU still match across punctuation.
+    return tokens.every(t=>words.some(w=>w.startsWith(t))||(t.length>=3&&aliases.some(a=>compact(a).includes(t))));
   });
   // Unknown or unsupported criteria produce no matches, never a guessed substitution.
   if(text&&!tokens.length&&!desired&&!/^(?:all|all products|products|all compounds|compounds|all peptides|peptides)$/.test(text)) return {products:[],scope:"unmatched",message:"Add a product name or format, such as BPC-157, blends or lab water. This is a catalog search, not a suitability recommendation."};

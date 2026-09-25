@@ -45,7 +45,7 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
       </div>
       <p id={`${uid}-help`} className={styles.help}>Search by name or format. Results appear as you type.</p>
     </form>
-    {showResults && <div id={`${uid}-matches`} className={styles.matches} data-product-search-matches data-search-scope={match.scope}>
+    {showResults && <div id={`${uid}-matches`} className={styles.matches} data-product-search-matches data-live-search-scope={match.scope}>
       <p className={styles.status} role="status" aria-live="polite" aria-atomic="true">{match.products.length ? `${match.products.length} ${match.products.length === 1 ? "product" : "products"}${match.products.length > visible.length ? ` · Showing ${visible.length}` : ""}` : match.scope === "restricted" ? "Search by product name or format only." : "No matching products."}</p>
       {visible.length ? <ul aria-label="Matching products" onKeyDown={event => {
         if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
