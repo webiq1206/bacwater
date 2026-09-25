@@ -6,6 +6,7 @@ import { ArrowLeft, Calculator, HelpCircle, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { AnalyticsPreferences } from "@/components/common/analytics-preferences";
 import { SiteSearchButton } from "@/components/search/site-search";
+import { ProductSearchButton } from "@/components/search/product-search";
 import { SupplierWaterLink } from "@/components/partners/supplier-context";
 import { CalculatorProductTools, ProductSelectionContext } from "@/components/partners/calculator-products";
 import { productForCalculatorPath } from "@/lib/partners/supplier-catalog";
@@ -66,11 +67,11 @@ export function CalculatorWorkspace({ title, description, children, help, refere
     guide.current?.querySelector("summary")?.focus();
   }
   return <ActionsContext.Provider value={actionsRoot}><ProductSelectionContext.Provider value={setSelectedProduct}>
-    <section ref={root} className={styles.workspace} data-calculator-workspace data-help-open={helpOpen} aria-label={title} onKeyDown={event => { if (event.key === "Escape" && helpOpen) { event.preventDefault(); closeHelp(); } }}>
+    <section ref={root} className={styles.workspace} data-calculator-workspace data-help-open={helpOpen} aria-label={title} onKeyDown={event => { if (event.key === "Escape" && helpOpen && !event.defaultPrevented && !(event.target instanceof Element && event.target.closest('[role="dialog"]'))) { event.preventDefault(); closeHelp(); } }}>
       <header ref={bar} className={styles.bar}>
         <Link href={backHref} className={styles.back} aria-label={backHref === "/" ? "Back to website" : backHref.startsWith("/peptides/") ? "Back to compound reference" : backHref.startsWith("/plan/") ? "Back to saved calculation" : "Back to calculators"}><ArrowLeft size={19} aria-hidden="true"/><span>Back</span></Link>
         <Link href="/tools" className={styles.brand} aria-label="Choose a calculator"><Calculator size={20} aria-hidden="true"/><span>Calculator</span></Link>
-        <div className={styles.headerActions}><SiteSearchButton compact/>
+        <div className={styles.headerActions}><ProductSearchButton compact/><SiteSearchButton compact/>
         <details ref={guide} className={styles.guide} open={helpOpen}>
           <summary onClick={event => { event.preventDefault(); setHelpOpen(open => !open); }} aria-label={helpOpen ? "Close calculator help" : "Open calculator help"}><HelpCircle size={19} aria-hidden="true"/><span>Help</span></summary>
           <div className={styles.helpBody} role="region" aria-label="Calculator help and supplies" tabIndex={0}>

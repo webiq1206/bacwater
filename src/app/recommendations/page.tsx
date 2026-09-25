@@ -4,19 +4,20 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ProductDirectory } from "@/components/partners/product-directory";
 import { getSupplierCatalog, RESEARCH_ONLY_NOTICE, SUPPLIER_SOURCES } from "@/lib/partners/supplier-catalog";
 import styles from "@/components/partners/product-directory.module.css";
+import searchStyles from "@/components/search/product-search.module.css";
 
 export const metadata=withSocialMetadata({title:"Research Product Directory: BAC Water and Compounds",description:"Browse research compound, blend, solution and BAC water products. Search by name or format and review product details. Laboratory research only, not for human use.",alternates:{canonical:"/recommendations"},openGraph:{title:"Research Product Directory",description:"Find a research product by name or format. Read labels, batch-document guidance and affiliate disclosures.",url:"/recommendations"}});
 export default function RecommendationsPage(){
   const products=getSupplierCatalog(),paid=products.some(p=>p.paid);
-  return <div className={styles.page}>
+  return <div className={styles.page} data-search-first-directory>
     <Breadcrumbs items={[{label:"Home",href:"/"},{label:"Research supplies",href:"/recommendations"}]}/>
-    <header className={styles.hero}>
+    <header className={`${styles.hero} ${searchStyles.directoryHero}`}>
       <p className={styles.eyebrow}>THE RESEARCH DIRECTORY</p>
-      <h1>Research products.<br/><em>Clearly organized.</em></h1>
-      <p className={styles.lead}>Browse {products.length} products. Search by name or choose a format. Open research details without losing your place.</p>
-      <div className={styles.notice}><strong>{RESEARCH_ONLY_NOTICE}</strong><p>{paid?"We are an independent affiliate and may earn a commission from purchases through supplier links.":"These are supplier links. No paid referral is active."} We do not represent the supplier, endorse suitability or provide medical advice.</p></div>
+      <h1>Research products.</h1>
+      <p className={styles.lead}>Search all {products.length} products by name or format. See matching products as you type.</p>
     </header>
     <ProductDirectory products={products}/>
+    <div className={searchStyles.directoryDisclosure}><strong>{RESEARCH_ONLY_NOTICE}</strong><p>{paid?"We are an independent affiliate and may earn a commission from purchases through supplier links.":"These are supplier links. No paid referral is active."} We do not represent the supplier, endorse suitability or provide medical advice.</p></div>
     <section className={styles.policies} aria-label="Directory and affiliate information">
       <details><summary>What the product details explain</summary><p>Each product explains what the compound is, what researchers study and how it works. Short sections define scientific terms and make the limits of the evidence clear. It does not claim health, recovery, weight, performance or cosmetic benefits. We have not independently tested these products.</p></details>
       <details><summary>How search and sorting work</summary><p>Search matches public product names and formats in your browser. It does not send your text to an AI service or the supplier. No product is recommended for a health goal, a person, an animal or a particular study. Sort order is alphabetical, not based on commission, personal information, calculator entries or saved plans. Unknown requests produce no guessed alternatives.</p></details>
