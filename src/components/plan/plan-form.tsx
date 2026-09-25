@@ -49,7 +49,6 @@ import {
   PEPTIDES,
   SYRINGES,
   calculate,
-  recommendBacWaterMl,
   type CalcInput,
   type CalcResult,
   type SyringeType,
@@ -60,6 +59,9 @@ import { rememberDevicePlan } from "@/lib/saved-plans";
 import { PostSaveDialog } from "@/components/plan/post-save-dialog";
 import { PlanResults } from "@/components/plan/plan-results";
 import { WizardPreview } from "@/components/plan/wizard-preview";
+import { LivePlanPreview } from "./live-plan-preview";
+import { planPreviewState, type PreviewField } from "@/lib/calc/plan-preview";
+import previewStyles from "./live-plan-preview.module.css";
 import { AiAssistantDrawer } from "@/components/plan/ai-assistant-drawer";
 import { toast } from "@/components/ui/toaster";
 import { positiveDecimal } from "@/lib/calc/number-text";
@@ -171,7 +173,7 @@ function StepBlock({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card rounded-2xl p-5 sm:p-7">
+    <div data-plan-section={n} className="rounded-xl border border-border bg-card rounded-2xl p-5 sm:p-7">
       <div className="flex items-center gap-3">
         <StepNumber n={n} filled />
         <SectionLabel>{label ?? `Step ${n} of ${total}`}</SectionLabel>
@@ -287,6 +289,8 @@ function ModeToggle({
 
 export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const router = useRouter();
+  const advancedRef = useRef<HTMLDivElement>(null);
+  const [previewExpanded, setPreviewExpanded] = useState(false);
   const setSelectedProduct=useCalculatorProductSelection();
 
   // Derive first-render values from an optional prefill (edit flow). Computed
@@ -302,7 +306,6 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     const doseMcg = initial.doseMcg ?? 0;
     // Old saved records with no split retain one amount. No frequency is inferred.
     const injectionsPerWeek = initial.injectionsPerWeek ?? 1;
-    const recommended = recommendBacWaterMl(vialMg, doseMcg / injectionsPerWeek);
     const bac = initial.bacWaterMl;
     const dosePresetValues = ref
       ? [ref.typicalDoseMcgRange[0], ref.suggestedDoseMcg, ref.typicalDoseMcgRange[1]]
@@ -316,7 +319,6 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       injectionsPerWeek,
       showCustomDose: true,
       syringeType: initial.syringeType ?? "insulin-1ml",
-      useRecommendedBac: false,
       customBacMl: bac ?? 0,
       dateMixed: initial.dateMixed ? initial.dateMixed.slice(0, 10) : "",
       showDate: !!initial.dateMixed,
@@ -413,7 +415,6 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   const [syringeType, setSyringeType] = usePlanDraft<SyringeType>("plan-syringe",init?.syringeType ?? "insulin-1ml",!!init);
 
-  const [useRecommendedBac, setUseRecommendedBac] = useState<boolean>(init?.useRecommendedBac ?? false);
   const [volumeRaw,setVolumeRaw]=usePlanField("finalVolume",init?String(init.customBacMl):"",!!init);
   const customBacMl=positiveDecimal(volumeRaw) ?? 0;
   const setCustomBacMl=(next:number)=>setVolumeRaw(next===0?"":String(next));
@@ -461,17 +462,13 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   const hasPeptide =
     peptideSlug === "custom" ? customPeptideName.trim().length > 0 : PEPTIDES.some(p=>p.slug===peptideSlug);
-  const hasValidInputs = hasPeptide && peptideSlug !== "hcg" && Number.isFinite(vialStrengthMg) && vialStrengthMg > 0 && scheduleResult.ready && Number.isFinite(customBacMl) && customBacMl > 0 && !useRecommendedBac;
+  const hasValidBlend = !showBlend || ((secondarySlug === "custom" || secondarySlug !== peptideSlug) && (secondarySlug === "custom" ? customSecondaryName.trim().length > 0 : PEPTIDES.some(p => p.slug === secondarySlug && p.slug !== "hcg")) && Number.isFinite(secondaryVialMg) && secondaryVialMg > 0);
+  const hasValidInputs = hasValidBlend && hasPeptide && peptideSlug !== "hcg" && Number.isFinite(vialStrengthMg) && vialStrengthMg > 0 && scheduleResult.ready && Number.isFinite(customBacMl) && customBacMl > 0;
 
   // Numeric fields are one synchronous session record shared with the hero and
   // product calculators. Saved-plan edits keep their supplied values isolated.
   const session=useCalculationSession();
   const hydrated=init?true:session.ready;
-
-  const recommendedBac = useMemo(
-    () => recommendBacWaterMl(vialStrengthMg, doseMcg / Math.max(1, injectionsPerWeek)),
-    [vialStrengthMg, doseMcg, injectionsPerWeek]
-  );
 
   const dosePresets: { mcg: number; label: string; hint: string }[] = [];
   const weeklyRangeHint = "Tell us whether your number is for one time, one day, or one week. Then copy the schedule from your instructions.";
@@ -492,7 +489,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     vialStrengthMg,
     doseMcg,
     injectionsPerWeek,
-    bacWaterMl: useRecommendedBac ? undefined : customBacMl,
+    bacWaterMl: customBacMl,
     syringeType,
     dateMixed: dateMixed || null,
     secondary: showBlend
@@ -514,7 +511,6 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
       doseMcg,
       injectionsPerWeek,
       syringeType,
-      useRecommendedBac,
       customBacMl,
       dateMixed,
       showBlend,
@@ -554,7 +550,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
         vialStrengthMg,
         doseMcg,
         injectionsPerWeek,
-        bacWaterMl: useRecommendedBac ? recommendedBac : customBacMl,
+        bacWaterMl: customBacMl,
         syringeType,
         dateMixed: dateMixed || null,
         notes: null,
@@ -633,9 +629,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     { label: "Syringe", value: syringe.label },
     {
       label: "Final liquid volume",
-      value: useRecommendedBac
-        ? `${recommendedBac} mL (arithmetic example)`
-        : `${customBacMl} mL (custom)`,
+      value: `${customBacMl} mL (entered)`,
     },
     {
       label: "Mixed",
@@ -650,18 +644,35 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   ];
 
   // ---------- ADVANCED: all-at-once side-by-side ----------
+  const preview = planPreviewState({ input, result, hasProduct: hasPeptide, vialText: vialRaw, vialUnit, volumeText: volumeRaw, amount: scheduleInput, secondaryReady: hasValidBlend, hydrated });
+  function editPreviewField(field: PreviewField) {
+    const section = { product: 1, vial: 2, amount: 3, volume: 5, blend: 1 }[field];
+    const panel = advancedRef.current?.querySelector<HTMLElement>(`[data-plan-section="${section}"]`);
+    panel?.scrollIntoView({ block: "start", behavior: "auto" });
+    const selector = field === "product" ? '[role="combobox"]' : field === "blend" ? 'input[aria-label="Second compound amount"]' : 'input';
+    panel?.querySelector<HTMLElement>(selector)?.focus({ preventScroll: true });
+  }
+  function showLivePreview() {
+    setPreviewExpanded(true);
+    requestAnimationFrame(() => {
+      const panel = advancedRef.current?.querySelector<HTMLElement>("[data-live-plan-preview]");
+      panel?.scrollIntoView({ block: "start", behavior: "auto" });
+      panel?.focus({ preventScroll: true });
+    });
+  }
+
   if (mode === "advanced") {
     return (
-      <div>
+      <div ref={advancedRef} data-plan-builder="advanced">
         {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={(open) => { if (!open) setSavedPlan(null); }} />}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           {hasMounted && (
             <ModeToggle mode={mode} onChange={setMode} />
           )}
         </div>
-        {!init&&<SessionValuesNotice/>}<div className="bac-focus-advanced grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-start">
-          {/* Form: sticky on desktop */}
-          <div className="lg:sticky lg:top-24 space-y-4">
+        {!init&&<SessionValuesNotice/>}<div className={`bac-focus-advanced ${previewStyles.advancedLayout}`}>
+          {/* The form scrolls normally; the preview stays visible on desktop. */}
+          <div className={`${previewStyles.fields} space-y-4`}>
             {/* 1. Peptide */}
             <StepBlock
               n={1}
@@ -796,7 +807,6 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                         setVialRaw(e.target.value)
                       }
                       className="flex-1"
-                      autoFocus
                       aria-label="Vial strength"
                     />
                     <UnitToggle
@@ -853,43 +863,12 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
               title="What final volume do your instructions give?"
               hint="Use the liquid and final volume from the exact product instructions. The calculator does not choose them."
             >
-              <div className="grid gap-1.5 sm:gap-2">
-                <ChipButton
-                  active={useRecommendedBac}
-                  onClick={() => setUseRecommendedBac(true)}
-                  hint="An arithmetic example only. Follow the product instructions and vial capacity."
-                >
-                  {recommendedBac} mL (arithmetic example)
-                </ChipButton>
-                <ChipButton
-                  active={!useRecommendedBac}
-                  onClick={() => setUseRecommendedBac(false)}
-                  hint="Use the final liquid volume from your instructions."
-                >
-                  Custom amount
-                </ChipButton>
+              <Label htmlFor="advanced-final-volume">Final liquid volume</Label>
+              <div className="mt-2 flex items-center gap-2">
+                <Input id="advanced-final-volume" aria-label="Final liquid volume in mL" type="text" inputMode="decimal" maxLength={64} value={volumeRaw} onChange={e => setVolumeRaw(e.target.value)} className="flex-1" />
+                <span className="text-sm text-muted-foreground">mL</span>
               </div>
-              {!useRecommendedBac ? (
-                <div className="mt-4">
-                  <Label className="text-xs text-muted-foreground">
-                    Final liquid volume
-                  </Label>
-                  <div className="mt-1 flex items-center gap-2">
-                    <Input aria-label="Final liquid volume in mL"
-                      type="text" inputMode="decimal" maxLength={64}
-                      value={volumeRaw}
-                      onChange={(e) =>
-                        setVolumeRaw(e.target.value)
-                      }
-                      className="flex-1"
-                      autoFocus
-                    />
-                    <div className="text-sm text-muted-foreground font-medium">
-                      mL
-                    </div>
-                  </div>
-                </div>
-              ) : null}
+              <BeginnerHelp kind="volume" />
             </StepBlock>
 
             {/* 6. Date (optional) */}
@@ -955,6 +934,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 />
               </div>
               <WorkspaceActions>
+              <button type="button" className={previewStyles.viewButton} onClick={showLivePreview}>View calculation</button>
               <Button
                 onClick={handleSave}
                 disabled={saving || !hasValidInputs || result.errors.length > 0}
@@ -976,18 +956,9 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             </div>
           </div>
 
-          {/* Live results (only once the inputs are complete: nothing is
-              shown for an empty, un-started plan). */}
-          <div>
-            {hasValidInputs ? (
-              <PlanResults result={result} />
-            ) : (
-              <div className="rounded-xl border border-border rounded-2xl p-10 text-center text-sm text-muted-foreground">
-                Choose your peptide, vial amount, and the amount you measure to see
-                your plan here.
-              </div>
-            )}
-          </div>
+          <LivePlanPreview preview={preview} result={result} expanded={previewExpanded} onExpand={setPreviewExpanded} onEdit={editPreviewField}>
+            {preview.ready && <PlanResults result={result} />}
+          </LivePlanPreview>
         </div>
       </div>
     );
@@ -1138,16 +1109,15 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
           onNext={() => goToStep(4)}
           onBack={() => goToStep(2)}
           stepNum={4}
-          nextDisabled={useRecommendedBac || !Number.isFinite(customBacMl) || customBacMl <= 0}
+          nextDisabled={!Number.isFinite(customBacMl) || customBacMl <= 0}
         >
           <Label htmlFor="guided-final-volume">Total liquid after preparation</Label>
-          <div className="mt-2 flex items-center gap-2"><Input id="guided-final-volume" aria-label="Final liquid volume in mL" type="text" inputMode="decimal" maxLength={64} value={useRecommendedBac ? "" : volumeRaw} onChange={e=>{setUseRecommendedBac(false);setVolumeRaw(e.target.value);}} className="flex-1 h-14 text-base"/><span>mL</span></div>
-          {useRecommendedBac && <p className="mt-3 text-sm">This draft used an example volume. Enter the final volume from your own instructions to continue.</p>}
+          <div className="mt-2 flex items-center gap-2"><Input id="guided-final-volume" aria-label="Final liquid volume in mL" type="text" inputMode="decimal" maxLength={64} value={volumeRaw} onChange={e=>setVolumeRaw(e.target.value)} className="flex-1 h-14 text-base"/><span>mL</span></div>
           <BeginnerHelp kind="volume"/>
           {/* Live reasoning: show the consequence of this choice */}
-          {customBacMl > 0 && !useRecommendedBac && result.errors.length === 0 && <div className="mt-3 sm:mt-4 rounded-xl border border-border bg-surface p-3 sm:p-4 text-sm leading-relaxed">
+          {customBacMl > 0 && result.errors.length === 0 && <div className="mt-3 sm:mt-4 rounded-xl border border-border bg-surface p-3 sm:p-4 text-sm leading-relaxed">
             <span className="text-muted-foreground">With </span>
-            <strong>{useRecommendedBac ? recommendedBac : customBacMl || 0} mL</strong>
+            <strong>{customBacMl || 0} mL</strong>
             <span className="text-muted-foreground"> final liquid volume, your entered amount equals </span>
             <strong style={{ color: "var(--color-accent-guide)" }}>
               {result.syringeReadout.displayLabel}

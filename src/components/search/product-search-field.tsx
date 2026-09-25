@@ -17,12 +17,13 @@ type Props = {
   onBrowse?: () => void;
   showInitial?: boolean;
   previewCount?: number;
+  hideField?: boolean;
   activeProductId?: string | null;
   onActiveProductChange?: (id: string | null) => void;
 };
 
 /** Shared, entirely local product search. The result list is directly below the field. */
-export function ProductSearchField({ query, onChange, match, inputId, inputRef, onBrowse, showInitial = false, previewCount = 4, activeProductId, onActiveProductChange }: Props) {
+export function ProductSearchField({ query, onChange, match, inputId, inputRef, onBrowse, showInitial = false, previewCount = 4, hideField = false, activeProductId, onActiveProductChange }: Props) {
   const uid = useId(), fallbackInput = useRef<HTMLInputElement>(null), root = useRef<HTMLDivElement>(null);
   const input = inputRef || fallbackInput, id = inputId || `${uid}-product-search`;
   const [limit, setLimit] = useState(previewCount);
@@ -36,7 +37,7 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
   function firstResult() { return root.current?.querySelector<HTMLButtonElement>("[data-product-match] > button"); }
   function clear() { onChange(""); input.current?.focus(); }
   return <div ref={root} className={styles.finder} data-live-product-search>
-    <form role="search" aria-label="Find research products" onSubmit={event => {
+    {!hideField && <form role="search" aria-label="Find research products" onSubmit={event => {
       event.preventDefault();
       if (onBrowse) onBrowse(); else firstResult()?.click();
     }}>
@@ -50,7 +51,7 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
         {query && <button type="button" aria-label="Clear product search" onClick={clear}><X size={19} aria-hidden="true" /></button>}
       </div>
       <p id={`${uid}-help`} className={styles.help}>Search by name or format. Results appear as you type.</p>
-    </form>
+    </form>}
     {showResults && <div id={`${uid}-matches`} className={styles.matches} data-product-search-matches data-live-search-scope={match.scope}>
       <p className={styles.status} role="status" aria-live="polite" aria-atomic="true">{match.products.length ? `${match.products.length} ${match.products.length === 1 ? "product" : "products"}${match.products.length > visible.length ? ` · Showing ${visible.length}` : ""}` : match.scope === "restricted" ? "Search by product name or format only." : "No matching products."}</p>
       {visible.length ? <ul aria-label="Matching products" onKeyDown={event => {
