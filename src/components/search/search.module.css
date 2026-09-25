@@ -6,3 +6,13 @@
 .openLabel{font-size:11px;line-height:1.5;font-weight:500;color:#355b39}.supplierAction{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-left:97px;font-size:12px;text-decoration:underline;text-underline-offset:3px;color:#365e40}@media(max-width:780px){.supplierAction{margin-left:76px}}
 /* One clear button and one enclosing focus ring, including WebKit search inputs. */
 .searchBox input:focus-visible{outline:none}.searchBox input::-webkit-search-cancel-button{appearance:none;-webkit-appearance:none}
+
+/* One labeled search entry, with an explicit full-directory route inside. */
+.trigger[data-compact=false] span{display:inline}.trigger[data-compact=false]{padding:9px 11px;white-space:nowrap}
+.searchFooter{flex-shrink:0;border-top:1px solid #d6e0ce;padding-top:6px}.searchFooter>a{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.productActions{padding:0 12px 14px 97px;border-bottom:1px solid #dce4d2}.productActions p{font-size:11px;line-height:1.6;margin:4px 0}.productActions .supplierAction{margin:0}
+.quickDetails{display:inline-flex;align-items:center;gap:7px;min-height:44px;font-size:13px;color:#18382d;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.productPane{min-height:0;display:flex;flex:1}.productPane [data-live-product-search]{display:flex;flex-direction:column;min-height:0;overflow:hidden;flex:1}.productPane [data-product-search-matches]{overflow:auto;overscroll-behavior:contain;min-height:80px;flex:1;padding:3px;margin-top:0}.productPane [data-live-product-search]>p{flex-shrink:0}
+.searchBody[data-standalone=true] .productPane [data-product-search-matches]{overflow:visible}
+@media(max-width:780px){.productActions{padding-left:76px}.trigger[data-compact=false]{font-size:12px;padding:9px 8px;gap:6px}.searchFooter .footnote{font-size:10px}}
+@media(max-height:520px){.productPane [data-live-product-search],.productPane [data-product-search-matches]{overflow:visible;flex:none}.productPane{flex:none}}

@@ -1,0 +1,31 @@
+import assert from "node:assert/strict";
+import { calculate, SYRINGES, type CalcInput } from "../src/lib/calc";
+import { amountSchedule, type AmountSchedule } from "../src/lib/calc/amount-schedule";
+import { planPreviewState } from "../src/lib/calc/plan-preview";
+import { positiveDecimal } from "../src/lib/calc/number-text";
+let checks = 0;
+function test(name: string, run: () => void) { run(); checks++; console.log(`PASS live preview: ${name}`); }
+function fixture(options: { vial?: string; unit?: "mg" | "mcg"; volume?: string; amount?: Partial<AmountSchedule>; product?: boolean; secondaryReady?: boolean; hydrated?: boolean; input?: Partial<CalcInput> } = {}) {
+  const vialText = options.vial ?? "5", vialUnit = options.unit ?? "mg", volumeText = options.volume ?? "2";
+  const amount: AmountSchedule = { amount: "0.25", amountUnit: "mg", basis: "each", timesPerWeek: "", ...options.amount };
+  const schedule = amountSchedule(amount);
+  const input: CalcInput = { peptideSlug: "bpc-157", peptideName: "BPC-157", vialStrengthMg: (positiveDecimal(vialText) || 0) / (vialUnit === "mcg" ? 1000 : 1), doseMcg: schedule.ready ? schedule.weeklyMcg : 0, injectionsPerWeek: schedule.ready ? schedule.count : 1, bacWaterMl: positiveDecimal(volumeText) || 0, syringeType: "insulin-1ml", ...options.input };
+  const result = calculate(input);
+  return { input, result, preview: planPreviewState({ input, result, hasProduct: options.product ?? true, vialText, vialUnit, volumeText, amount, secondaryReady: options.secondaryReady ?? true, hydrated: options.hydrated ?? true }) };
+}
+test("an untouched form has no assumed result or concentration", () => { const { preview } = fixture({ product: false, vial: "", volume: "", amount: { amount: "" } }); assert.equal(preview.completed, 0); assert.equal(preview.ready, false); assert.equal(preview.concentration, null); assert.equal(preview.issues.length, 0); });
+test("the screenshot state shows both entered fields and both missing fields", () => { const { preview } = fixture({ volume: "", amount: { amount: "" }, input: { peptideSlug: "cjc-1295", peptideName: "CJC-1295 (no DAC)" } }); assert.equal(preview.completed, 2); assert.equal(preview.entries[0].value, "CJC-1295 (no DAC)"); assert.equal(preview.entries[1].value, "5 mg"); assert.deepEqual(preview.remaining.map(r => r.field), ["amount", "volume"]); assert.equal(preview.ready, false); });
+test("concentration appears when only its two numeric prerequisites are ready", () => { const { preview } = fixture({ amount: { amount: "" } }); assert.equal(preview.concentration, 2.5); assert.equal(preview.ready, false); });
+test("the completed preview uses the same calculation as the saved result", () => { const { preview, result } = fixture(); assert.equal(preview.ready, true); assert.equal(preview.concentration, result.finalConcentrationMgPerMl); assert.equal(result.doseVolumeMl, .1); assert.equal(result.syringeReadout.exactValue, 10); assert.equal(result.dosesPerVial, 20); });
+test("clearing a completed input immediately removes dependent results", () => { for (const opts of [{ vial: "" }, { volume: "" }, { amount: { amount: "" } }, { product: false }]) assert.equal(fixture(opts).preview.ready, false); assert.equal(fixture({ volume: "" }).preview.concentration, null); });
+for (const raw of ["0", "-1", "abc", "NaN", "Infinity", "1e309", "1e-13", "1,2", "0.25mg"]) test(`invalid raw input is never substituted: ${raw}`, () => { assert.equal(fixture({ vial: raw }).preview.ready, false); assert.equal(fixture({ volume: raw }).preview.concentration, null); assert.equal(fixture({ amount: { amount: raw } }).preview.ready, false); });
+test("switching mass units preserves the result", () => { const a = fixture(), b = fixture({ vial: "5000", unit: "mcg", amount: { amount: "250", amountUnit: "mcg" } }); assert.equal(a.result.doseVolumeMl, b.result.doseVolumeMl); assert.equal(a.preview.concentration, b.preview.concentration); assert.equal(b.preview.ready, true); });
+test("weekly total waits for an explicit count, then divides exactly once", () => { assert.equal(fixture({ amount: { amount: "4", basis: "week" } }).preview.ready, false); const f = fixture({ vial: "40", amount: { amount: "4", basis: "week", timesPerWeek: "2" } }); assert.equal(f.preview.ready, true); assert.equal(f.preview.schedule.eachMcg, 2000); assert.equal(f.result.doseVolumeMl, .1); });
+test("daily totals require a compatible daily schedule", () => { assert.equal(fixture({ amount: { basis: "day", timesPerWeek: "2" } }).preview.ready, false); assert.equal(fixture({ amount: { basis: "day", timesPerWeek: "14" } }).preview.ready, true); });
+test("incomplete blends and invalid engine states cannot be saved as ready", () => { assert.equal(fixture({ secondaryReady: false }).preview.ready, false); assert.equal(fixture({ input: { dateMixed: "not-a-date" } }).preview.ready, false); assert.equal(fixture({ input: { secondary: { peptideName: "Companion", vialStrengthMg: 0 } } }).preview.ready, false); });
+test("IU labels never enter the mass preview", () => assert.equal(fixture({ input: { peptideSlug: "hcg", peptideName: "hCG" } }).preview.ready, false));
+test("session hydration is required before a result is presented as ready", () => assert.equal(fixture({ hydrated: false }).preview.ready, false));
+test("all supported device scales are preserved", () => { for (const scale of SYRINGES) { const { preview, result } = fixture({ input: { syringeType: scale.id } }); assert.equal(preview.ready, true); assert.equal(result.syringeReadout.kind, scale.scale); } });
+test("capacity warnings remain attached to the calculated output", () => { const { preview, result } = fixture({ amount: { amount: "4" }, input: { syringeType: "insulin-0.3ml" } }); assert.equal(preview.ready, true); assert.equal(result.syringeReadout.exceedsSyringe, true); assert.ok(result.warnings.some(w => w.includes("exceeds the capacity"))); });
+test("concentration agrees across a grid of valid entries", () => { for (const vial of [1, 2, 5, 12, 40]) for (const volume of [.5, 1, 2, 4]) { const { preview, result } = fixture({ vial: String(vial), volume: String(volume) }); assert.equal(preview.ready, true); assert.equal(preview.concentration, result.finalConcentrationMgPerMl); } });
+console.log(`${checks} grouped live-preview checks passed.`);

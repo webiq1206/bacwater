@@ -104,15 +104,15 @@ for (const config of configurations) {
     for (const route of ['/', '/learn', '/tools', '/privacy', '/search', '/recommendations', '/tools/bac-water', '/calculate/product/bpc-157']) {
       await page.goto(`${origin}${route}`);
       const workspace = await page.locator('[data-calculator-workspace]').count();
-      if (config.width < 1024 && !workspace) await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
-      const trigger = page.getByRole('button', { name: 'Search products', exact: true });
+      const trigger = page.getByRole('link', { name: 'Search site', exact: true });
       await expect(trigger).toBeVisible();
       await noOverflow(page);
       await trigger.click();
-      const dialog = page.locator('[data-product-search-dialog]');
+      const dialog = page.locator('[data-unified-search-dialog]');
       await expect(dialog).toBeVisible();
-      const search = dialog.getByRole('searchbox', { name: 'Find a product', exact: true });
+      const search = dialog.getByRole('searchbox', { name: 'What are you looking for?', exact: true });
       await expect(search).toBeFocused();
+      await dialog.getByRole('button', { name: 'Products', exact: true }).click();
       if (route === '/' && config.name === 'chromium-desktop') {
         await expect(dialog.locator('[data-product-match]')).toHaveCount(6);
         await dialog.getByRole('button', { name: 'Show more products', exact: true }).click();

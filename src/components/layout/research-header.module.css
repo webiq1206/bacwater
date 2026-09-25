@@ -3,3 +3,5 @@
 @media(max-width:400px){.header>div:first-child{padding-inline:12px;gap:8px}.header :global(.bac-wordmark) img{max-width:140px!important}.header>div:first-child>div:last-child{gap:5px}}
 
 @media(min-width:1024px) and (max-width:1199px){.plansLink{display:none}.header nav a{padding-inline:10px}}
+
+@media(max-width:359px){.header :global(.bac-wordmark) img{max-width:108px!important}}

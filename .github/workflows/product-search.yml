@@ -1,4 +1,4 @@
-name: Live product search acceptance
+name: Search and live preview acceptance
 on:
   pull_request:
   push:
@@ -66,10 +66,13 @@ jobs:
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && exit 0 || sleep 2; done
           exit 1
       - name: Verify live images, menus, responsive layouts, accessibility and privacy
-        run: node scripts/audit-live-product-search.mjs
+        run: |
+          node scripts/audit-live-product-search.mjs
+          node scripts/audit-plan-preview.mjs
+          node scripts/audit-calculator-reflow.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: live-product-search-${{ github.sha }}
-          path: audit-evidence/live-product-search/
+          path: audit-evidence/
           retention-days: 14
