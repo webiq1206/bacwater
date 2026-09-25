@@ -1,8 +1,10 @@
 "use client";
 import { useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Search, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
 import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct, type ProductKind } from "@/lib/partners/supplier-catalog";
 import { DIRECTORY_KINDS, matchDirectory } from "@/lib/partners/product-directory";
+import { ProductSearchField } from "@/components/search/product-search-field";
+import searchStyles from "@/components/search/product-search.module.css";
 import { ProductArtwork } from "./product-artwork";
 import { ProductQuickView } from "./product-quick-view";
 import styles from "./product-directory.module.css";
@@ -16,14 +18,11 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
   const pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE)),current=Math.min(page,pages),start=(current-1)*PAGE_SIZE;
   function search(value:string){setQuery(value);setPage(1);}
   function reset(){setQuery("");setKind("all");setPage(1);input.current?.focus();}
-  function turn(value:number){setPage(value);results.current?.focus({preventScroll:true});results.current?.scrollIntoView({block:"start",behavior:"auto"});}
+  function browse(){input.current?.blur();results.current?.focus({preventScroll:true});results.current?.scrollIntoView({block:"start",behavior:"auto"});}
+  function turn(value:number){setPage(value);browse();}
   return <section className={styles.directory} data-product-directory aria-label="Research product directory">
-    <div className={styles.searchPanel}>
-      <form role="search" onSubmit={e=>{e.preventDefault();input.current?.blur();results.current?.focus();}}>
-        <label htmlFor="research-product-search" className={styles.searchLabel}>Find a product</label>
-        <div className={styles.searchField}><Search size={21} aria-hidden="true"/><input ref={input} id="research-product-search" type="search" value={query} onChange={e=>search(e.target.value)} maxLength={160} placeholder="Try a name, or ‘show me lab water’" autoComplete="off" spellCheck={false} aria-describedby="product-search-help" data-clarity-mask="true"/>{query&&<button type="button" aria-label="Clear product search" onClick={()=>{search("");input.current?.focus();}}><X size={19} aria-hidden="true"/></button>}</div>
-        <p id="product-search-help" className={styles.help}>Use a product name or describe a format. Search stays in your browser. No health goals, dosing or personal-use recommendations.</p>
-      </form>
+    <div className={`${styles.searchPanel} ${searchStyles.directoryPanel}`}>
+      <ProductSearchField query={query} onChange={search} match={{...match,products:filtered}} inputId="research-product-search" inputRef={input} onBrowse={browse}/>
       <div className={styles.controls}>
         <label>Product type<select aria-label="Product type" value={kind} onChange={e=>{setKind(e.target.value as ProductKind|"all");setPage(1);}}>{DIRECTORY_KINDS.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
         <label>Sort by<select aria-label="Sort products" value={sort} onChange={e=>{setSort(e.target.value);setPage(1);}}><option value="az">Name: A to Z</option><option value="za">Name: Z to A</option></select></label>

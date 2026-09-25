@@ -1,0 +1,75 @@
+name: Live product search acceptance
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: live-product-search-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: audit
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: bacwater_audit
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U audit -d bacwater_audit"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://audit:isolated-ci-only@127.0.0.1:5432/bacwater_audit
+      AUTH_SECRET: ci-placeholder-not-a-real-secret
+      AUTH_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      NEXT_TELEMETRY_DISABLED: '1'
+      AUDIT_ORIGIN: http://127.0.0.1:3000
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install and prepare disposable database
+        run: |
+          mkdir -p audit-evidence/live-product-search
+          git rev-parse HEAD > audit-evidence/live-product-search/source-commit.txt
+          npm ci
+          npx prisma generate
+          npx prisma db push --skip-generate
+          npx tsx prisma/seed.ts
+      - name: Typecheck and production build
+        run: |
+          npx tsc --noEmit
+          npx next build --webpack
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.63.0
+      - name: Install browser checks
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Start production server
+        run: |
+          npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/live-product-search/server.log 2>&1 &
+          for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && exit 0 || sleep 2; done
+          exit 1
+      - name: Verify live images, menus, responsive layouts, accessibility and privacy
+        run: node scripts/audit-live-product-search.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-product-search-${{ github.sha }}
+          path: audit-evidence/live-product-search/
+          retention-days: 14
