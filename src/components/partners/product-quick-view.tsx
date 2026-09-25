@@ -11,13 +11,13 @@ import cards from "./product-directory.module.css";
 import styles from "./product-quick-view.module.css";
 
 /** Radix retains focus trapping, Escape, scroll locking and return-to-trigger focus. */
-export function ProductQuickView({product,className,children}:{product:DisplaySupplierProduct;className?:string;children?:ReactNode}) {
+export function ProductQuickView({product,className,children,open,onOpenChange}:{product:DisplaySupplierProduct;className?:string;children?:ReactNode;open?:boolean;onOpenChange?:(open:boolean)=>void}) {
   const title=useRef<HTMLHeadingElement>(null),sources=useRef<HTMLDetailsElement>(null),uid=useId();
   const [sourcesOpen,setSourcesOpen]=useState(false);
   const detail=PRODUCT_RESEARCH[product.id];
   if(!detail)return null;
   function showSources(){setSourcesOpen(true);requestAnimationFrame(()=>sources.current?.scrollIntoView({block:"nearest",behavior:"auto"}));}
-  return <Dialog onOpenChange={open=>{if(!open)setSourcesOpen(false);}}>
+  return <Dialog open={open} onOpenChange={next=>{if(!next)setSourcesOpen(false);onOpenChange?.(next);}}>
     <DialogTrigger asChild><button type="button" className={className||cards.detailsButton} aria-label={`${children?"Open product details for":"Read research details for"} ${product.name}`}>{children||<>Research details <ArrowUpRight size={15} aria-hidden="true"/></>}</button></DialogTrigger>
     <DialogContent className={styles.dialog} data-product-detail={product.id} onOpenAutoFocus={e=>{e.preventDefault();title.current?.focus();}}>
       <header className={styles.header}>

@@ -17,10 +17,12 @@ type Props = {
   onBrowse?: () => void;
   showInitial?: boolean;
   previewCount?: number;
+  activeProductId?: string | null;
+  onActiveProductChange?: (id: string | null) => void;
 };
 
 /** Shared, entirely local product search. The result list is directly below the field. */
-export function ProductSearchField({ query, onChange, match, inputId, inputRef, onBrowse, showInitial = false, previewCount = 4 }: Props) {
+export function ProductSearchField({ query, onChange, match, inputId, inputRef, onBrowse, showInitial = false, previewCount = 4, activeProductId, onActiveProductChange }: Props) {
   const uid = useId(), fallbackInput = useRef<HTMLInputElement>(null), root = useRef<HTMLDivElement>(null);
   const input = inputRef || fallbackInput, id = inputId || `${uid}-product-search`;
   const [limit, setLimit] = useState(previewCount);
@@ -42,7 +44,7 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
       <div className={styles.field}>
         <Search size={21} aria-hidden="true" />
         <input ref={input} id={id} type="search" value={query} onChange={event => onChange(event.target.value)} maxLength={160}
-          placeholder="Search a product name or format" autoComplete="off" spellCheck={false} enterKeyHint="search"
+          placeholder="Search products…" autoComplete="off" spellCheck={false} enterKeyHint="search"
           aria-describedby={`${uid}-help`} aria-controls={showResults ? `${uid}-matches` : undefined} data-clarity-mask="true"
           onKeyDown={event => { if (event.key === "ArrowDown" && firstResult()) { event.preventDefault(); firstResult()?.focus(); } }} />
         {query && <button type="button" aria-label="Clear product search" onClick={clear}><X size={19} aria-hidden="true" /></button>}
@@ -60,7 +62,9 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
         if (event.key === "ArrowUp" && current === 0) input.current?.focus();
         else buttons[Math.max(0, Math.min(buttons.length - 1, current + (event.key === "ArrowDown" ? 1 : -1)))]?.focus();
       }}>{visible.map(product => <li key={product.id} data-product-match={product.id}>
-        <ProductQuickView product={product} className={styles.match}>
+        <ProductQuickView product={product} className={styles.match}
+          open={onActiveProductChange ? activeProductId === product.id : undefined}
+          onOpenChange={open => onActiveProductChange?.(open ? product.id : null)}>
           <span className={styles.thumbnail}><ProductArtwork product={product} compact /></span>
           <span className={styles.matchText}><strong>{product.name}</strong><span>{product.label}</span><small>Research details</small></span>
           <ArrowRight size={18} aria-hidden="true" />
