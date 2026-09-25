@@ -1,8 +1,9 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
-export const metadata = {
+export const metadata = withSocialMetadata({
   alternates: { canonical: "/terms" },
   title: "Terms of Service",
   description: "Terms of service for BACwater.ai. Educational calculations, accuracy limitations and site usage terms.",
@@ -13,7 +14,7 @@ export const metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 export default function TermsPage() {
   return (

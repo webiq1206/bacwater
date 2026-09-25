@@ -1,8 +1,9 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import { CalculatorWorkspace } from "@/components/calculator/calculator-workspace";
 import { PlanForm } from "@/components/plan/plan-form";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
-export const metadata = {
+export const metadata = withSocialMetadata({
   alternates: { canonical: "/plan" },
   title: "Peptide Reconstitution Plan Builder",
   description:
@@ -15,7 +16,7 @@ export const metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 export default function PlanPage() {
   return (

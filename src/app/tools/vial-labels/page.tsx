@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -5,7 +6,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
 const title = "Free Printable Peptide Vial Labels: Small Label PDFs";
 const description = "Make small vial labels from a saved calculation. Choose label dimensions, record concentration and dates, then download a PDF or print at actual size.";
-export const metadata = { title, description, alternates: { canonical: "/tools/vial-labels" }, openGraph: { title, description, url: "/tools/vial-labels", type: "website" } };
+export const metadata = withSocialMetadata({ title, description, alternates: { canonical: "/tools/vial-labels" }, openGraph: { title, description, url: "/tools/vial-labels", type: "website" } });
 const faqs = [
   { q: "What appears on the small vial label?", a: "The product name, concentration, mix date and use-by date. Missing dates are shown as not set. The full calculation and QR code stay on the separate plan PDF, where they have enough room to be readable." },
   { q: "Does the tool decide a peptide's shelf life?", a: "No. Enter the whole-day period from the exact product's instructions. The tool performs calendar arithmetic from your mix date and limits the result to an earlier original expiry when you provide one. It cannot establish stability or sterility. For deadlines shorter than a day, follow the exact product instructions." },

@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import type {Metadata} from "next";
@@ -30,11 +31,11 @@ import styles from "./reference.module.css";
 const categories:Record<string,string>={metabolic:"Metabolic signaling research",healing:"Tissue and repair research",growth:"Growth hormone signaling research",cosmetic:"Dermatology and pigmentation research",cognitive:"Neurological research",reproductive:"Reproductive signaling research",longevity:"Mitochondrial and aging research",other:"Research compound"};
 export function generateStaticParams(){return PEPTIDES.map(p=>({slug:p.slug}));}
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
- const {slug}=await params,p=PEPTIDES.find(x=>x.slug===slug);if(!p)return {};
+ const {slug}=await params,p=PEPTIDES.find(x=>x.slug===slug);if(!p)return withSocialMetadata({});
  const short=shortName(p.name),title=p.slug==='custom'?'Reconstitution Calculator for a Stated Compound':`${short} Reconstitution Calculator and Reference`;
  const description=p.slug==='hcg'?"Check hCG IU concentration and measurement volume from your stated inputs. Product activity units are not milligrams or syringe units; no dose or dilution is selected.":`Check ${short} concentration and U-100 volume relationships from your stated inputs, with formulation limits and linked references. No dose or storage period is selected.`;
  const dims=hasChart(p)?peptideChartDims(p):null;
- return {title,description,alternates:{canonical:`/peptides/${p.slug}`},openGraph:{title,description,url:`/peptides/${p.slug}`,type:'website',siteName:'BACwater.ai',...(dims?{images:[{url:`/peptides/${p.slug}/chart.svg`,width:dims.width,height:dims.height,alt:peptideChartAlt(p)}]}:{})}};
+ return withSocialMetadata({title,description,alternates:{canonical:`/peptides/${p.slug}`},openGraph:{title,description,url:`/peptides/${p.slug}`,type:'website',siteName:'BACwater.ai',...(dims?{images:[{url:`/peptides/${p.slug}/chart.svg`,width:dims.width,height:dims.height,alt:peptideChartAlt(p)}]}:{})}});
 }
 export default async function PeptidePage({params}:{params:Promise<{slug:string}>}){
  const {slug}=await params,p=PEPTIDES.find(x=>x.slug===slug);if(!p)notFound();

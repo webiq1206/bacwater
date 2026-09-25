@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import { CalculatorWorkspace } from "@/components/calculator/calculator-workspace";
 import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
@@ -21,7 +22,7 @@ const TITLE = "Peptide Calculator: Reconstitution, BAC Water & Syringe Units";
 const DESCRIPTION =
   "Free peptide calculator for concentration, mL and U-100 units. Enter your label values and final liquid volume. Save a plan or print a vial label.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/peptide-calculator" },
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 // A curated set of high-search compounds for the ItemList / quick links.
 const POPULAR = [

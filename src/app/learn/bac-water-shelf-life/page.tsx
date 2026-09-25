@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -9,11 +10,11 @@ const references = [
   { title: "Preventing Unsafe Injection Practices: multi-dose vials", source: "CDC", url: "https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html", note: "Opened-vial dating, manufacturer exceptions and contamination limitations." },
 ];
 const description = "BAC water storage depends on the product label. Learn how unopened expiry, opened-vial dating and reconstituted-product instructions differ.";
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: "BAC Water Shelf Life: Expiry, Opening and Storage", description,
   alternates: { canonical: "/learn/bac-water-shelf-life" },
   openGraph: { title: "BAC Water Shelf Life and Storage", description, url: "/learn/bac-water-shelf-life", type: "article" },
-};
+});
 export default function ShelfLifePage() {
   return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24">
     <WebPageJsonLd name="BAC Water Shelf Life and Storage" description={description} url="/learn/bac-water-shelf-life" citations={references} breadcrumb={[{ name: "Home", url: "/" }, { name: "Learning Center", url: "/learn" }, { name: "Shelf life and storage", url: "/learn/bac-water-shelf-life" }]} />

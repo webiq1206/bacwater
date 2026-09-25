@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -16,7 +17,7 @@ const TITLE = "Site Map: Every Calculator, Peptide and Guide";
 const DESCRIPTION =
   "A complete, browsable map of BACwater.ai: every reconstitution calculator, peptide reference, comparison and learning guide, linked from one page.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/sitemap" },
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 /**
  * Human-readable labels for the code-defined static routes. Anything not named

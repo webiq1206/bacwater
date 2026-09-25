@@ -1,8 +1,9 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 const description = "How BACwater.ai calculates concentration and syringe units, handles sources and corrections, and separates arithmetic from medical advice.";
-export const metadata = { title: "Calculation Methodology and Editorial Policy", description, alternates: { canonical: "/editorial-policy" }, openGraph: { title: "Calculation Methodology and Editorial Policy", description, url: "/editorial-policy", type: "website" } };
+export const metadata = withSocialMetadata({ title: "Calculation Methodology and Editorial Policy", description, alternates: { canonical: "/editorial-policy" }, openGraph: { title: "Calculation Methodology and Editorial Policy", description, url: "/editorial-policy", type: "website" } });
 export default function EditorialPolicyPage() {
   return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-12 pb-24">
     <WebPageJsonLd name="Calculation methodology and editorial policy" description={description} url="/editorial-policy" />

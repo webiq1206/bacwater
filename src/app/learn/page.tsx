@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -71,12 +72,12 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const catalog = await getCatalogCached();
   const landing = learnLanding(filters, applyFilters(catalog, filters).length,
     shortName(PEPTIDES.find(p => p.slug === filters.peptide)?.name || filters.peptide || ""));
-  return {
+  return withSocialMetadata({
     title: landing.title, description: landing.description,
     alternates: { canonical: landing.canonical },
     robots: { index: landing.indexable, follow: true },
     openGraph: { title: landing.title, description: landing.description, url: landing.canonical, type: "website", siteName: "BACwater.ai" },
-  };
+  });
 }
 
 export default async function LearnPage({

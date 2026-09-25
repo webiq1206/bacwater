@@ -1,9 +1,10 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { ContactForm } from "@/components/common/contact-form";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
-export const metadata = {
+export const metadata = withSocialMetadata({
   alternates: { canonical: "/contact" },
   title: "Contact Us",
   description: "Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website.",
@@ -14,7 +15,7 @@ export const metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 export default function ContactPage() {
   return (

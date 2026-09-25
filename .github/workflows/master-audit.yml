@@ -117,6 +117,8 @@ jobs:
           if (http.unvisited.length || http.queueRemaining.length || http.pages.some(p => p.error || p.status !== 200)) process.exit(1);
           if (http.endpoints.filter(r => r.requested.includes('does-not-exist-audit')).some(r => r.status !== 404)) process.exit(1);
           if (renders.some(r => !r.title || r.h1?.length !== 1 || r.errors?.length || r.schema?.some(s => s?.parseError))) process.exit(1);
+          if (renders.filter(r => !r.robots.join(' ').includes('noindex')).some(r => !r.social?.title || !r.social?.image || !r.social?.twitterImage || new URL(r.social.url).href !== new URL(r.canonical).href)) process.exit(1);
+          if (!http.endpoints.some(r => r.requested.endsWith('/opengraph-image') && r.status === 200 && r.headers['content-type']?.includes('image/png'))) process.exit(1);
           console.log(`Verified ${summary.httpPages} URLs, ${summary.rendered} renders and ${summary.responsive} responsive/engine checks.`);
           JS
       - name: Verify dedicated calculator screens and full-height homepage

@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import type {Metadata} from "next";
 import {PEPTIDES} from "@/lib/calc/peptides";
@@ -9,7 +10,7 @@ import {CompareSelector} from "@/components/peptides/compare-selector";
 const options=PEPTIDES.filter(p=>p.slug!=="custom");
 type Params=Record<string,string|string[]|undefined>;
 function pick(v:string|string[]|undefined,fallback:string){return options.find(p=>p.slug===(Array.isArray(v)?v[0]:v))||options.find(p=>p.slug===fallback)!;}
-export async function generateMetadata({searchParams}:{searchParams:Promise<Params>}):Promise<Metadata>{const sp=await searchParams,a=pick(sp.a,"bpc-157"),b=pick(sp.b,"tb-500");return {title:`${shortName(a.name)} vs ${shortName(b.name)}: Label and Evidence Context`,description:"Compare compound identity, supported label units and calculation limits. No ranking, dosing recommendation or inferred storage period.",alternates:{canonical:"/peptides/compare"},robots:sp.a||sp.b?{index:false,follow:true}:undefined};}
+export async function generateMetadata({searchParams}:{searchParams:Promise<Params>}):Promise<Metadata>{const sp=await searchParams,a=pick(sp.a,"bpc-157"),b=pick(sp.b,"tb-500");return withSocialMetadata({title:`${shortName(a.name)} vs ${shortName(b.name)}: Label and Evidence Context`,description:"Compare compound identity, supported label units and calculation limits. No ranking, dosing recommendation or inferred storage period.",alternates:{canonical:"/peptides/compare"},robots:sp.a||sp.b?{index:false,follow:true}:undefined});}
 export default async function ComparePage({searchParams}:{searchParams:Promise<Params>}){
  const sp=await searchParams,a=pick(sp.a,"bpc-157"),b=pick(sp.b,"tb-500");
  const rows=[

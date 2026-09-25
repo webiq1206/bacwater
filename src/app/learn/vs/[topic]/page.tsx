@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -38,9 +39,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { topic } = await params;
   const c = findComparison(topic);
-  if (!c) return {};
+  if (!c) return withSocialMetadata({});
   const dims = comparisonDims(c);
-  return {
+  return withSocialMetadata({
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: { canonical: `/learn/vs/${c.slug}` },
@@ -59,7 +60,7 @@ export async function generateMetadata({
         },
       ],
     },
-  };
+  });
 }
 
 export default async function ComparisonPage({

@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -5,7 +6,7 @@ import { References } from "@/components/common/references";
 import { Button } from "@/components/ui/button";
 const title = "What a Peptide Calculator Cannot Verify About Your Vial";
 const description = "A calculation checks relationships between entered numbers. It cannot verify identity, amount, sterility, compatibility, device accuracy or a product's shelf life.";
-export const metadata = { title, description, alternates: { canonical: "/learn/what-you-cannot-know" }, openGraph: { title, description, url: "/learn/what-you-cannot-know", type: "article" } };
+export const metadata = withSocialMetadata({ title, description, alternates: { canonical: "/learn/what-you-cannot-know" }, openGraph: { title, description, url: "/learn/what-you-cannot-know", type: "article" } });
 const references = [
   { title: "Bacteriostatic Water for Injection: labeling", source: "Pfizer", url: "https://labeling.pfizer.com/ShowLabeling.aspx?id=4666", note: "Compatibility, preparation and storage require the applicable product instructions." },
   { title: "Preventing Unsafe Injection Practices", source: "CDC", url: "https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html", note: "Opened-container dates and preservative do not eliminate contamination risk." },

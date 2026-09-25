@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import type { Metadata } from "next";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import CalculatorClient from "./calculator-client";
@@ -8,7 +9,7 @@ const TITLE = 'mg to mcg Converter: Milligrams and Micrograms';
 const DESCRIPTION = 'Convert milligrams to micrograms and back. Multiply mg by 1,000 or divide mcg by 1,000. Check label units without estimating a dose or choosing a treatment.';
 const PATH = "/tools/mg-to-mcg";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: PATH },
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 export default function Page() {
   return (

@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { safeJson } from "@/lib/seo/safe-json";
@@ -6,7 +7,7 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
-export const metadata={title:"BAC Water FAQ: Ingredients, Storage and Calculator Limits",description:"Answers about BAC water labeling, final volume, U-100 scale, storage and saved calculations. Product-specific instructions remain separate from arithmetic.",alternates:{canonical:"/faq"}};
+export const metadata=withSocialMetadata({title:"BAC Water FAQ: Ingredients, Storage and Calculator Limits",description:"Answers about BAC water labeling, final volume, U-100 scale, storage and saved calculations. Product-specific instructions remain separate from arithmetic.",alternates:{canonical:"/faq"}});
 const questions=[
  {q:"What is BAC water (bacteriostatic water)?",a:"BAC water is short for bacteriostatic water, a pharmaceutical diluent containing a preservative. It is not interchangeable with every other water product or suitable for every substance.",href:"/learn/what-is-bac-water",label:"Read the ingredient and purpose reference"},
  {q:"What is BAC water used for?",a:"The product label describes dilution or dissolution of drugs according to the instructions for the exact preparation. The presence of preservative does not establish the sterility or stability of a mixture, and this site does not confirm compatibility.",href:"/learn/bac-water-for-peptides",label:"Separate product instructions from concentration math"},

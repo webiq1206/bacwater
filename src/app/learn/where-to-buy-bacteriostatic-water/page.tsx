@@ -1,7 +1,8 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-export const metadata={title:"Where to Buy Bacteriostatic Water: Product and Pharmacy Checks",description:"Check the exact product, supplier license, instructions and traceability before a medicine-related purchase. BACwater.ai sells no products and does not verify vendors.",alternates:{canonical:"/learn/where-to-buy-bacteriostatic-water"}};
+export const metadata=withSocialMetadata({title:"Where to Buy Bacteriostatic Water: Product and Pharmacy Checks",description:"Check the exact product, supplier license, instructions and traceability before a medicine-related purchase. BACwater.ai sells no products and does not verify vendors.",alternates:{canonical:"/learn/where-to-buy-bacteriostatic-water"}});
 export default function BuyingGuide(){return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-8 sm:pt-12 pb-24">
  <WebPageJsonLd name="Buying bacteriostatic water: questions to verify" description="A product-label and pharmacy verification checklist, not a vendor endorsement." url="/learn/where-to-buy-bacteriostatic-water"/>
  <Breadcrumbs items={[{label:"Home",href:"/"},{label:"Learning Center",href:"/learn"},{label:"Buying checks",href:"/learn/where-to-buy-bacteriostatic-water"}]}/><p className="eyebrow">Before a purchase</p><h1 className="mt-2 text-3xl sm:text-5xl font-serif">Where can you buy bacteriostatic water?</h1>

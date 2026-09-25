@@ -1,10 +1,11 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ProductDirectory } from "@/components/partners/product-directory";
 import { getSupplierCatalog, RESEARCH_ONLY_NOTICE, SUPPLIER_SOURCES } from "@/lib/partners/supplier-catalog";
 import styles from "@/components/partners/product-directory.module.css";
 
-export const metadata={title:"Research Product Directory: BAC Water and Compounds",description:"Browse research compound, blend, solution and BAC water listings. Search by name or format and review product details. Laboratory research only, not for human use.",alternates:{canonical:"/recommendations"},openGraph:{title:"Research Product Directory",description:"Find a research listing by name or format. Read labels, batch-document guidance and affiliate disclosures.",url:"/recommendations"}};
+export const metadata=withSocialMetadata({title:"Research Product Directory: BAC Water and Compounds",description:"Browse research compound, blend, solution and BAC water listings. Search by name or format and review product details. Laboratory research only, not for human use.",alternates:{canonical:"/recommendations"},openGraph:{title:"Research Product Directory",description:"Find a research listing by name or format. Read labels, batch-document guidance and affiliate disclosures.",url:"/recommendations"}});
 export default function RecommendationsPage(){
   const products=getSupplierCatalog(),paid=products.some(p=>p.paid);
   return <div className={styles.page}>

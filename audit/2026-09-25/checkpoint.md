@@ -24,6 +24,8 @@ The final discovery pass explicitly seeds all 24 supported compound-filter state
 
 Visual review of the storage collection found 23 general compound references ahead of the actual storage material. Removed their blanket storage tag, keeping their calculation and reconstitution tags and all original reference pages. The storage destination now presents the relevant shelf-life, prepared-product storage and calculation-limits resources.
 
+The social-metadata pass found inherited homepage titles/URLs, missing images after nested metadata replacement and SVG-only share images. Public page metadata now shares a helper that retains each page's actual title, description and canonical and supplies the existing branded PNG. On-page SVG charts remain unchanged. Full-route acceptance checks share metadata and the actual PNG endpoint.
+
 ## Verification state at this checkpoint
 
 The live HTTP inventory contains 169 public and utility URLs, plus discovery endpoints and four invalid-route probes. All regular URLs returned 200 and all four invalid routes returned 404. This is baseline evidence, not verification that the new code is deployed.

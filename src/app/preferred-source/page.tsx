@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -5,7 +6,7 @@ import { PreferredSourceButton } from "@/components/common/preferred-source-butt
 import { preferredSourceDeeplink } from "@/lib/preferred-source";
 const title = "Choose BACwater.ai as a Preferred Source on Google";
 const description = "Learn how to find BACwater.ai in Google's source preferences, what the setting changes, and how to remove a preference later.";
-export const metadata = { title, description, alternates: { canonical: "/preferred-source" }, openGraph: { title, description, url: "/preferred-source", type: "website" } };
+export const metadata = withSocialMetadata({ title, description, alternates: { canonical: "/preferred-source" }, openGraph: { title, description, url: "/preferred-source", type: "website" } });
 export default function PreferredSourcePage() {
   return <article className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-16 pb-20">
     <WebPageJsonLd name={title} description={description} url="/preferred-source"/><Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Preferred source on Google", href: "/preferred-source" }]}/>
