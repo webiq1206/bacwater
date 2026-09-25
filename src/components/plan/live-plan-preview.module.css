@@ -2,3 +2,7 @@
 @media(min-width:1024px){.advancedLayout.advancedLayout{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}.preview{position:sticky;top:16px;align-self:start;order:0;max-height:var(--preview-height,calc(100dvh - 150px));overflow:auto;scrollbar-gutter:stable}.mobileToggle,.viewButton{display:none}.previewBody[data-expanded=false]{display:block}}
 @media(max-width:600px){.preview{padding:18px;border-radius:16px}.topline{margin-bottom:13px}.product strong{font-size:16px}.answer{padding:16px}.entries>div{gap:12px;flex-wrap:wrap}.entries dd{flex-basis:50%}.metrics strong{font-size:17px}.viewButton{font-size:11px;padding-inline:9px}.progress{margin-bottom:14px}}
 @media print{.preview{position:static;max-height:none;overflow:visible}.mobileToggle,.viewButton,.next button{display:none}.previewBody[data-expanded=false]{display:block}}
+
+/* Let both mobile actions share a row when there is room. Enlarged text can still wrap. */
+button.saveAction.saveAction.saveAction{width:auto;flex:1 1 130px;min-width:min-content;padding:10px 12px}
+button.viewButton.viewButton.viewButton{padding:8px 10px;flex:0 1 auto}

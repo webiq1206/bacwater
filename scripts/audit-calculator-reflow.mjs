@@ -31,7 +31,8 @@ try{
   await p.screenshot({path:out+'/help-320-enlarged.png',fullPage:false});await p.getByRole('button',{name:'Return to calculation',exact:true}).click();await expect(p.getByLabel('Vial strength',{exact:true})).toHaveValue('12');
  });
  await check('Enlarged all-at-once save control remains readable without taking over the viewport',async()=>{
-  await p.locator('[data-calculator-scroll]').evaluate(el=>el.scrollTo(0,0));await p.getByRole('button',{name:'All at once',exact:true}).click();await expect(p.locator('[data-calculator-actions] button')).toHaveText('Save my plan');await compactDock();
+  await p.locator('[data-calculator-scroll]').evaluate(el=>el.scrollTo(0,0));await p.getByRole('button',{name:'All at once',exact:true}).click();await expect(p.locator('[data-calculator-actions] button')).toHaveText(['View calculation', 'Save my plan']);await compactDock();
+  await p.getByRole('button',{name:'View calculation',exact:true}).click();await expect(p.locator('[data-live-plan-preview]')).toBeFocused();await expect(p.getByRole('button',{name:'Save my plan',exact:true})).toBeInViewport();
   await p.screenshot({path:out+'/all-at-once-320-enlarged.png',fullPage:false});
  });
  assert.deepEqual(errors,[]);

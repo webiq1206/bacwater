@@ -940,7 +940,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
                 disabled={saving || !hasValidInputs || result.errors.length > 0}
                 variant="brand"
                 size="lg"
-                className="w-full"
+                className={previewStyles.saveAction}
               >
                 {saving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
