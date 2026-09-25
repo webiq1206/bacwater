@@ -7,7 +7,7 @@
     "dev": "next dev",
     "test": "node scripts/verify-next-security.mjs && tsx src/lib/calc/__tests__/calc.test.ts && tsx src/lib/ai/__tests__/guardrails.test.ts && tsx src/lib/__tests__/workspaces.test.ts && tsx src/lib/__tests__/audit-security.test.ts && tsx src/lib/__tests__/audit-calculation.test.ts && tsx src/lib/__tests__/remaining-scope.test.ts && npm run test:partners && tsx scripts/test-research-design.ts && tsx scripts/test-supplier-catalog.ts && tsx scripts/test-audit-improvements.ts && tsx scripts/test-affiliate-directory.ts",
     "test:partners": "tsx scripts/test-amino-partner.ts",
-    "prebuild": "npm run test",
+    "prebuild": "node scripts/clean-build-cache.mjs && npm run test",
     "build": "next build --webpack",
     "start": "next start",
     "db:push": "prisma db push --skip-generate",

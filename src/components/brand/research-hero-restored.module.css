@@ -131,3 +131,26 @@
   .exampleNote { margin-block: 6px 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .hero a { transition: none; } }
+
+/* On phones, prioritize the actual calculator over links to other pages. */
+@media (min-width: 781px) and (max-height: 850px) {
+  .hero { padding-top: 12px; padding-bottom: 40px; align-items: start; }
+  .copy { align-self: center; }
+  .scene { padding-top: 0; }
+}
+@media (max-width: 780px) {
+  .hero {
+    min-height: 0;
+    align-content: start;
+    padding-top: 16px;
+    padding-bottom: 24px;
+    gap: 12px;
+  }
+  .copy { display: contents; }
+  .headline, .description { text-align: center; }
+  .description { margin-top: 0; }
+  .scene { order: 1; padding-top: 0; padding-bottom: 0; }
+  .actions { order: 2; margin-top: 4px; }
+  .free { order: 3; margin-top: 0; }
+  .scrollCue { display: none; }
+}

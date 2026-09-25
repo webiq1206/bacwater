@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "aKZ4gq4BpK3RI8SGXF_UT"
+uri = "file://attached_assets/share/bacwater-social.png"
+type = "image"
+title = "BACwater.ai — redesigned share image"
+description = "1200 × 630 social image matching the cream, forest-green and pale-lime homepage redesign."
+logical_id = "cdaffd3a-ebec-4a62-8be8-71922e28381c"
+content_hash = "sha256:44502958e816066a36357b09240a237281bca10a34e99331016301ecf69de2d3"
+size = 78093
+mtime_ms = 1790289863746
+storage_uri = "gcs://replit-rams-assets-kirk/rams/assets/repl:6936427a-58d9-4c0a-b7ab-cf2e1c4aed4c/cdaffd3a-ebec-4a62-8be8-71922e28381c/247f444b-e197-4a88-9087-af0067b597a3"
+storage_version_token = "1790290221286765"
+content_type = "image/png"
