@@ -36,7 +36,7 @@ export function ProductQuickView({product,className,children,open,onOpenChange}:
           <div className={styles.copy}>
             <section className={styles.section} aria-labelledby={`${uid}-what`}><span className={styles.number} aria-hidden="true">01</span><div><h3 id={`${uid}-what`}>What it is</h3><p>{detail.what}</p></div></section>
             <section className={styles.section} aria-labelledby={`${uid}-study`}><span className={styles.number} aria-hidden="true">02</span><div><h3 id={`${uid}-study`}>What researchers study</h3><p>{detail.study}</p></div></section>
-            <section className={styles.section} aria-labelledby={`${uid}-how`}><span className={styles.number} aria-hidden="true">03</span><div><h3 id={`${uid}-how`}>How it works</h3><p>{detail.how}</p></div></section>
+            <section className={styles.section} aria-labelledby={`${uid}-how`}><span className={styles.number} aria-hidden="true">03</span><div data-product-mechanism><h3 id={`${uid}-how`}>How it works</h3>{detail.how.split("\n\n").map((paragraph,index)=><p key={index} data-mechanism-paragraph>{paragraph}</p>)}</div></section>
             <div className={styles.limit}><Info size={18} aria-hidden="true"/><div><h3>What this does not prove</h3><p>{detail.limit}</p></div></div>
           </div>
         </div>
@@ -44,7 +44,7 @@ export function ProductQuickView({product,className,children,open,onOpenChange}:
           <summary><BookOpen size={17} aria-hidden="true"/>Sources &amp; product checks<ChevronDown size={17} aria-hidden="true"/></summary>
           <div className={styles.sourceBody}>
             <p>The explanations above describe the compound, not results from testing this supplier’s product. We have not independently tested these products.</p>
-            <ol>{detail.sources.map(source=><li key={source.url}><a href={source.type==="product"?product.href:source.url} target="_blank" rel={source.type==="product"?"sponsored nofollow noopener noreferrer":"noopener noreferrer"} referrerPolicy="no-referrer">{source.label}<ArrowUpRight size={14} aria-hidden="true"/></a><span>{source.type==="product"?"Name, ingredients and product format. Affiliate link.":"Published compound research, not a test of this product."}</span></li>)}</ol>
+            <ol>{detail.sources.map(source=><li key={source.url}><a href={source.type==="product"?product.href:source.url} target="_blank" rel={source.type==="product"?"sponsored nofollow noopener noreferrer":"noopener noreferrer"} referrerPolicy="no-referrer">{source.label}<ArrowUpRight size={14} aria-hidden="true"/></a><span>{source.note||(source.type==="product"?"Partner source for product identity and format. Affiliate link.":source.type==="reference"?"Chemical background reference, not a test of this product.":"Published compound research, not a test of this product.")}</span></li>)}</ol>
             <p>Before following a product link, match its name, ingredients and amounts to the label. A certificate of analysis is a batch test report; check that its batch number matches.</p>
             <div className={styles.resources}><a href={SUPPLIER_SOURCES.coa} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer">Supplier batch reports <ArrowUpRight size={14} aria-hidden="true"/></a><a href={SUPPLIER_SOURCES.researchUse} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer">Research-use restrictions <ArrowUpRight size={14} aria-hidden="true"/></a></div>
           </div>

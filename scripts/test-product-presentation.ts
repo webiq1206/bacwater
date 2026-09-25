@@ -1,3 +1,4 @@
+import "./test-product-mechanisms";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { PRODUCT_RESEARCH } from "../src/lib/partners/product-content";
@@ -18,11 +19,11 @@ for(const product of SUPPLIER_PRODUCTS){
  });
  check(`${product.id}: three useful sections with a specific evidence limit`,()=>{
   const detail=PRODUCT_RESEARCH[product.id];assert.equal(detail.name,product.name);assert.equal(product.summary,detail.summary);
-  for(const key of ["what","study","how","limit"] as const){assert.ok(detail[key].length>=45,`${product.id}.${key}`);assert.ok(detail[key].split(/\s+/).length<=75,`${product.id}.${key} is too long`);assert.doesNotMatch(detail[key],/\blistings?\b|Listing review|\u2014|--/i);}
+  for(const key of ["what","study","how","limit"] as const){assert.ok(detail[key].length>=45,`${product.id}.${key}`);assert.ok(detail[key].split(/\s+/).length<=(key==="how"?145:75),`${product.id}.${key} is too long`);assert.doesNotMatch(detail[key],/\blistings?\b|Listing review|\u2014|--/i);}
   assert.equal(new Set([detail.what,detail.study,detail.how]).size,3);
   assert.equal(detail.sources.filter(s=>s.type==="product").length,1);
   assert.equal(detail.sources.find(s=>s.type==="product")!.url,product.sourceUrl);
-  for(const source of detail.sources){const u=new URL(source.url);assert.equal(u.protocol,"https:");assert.ok(["www.aminoclub.com","pubmed.ncbi.nlm.nih.gov","pmc.ncbi.nlm.nih.gov","www.nature.com"].includes(u.hostname));assert.equal(u.search,"");}
+  for(const source of detail.sources){const u=new URL(source.url);assert.equal(u.protocol,"https:");assert.ok(["www.aminoclub.com","pubmed.ncbi.nlm.nih.gov","pmc.ncbi.nlm.nih.gov","pubchem.ncbi.nlm.nih.gov","www.nature.com"].includes(u.hostname));assert.equal(u.search,"");}
   assert.doesNotMatch([detail.what,detail.study,detail.how].join(" "),/you should (?:take|inject)|recommended dose|burns fat|boosts testosterone|promotes healing|guaranteed results|clinically proven/i);
  });
 }

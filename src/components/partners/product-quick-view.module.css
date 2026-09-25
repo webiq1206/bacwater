@@ -22,3 +22,6 @@
 /* Keep the full name in the mobile heading, not squeezed into a second miniature label. */
 @media(max-width:600px){.visual{grid-template-columns:96px minmax(0,1fr);column-gap:16px;row-gap:0}.visual [data-product-artwork]{aspect-ratio:1;grid-row:1 / span 2;min-height:96px;padding:10px}.visual [data-product-artwork]>span{display:none}.summary{font-size:18px;line-height:1.45;letter-spacing:-.02em}.artNote{grid-column:1 / -1;grid-row:3;margin:7px 0 0;font-size:10px}.sourceButton{align-self:start;font-size:11px;min-height:40px}.layout{gap:21px}}
 @media(max-width:360px){.title{font-size:24px!important}.eyebrow span{display:none}.visual{grid-template-columns:84px minmax(0,1fr);column-gap:14px}.visual [data-product-artwork]{min-height:84px}.summary{font-size:17px}.scroll{padding-top:18px}}
+
+/* Keep the expanded mechanism readable without moving the fixed affiliate action. */
+.section p + p{margin-top:14px}
