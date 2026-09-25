@@ -15,7 +15,7 @@ export function peptideChartAlt(p: PeptideRef): string {
   const name = shortName(p.name);
   const rows = dosageRows(p);
   const parts = rows.map(
-    (r) => `a ${r.vialMg} mg vial with ${r.bacMl} mL of bac water makes ${r.concentrationMgPerMl} mg/mL`
+    (r) => `an illustrative ${r.vialMg} mg amount in a final ${r.bacMl} mL gives ${r.concentrationMgPerMl} mg/mL`
   );
   return `${name} reconstitution reference: ${parts.join("; ")}. Concentration is the vial amount divided by the final volume; no dose is assumed.`;
 }

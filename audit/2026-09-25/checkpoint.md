@@ -14,6 +14,12 @@ Baseline repository: ca96b4eea9f19696ec8ca3eafba5a36234361d73. Public domain: ht
 - New registrations use 15-character minimum passphrases, bounded bcrypt input, normalized names/emails and useful partial-success recovery. Existing six-character passwords remain accepted at sign-in. Added persistent accessible form errors and clarified contact confirmation.
 - Corrected deployment documentation: .replit verifies schema; it does not apply schema changes or editorial revisions.
 
+## Follow-through batch
+
+The per-page content review found the old unsupported vial warning repeated across every compound reference, stale label-tool summaries in related-reading cards and ambiguous CJC-1295 naming. The follow-through batch corrects all affected references, preserves the no-DAC qualifier, makes chart captions explicit about illustrative final volume, avoids repeated FAQ question headings and marks the current mobile navigation destination. Privacy copy now documents short-lived abuse counters.
+
+The full browser inventory now includes peptide-filter URLs, search and label utilities. Changed label, preference, limits, registration, directory and topic templates receive additional responsive and alternate-engine checks. Navigation timing measurements are lab observations, not field Core Web Vitals.
+
 ## Verification state at this checkpoint
 
 The live HTTP inventory contains 169 public and utility URLs, plus discovery endpoints and four invalid-route probes. All regular URLs returned 200 and all four invalid routes returned 404. This is baseline evidence, not verification that the new code is deployed.

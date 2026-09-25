@@ -108,3 +108,10 @@ export function renderBody(body: string) {
   const blocks = body.split(/\n\n+/);
   return blocks.map((block, i) => renderBlock(block, i));
 }
+
+/** Avoid repeating an exact CMS question as the first answer paragraph. */
+export function faqAnswerBody(title: string, body: string): string {
+  const blocks = body.split(/\n\n+/);
+  const plain = (value: string) => value.replace(/[*#`]/g, "").trim().toLowerCase();
+  return plain(blocks[0] || "") === plain(title) ? blocks.slice(1).join("\n\n") : body;
+}

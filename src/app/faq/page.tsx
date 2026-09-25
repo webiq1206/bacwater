@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { safeJson } from "@/lib/seo/safe-json";
-import { inlineMarkdown } from "@/lib/content/render";
+import { inlineMarkdown, faqAnswerBody } from "@/lib/content/render";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -21,7 +21,7 @@ const questions=[
 ];
 export default async function FaqPage(){
  const extra=await prisma.contentBlock.findMany({where:{kind:"faq",published:true},orderBy:{createdAt:"asc"}});
- const schema={"@context":"https://schema.org","@type":"FAQPage",mainEntity:[...questions.map(f=>({"@type":"Question",name:f.q,acceptedAnswer:{"@type":"Answer",text:f.a}})),...extra.map(f=>({"@type":"Question",name:f.title,acceptedAnswer:{"@type":"Answer",text:f.body.replace(/[*#`]/g,"")}}))]};
+ const schema={"@context":"https://schema.org","@type":"FAQPage",mainEntity:[...questions.map(f=>({"@type":"Question",name:f.q,acceptedAnswer:{"@type":"Answer",text:f.a}})),...extra.map(f=>({"@type":"Question",name:f.title,acceptedAnswer:{"@type":"Answer",text:faqAnswerBody(f.title,f.body).replace(/[*#`]/g,"")}}))]};
  return <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-8 sm:pt-12 pb-24">
   <script type="application/ld+json" dangerouslySetInnerHTML={{__html:safeJson(schema)}}/>
   <WebPageJsonLd name="BAC water frequently asked questions" description="Product-label context and the limits of the calculation tools." url="/faq"/>
@@ -29,7 +29,7 @@ export default async function FaqPage(){
   <p className="eyebrow">Help and reference</p><h1 className="mt-2 text-3xl sm:text-5xl font-serif">Frequently asked questions</h1>
   <p className="mt-4 leading-relaxed">Find the answer you need, then open the relevant guide or calculator. For a problem with the website, <Link href="/contact" className="underline">contact support</Link>. For a medication question, ask the dispensing professional.</p>
   <Accordion type="single" collapsible className="mt-6">{questions.map((f,i)=><AccordionItem key={f.q} value={`core-${i}`}><AccordionTrigger>{f.q}</AccordionTrigger><AccordionContent><p>{f.a}</p><p className="mt-3"><Link href={f.href} className="underline">{f.label}</Link></p></AccordionContent></AccordionItem>)}</Accordion>
-  {extra.length>0&&<section className="mt-8"><h2 className="text-xl font-serif">More questions from the content library</h2><Accordion type="single" collapsible className="mt-3">{extra.map(f=><AccordionItem key={f.id} value={f.id}><AccordionTrigger>{f.title}</AccordionTrigger><AccordionContent><div className="space-y-3">{f.body.split(/\n\n+/).map((s,i)=><p key={i} dangerouslySetInnerHTML={{__html:inlineMarkdown(s)}}/>)}</div></AccordionContent></AccordionItem>)}</Accordion></section>}
+  {extra.length>0&&<section className="mt-8"><h2 className="text-xl font-serif">More questions from the content library</h2><Accordion type="single" collapsible className="mt-3">{extra.map(f=><AccordionItem key={f.id} value={f.id}><AccordionTrigger>{f.title}</AccordionTrigger><AccordionContent><div className="space-y-3">{faqAnswerBody(f.title,f.body).split(/\n\n+/).map((s,i)=><p key={i} dangerouslySetInnerHTML={{__html:inlineMarkdown(s)}}/>)}</div></AccordionContent></AccordionItem>)}</Accordion></section>}
   <section className="mt-9 rounded-xl border p-5 text-sm leading-relaxed"><h2 className="text-lg font-semibold">Sources and review limits</h2><p className="mt-3">The product facts above use <a className="underline" href="https://www.pfizermedical.com/bacteriostatic-water">Pfizer's labeling</a> and <a className="underline" href="https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html">CDC injection-safety guidance</a>, checked September 22, 2026. FDA has separate <a className="underline" href="https://www.fda.gov/drugs/drug-alerts-and-statements/fdas-concerns-unapproved-glp-1-drugs-used-weight-loss">guidance on unapproved GLP-1 products</a>. A source check is not a qualified clinical review of this website.</p><p className="mt-3"><Link href="/editorial-policy" className="underline">Editorial policy</Link> · <Link href="/tools" className="underline">All calculators</Link></p></section>
  </div>;
 }

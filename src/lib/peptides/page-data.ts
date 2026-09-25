@@ -20,6 +20,7 @@ export interface DosageRow {
 
 /** Short display name: strip the parenthetical, e.g. "TB-500 (Thymosin Beta-4)" -> "TB-500". */
 export function shortName(name: string): string {
+  if (/\(no DAC\)/i.test(name)) return name.trim();
   return name.replace(/\s*\(.*\)\s*/, "").trim();
 }
 

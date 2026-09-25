@@ -192,7 +192,7 @@ const STATIC_ENTRIES: LearnEntry[] = [
     url: "/learn/what-you-cannot-know",
     title: "What you cannot know about your vial",
     excerpt:
-      "The math is exact for the numbers you type, but it cannot tell you what is really in the powder. What no calculation can verify.",
+      "The tools check relationships between entered numbers. They cannot verify product identity, sterility, compatibility or stability.",
     contentType: "guide",
     peptideTags: [],
     topicTags: ["safety", "storage"],
@@ -225,7 +225,7 @@ const STATIC_ENTRIES: LearnEntry[] = [
     url: "/tools/vial-labels",
     title: "Free printable peptide vial labels",
     excerpt:
-      "Generate printable vial labels with a QR code showing strength, concentration, measurement and mix date. Storage limits come from the product instructions.",
+      "Print small labels with the name, concentration and user-supplied dates. Choose dimensions and download a PDF; the QR code stays on the separate plan PDF.",
     contentType: "guide",
     peptideTags: [],
     topicTags: ["injection-supplies", "reconstitution-method"],
