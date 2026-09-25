@@ -1,6 +1,7 @@
 import { safeJson } from "@/lib/seo/safe-json";
 import { SITE_URL, WEBSITE_ID, orgRef, citationLd } from "@/lib/seo/schema";
 import { LAST_REVIEWED_ISO } from "@/lib/content-meta";
+import { shareImage } from "@/lib/seo/search-appearance";
 import type { Reference } from "@/lib/content/references";
 
 interface BreadcrumbItem {
@@ -23,11 +24,15 @@ interface WebPageJsonLdProps {
 }
 
 export function WebPageJsonLd({ name, description, url, breadcrumb, citations, reviewed }: WebPageJsonLdProps) {
+  const parsedUrl = new URL(url, SITE_URL);
+  const image = shareImage(`${parsedUrl.pathname}${parsedUrl.search}`);
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name,
     description,
+    publisher: orgRef,
+    primaryImageOfPage: { "@type": "ImageObject", url: `${SITE_URL}${image.url}`, width: image.width, height: image.height, caption: image.alt },
     url: url.startsWith("http") ? url : `${SITE_URL}${url}`,
     isPartOf: {
       "@type": "WebSite",

@@ -1,6 +1,7 @@
 import { safeJson } from "@/lib/seo/safe-json";
 import { SITE_URL, orgRef, citationLd } from "@/lib/seo/schema";
 import { LAST_REVIEWED_ISO } from "@/lib/content-meta";
+import { shareImage } from "@/lib/seo/search-appearance";
 import type { Reference } from "@/lib/content/references";
 
 export function ArticleJsonLd({
@@ -30,7 +31,7 @@ export function ArticleJsonLd({
     "@type": "Article",
     headline: title,
     articleBody: plainBody,
-    image: `${SITE_URL}/opengraph-image`,
+    image: `${SITE_URL}${shareImage(new URL(url, SITE_URL).pathname).url}`,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,
     ...(createdAt && !Number.isNaN(createdAt.getTime()) ? {datePublished:createdAt.toISOString()} : {}),

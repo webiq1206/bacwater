@@ -4,7 +4,7 @@ import { loadGoogleFont } from "@/lib/og-font";
 export const runtime = "nodejs";
 
 export const alt =
-  "BACwater.ai — BAC water calculator with a clear arithmetic worksheet";
+  "BACwater.ai droplet logo beside a BAC water concentration calculator worksheet";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

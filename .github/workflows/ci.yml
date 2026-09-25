@@ -35,5 +35,9 @@ jobs:
         run: npx tsc --noEmit
       - name: Unit tests
         run: npm test
+      - name: Verify search metadata, icons and every generated share card
+        run: npm run test:search-appearance
       - name: Production build
         run: npx next build --webpack
+      - name: Verify rendered search metadata and branded icon endpoints
+        run: npm run test:search-http
