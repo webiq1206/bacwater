@@ -1,0 +1,50 @@
+name: Reconcile reviewed product updates
+on:
+  push:
+    branches: [product-clarity-2026-09-25]
+    paths: [.github/workflows/reconcile-product-updates.yml]
+permissions:
+  contents: write
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Merge the reviewed calculator tree without overwriting either feature
+        env:
+          EXPECTED_EVENT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name 'webIQ'
+          git config user.email 'info@webiq.co'
+          git fetch origin main product-clarity-2026-09-25
+          test "$(git rev-parse origin/main)" = ed39c7bab6d139b5644eed36269777a8d6a360b0
+          test "$(git rev-parse origin/product-clarity-2026-09-25)" = "$EXPECTED_EVENT"
+          git merge --no-commit --no-ff ed39c7bab6d139b5644eed36269777a8d6a360b0 || test -f .git/MERGE_HEAD
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          expected = ['scripts/audit-hero-restoration.mjs', 'src/components/peptides/peptide-calc.tsx']
+          actual = subprocess.check_output(['git','diff','--name-only','--diff-filter=U'],text=True).splitlines()
+          assert sorted(actual) == expected, actual
+          source = subprocess.check_output(['git','show',':3:scripts/audit-hero-restoration.mjs'],text=True)
+          assert source.count('View BAC water, opens a new tab') == 1
+          Path(expected[0]).write_text(source.replace('View BAC water, opens a new tab','View Amino H2O, opens a new tab'))
+          source = subprocess.check_output(['git','show',':3:src/components/peptides/peptide-calc.tsx'],text=True)
+          start = '"use client";\n'
+          signature = 'export function PeptideCalc({peptideName,peptideSlug,standalone=false}:Props){\n'
+          assert source.startswith(start) and source.count(signature) == 1
+          source = source.replace(start,start+'import { productDisplayName } from "@/lib/partners/supplier-catalog";\n',1)
+          source = source.replace(signature,signature+' peptideName=productDisplayName(peptideSlug||"",peptideName);\n',1)
+          Path(expected[1]).write_text(source)
+          PY
+          git add scripts/audit-hero-restoration.mjs src/components/peptides/peptide-calc.tsx
+          git rm .github/workflows/reconcile-product-updates.yml
+          test "$(git write-tree)" = 442c0a97b9bdbb169647a169e7147490d41986e2
+          git diff --cached --check
+          git commit -m 'Preserve current calculator sessions while integrating product presentation'
+          git push origin HEAD:refs/heads/product-clarity-2026-09-25
