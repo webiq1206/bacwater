@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 /**
  * Deterministic peptide reconstitution math.
  *
@@ -267,7 +268,7 @@ export function calculate(input: CalcInput): CalcResult {
   const errors: string[] = [];
 
   const peptideRef = input.peptideSlug ? findPeptide(input.peptideSlug) : null;
-  const peptideName = input.peptideName || peptideRef?.name || null;
+  const peptideName = input.peptideName || (peptideRef ? productDisplayName(peptideRef.slug, peptideRef.name) : null);
 
   if (!isFiniteNumber(input.vialStrengthMg) || input.vialStrengthMg <= 0)
     errors.push("Vial strength must be greater than 0 mg.");
@@ -459,7 +460,7 @@ export function calculate(input: CalcInput): CalcResult {
     const secondaryConcentration = secondaryVialMg / usedBacMl;
     const companionDoseMcg = doseVolumeMl * secondaryConcentration * 1000;
     secondaryName =
-      input.secondary.peptideName || secondaryRef?.name || "Secondary peptide";
+      input.secondary.peptideName || (secondaryRef ? productDisplayName(secondaryRef.slug, secondaryRef.name) : "Secondary peptide");
     secondaryOutput = {
       peptideName: secondaryName,
       vialStrengthMg: secondaryVialMg,

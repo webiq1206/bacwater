@@ -12,7 +12,7 @@ const pending=getSupplierCatalog({AMINO_CLUB_ENABLED:"true",AMINO_CLUB_APPROVAL_
 assert.deepEqual(pending,plain);
 assert.deepEqual(getSupplierCatalog({AMINO_CLUB_ENABLED:"true",AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED:"true",AMINO_CLUB_PRODUCT_LINKS_JSON:'{"amino-h2o":"https://bad.example"}'}),plain);
 for(const p of SUPPLIER_PRODUCTS)assert.match(p.sourceUrl,/^https:\/\/www\.aminoclub\.com\/us\/products\/[a-z0-9-]+$/);
-assert.equal(SUPPLIER_PRODUCTS.find(p=>p.name==="Tirzepatide")?.id,"glp-2");assert.equal(SUPPLIER_PRODUCTS.find(p=>p.name==="Retatrutide")?.id,"glp-3");
+assert.equal(SUPPLIER_PRODUCTS.find(p=>p.name==="GLP-2 (TR)")?.id,"glp-2");assert.equal(SUPPLIER_PRODUCTS.find(p=>p.name==="GLP-3 (RT)")?.id,"glp-3");
 for(const path of ["src/components/layout/site-header.tsx","src/components/layout/site-footer.tsx","src/app/admin/layout.tsx"])assert.ok(fs.readFileSync(path,"utf8").includes("<Wordmark"),path);
 for(const file of ["bacwater-wordmark.svg","bacwater-wordmark-light.svg","bacwater-mark.svg"]){const s=fs.readFileSync("public/brand/"+file,"utf8");assert.ok(s.startsWith("<svg"));assert.equal(/https?:|<script|<image|@font-face/.test(s.replace('xmlns="http://www.w3.org/2000/svg"',"")),false);}
 const slider=fs.readFileSync("src/components/partners/product-slider.tsx","utf8");assert.ok(slider.includes('filtered.map('));assert.equal(slider.includes('setInterval'),false);assert.ok(slider.includes('prefers-reduced-motion'));

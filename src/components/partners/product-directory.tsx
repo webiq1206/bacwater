@@ -34,7 +34,7 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
       <div><h2 ref={results} tabIndex={-1} className={styles.resultsTitle}>Browse the directory</h2><p role="status" aria-live="polite" aria-atomic="true">{filtered.length?`${filtered.length} ${filtered.length===1?"product":"products"}. Showing ${start+1} to ${Math.min(start+PAGE_SIZE,filtered.length)}.`:match.message}</p></div>
       {(query||kind!=="all")&&<button type="button" className={styles.reset} onClick={reset}>Clear filters <X size={15} aria-hidden="true"/></button>}
     </div>
-    {!filtered.length?<div className={styles.empty} data-search-scope={match.scope}><h3>{match.scope==="restricted"?"Research listings, not personal-use advice.":"No matching listings."}</h3><p>{match.message}</p><button type="button" onClick={reset}>Browse all products</button></div>:<>
+    {!filtered.length?<div className={styles.empty} data-search-scope={match.scope}><h3>{match.scope==="restricted"?"Research products, not personal-use advice.":"No matching products."}</h3><p>{match.message}</p><button type="button" onClick={reset}>Browse all products</button></div>:<>
       <div className={styles.grid}>
         {/* Avoid native hidden: the CSS reset gives it layered !important priority over the no-script fallback. */}
         {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} data-page-hidden={index<start||index>=start+PAGE_SIZE?"true":undefined} style={index<start||index>=start+PAGE_SIZE?{display:"none"}:undefined}>
@@ -45,6 +45,6 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
       {pages>1&&<nav className={styles.pagination} aria-label="Product pages"><button type="button" disabled={current===1} onClick={()=>turn(current-1)}><ArrowLeft size={18} aria-hidden="true"/>Previous</button><span>Page {current} of {pages}</span><button type="button" disabled={current===pages} onClick={()=>turn(current+1)}>Next<ArrowRight size={18} aria-hidden="true"/></button></nav>}
     </>}
     <p className={styles.matchNote}>{match.scope==="catalog"?match.message:"No search text is sent to the supplier or added to affiliate links."}</p>
-    <noscript><style>{'[data-product-directory] [data-page-hidden="true"]{display:flex!important}[data-product-directory] nav[aria-label="Product pages"], [data-product-directory] .directory-interactive-only{display:none!important}'}</style><p>All listings are shown when JavaScript is unavailable. Product links still open the supplier website; interactive search and detail panels require JavaScript.</p></noscript>
+    <noscript><style>{'[data-product-directory] [data-page-hidden="true"]{display:flex!important}[data-product-directory] nav[aria-label="Product pages"], [data-product-directory] .directory-interactive-only{display:none!important}'}</style><p>All products are shown when JavaScript is unavailable. Product links still open the supplier website; interactive search and detail panels require JavaScript.</p></noscript>
   </section>;
 }

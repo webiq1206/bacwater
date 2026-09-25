@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 /**
  * Deterministic per-peptide page data derived from the calculator engine and
  * peptides.ts. Everything numeric on a /peptides/[slug] page flows through
@@ -60,14 +61,14 @@ export function representativeStrength(p: PeptideRef): number {
 
 /** 40-60 word direct-answer paragraph that opens the page. */
 export function directAnswer(p: PeptideRef): string {
-  const name = shortName(p.name);
+  const name = productDisplayName(p.slug, shortName(p.name));
   return `Use this ${name} calculator to convert your stated vial amount and final liquid volume into concentration and U-100 syringe units. Enter an amount to measure from instructions you already have. Vial strength alone cannot determine a suitable diluent, mixing volume, dose or storage time.`;
 }
 
 /** Reconstitution steps for the HowTo block, tuned to this peptide. */
 export function reconstitutionSteps(p: PeptideRef): { name: string; text: string }[] {
   return [
-    { name: "Check the product instructions", text: `Confirm the identity, amount and units on your ${shortName(p.name)} label. A name alone does not establish formulation, purity or suitability for use.` },
+    { name: "Check the product instructions", text: `Confirm the identity, amount and units on your ${productDisplayName(p.slug, shortName(p.name))} label. A name alone does not establish formulation, purity or suitability for use.` },
     { name: "Enter the known volume", text: "Use the liquid volume specified for your product or the actual final volume of an existing solution. A convenient calculator result is not permission to change those instructions." },
     { name: "Check the concentration", text: "Divide the total amount in milligrams by the final volume in milliliters to obtain mg/mL. The calculation assumes the stated amount is fully dissolved in that final volume." },
     { name: "Check the measurement", text: "Convert the amount you entered to milliliters using that concentration. U-100 markings represent 100 units per mL, not milligrams of a compound." },
@@ -85,7 +86,7 @@ export function buildFaqs(
   p: PeptideRef,
   extra: FaqItem[] = []
 ): FaqItem[] {
-  const name = shortName(p.name);
+  const name = productDisplayName(p.slug, shortName(p.name));
   const rows = dosageRows(p);
   const faqs: FaqItem[] = [];
 

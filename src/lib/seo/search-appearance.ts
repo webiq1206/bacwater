@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { shortName } from "@/lib/peptides/page-data";
 import { COMPARISONS } from "@/lib/comparisons/content";
@@ -21,7 +22,7 @@ export const SEARCH_SNIPPETS: Record<string, Snippet> = {
   "/tools/supplies": { title: "Vial Count Calculator", description: "Calculate how many vials cover a known number of measurements using your stated vial amount and amount per measurement. No schedule is recommended." },
   "/tools/vial-labels": { title: "Printable Peptide Vial Labels: Free PDF Tool", description: "Create a PDF of small vial labels from a saved calculation. Choose label dimensions, include concentration and entered dates, then print at actual size." },
   "/peptides": { title: "Peptide Calculators and Compound References", description: "Find a peptide reconstitution calculator by compound. Check concentration examples, label units, original references and what the calculation cannot verify." },
-  "/recommendations": { title: "Research Peptides and BAC Water Directory", description: "Search research compounds, blends and BAC water listings by name or format. Review product details and supplier links. Research only; affiliate disclosure." },
+  "/recommendations": { title: "Research Peptides and BAC Water Directory", description: "Search research compounds, blends and BAC water products by name or format. Review product details and supplier links. Research only; affiliate disclosure." },
   "/faq": { title: "BAC Water FAQ: Ingredients, Storage and Math", description: "Get clear answers about BAC water ingredients, storage, final volume and syringe units, with links to product labeling and free calculation tools." },
   "/learn/glossary": { title: "BAC Water Glossary: mg, mcg, mL and U-100", description: "Look up BAC water, reconstitution, concentration, benzyl alcohol and syringe-scale terms. Understand label language without confusing mass and volume." },
   "/learn/bac-water-shelf-life": { title: "How Long Does BAC Water Last? Shelf Life & Storage", description: "Does BAC water need refrigeration? Check product-label storage, unopened expiry and opened-vial guidance. Learn why mixed products need separate instructions." },
@@ -48,7 +49,7 @@ export const SEARCH_SNIPPETS: Record<string, Snippet> = {
 export const FACET_SNIPPETS: Record<string, Snippet> = Object.fromEntries([
   ...CONTENT_TYPES.map(t => learnLanding({ type: t.key }, 3)),
   ...TOPICS.map(t => learnLanding({ topic: t.key }, 3)),
-  ...PEPTIDES.map(p => learnLanding({ peptide: p.slug }, 3, shortName(p.name))),
+  ...PEPTIDES.map(p => learnLanding({ peptide: p.slug }, 3, productDisplayName(p.slug, shortName(p.name)))),
 ].filter(p => p.indexable).map(p => [p.canonical, { title: p.title, description: p.description }]));
 
 /** A bounded catalog prevents arbitrary/private text from becoming public image URLs. */
@@ -57,7 +58,7 @@ export function searchSnippet(path: string): Snippet | undefined {
   if (Object.hasOwn(FACET_SNIPPETS, path)) return FACET_SNIPPETS[path];
   const peptide = PEPTIDES.find(p => path === `/peptides/${p.slug}`);
   if (peptide) {
-    const name = shortName(peptide.name);
+    const name = productDisplayName(peptide.slug, shortName(peptide.name));
     return {
       title: peptide.slug === "custom" ? "Custom Peptide Reconstitution Calculator" : `${name} Reconstitution Calculator`,
       description: peptide.slug === "hcg"

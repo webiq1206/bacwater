@@ -1,5 +1,5 @@
 import { PEPTIDES } from "@/lib/calc/peptides";
-import { SUPPLIER_PRODUCTS, productCalculatorPath, productForReference, type SupplierProduct } from "@/lib/partners/supplier-catalog";
+import { SUPPLIER_PRODUCTS, productDisplayName, productCalculatorPath, productForReference, type SupplierProduct } from "@/lib/partners/supplier-catalog";
 import { searchScore } from "./matching";
 export type SearchKind = "calculator" | "product" | "guide" | "reference" | "page";
 export interface SearchItem { id: string; title: string; description: string; href: string; kind: SearchKind; keywords: string; productId?: string; reference?: string; }
@@ -16,8 +16,8 @@ const tools: [string,string,string,string][] = [
 ];
 export const BASE_SEARCH_ITEMS: readonly SearchItem[] = [
  ...tools.map(([href,title,description,keywords])=>({id:`tool:${href}`,href,title,description,keywords,kind:"calculator" as const})),
- ...SUPPLIER_PRODUCTS.map(p=>({id:`product:${p.id}`,title:p.name,description:p.kind==="blend"?"Several ingredients. Check each amount on the label.":p.kind==="spray"?"Ready-made liquid. Use its stated concentration.":p.kind==="water"?"View the water listing and check its label.":"Open its calculator and check the product label.",href:productCalculatorPath(p.id),kind:"product" as const,productId:p.id,reference:p.reference,keywords:`${p.id} ${p.reference} ${p.mark} ${p.label} supplier buy product details ${p.name.includes("Semaglutide")?"glp1 glp 1":p.name==="Tirzepatide"?"glp2 glp 2":p.name==="Retatrutide"?"glp3 glp 3":""}`})),
- ...PEPTIDES.filter(p=>p.slug!=="custom").map(p=>({id:`reference:${p.slug}`,title:`${p.name} reference`,description:"Read the label context and find the right calculator.",href:`/peptides/${p.slug}`,kind:"reference" as const,reference:p.slug,productId:productForReference(p.slug)?.id,keywords:`${p.slug} ${(p.aliases||[]).join(" ")} calculator reconstitution`})),
+ ...SUPPLIER_PRODUCTS.map(p=>({id:`product:${p.id}`,title:p.name,description:p.summary,href:productCalculatorPath(p.id),kind:"product" as const,productId:p.id,reference:p.reference,keywords:`${p.id} ${p.reference} ${p.mark} ${p.label} ${(p.aliases||[]).join(" ")} supplier buy product details`})),
+ ...PEPTIDES.filter(p=>p.slug!=="custom").map(p=>({id:`reference:${p.slug}`,title:`${productDisplayName(p.slug,p.name)} reference`,description:"Read the label context and find the right calculator.",href:`/peptides/${p.slug}`,kind:"reference" as const,reference:p.slug,productId:productForReference(p.slug)?.id,keywords:`${p.slug} ${(p.aliases||[]).join(" ")} calculator reconstitution`})),
  ...[["/learn","Guides and answers","Understand the labels, units and limits.","help learn beginners"],["/faq","Common questions","Find straightforward answers about this site.","help questions faq"],["/methodology","How the math works","See the formulas and calculation limits.","formulas methodology accuracy"],["/recommendations","Research supplies","Browse products and open their supplier pages.","supplies products water"],["/tools","All calculators","Choose a tool for the question you have.","tools calculators"],["/contact","Contact us","Ask a question or report a problem.","contact support"],["/privacy","Privacy","See how this site handles information.","privacy data"],["/disclaimer","Important limits","What these tools do and do not tell you.","safety disclaimer"],["/learn/glossary","What the words mean","Plain definitions for unfamiliar words and units.","glossary definitions beginner milligram microgram reconstitution mg mcg ml u100 units"]].map(([href,title,description,keywords])=>({id:`page:${href}`,href,title,description,keywords,kind:"page" as const})),
 ];
 export function searchItems(items: readonly SearchItem[], query: string, kind: SearchKind | "all" = "all"): SearchItem[] {
@@ -32,7 +32,7 @@ export function referenceArtwork(slug: string): SupplierProduct | undefined {
 }
 export interface ProductChoice { value:string; name:string; description:string; product?:SupplierProduct; }
 export function productChoices(referencesOnly=false): ProductChoice[] {
- const known=PEPTIDES.map(p=>({value:p.slug,name:p.name,description:p.slug==="custom"?"Enter a different name from your label.":p.slug==="hcg"?"Uses IU, not mg. Needs the IU calculator.":"Match the exact name on your label.",product:referenceArtwork(p.slug)}));
+ const known=PEPTIDES.map(p=>({value:p.slug,name:productForReference(p.slug)?.name||p.name,description:p.slug==="custom"?"Enter a different name from your label.":p.slug==="hcg"?"Uses IU, not mg. Needs the IU calculator.":"Match the exact name on your label.",product:referenceArtwork(p.slug)}));
  if(referencesOnly)return known.filter(p=>p.value!=="hcg");
  return [...known,...SUPPLIER_PRODUCTS.filter(p=>!p.reference||!PEPTIDES.some(ref=>ref.slug===p.reference)).map(p=>({value:`product:${p.id}`,name:p.name,description:p.kind==="blend"?"Blend: several ingredients in one product.":p.kind==="spray"?"Ready-made liquid: use the label concentration.":p.kind==="water"?"Water supply: opens a volume tool.":"Match the exact name on your label.",product:p}))];
 }

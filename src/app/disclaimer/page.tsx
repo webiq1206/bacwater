@@ -41,7 +41,7 @@ export default function DisclaimerPage() {
         <p>
           BACwater.ai has no checkout and does not sell or fulfill products.
           The research directory links to an external supplier and may earn
-          affiliate commissions. Those listings are for laboratory research,
+          affiliate commissions. Those products are for laboratory research,
           not human or veterinary use. We have not independently tested them.
         </p>
         <p>

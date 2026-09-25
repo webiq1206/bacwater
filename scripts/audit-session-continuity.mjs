@@ -47,7 +47,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
   });
   await check('Guided and all-at-once views inherit the same values and meaning',async()=>{
    await p.goto(origin+'/plan',{waitUntil:'networkidle'});
-   await expect(p.getByRole('combobox',{name:'Product',exact:true})).toContainText('Retatrutide');
+   await expect(p.getByRole('combobox',{name:'Product',exact:true})).toContainText('GLP-3 (RT)');
    await p.getByRole('button',{name:'Continue',exact:false}).click();
    await expect(p.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
    await p.getByRole('button',{name:'Continue',exact:false}).click();

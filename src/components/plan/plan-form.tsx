@@ -1,4 +1,6 @@
 "use client";
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
+
 import Link from "next/link";
 import { useCalculationSession, useSessionDraft, readCalculation, chooseCalculationProduct, resumeMassCalculation, type SharedCalculation } from "@/lib/session/calculation-session";
 import { amountSchedule } from "@/lib/calc/amount-schedule";
@@ -477,11 +479,11 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const primaryName =
     peptideSlug === "custom"
       ? customPeptideName || "Custom peptide"
-      : peptide.name;
+      : productDisplayName(peptide.slug, peptide.name);
   const secondaryName = showBlend
     ? secondarySlug === "custom"
       ? customSecondaryName || "Custom peptide"
-      : secondaryPeptide.name
+      : productDisplayName(secondaryPeptide.slug, secondaryPeptide.name)
     : null;
 
   const input: CalcInput = {
@@ -1044,7 +1046,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
             />
           ) : peptideSlug ? (
             <div className="mt-4 bg-surface px-4 py-3 text-sm text-muted-foreground">
-              <strong className="text-foreground">{peptide.name}</strong>
+              <strong className="text-foreground">{productDisplayName(peptide.slug, peptide.name)}</strong>
               {". "}Confirm the amount and units on your own label.
               Next, copy the amount printed on this product's label.
             </div>
