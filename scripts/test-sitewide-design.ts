@@ -16,6 +16,6 @@ assert.equal(SUPPLIER_PRODUCTS.find(p=>p.name==="Tirzepatide")?.id,"glp-2");asse
 for(const path of ["src/components/layout/site-header.tsx","src/components/layout/site-footer.tsx","src/app/admin/layout.tsx"])assert.ok(fs.readFileSync(path,"utf8").includes("<Wordmark"),path);
 for(const file of ["bacwater-wordmark.svg","bacwater-wordmark-light.svg","bacwater-mark.svg"]){const s=fs.readFileSync("public/brand/"+file,"utf8");assert.ok(s.startsWith("<svg"));assert.equal(/https?:|<script|<image|@font-face/.test(s.replace('xmlns="http://www.w3.org/2000/svg"',"")),false);}
 const slider=fs.readFileSync("src/components/partners/product-slider.tsx","utf8");assert.ok(slider.includes('filtered.map('));assert.equal(slider.includes('setInterval'),false);assert.ok(slider.includes('prefers-reduced-motion'));
-assert.ok(fs.readFileSync("src/app/sitemap-pages.xml/route.ts","utf8").includes('path:"/recommendations"'));
+assert.ok(fs.readFileSync("src/lib/seo/sitemap.ts","utf8").includes('path:"/recommendations"'));
 assert.equal(fs.readFileSync("src/lib/positioning.ts","utf8").includes("recommends no vendor"),false);
 console.log("PASS 50 fixed listings, public fallback, verified paid links, product identities, shared wordmark, manual carousel and discovery boundaries.");

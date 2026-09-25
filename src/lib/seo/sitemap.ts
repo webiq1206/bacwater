@@ -7,9 +7,10 @@ export function urlsetXml(urls:SitemapUrl[]){const body=[...new Map(urls.map(u=>
 export function sitemapIndexXml(paths:string[]){return `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${paths.map(p=>`<sitemap><loc>${escapeXml(SITE_URL+p)}</loc></sitemap>`).join("")}</sitemapindex>`;}
 export function xmlResponse(xml:string){return new Response(xml,{headers:{"Content-Type":"application/xml","Cache-Control":"public, max-age=0, s-maxage=0, must-revalidate"}});}
 export const STATIC_PAGES:SitemapUrl[]=[
+ {path:"/recommendations",changeFrequency:"weekly",priority:0.7},
  {path:"/methodology",priority:0.6},{path:"/compare-calculators",priority:0.6},
  {path:"",changeFrequency:"weekly",priority:1},{path:"/peptide-calculator",changeFrequency:"weekly",priority:1},
- {path:"/plan",changeFrequency:"weekly",priority:0.9},{path:"/plan/new",changeFrequency:"weekly",priority:0.9},
+ {path:"/plan",changeFrequency:"weekly",priority:0.9},
  {path:"/peptides",changeFrequency:"weekly",priority:0.9},{path:"/peptides/compare",changeFrequency:"weekly",priority:0.7},
  {path:"/learn",changeFrequency:"weekly",priority:0.8},{path:"/faq",changeFrequency:"weekly",priority:0.7},{path:"/sitemap",changeFrequency:"weekly",priority:0.5},
  {path:"/tools",changeFrequency:"weekly",priority:0.9},{path:"/tools/bac-water",changeFrequency:"weekly",priority:0.9},{path:"/tools/dose",changeFrequency:"weekly",priority:0.9},

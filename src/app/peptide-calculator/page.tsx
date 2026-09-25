@@ -59,7 +59,7 @@ const FAQS = [
   },
   {
     q: "How many syringe units is my measurement?",
-    a: "On a U-100 insulin syringe, 100 units equal 1 mL, so 0.1 mL is 10 units and 0.05 mL is 5 units. Enter your concentration and the amount you want, and the calculator converts it to exact units.",
+    a: "On a U-100 insulin syringe, 100 units equal 1 mL, so 0.1 mL is 10 units and 0.05 mL is 5 units. Enter your concentration and the amount you want, and the calculator shows the corresponding scale reading. Displayed values may be rounded; verify the actual device graduations.",
   },
   {
     q: "Does this calculator tell me how much peptide to take?",
@@ -143,8 +143,8 @@ export default function PeptideCalculatorPage() {
           Calculators by compound
         </h2>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
-          Each compound page has the same calculator plus its common vial sizes,
-          storage, and what research looked at.
+          Each compound page combines a calculator with identity context,
+          arithmetic examples and selected research where available.
         </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {POPULAR.map((p) => (

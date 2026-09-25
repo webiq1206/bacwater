@@ -38,9 +38,10 @@ export default function DisclaimerPage() {
           or preventing any condition.
         </p>
         <p>
-          Products offered through BACwater.ai, including bacteriostatic
-          water, syringes, and alcohol prep pads, are sold for laboratory
-          research and educational use only.
+          BACwater.ai has no checkout and does not sell or fulfill products.
+          The research directory links to an external supplier and may earn
+          affiliate commissions. Those listings are for laboratory research,
+          not human or veterinary use. We have not independently tested them.
         </p>
         <p>
           Our calculators use verified, transparent formulas backed by
@@ -51,7 +52,7 @@ export default function DisclaimerPage() {
         </p>
         <p>
           By using this site, you accept full responsibility for your use of
-          the information and products offered.
+          the information and tools provided.
         </p>
         <div className="mt-8 pt-6 border-t border-border">
           <Link href="/" className="text-sm font-medium text-foreground hover:underline">&larr; Back to BACwater.ai</Link>

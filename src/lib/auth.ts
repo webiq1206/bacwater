@@ -6,10 +6,11 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { storedRole } from "@/lib/security/authorization";
+import { takeActionBudget } from "@/lib/security/action-budget";
 
 const credentialsSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().trim().email().max(254),
+  password: z.string().min(6).max(72).refine(value => Buffer.byteLength(value, "utf8") <= 72),
 });
 
 /** JWT roles are checked against the stored user on every request. Keep AUTH_SECRET stable across deployments. Deleting a database Session row does not revoke a JWT. */
@@ -34,6 +35,7 @@ export const authConfig: NextAuthConfig = {
         const parsed = credentialsSchema.safeParse(raw);
         if (!parsed.success) return null;
         const { email, password } = parsed.data;
+        if (!await takeActionBudget("signin", email)) return null;
         const user = await prisma.user.findUnique({
           where: { email: email.toLowerCase() },
         });

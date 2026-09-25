@@ -9,7 +9,7 @@ import "./globals.css";
 import "./design-accessibility.css";
 import { SiteFrame } from "@/components/brand/site-frame";
 import { SupplierProvider } from "@/components/partners/supplier-context";
-import { ResearchSupplierSection } from "@/components/partners/supplier-recommendations";
+import { ResearchDirectoryLink } from "@/components/partners/supplier-recommendations";
 import { getSupplierCatalog } from "@/lib/partners/supplier-catalog";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -111,7 +111,7 @@ export default async function RootLayout({
         </a>
         <SiteChrome><SiteHeader isAuthenticated={isAuthenticated} /></SiteChrome>
         <AgeGate initialVerified={ageVerified} />
-        <main id="main" className="flex-1 min-w-0"><SiteFrame shelf={<ResearchSupplierSection products={catalog}/>}>{children}</SiteFrame></main>
+        <main id="main" className="flex-1 min-w-0"><SiteFrame shelf={<ResearchDirectoryLink/>}>{children}</SiteFrame></main>
         <SiteChrome><SiteFooter /></SiteChrome>
         <SiteChrome><MobileBottomNav /></SiteChrome>
         <Toaster />

@@ -1,10 +1,10 @@
 # External acceptance and owner actions
 
-Updated September 22, 2026. This replaces stale instructions for the former retail model. Do not configure purchase/cart events, invent product offers, create unnecessary profiles or send compound identities to analytics.
+Updated September 25, 2026. This replaces stale instructions for the former retail model. Do not configure purchase/cart events, invent product offers, create unnecessary profiles or send compound identities to analytics.
 
 ## Deployment owner
 
-Retain a production database backup. Confirm the Replit workspace origin and preserve unrelated changes. Fetch and fast-forward the final GitHub main revision, then use normal Republish controls. No Agent prompt is necessary. Keep the configured Prisma schema and fingerprint-based editorial revision steps; do not run seed data or accept data loss. Verify /version.json and every public route after publishing.
+Retain a production database backup. Confirm the Replit workspace origin and preserve unrelated changes. Fetch and fast-forward the final GitHub main revision, then use normal Republish controls. No Agent prompt is necessary. The configured build only verifies the schema; it does not apply schema or editorial changes. Keep it read-only. Do not run seed data or accept data loss. Verify /version.json and every public route after publishing.
 
 ## Analytics owner
 

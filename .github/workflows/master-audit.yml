@@ -65,6 +65,7 @@ jobs:
           npm run test:design 2>&1 | tee audit-evidence/design-unit-tests.log
           npx tsx scripts/audit-publication.ts 2>&1 | tee audit-evidence/publication-tests.log
           npx tsx scripts/audit-remaining.ts 2>&1 | tee audit-evidence/remaining-tests.log
+          npx tsx scripts/audit-action-budgets.ts 2>&1 | tee audit-evidence/action-budget-tests.log
       - name: Reproduce stale Replit development artifacts
         run: node scripts/audit-build-type-isolation.mjs seed
       - name: Production build with stale development artifacts present

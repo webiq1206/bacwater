@@ -36,3 +36,6 @@ yarn-error.log*
 .vscode/
 .claude/local/
 prisma/prisma/
+
+# Private crawl and test artifacts, never production content
+audit-evidence/

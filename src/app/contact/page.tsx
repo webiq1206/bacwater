@@ -45,7 +45,8 @@ export default function ContactPage() {
           <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
         </p>
       </div>
-      <div className="mt-8 border border-border p-8">
+      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">Your message is saved in the site's support inbox. The confirmation means the record was saved, not that a reply has been sent. For a calculator issue, include the public page, units and steps to reproduce it.</p>
+      <div className="mt-6 rounded-xl border border-border p-4 sm:p-6">
         <ContactForm />
       </div>
     </div>

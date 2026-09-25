@@ -99,7 +99,7 @@ try {
   });
   await step('Signup creates an ordinary user, and guest plans are claimed by their creator',async()=>{
     await page.goto(`${origin}/signup`);await page.getByLabel('Your name').fill(prefix);await page.getByLabel('Email',{exact:true}).fill(email);
-    await page.getByLabel('Password (6+ characters)').fill('FixtureOnly!93842');
+    await page.getByLabel('Passphrase (15+ characters)').fill('FixtureOnly!93842');
     await page.getByRole('button',{name:'Create account',exact:true}).click();await expect(page).toHaveURL(`${origin}/plans`);
     const u=await prisma.user.findUniqueOrThrow({where:{email}});userIds.push(u.id);assert.equal(u.role,'user');
     await expect.poll(async()=>(await prisma.plan.findUnique({where:{publicId}}))?.userId).toBe(u.id);

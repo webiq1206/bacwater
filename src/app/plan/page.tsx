@@ -6,11 +6,11 @@ export const metadata = {
   alternates: { canonical: "/plan" },
   title: "Peptide Reconstitution Plan Builder",
   description:
-    "Enter your peptide, vial strength, dose, and syringe. Get an calculation using your own instructions with plain-English explanations and a printable PDF.",
+    "Enter the stated amount, final liquid volume and measurement from your instructions. Check concentration and scale readings, then save a calculation or print a PDF.",
   openGraph: {
     title: "Peptide Reconstitution Plan Builder",
     description:
-      "Enter your peptide, vial strength, dose, and syringe. Get an calculation using your own instructions with plain-English explanations and a printable PDF.",
+      "Enter the stated amount, final liquid volume and measurement from your instructions. Check concentration and scale readings, then save a calculation or print a PDF.",
     url: "/plan",
     type: "website",
     siteName: "BACwater.ai",
@@ -22,7 +22,7 @@ export default function PlanPage() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-6 pb-12 xl:max-w-7xl">
       <WebPageJsonLd
         name="Build My Plan"
-        description="Enter your peptide, vial strength, dose, and syringe. Get an calculation using your own instructions with plain-English explanations and a printable PDF."
+        description="Enter the stated amount, final liquid volume and measurement from your instructions. Check concentration and scale readings, then save a calculation or print a PDF."
         url="/plan"
         breadcrumb={[
           { name: "Home", url: "/" },

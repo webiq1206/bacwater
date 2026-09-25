@@ -39,6 +39,9 @@ export const metadata: Metadata = {
  */
 const LABELS: Record<string, string> = {
   "": "Home",
+  "/recommendations": "Research product directory",
+  "/methodology": "Calculator formulas and limitations",
+  "/compare-calculators": "Compare calculation tools",
   "/peptide-calculator": "Peptide Calculator",
   "/plan": "Plan Builder",
   "/plan/new": "Guided Plan Builder",

@@ -7,17 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { signinAction } from "@/lib/auth-actions";
-import { toast } from "@/components/ui/toaster";
+
 
 export function SignInForm() {
   const router = useRouter();
   const params = useSearchParams();
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (pending) return;
     setPending(true);
+    setError("");
     const form = new FormData(e.currentTarget);
     try {
     const res = await signinAction(form);
@@ -28,14 +30,15 @@ export function SignInForm() {
       router.push(next);
       router.refresh();
     } else {
-      toast({ title: "Sign in failed", description: res.error, variant: "destructive" });
+      setError(res.error || "Could not sign in. Please retry.");
     }
-    } catch { toast({ title: "Connection interrupted", description: "Your entries are still here. Please retry.", variant: "destructive" }); }
+    } catch { setError("Connection interrupted. Your entries are still here. Please retry."); }
     finally { setPending(false); }
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="space-y-4" aria-busy={pending}>
+      {error && <p role="alert" className="rounded-lg border border-destructive p-3 text-sm text-destructive">{error}</p>}
       <div>
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email" autoComplete="email" required className="mt-2" />

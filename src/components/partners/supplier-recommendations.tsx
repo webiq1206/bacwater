@@ -16,3 +16,16 @@ export function ResearchSupplierSection({products=getSupplierCatalog()}:{product
 }
 export function SupplierRecommendations(){return <ResearchSupplierSection/>;}
 export function RecommendationsNavLink(){return <Link href="/recommendations" className="underline">Research supplies</Link>;}
+
+/** Keep reference pages focused; the homepage and directory retain all listings. */
+export function ResearchDirectoryLink() {
+  return <aside data-research-directory-link className="mx-auto mb-12 w-full max-w-5xl px-4 sm:px-6" aria-label="Research product directory">
+    <div className="rounded-2xl border border-border bg-surface p-6 sm:flex sm:items-center sm:justify-between sm:gap-8">
+      <div className="max-w-2xl">
+        <h2 className="text-xl font-serif">Checking research supplies?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Compare listing details and product labels in the complete directory. Research use only. We have not independently tested the products and may earn a commission from linked purchases.</p>
+      </div>
+      <Link href="/recommendations" className="mt-4 inline-flex min-h-12 shrink-0 items-center gap-2 rounded-full border border-border bg-card px-5 py-3 text-sm font-medium hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-4 sm:mt-0">Browse research supplies <ArrowUpRight size={16} aria-hidden="true"/></Link>
+    </div>
+  </aside>;
+}

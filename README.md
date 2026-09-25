@@ -14,13 +14,13 @@ Use Node.js 22 and the committed npm lockfile. Run npm ci and npx prisma generat
 
 npm test runs the retained assertion suites. npm run build runs those tests and a Webpack production build. The read-only GitHub workflows additionally exercise publication transactions, conservative editorial revisions, durable rate limits, browser journeys, private PDF content, the known public inventory and responsive browser engines. These results do not constitute clinical, legal, security or WCAG certification.
 
-The pinned Next.js 16.3.5 font loader assumed an upstream font URL always ended in an extension and intermittently failed valid builds. scripts/prepare-font-loader.mjs installs a small checked compatibility change after dependency installation: the extension is read from a recognized binary font header. Downloading and self-hosting remain unchanged. It fails on an unsupported response and requires review when Next.js is upgraded. No font file is included in the audit deliverables.
+The pinned Next.js 16.3.6 font loader assumed an upstream font URL always ended in an extension and intermittently failed valid builds. scripts/prepare-font-loader.mjs installs a small checked compatibility change after dependency installation: the extension is read from a recognized binary font header. Downloading and self-hosting remain unchanged. It fails on an unsupported response and requires review when Next.js is upgraded. No font file is included in the audit deliverables.
 
 ## Replit production deployment
 
 Repository: webiq1206/bacwater. Preserve the existing Next.js deployment and unrelated work. Verify the checkout and origin, fetch and fast-forward main, then use the normal Republish controls. Do not reset over unrelated uncommitted changes.
 
-Before the first publication of this release, retain a production database backup. The configured build installs the lockfile, generates Prisma, applies the additive schema and runs scripts/apply-editorial-revisions.ts in apply mode before building. That script changes only title/body values that match the recorded legacy default fingerprints; independent edits, publication flags, canonical choices and missing records are preserved. Review its output and any skipped independent content. This is a controlled content update, not a production reseed.
+Retain a production database backup before deployment. The configured build is read-only against the database: it installs the lockfile, generates Prisma, checks the expected schema with scripts/verify-deploy-schema.ts, then runs tests and builds. It does not push a schema, seed records or apply editorial revisions. Any required schema migration or fingerprint-based editorial update is a separate reviewed operational step. Do not add either to the deployment build.
 
 Keep AUTH_SECRET stable, use an appropriate pooled database connection for autoscaling, and never accept a destructive schema-push flag. /version.json exposes only the release marker and build commit. Compare it after actual publication; GitHub main, the Replit workspace and public deployment are separate states.
 
