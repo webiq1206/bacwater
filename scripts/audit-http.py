@@ -74,6 +74,10 @@ def run(origin, out, extra):
                 else:add(loc,'sitemap')
         except Exception:pass
     sitemap(origin+'/sitemap.xml')
+    for url in list(known):
+        path=urlsplit(url).path
+        if re.fullmatch(r'/peptides/[^/]+',path) and path!='/peptides/compare':
+            add('/learn?peptide='+path.rsplit('/',1)[-1],'source-filter-option')
     for path in ['/','/sitemap','/search','/signin','/signup','/plans','/plans/labels','/plan','/plan/new','/recommendations']+extra:add(path,'source/history')
     while queue:
         batch=queue[:4];del queue[:4]
