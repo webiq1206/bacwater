@@ -9,7 +9,7 @@ import styles from "./recommendations.module.css";
 /** Every card is in server HTML. Native scrolling works without scripts or a drag. */
 export function ProductSlider({products}:{products:readonly DisplaySupplierProduct[]}) {
   const [query,setQuery]=useState(""),[kind,setKind]=useState("all");
-  const filtered=products.filter(p=>(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.mark} ${p.reference}`.toLowerCase().includes(query.trim().toLowerCase()));
+  const filtered=products.filter(p=>(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.mark} ${p.reference} ${(p.aliases||[]).join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
   const id=useId(),track=useRef<HTMLDivElement>(null);
   const [range,setRange]=useState({first:1,last:products.length,start:true,end:false});
   useEffect(()=>{

@@ -1,4 +1,5 @@
 "use client";
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { UnitHelp } from "@/components/tools/unit-help";
 import { SupplyChecklist } from "@/components/tools/supply-checklist";
 import { positiveDecimal } from "@/lib/calc/number-text";
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/common/copy-button";
 interface Props {peptideName:string;peptideSlug?:string;commonVialStrengthsMg:number[];suggestedDoseMcg:number;standalone?:boolean;}
 export function PeptideCalc({peptideName,peptideSlug,standalone=false}:Props){
+ peptideName=productDisplayName(peptideSlug||"",peptideName);
  const iu=peptideSlug==="hcg";const [mass,setMass]=usePersistentState(`bacwater.compound.${peptideSlug}.mass`,"");const [volume,setVolume]=usePersistentState(`bacwater.compound.${peptideSlug}.volume`,"");const [amount,setAmount]=usePersistentState(`bacwater.compound.${peptideSlug}.amount`,"");
  const m=Number(mass),v=Number(volume),a=Number(amount);const empty=!mass.trim()||!volume.trim()||!amount.trim();
  const valid=!empty&&[mass,volume,amount].every(n=>positiveDecimal(n)!==null);const c=m/v,ml=(iu?a:a/1000)/c,u=ml*100;

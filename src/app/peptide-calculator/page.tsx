@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import { CalculatorWorkspace } from "@/components/calculator/calculator-workspace";
 import { safeJson } from "@/lib/seo/safe-json";
@@ -96,7 +97,7 @@ export default function PeptideCalculatorPage() {
             itemListElement: POPULAR.map((p, i) => ({
               "@type": "ListItem",
               position: i + 1,
-              name: `${p.label} reconstitution calculator`,
+              name: `${productDisplayName(p.slug,p.label)} reconstitution calculator`,
               url: `${SITE_URL}/peptides/${p.slug}`,
             })),
           }),
@@ -154,7 +155,7 @@ export default function PeptideCalculatorPage() {
               href={`/peptides/${p.slug}`}
               className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
             >
-              <span className="font-medium">{p.label}</span>
+              <span className="font-medium">{productDisplayName(p.slug,p.label)}</span>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
             </Link>
           ))}

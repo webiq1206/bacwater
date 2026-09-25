@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -113,7 +114,7 @@ export default async function HtmlSitemapPage() {
 
   const peptideLinks: SiteLink[] = PEPTIDES.map((p) => ({
     href: `/peptides/${p.slug}`,
-    label: p.name,
+    label: productDisplayName(p.slug, p.name),
   }));
 
   const comparisonLinks: SiteLink[] = COMPARISONS.map((c) => ({

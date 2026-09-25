@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -221,7 +222,7 @@ export default async function ComparisonPage({
               href={`/peptides/${pep.slug}`}
               className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
             >
-              <span className="font-medium">{pep.label}</span>
+              <span className="font-medium">{productDisplayName(pep.slug,pep.label)}</span>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
             </Link>
           ))}

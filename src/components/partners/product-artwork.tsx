@@ -1,12 +1,20 @@
+import type { CSSProperties } from "react";
 import type { SupplierProduct } from "@/lib/partners/supplier-catalog";
-const tones = [["#e4eccb","#405c32"],["#e9dfd2","#665033"],["#dde5ec","#3c546b"],["#e4dff0","#604d78"],["#e8e0cb","#6e5b2c"],["#d8e9e3","#376458"],["#e8ddd9","#74564b"]];
-/** Original BACwater monogram artwork, never supplier photography or packaging. */
+import styles from "./product-artwork.module.css";
+const tones = [["#e8efda","#3f5d3c"],["#f1e7db","#66503b"],["#e4edf2","#385c70"],["#ece6f5","#654c82"],["#efe9d4","#67552f"],["#dceee7","#305e4d"],["#f0e2dd","#745146"]];
+/** Abstract BACwater illustration, not a molecular diagram or product packaging. */
 export function ProductArtwork({product,compact=false}:{product:SupplierProduct;compact?:boolean}) {
   const [fill,ink]=tones[product.artworkTone%tones.length];
-  return <svg data-product-artwork={product.id} viewBox={compact?"0 0 160 120":"0 0 320 180"} width={compact?160:320} height={compact?120:180} role="img" aria-label={`${product.name}: original BACwater artwork, not product packaging`} style={{display:"block",width:"100%",height:"auto",borderRadius:"inherit",background:fill,color:ink}}>
-    <rect width="100%" height="100%" fill={fill}/><circle cx={compact?150:295} cy={compact?95:115} r={compact?60:85} fill="none" stroke={ink} opacity=".16"/><circle cx={compact?150:295} cy={compact?95:115} r={compact?80:105} fill="none" stroke={ink} opacity=".08"/>
-    {!compact&&<text x="20" y="28" fill={ink} fontSize="10" letterSpacing="1.5" fontFamily="sans-serif">BACWATER / RESEARCH</text>}
-    <text x={compact?12:20} y={compact?66:110} fill={ink} fontSize={compact?(product.mark.length>6?25:31):(product.mark.length>6?37:46)} fontWeight="500" letterSpacing="-1.2" fontFamily="sans-serif">{product.mark}</text>
-    <text x={compact?12:20} y={compact?99:157} fill={ink} fontSize={compact?10:11} letterSpacing="1" fontFamily="sans-serif">{product.kind==="spray"?"SOLUTION":product.kind==="blend"?"BLEND":product.kind==="water"?"LAB WATER":"COMPOUND"}</text>
-  </svg>;
+  return <div data-product-artwork={product.id} data-compact={compact} className={styles.artwork} role="img" aria-label={`${product.name}: original BACwater illustration, not product packaging`} style={{"--art-fill":fill,"--art-ink":ink} as CSSProperties}>
+    <svg className={styles.motif} viewBox="0 0 320 200" aria-hidden="true" focusable="false">
+      <circle cx="252" cy="88" r="100" fill="none" stroke="currentColor" opacity=".11"/>
+      <circle cx="252" cy="88" r="72" fill="none" stroke="currentColor" opacity=".08"/>
+      <path d="M175 25L236 60L236 130L296 165M236 60L296 25M236 130L175 165" fill="none" stroke="currentColor" strokeWidth="1.5" opacity=".22"/>
+      {[ [175,25],[236,60],[236,130],[296,165],[296,25],[175,165] ].map(([cx,cy],i)=><circle key={i} cx={cx} cy={cy} r={i===1?13:7} fill="currentColor" opacity={i===1?.15:.1}/>) }
+      {product.kind==="water"&&<path d="M255 35C239 57 225 76 225 92a30 30 0 0 0 60 0c0-16-14-35-30-57Z" fill="none" stroke="currentColor" opacity=".16"/>}
+    </svg>
+    {!compact&&<span className={styles.signature}>BACWATER / RESEARCH</span>}
+    {!compact&&<span className={styles.name} data-artwork-name>{product.name}</span>}
+    <span className={styles.format}>{product.kind==="spray"?"RESEARCH SOLUTION":product.kind==="blend"?"RESEARCH BLEND":product.kind==="water"?"LAB WATER":"RESEARCH COMPOUND"}</span>
+  </div>;
 }

@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
@@ -256,7 +257,7 @@ export default async function LearnPage({
             <option value="">All peptides</option>
             {peptideOptions.map((p) => (
               <option key={p.slug} value={p.slug}>
-                {shortName(p.name)}
+                {productDisplayName(p.slug, shortName(p.name))}
               </option>
             ))}
           </select>

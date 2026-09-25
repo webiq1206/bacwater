@@ -1,3 +1,4 @@
+import { PRODUCT_RESEARCH } from "./product-content";
 /** Reviewed supplier listings, not a live inventory feed or product endorsement. */
 export const SUPPLIER_SOURCES = {
   program: "https://www.aminoclub.com/us/affiliate",
@@ -26,59 +27,60 @@ export type ProductKind = "single" | "blend" | "spray" | "water";
 export interface SupplierProduct {
   id: string; name: string; mark: string; kind: ProductKind; reference: string;
   label: string; summary: string; sourceUrl: string; artworkTone: number;
+  aliases?: readonly string[];
 }
 export const CATALOG_CHECKED_AT = "2026-09-24";
-const LISTINGS: readonly (readonly [string, string, string, ProductKind, string])[] = [
-  ["amino-h2o","BAC water","H₂O","water",""],
-  ["glp-1","GLP-1 / Semaglutide","GLP·1","single","semaglutide"],
-  ["glp-2","Tirzepatide","TR","single","tirzepatide"],
-  ["glp-3","Retatrutide","RT","single","retatrutide"],
-  ["bpc-157","BPC-157","BPC·157","single","bpc-157"],
-  ["ghk-cu","GHK-Cu","GHK·Cu","single","ghk-cu"],
-  ["tb-500","TB-500","TB·500","single","tb-500"],
-  ["tesamorlin","Tesamorelin","TES","single",""],
-  ["mots-c","MOTS-C","MOTS·C","single","mots-c"],
-  ["nad-plus","NAD+","NAD+","single",""],
-  ["cjc-ipa-no-dac","CJC-1295 / Ipamorelin (No DAC)","CJC·IPA","blend",""],
-  ["kpv","KPV","KPV","single",""],
-  ["klow","KLOW","KLOW","blend",""],
-  ["semax","SEMAX","SEMAX","single","semax"],
-  ["glutathione","Glutathione","GSH","single",""],
-  ["melanotan-ii","Melanotan II","MT·II","single","melanotan-2"],
-  ["glow","GLOW","GLOW","blend","glow-blend"],
-  ["selank","SELANK","SELANK","single","selank"],
-  ["melanotan-i","Melanotan I","MT·I","single",""],
-  ["igf-1-lr3","IGF-1 LR3","IGF·1","single",""],
-  ["5-amino-1mq","5-Amino-1MQ","1MQ","single",""],
-  ["wolverine-stack","BPC-157 / TB-500 (Wolverine)","BPC·TB","blend",""],
-  ["pt-141","PT-141","PT·141","single","pt-141"],
-  ["cagrilintide","Cagrilintide","CAG","single","cagrilintide"],
-  ["aod-9604","AOD-9604","AOD","single","aod-9604"],
-  ["dsip","DSIP","DSIP","single",""],
-  ["epithalon","Epithalon","EPI","single","epithalon"],
-  ["ipamorelin","Ipamorelin","IPA","single","ipamorelin"],
-  ["snap-8","SNAP-8","SNAP·8","single",""],
-  ["thymosin-alpha-1","Thymosin Alpha-1","TA·1","single",""],
-  ["ghkcu-spray","GHK-Cu Spray","GHK·Cu","spray",""],
-  ["nad-plus-spray","NAD+ Spray","NAD+","spray",""],
-  ["semax-spray","SEMAX Spray","SEMAX","spray",""],
-  ["selank-spray","SELANK Spray","SELANK","spray",""],
-  ["pt-141-spray","PT-141 Spray","PT·141","spray",""],
-  ["melanotan-ii-spray","Melanotan II Spray","MT·II","spray",""],
-  ["ll-37","LL-37","LL·37","single",""],
-  ["cartalax","Cartalax","CART","single",""],
-  ["sermorelin","Sermorelin","SERM","single","sermorelin"],
-  ["kisspeptin","Kisspeptin-10","KP·10","single","kisspeptin-10"],
-  ["dihexa","Dihexa","DIH","single",""],
-  ["vip","VIP","VIP","single",""],
-  ["ara-290","ARA-290","ARA","single",""],
-  ["dsip-spray","DSIP Spray","DSIP","spray",""],
-  ["adalank-spray","Adalank Spray","ADA·L","spray",""],
-  ["adamax-spray","Adamax Spray","ADA·M","spray",""],
-  ["bpc-tb-spray","BPC-157 / TB-500 Spray (Wolverine)","BPC·TB","spray",""],
-  ["bpc-spray","BPC-157 Spray","BPC·157","spray",""],
-  ["pinealon","Pinealon","PINE","single",""],
-  ["ahk-cu","AHK-Cu","AHK·Cu","single",""]
+const PRODUCTS: readonly (readonly [string, ProductKind, string])[] = [
+  ["amino-h2o", "water", ""],
+  ["glp-1", "single", "semaglutide"],
+  ["glp-2", "single", "tirzepatide"],
+  ["glp-3", "single", "retatrutide"],
+  ["bpc-157", "single", "bpc-157"],
+  ["ghk-cu", "single", "ghk-cu"],
+  ["tb-500", "single", "tb-500"],
+  ["tesamorlin", "single", ""],
+  ["mots-c", "single", "mots-c"],
+  ["nad-plus", "single", ""],
+  ["cjc-ipa-no-dac", "blend", ""],
+  ["kpv", "single", ""],
+  ["klow", "blend", ""],
+  ["semax", "single", "semax"],
+  ["glutathione", "single", ""],
+  ["melanotan-ii", "single", "melanotan-2"],
+  ["glow", "blend", "glow-blend"],
+  ["selank", "single", "selank"],
+  ["melanotan-i", "single", ""],
+  ["igf-1-lr3", "single", ""],
+  ["5-amino-1mq", "single", ""],
+  ["wolverine-stack", "blend", ""],
+  ["pt-141", "single", "pt-141"],
+  ["cagrilintide", "single", "cagrilintide"],
+  ["aod-9604", "single", "aod-9604"],
+  ["dsip", "single", ""],
+  ["epithalon", "single", "epithalon"],
+  ["ipamorelin", "single", "ipamorelin"],
+  ["snap-8", "single", ""],
+  ["thymosin-alpha-1", "single", ""],
+  ["ghkcu-spray", "spray", ""],
+  ["nad-plus-spray", "spray", ""],
+  ["semax-spray", "spray", ""],
+  ["selank-spray", "spray", ""],
+  ["pt-141-spray", "spray", ""],
+  ["melanotan-ii-spray", "spray", ""],
+  ["ll-37", "single", ""],
+  ["cartalax", "single", ""],
+  ["sermorelin", "single", "sermorelin"],
+  ["kisspeptin", "single", "kisspeptin-10"],
+  ["dihexa", "single", ""],
+  ["vip", "single", ""],
+  ["ara-290", "single", ""],
+  ["dsip-spray", "spray", ""],
+  ["adalank-spray", "spray", ""],
+  ["adamax-spray", "spray", ""],
+  ["bpc-tb-spray", "spray", ""],
+  ["bpc-spray", "spray", ""],
+  ["pinealon", "single", ""],
+  ["ahk-cu", "single", ""],
 ];
 const descriptions: Record<ProductKind, {label:string;summary:string}> = {
   single: {label:"Research compound",summary:"Check the full label, listed amounts, and batch report."},
@@ -86,10 +88,14 @@ const descriptions: Record<ProductKind, {label:string;summary:string}> = {
   spray: {label:"Research solution",summary:"A ready-made solution. Check its label; do not assume it needs more water."},
   water: {label:"Lab water",summary:"Check the water label, bottle sizes, and batch report."},
 };
-export const SUPPLIER_PRODUCTS: readonly SupplierProduct[] = LISTINGS.map(([id,name,mark,kind,reference],index) => ({
-  id,name,mark,kind,reference,...descriptions[kind],artworkTone:index%7,
-  sourceUrl:`https://www.aminoclub.com/us/products/${id}`,
-}));
+export const SUPPLIER_PRODUCTS: readonly SupplierProduct[] = PRODUCTS.map(([id,kind,reference],index) => {
+  const content = PRODUCT_RESEARCH[id];
+  if (!content) throw new Error(`Missing reviewed product content: ${id}`);
+  return {id,kind,reference,...descriptions[kind],artworkTone:index%7,
+    name:content.name,mark:content.name,summary:content.summary,aliases:content.aliases,
+    sourceUrl:`https://www.aminoclub.com/us/products/${id}`};
+});
+
 export type SupplierProductId = string;
 export function productForReference(slug: string) {
   return SUPPLIER_PRODUCTS.find(p => p.reference === slug && slug !== "");
@@ -175,4 +181,9 @@ export function getSupplierCatalog(settings?: SupplierSettings): DisplaySupplier
     const linked = partner.active ? partner.products.find(item => item.id === product.id) : undefined;
     return { ...product, href: linked?.affiliateUrl || product.sourceUrl, paid: Boolean(linked) };
   });
+}
+
+/** Product display names never change a compound identity, URL, unit, or saved user label. */
+export function productDisplayName(slug: string, fallback: string): string {
+  return productForReference(slug)?.name || fallback;
 }

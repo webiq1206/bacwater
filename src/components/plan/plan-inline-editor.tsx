@@ -1,4 +1,6 @@
 "use client";
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
+
 
 import { useMemo, useState } from "react";
 import { Loader2, RotateCcw, Save, X } from "lucide-react";
@@ -47,7 +49,7 @@ function displayPeptideName(f: {
   peptideName: string;
 }): string {
   if (f.peptideSlug === "custom") return f.peptideName || "Custom";
-  return PEPTIDES.find((p) => p.slug === f.peptideSlug)?.name ?? f.peptideName;
+  return productDisplayName(f.peptideSlug, PEPTIDES.find((p) => p.slug === f.peptideSlug)?.name ?? f.peptideName);
 }
 
 /**
@@ -172,7 +174,7 @@ export function PlanInlineEditor({
               <SelectContent>
                 {PEPTIDES.map((p) => (
                   <SelectItem key={p.slug} value={p.slug}>
-                    {p.name}
+                    {productDisplayName(p.slug, p.name)}
                   </SelectItem>
                 ))}
               </SelectContent>

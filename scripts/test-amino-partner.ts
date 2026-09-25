@@ -1,3 +1,4 @@
+import "./test-product-presentation";
 import "./test-affiliate-directory";
 import assert from "node:assert/strict";
 import { SUPPLIER_PRODUCTS, getSupplierPartner, validateSupplierLink } from "../src/lib/partners/supplier-catalog";

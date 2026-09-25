@@ -12,8 +12,8 @@ export function SupplierProvider({water, products, children}:{water:DisplaySuppl
 export function SupplierWaterLink({compact=false}:{compact?:boolean}) {
   const water=useContext(WaterContext);
   return <div className={compact ? "bac-water-link compact" : "bac-water-link"} data-bac-water-link>
-    <a href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label="View BAC water, opens a new tab">
-      <Droplets size={18} aria-hidden="true"/><span>View BAC water</span><ArrowUpRight size={17} aria-hidden="true"/>
+    <a href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${water.name}, opens a new tab`}>
+      <Droplets size={18} aria-hidden="true"/><span>View {water.name}</span><ArrowUpRight size={17} aria-hidden="true"/>
     </a><p style={{fontSize:13,lineHeight:1.6}}>{water.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p>
   </div>;
 }

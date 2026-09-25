@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/lib/partners/supplier-catalog";
 /**
  * Per-compound reconstitution infographic: a horizontal bar chart of the
  * CONCENTRATION (mg/mL) produced at each common vial strength for a given bac
@@ -12,7 +13,7 @@ import { dosageRows, shortName } from "@/lib/peptides/page-data";
 import { PALETTE, esc, svgDoc } from "@/lib/infographics/svg";
 
 export function peptideChartAlt(p: PeptideRef): string {
-  const name = shortName(p.name);
+  const name = productDisplayName(p.slug, shortName(p.name));
   const rows = dosageRows(p);
   const parts = rows.map(
     (r) => `an illustrative ${r.vialMg} mg amount in a final ${r.bacMl} mL gives ${r.concentrationMgPerMl} mg/mL`
@@ -39,7 +40,7 @@ function logo(x: number, y: number): string {
 }
 
 export function peptideChartSvg(p: PeptideRef): string {
-  const name = shortName(p.name);
+  const name = productDisplayName(p.slug, shortName(p.name));
   const rows = dosageRows(p);
 
   const width = 720;
