@@ -1,0 +1,29 @@
+name: Export reconciliation source
+on:
+  push:
+    branches: [delivery/reconciliation-source-20260925]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bundle the exact main and review histories without changing remote branches
+        run: |
+          git update-ref refs/heads/export-main ebbc6b65bf2054df65de637aa4387c1394f3867a
+          git update-ref refs/heads/export-pr b09846d0f53712edc88cc8e357be79aaf6d11dd2
+          git bundle create reconciliation.bundle refs/heads/export-main refs/heads/export-pr
+          git bundle verify reconciliation.bundle
+          sha256sum reconciliation.bundle > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reconciliation-source
+          path: |
+            reconciliation.bundle
+            SHA256SUMS.txt
+          retention-days: 2
