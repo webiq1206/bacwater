@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { SiteSearchButton } from "@/components/search/site-search";
-import { ProductSearchButton } from "@/components/search/product-search";
-import productSearchStyles from "@/components/search/product-search.module.css";
 import { Wordmark } from "@/components/brand/wordmark";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -16,7 +14,6 @@ const NAV = [
   { href: "/peptide-calculator", label: "Calculator" },
   { href: "/tools", label: "More tools" },
   { href: "/learn", label: "Learn" },
-  { href: "/recommendations", label: "Research supplies" },
 ];
 const ITEM = "flex items-center gap-2.5 px-3.5 min-h-11 py-2.5 text-sm hover:bg-muted transition-colors";
 
@@ -60,18 +57,16 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
           const active = pathname === n.href || (n.href !== "/" && pathname?.startsWith(`${n.href}/`));
           return <Link key={n.href} href={n.href} aria-current={active ? "page" : undefined} className={cn("px-3 py-1.5 text-sm transition-colors", active ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground")}>{n.label}</Link>;
         })}
-        <ProductSearchButton/>
       </nav>
       <div className="flex items-center gap-2">
         <Link href="/plans" className={styles.plansLink}>My plans</Link>
-        <SiteSearchButton compact/>
+        <SiteSearchButton onActivate={() => setOpen(false)}/>
         <AccountMenu isAuthenticated={isAuthenticated} />
         <button type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="mobile-navigation" ref={trigger} onClick={() => setOpen((s) => !s)} className="lg:hidden inline-flex h-11 w-11 items-center justify-center border border-border hover:bg-muted">{open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}</button>
       </div>
     </div>
     {open ? <div id="mobile-navigation" className="lg:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-white">
       <nav aria-label="Expanded mobile navigation" className="mx-auto flex max-w-7xl flex-col p-3">
-        <div className={productSearchStyles.mobileMenuSearch}><ProductSearchButton/></div>
         {NAV.map((n) => <Link key={n.href} href={n.href} aria-current={pathname === n.href || pathname?.startsWith(`${n.href}/`) ? "page" : undefined} onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">{n.label}</Link>)}
         <Link href="/plans" onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">My Plans</Link>
         {isAuthenticated ? <button type="button" onClick={() => { setOpen(false); signOut({ callbackUrl: "/" }); }} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted text-left">Sign out</button> : <>
