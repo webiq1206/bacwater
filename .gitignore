@@ -37,5 +37,5 @@ yarn-error.log*
 .claude/local/
 prisma/prisma/
 
-# Local and CI verification output is generated, not application source.
+# Private crawl and test artifacts, never production content
 audit-evidence/

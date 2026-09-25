@@ -1,3 +1,4 @@
+import "./test-affiliate-directory";
 import assert from "node:assert/strict";
 import { SUPPLIER_PRODUCTS, getSupplierPartner, validateSupplierLink } from "../src/lib/partners/supplier-catalog";
 const product = SUPPLIER_PRODUCTS[0];
@@ -6,8 +7,8 @@ const valid = product.sourceUrl + "?ref=LOCAL_FIXTURE_NOT_A_REAL_CODE";
 const settings = { AMINO_CLUB_ENABLED: "true", AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED: "true", AMINO_CLUB_PRODUCT_LINKS_JSON: JSON.stringify({ [product.id]: valid }) };
 let count = 0;
 function check(name: string, fn: () => void) { fn(); console.log("PASS " + name); count++; }
-check("disabled by default", () => assert.equal(getSupplierPartner({}).active, false));
-check("explicit approval required", () => assert.equal(getSupplierPartner({ ...settings, AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED: "false" }).active, false));
+check("explicit empty settings fail closed", () => assert.equal(getSupplierPartner({}).active, false));
+check("explicit approval required for custom settings", () => assert.equal(getSupplierPartner({ ...settings, AMINO_CLUB_APPROVAL_AND_LINKS_VERIFIED: "false" }).active, false));
 check("exact validated URL retained unchanged", () => assert.equal(validateSupplierLink(valid, product), valid));
 check("correct product mapping retained", () => { const p=getSupplierPartner(settings); assert.ok(p.active); assert.equal(p.products[0].id, product.id); assert.equal(p.products[0].affiliateUrl, valid); });
 check("no links means no paid referral links", () => assert.equal(getSupplierPartner({ ...settings, AMINO_CLUB_PRODUCT_LINKS_JSON: "{}" }).active, false));

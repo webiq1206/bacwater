@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import type { Metadata } from "next";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import CalculatorClient from "./calculator-client";
@@ -13,7 +14,7 @@ const TITLE = 'BAC Water Calculator: Volume and Concentration';
 const DESCRIPTION = 'Compare BAC water volume and concentration using the values you enter. Check the arithmetic and follow the exact product instructions, not a suggested dose.';
 const PATH = "/tools/bac-water";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: PATH },
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 export default function Page() {
   return (

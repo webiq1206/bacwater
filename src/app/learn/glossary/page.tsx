@@ -1,7 +1,8 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-export const metadata={title:"BAC Water Glossary: Mass, Volume, Concentration and Label Terms",description:"Understand BAC water, benzyl alcohol, reconstitution, concentration, U-100 scale and related label terms. Definitions are not preparation or treatment instructions.",alternates:{canonical:"/learn/glossary"}};
+export const metadata=withSocialMetadata({title:"BAC Water Glossary: Mass, Volume, Concentration and Label Terms",description:"Understand BAC water, benzyl alcohol, reconstitution, concentration, U-100 scale and related label terms. Definitions are not preparation or treatment instructions.",alternates:{canonical:"/learn/glossary"}});
 const terms=[
  {id:"bacteriostatic-water",name:"Bacteriostatic water",text:"A pharmaceutical water preparation containing a bacteriostatic preservative. Read the exact label; the term does not establish compatibility with another product.",href:"/learn/what-is-bac-water",link:"Ingredients and labeled purpose"},
  {id:"benzyl-alcohol",name:"Benzyl alcohol",text:"A preservative used in the referenced bacteriostatic water formulations. Its concentration is product-specific. Preservative does not establish that a subsequently prepared mixture is sterile.",href:"/learn/vs/benzyl-alcohol",link:"Ingredient versus finished product"},

@@ -59,7 +59,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true}).click();const focus=p.locator('[data-hero-focus]');await expect(focus).toBeVisible();await expect(p.getByRole('navigation',{name:'Primary navigation',exact:true})).toHaveCount(0);
    await focus.getByLabel('Amount in vial',{exact:true}).fill('12');await focus.getByLabel('Final liquid volume',{exact:true}).fill('4');await expect(focus.locator('[data-live-result]')).toContainText('3 mg/mL');
    await focus.getByText('Find the amount of liquid for each time',{exact:true}).click();await focus.getByLabel('Amount unit',{exact:true}).selectOption('mcg');await focus.getByLabel('Amount for one time',{exact:true}).fill('300');await expect(focus.locator('[data-live-result]')).toContainText('0.1 mL');
-   await expect(focus.getByRole('link',{name:'View BAC water, opens a new tab',exact:true})).toHaveAttribute('href',/\/products\/amino-h2o$/);
+   await expect(focus.getByRole('link',{name:'View BAC water, opens a new tab',exact:true})).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o?utm_source=affiliate_marketing&code=WEBIQ');
    const r=await focus.boundingBox();assert.ok(r&&r.x>=0&&r.y>=0&&r.y+r.height<=846);await p.screenshot({path:`${out}/${engine}-mobile-focus.png`,fullPage:false});
    await focus.getByRole('button',{name:'Return to homepage',exact:true}).click();await expect(focus).toHaveCount(0);await expect(p.getByRole('button',{name:'Open hero calculator full screen'})).toBeFocused();await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('12');
    await p.reload({waitUntil:'networkidle'});await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('12');await p.getByRole('button',{name:'Open hero calculator full screen'}).click();await expect(focus.getByLabel('Amount for one time',{exact:true})).toHaveValue('300');
@@ -70,6 +70,22 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    const picker=p.getByRole('dialog').filter({has:p.getByLabel('Find a product',{exact:true})});await expect(picker).toBeVisible();await picker.getByLabel('Find a product',{exact:true}).fill('BPC-157');await expect(picker.locator('a[href="/calculate/product/bpc-157"]')).toBeVisible();
    await picker.locator('a[href="/calculate/product/bpc-157"]').click();await expect(p).toHaveURL(origin+'/calculate/product/bpc-157');await expect(p.locator('[data-calculator-workspace]')).toBeVisible();await expect(p.locator('[data-supplier-shelf]')).toHaveCount(0);
   }));
+  await check(`${engine}: priority calculators expose reference content without opening Help`,async()=>{
+   for(const width of [320,390,768,1440])for(const [path,heading] of [['/tools/syringe-units','U-100 conversion examples'],['/tools/mg-to-mcg','Check the relationship'],['/tools/bac-water','How the volume changes concentration']])await journey(width,900,async p=>{
+    await p.goto(origin+path,{waitUntil:'networkidle'});
+    const reference=p.locator('[data-calculator-reference]');
+    await expect(reference.getByRole('heading',{name:heading,exact:true})).toBeVisible();
+    assert.equal(await reference.evaluate(el=>Boolean(el.closest('details'))),false);
+    await expect(p.getByLabel('Open calculator help',{exact:true})).toBeVisible();
+    assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
+    if(path==='/tools/syringe-units'){
+     await p.getByLabel('U-100 syringe units',{exact:true}).fill('25');await expect(p.getByLabel('Milliliters (mL)',{exact:true})).toHaveValue('0.25');
+     await expect(reference.getByRole('heading',{name:'Can you convert mg directly to syringe units?',exact:true})).toBeVisible();
+    }
+    await reference.getByRole('heading',{name:heading,exact:true}).scrollIntoViewIfNeeded();
+    if(engine==='chromium'&&[390,1440].includes(width))await p.screenshot({path:`${out}/reference-${path.split('/').pop()}-${width}.png`});
+   });
+  });
   if(engine==='chromium')await check('SEO metadata, visible primary heading and reflow are consistent',async()=>{
    for(const width of [320,390,1440])await journey(width,900,async p=>{
     await expect(p).toHaveTitle('BAC Water Calculator | Peptide Reconstitution | BACwater.ai');await expect(p.locator('h1')).toHaveCount(1);await expect(p.locator('h1')).toContainText('BAC water');await expect(p.locator('h1')).toContainText('calculator.');
@@ -86,5 +102,5 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
  }finally{await browser.close();}
 }
 if(errors.length)process.exitCode=1;
-await fs.writeFile(`${out}/results.json`,JSON.stringify({results,errors,teardownErrors,limitations:['Isolated localhost fixtures, not a live deployment.','Chromium/WebKit viewport emulation, not physical phone keyboard or screen-reader certification.','Enlarged text may extend the hero vertically to keep controls usable.','No supplier purchase, account registration, product inventory or affiliate attribution is tested.']},null,2));
+await fs.writeFile(`${out}/results.json`,JSON.stringify({results,errors,teardownErrors,limitations:['Isolated localhost fixtures, not a live deployment.','Chromium/WebKit viewport emulation, not physical phone keyboard or screen-reader certification.','Enlarged text may extend the hero vertically to keep controls usable.','No supplier purchase, account registration, product inventory or conversion attribution is tested.']},null,2));
 console.log(JSON.stringify({results,errors,teardownErrors}));

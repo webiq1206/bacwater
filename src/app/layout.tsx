@@ -9,7 +9,7 @@ import "./globals.css";
 import "./design-accessibility.css";
 import { SiteFrame } from "@/components/brand/site-frame";
 import { SupplierProvider } from "@/components/partners/supplier-context";
-import { ResearchSupplierSection } from "@/components/partners/supplier-recommendations";
+import { ResearchDirectoryLink } from "@/components/partners/supplier-recommendations";
 import { getSupplierCatalog } from "@/lib/partners/supplier-catalog";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   description:
     "Work out concentration, how much to measure, and syringe units from the numbers on your vial. Every step is shown.",
   applicationName: "BACwater.ai",
-  icons: { icon: "/brand/bacwater-mark.svg", shortcut: "/brand/bacwater-mark.svg", apple: "/icon" },
+  icons: { icon: [{ url: "/icon", type: "image/png", sizes: "192x192" }], shortcut: "/icon", apple: "/icon" },
   authors: [{ name: "BACwater.ai" }],
   openGraph: {
     type: "website",
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
-  robots: { index: true, follow: true },
+  robots: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   other: {
     "google-adsense-account": "ca-pub-3192081478482854",
   },
@@ -111,7 +111,7 @@ export default async function RootLayout({
         </a>
         <SiteChrome><SiteHeader isAuthenticated={isAuthenticated} /></SiteChrome>
         <AgeGate initialVerified={ageVerified} />
-        <main id="main" className="flex-1 min-w-0"><SiteFrame shelf={<ResearchSupplierSection products={catalog}/>}>{children}</SiteFrame></main>
+        <main id="main" className="flex-1 min-w-0"><SiteFrame shelf={<ResearchDirectoryLink/>}>{children}</SiteFrame></main>
         <SiteChrome><SiteFooter /></SiteChrome>
         <SiteChrome><MobileBottomNav /></SiteChrome>
         <Toaster />

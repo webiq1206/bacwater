@@ -18,8 +18,8 @@ export function WorkspaceActions({ children }: { children: ReactNode }) {
   return destination ? createPortal(controls, destination) : controls;
 }
 /** A page, not a modal: ordinary Back/Forward and deep links remain intact. */
-export function CalculatorWorkspace({ title, description, children, help, backHref = "/tools" }: {
-  title: string; description: string; children: ReactNode; help?: ReactNode; backHref?: string;
+export function CalculatorWorkspace({ title, description, children, help, reference, backHref = "/tools" }: {
+  title: string; description: string; children: ReactNode; help?: ReactNode; reference?: ReactNode; backHref?: string;
 }) {
   const [actionsRoot, setActionsRoot] = useState<HTMLDivElement | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -89,6 +89,7 @@ export function CalculatorWorkspace({ title, description, children, help, backHr
           <div className={styles.heading}><h1>{title}</h1><p>{description}</p></div>
           {!hasOwnProductPicker && <CalculatorProductTools selectedId={routeProduct?.id||(session.kind==="single"?session.productId:null)}/>}
           {children}
+          {reference && <div className="mt-10 border-t border-border pb-8 text-base leading-relaxed" data-calculator-reference>{reference}</div>}
         </div>
       </div>
       <div ref={setActionsRoot} className={styles.actionDock} data-calculator-actions />

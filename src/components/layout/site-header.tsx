@@ -142,6 +142,7 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
               <Link
                 key={n.href}
                 href={n.href}
+                aria-current={pathname === n.href || pathname?.startsWith(`${n.href}/`) ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border"
               >

@@ -1,8 +1,9 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { ArrowUpRight, Calculator, Droplets, Scale, Ruler, Package, RotateCcw, FileText, Beaker } from "lucide-react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-export const metadata={title:"Free BAC Water and Peptide Calculators",description:"Check your label numbers. Find concentration, convert mg and mcg, check U-100 units, count vials, or save a plan.",alternates:{canonical:"/tools"}};
+export const metadata=withSocialMetadata({title:"Free BAC Water and Peptide Calculators",description:"Check your label numbers. Find concentration, convert mg and mcg, check U-100 units, count vials, or save a plan.",alternates:{canonical:"/tools"}});
 const tools=[
  {href:"/tools/bac-water",icon:Droplets,title:"Check BAC water math",body:"Enter the vial amount and final liquid volume. See how much is in each mL.",example:"mg ÷ mL"},
  {href:"/tools/mg-to-mcg",icon:Scale,title:"Change mg to mcg",body:"Switch between these two ways to write an amount. Either way works.",example:"mg ↔ mcg"},

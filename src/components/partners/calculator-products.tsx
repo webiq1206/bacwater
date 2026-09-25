@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Search, ArrowUpRight, ChevronDown, Droplets } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { SelectItem } from "@/components/ui/select";
-import { SUPPLIER_PRODUCTS, productCalculatorPath } from "@/lib/partners/supplier-catalog";
+import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, SUPPLIER_PRODUCTS, productCalculatorPath } from "@/lib/partners/supplier-catalog";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { useSupplierCatalog } from "./supplier-context";
 import { ProductArtwork } from "./product-artwork";
@@ -29,7 +29,7 @@ export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
     <DialogTrigger asChild><button className={styles.choose} type="button"><Search size={16} aria-hidden="true"/>{product?"Change product":"Choose product"}<ChevronDown size={15} aria-hidden="true"/></button></DialogTrigger>
     <DialogContent className={styles.dialog}>
      <DialogTitle className={styles.title}>Choose a product</DialogTitle>
-     <DialogDescription>Pick the exact product. Your entered numbers follow you between matching calculator types. Check them against the new label. Blends, solutions, water and IU use separate fields.</DialogDescription>
+     <DialogDescription>Pick the exact product. Your entered numbers follow you between matching calculator types in this tab. Check them against the new label. Blends, solutions, water and IU use separate fields. {RESEARCH_ONLY_NOTICE}</DialogDescription>
      <label className={styles.search}>Find a product<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search by name" autoComplete="off" /></label>
      <label className={styles.search}>Product type<select aria-label="Product type" value={kind} onChange={e=>setKind(e.target.value)}><option value="all">All products</option><option value="single">Single compounds</option><option value="blend">Blends</option><option value="spray">Sprays and solutions</option><option value="water">Lab water</option></select></label>
      <p className={styles.count} role="status">{filtered.length} of {catalog.length} products</p>
@@ -41,7 +41,7 @@ export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
        </Link>
       </li>)}</ul>:<p>No matches. Try another name or choose All products.</p>}
      </div>
-     <p className={styles.count}>Our own artwork, not product packaging. Lab research only, not for people or animals.</p>
+     <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>Our own artwork, not product packaging. {catalog.some(p=>p.paid)&&"We may earn a commission from supplier purchases."}</p>
     </DialogContent>
    </Dialog>
    <a className={styles.water} href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label="View BAC water, opens a new tab"><Droplets size={16} aria-hidden="true"/>BAC water<ArrowUpRight size={14} aria-hidden="true"/></a>
@@ -50,6 +50,6 @@ export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
    <span className={styles.selectedArt}><ProductArtwork product={product} compact/></span>
    <div className={styles.selectedText}><strong>{product.name}</strong><span>{product.label}</span><a href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" data-selected-product-link aria-label={`View ${product.name}, opens a new tab`}>View product<ArrowUpRight size={14} aria-hidden="true"/></a></div>
   </div>}
-  {(product?.paid||water.paid)&&<p className={styles.count}>Paid link. We may earn a fee.</p>}
+  <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>{(product?.paid||water.paid)&&AFFILIATE_DISCLOSURE} {RESEARCH_ONLY_NOTICE}</p>
  </div>;
 }

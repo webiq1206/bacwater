@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
@@ -19,22 +20,22 @@ interface Props { params: Promise<{ slug: string }>; }
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const g = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
-  if (!g) return { title: "Guide not found", robots: { index: false, follow: false } };
+  if (!g) return withSocialMetadata({ title: "Guide not found", robots: { index: false, follow: false } });
 
   // FAQ content blocks are canonicalized to /faq; noindex the /learn/faq-* URLs
   // so search engines see one authoritative version of each FAQ answer.
   if (g.kind === "faq") {
-    return {
+    return withSocialMetadata({
       title: g.title,
       robots: { index: false, follow: true },
       alternates: { canonical: "/faq" },
-    };
+    });
   }
 
   const description = g.metaDescription || extractMetaDescription(g.body);
   const searchTitle = g.seoTitle || g.title;
   const canonical = g.canonicalPath || `/learn/${slug}`;
-  return {
+  return withSocialMetadata({
     title: searchTitle,
     description,
     robots: { index: !g.noindex, follow: true },
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: Props) {
       siteName: "BACwater.ai",
     },
     alternates: { canonical },
-  };
+  });
 }
 
 export const dynamic = "force-dynamic";

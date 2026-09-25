@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { PEPTIDE_CONTENT } from "@/lib/peptides/content";
@@ -5,7 +6,7 @@ import { shortName } from "@/lib/peptides/page-data";
 import { safeJson } from "@/lib/seo/safe-json";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-export const metadata={title:"Peptide Calculators and Compound References",description:"Find a compound calculator with identity context, linked research and calculation limits. Enter your own label values; no recommended dose, diluent or expiry.",alternates:{canonical:"/peptides"}};
+export const metadata=withSocialMetadata({title:"Peptide Calculators and Compound References",description:"Find a compound calculator with identity context, linked research and calculation limits. Enter your own label values; no recommended dose, diluent or expiry.",alternates:{canonical:"/peptides"}});
 const groups=[['metabolic','Metabolic signaling research'],['healing','Tissue and repair research'],['growth','Growth hormone signaling research'],['cosmetic','Dermatology and pigmentation research'],['cognitive','Neurological research'],['reproductive','Reproductive signaling research'],['longevity','Mitochondrial and aging research'],['other','Other compound names']];
 export default function PeptidesHubPage(){const origin=process.env.NEXT_PUBLIC_SITE_URL||'https://bacwater.ai';return <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-8 sm:pt-12 pb-24">
  <WebPageJsonLd name="Peptide calculators and compound references" description="Compound identity context and arithmetic tools, not treatment recommendations." url="/peptides"/>

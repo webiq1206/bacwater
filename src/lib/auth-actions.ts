@@ -1,15 +1,10 @@
 "use server";
 
-import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { signIn } from "@/lib/auth";
-
-const signupSchema = z.object({
-  name: z.string().min(1).max(120),
-  email: z.string().email(),
-  password: z.string().min(6).refine((value) => Buffer.byteLength(value, "utf8") <= 72),
-});
+import { signupSchema } from "@/lib/security/registration";
+import { takeActionBudget } from "@/lib/security/action-budget";
 
 export async function signupAction(formData: FormData) {
   const parsed = signupSchema.safeParse({
@@ -18,9 +13,11 @@ export async function signupAction(formData: FormData) {
     password: formData.get("password"),
   });
   if (!parsed.success) {
-    return { ok: false, error: "Please provide a valid name, email, and password (6+ chars)." };
+    return { ok: false, error: "Enter a name, valid email and a passphrase of at least 15 characters (maximum 72 UTF-8 bytes)." };
   }
   const { name, email, password } = parsed.data;
+  if (!await takeActionBudget("signup", email)) return { ok: false, error: "Account creation is temporarily limited. Keep your details here and try again later." };
+  try {
   const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
   if (existing) {
     return { ok: false, error: "An account with that email already exists." };
@@ -36,22 +33,27 @@ export async function signupAction(formData: FormData) {
       role,
     },
   });
+  } catch {
+    return { ok: false, error: "We could not finish creating this account. Your details are still here. Try signing in if you already submitted them, or retry later." };
+  }
+  try {
   await signIn("credentials", {
     email: email.toLowerCase(),
     password,
     redirect: false,
   });
+  } catch { return { ok: false, error: "Your account was created, but sign-in did not finish. Sign in with the same email and password." }; }
   return { ok: true };
 }
 
 export async function signinAction(formData: FormData) {
-  const email = String(formData.get("email") || "").toLowerCase();
+  const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
   if (!email || !password) return { ok: false, error: "Enter your email and password." };
   try {
     await signIn("credentials", { email, password, redirect: false });
     return { ok: true };
   } catch {
-    return { ok: false, error: "Incorrect email or password." };
+    return { ok: false, error: "Could not sign in. Check your email and password. If you have tried repeatedly, wait 15 minutes and try again." };
   }
 }

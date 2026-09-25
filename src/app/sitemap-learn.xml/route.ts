@@ -8,6 +8,7 @@ import {
 } from "@/lib/seo/sitemap";
 import { COMPARISONS } from "@/lib/comparisons/content";
 import { getCatalog } from "@/lib/learn/catalog";
+import { learnLanding } from "@/lib/learn/landing";
 import { CONTENT_TYPES, TOPICS } from "@/lib/learn/taxonomy";
 
 export const dynamic = "force-dynamic";
@@ -49,7 +50,7 @@ export async function GET() {
   const filterUrls: SitemapUrl[] = [];
   for (const c of CONTENT_TYPES) {
     const count = catalog.filter((e) => e.contentType === c.key).length;
-    if (count >= 3)
+    if (learnLanding({ type: c.key }, count).indexable)
       filterUrls.push({
         path: `/learn?type=${c.key}`,
         changeFrequency: "weekly",
@@ -58,7 +59,7 @@ export async function GET() {
   }
   for (const t of TOPICS) {
     const count = catalog.filter((e) => e.topicTags.includes(t.key)).length;
-    if (count >= 3)
+    if (learnLanding({ topic: t.key }, count).indexable)
       filterUrls.push({
         path: `/learn?topic=${t.key}`,
         changeFrequency: "weekly",

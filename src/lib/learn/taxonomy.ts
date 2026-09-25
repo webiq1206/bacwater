@@ -17,13 +17,13 @@ export const CONTENT_TYPES = [
 export type ContentType = (typeof CONTENT_TYPES)[number]["key"];
 
 export const TOPICS = [
-  { key: "dosage", label: "Dosage" },
+  { key: "dosage", label: "Amounts & Units" },
   { key: "storage", label: "Storage & Shelf Life" },
   { key: "safety", label: "Safety" },
   { key: "ingredients", label: "Ingredients" },
   { key: "where-to-buy", label: "Where to Buy" },
-  { key: "injection-supplies", label: "Injection Supplies" },
-  { key: "reconstitution-method", label: "Reconstitution Method" },
+  { key: "injection-supplies", label: "Syringe Scales" },
+  { key: "reconstitution-method", label: "Reconstitution Basics" },
 ] as const;
 
 export type Topic = (typeof TOPICS)[number]["key"];

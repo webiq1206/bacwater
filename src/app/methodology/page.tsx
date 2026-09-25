@@ -1,8 +1,9 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
-export const metadata: Metadata = { title: "Calculator Methodology: Formulas, Units and Limits", description: "Check the formulas behind BACwater.ai: mg to mcg, concentration, measured volume and syringe scales. Worked examples, rounding limits and verification cases.", alternates: { canonical: "/methodology" } };
+export const metadata: Metadata = withSocialMetadata({ title: "Calculator Methodology: Formulas, Units and Limits", description: "Check the formulas behind BACwater.ai: mg to mcg, concentration, measured volume and syringe scales. Worked examples, rounding limits and verification cases.", alternates: { canonical: "/methodology" } });
 export default function Methodology() {
  return <article className="mx-auto max-w-3xl px-4 pb-24 pt-10 sm:px-6">
   <WebPageJsonLd name="Calculator methodology" description="The formulas, assumptions and limits used by BACwater.ai." url="/methodology" />

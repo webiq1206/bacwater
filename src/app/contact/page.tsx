@@ -1,9 +1,10 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { ContactForm } from "@/components/common/contact-form";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 
-export const metadata = {
+export const metadata = withSocialMetadata({
   alternates: { canonical: "/contact" },
   title: "Contact Us",
   description: "Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website.",
@@ -14,7 +15,7 @@ export const metadata = {
     type: "website",
     siteName: "BACwater.ai",
   },
-};
+});
 
 export default function ContactPage() {
   return (
@@ -45,7 +46,8 @@ export default function ContactPage() {
           <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
         </p>
       </div>
-      <div className="mt-8 border border-border p-8">
+      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">Your message is saved in the site's support inbox. The confirmation means the record was saved, not that a reply has been sent. For a calculator issue, include the public page, units and steps to reproduce it.</p>
+      <div className="mt-6 rounded-xl border border-border p-4 sm:p-6">
         <ContactForm />
       </div>
     </div>

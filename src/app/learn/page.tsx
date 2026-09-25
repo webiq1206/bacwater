@@ -1,3 +1,4 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import { safeJson } from "@/lib/seo/safe-json";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -16,6 +17,7 @@ import {
 } from "@/lib/learn/taxonomy";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { shortName } from "@/lib/peptides/page-data";
+import { learnLanding } from "@/lib/learn/landing";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
 
@@ -65,96 +67,17 @@ function applyFilters(catalog: LearnEntry[], f: ActiveFilters): LearnEntry[] {
   });
 }
 
-function singleDimension(f: ActiveFilters): keyof ActiveFilters | null {
-  const active = (["type", "topic", "peptide"] as const).filter((k) => f[k]);
-  if (f.q) return null; // search is always a narrow, noindex view
-  if (active.length === 1) return active[0];
-  return null;
-}
-
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<SP>;
-}): Promise<Metadata> {
-  const f = parseFilters(await searchParams);
-  const activeCount = [f.type, f.topic, f.peptide, f.q].filter(Boolean).length;
-
-  // No filters: the canonical hub.
-  if (activeCount === 0) {
-    return {
-      title: "Peptide Reconstitution Guides & BAC Water Learning center",
-      description:
-        "Simple guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
-      alternates: { canonical: "/learn" },
-      openGraph: {
-        title: "Peptide Reconstitution Guides & BAC Water Learning center",
-        description:
-          "Simple guides, comparisons, and FAQs on bac water, reconstitution, syringes, and storage.",
-        url: "/learn",
-        type: "website",
-        siteName: "BACwater.ai",
-      },
-    };
-  }
-
-  const single = singleDimension(f);
-
-  // A single-dimension filter with enough results stays indexable and
-  // canonicalizes to itself. Everything else (multi-filter combos, search,
-  // or thin single filters) is noindexed and canonicalizes back to /learn.
-  // A key can exist in BOTH taxonomies ("safety" is a content type and a
-  // topic), in which case ?type=safety and ?topic=safety each pass the
-  // threshold below and each self-canonicalise: two indexable URLs with
-  // byte-identical titles and descriptions, competing with each other.
-  // Topic is the canonical home for a colliding key; the type variant points
-  // at it and drops out of the index.
-  const collidesWithTopic =
-    single === "type" && Boolean(f.type) && TOPICS.some((t) => t.key === f.type);
-  if (collidesWithTopic) {
-    const canonical = hrefWith({}, { topic: f.type } as ActiveFilters);
-    return {
-      title: `${CONTENT_TYPE_LABEL[f.type!]} guides · BAC Water Learning center`,
-      robots: { index: false, follow: true },
-      alternates: { canonical },
-    };
-  }
-
-  if (single) {
-    const catalog = await getCatalogCached();
-    const count = applyFilters(catalog, f).length;
-    if (count >= 3) {
-      const label =
-        single === "type"
-          ? CONTENT_TYPE_LABEL[f.type!]
-          : single === "topic"
-            ? TOPIC_LABEL[f.topic!]
-            : shortName(
-                PEPTIDES.find((p) => p.slug === f.peptide)?.name ?? f.peptide!
-              );
-      const canonical = hrefWith({}, { [single]: f[single] } as ActiveFilters);
-      return {
-        title: `${label} guides · BAC Water Learning center`,
-        description: `Bac water and reconstitution content filtered to ${label}. Simple guides, comparisons, and FAQs.`,
-        alternates: { canonical },
-        openGraph: {
-          title: `${label} guides · BAC Water Learning center`,
-          description: `Bac water and reconstitution content filtered to ${label}. Simple guides, comparisons, and FAQs.`,
-          url: canonical,
-          type: "website",
-          siteName: "BACwater.ai",
-        },
-      };
-    }
-  }
-
-  return {
-    title: "BAC Water Learning center",
-    description:
-      "Simple guides, comparisons, and FAQs on bac water and peptide reconstitution.",
-    robots: { index: false, follow: true },
-    alternates: { canonical: "/learn" },
-  };
+export async function generateMetadata({ searchParams }: { searchParams: Promise<SP> }): Promise<Metadata> {
+  const filters = parseFilters(await searchParams);
+  const catalog = await getCatalogCached();
+  const landing = learnLanding(filters, applyFilters(catalog, filters).length,
+    shortName(PEPTIDES.find(p => p.slug === filters.peptide)?.name || filters.peptide || ""));
+  return withSocialMetadata({
+    title: landing.title, description: landing.description,
+    alternates: { canonical: landing.canonical },
+    robots: { index: landing.indexable, follow: true },
+    openGraph: { title: landing.title, description: landing.description, url: landing.canonical, type: "website", siteName: "BACwater.ai" },
+  });
 }
 
 export default async function LearnPage({
@@ -169,30 +92,11 @@ export default async function LearnPage({
 
   const peptideOptions = PEPTIDES.filter((p) => p.slug !== "custom");
 
-  // Determine schema URL/name/description - mirror the generateMetadata logic so
-  // indexable filtered pages declare the correct URL in their structured data.
-  const single = singleDimension(f);
-  const isIndexableFilter = !!(single && results.length >= 3);
-
-  let schemaUrl = `${SITE_URL}/learn`;
-  let schemaName = "BAC Water Learning center";
-  let schemaDescription =
-    "Simple guides, comparisons, and FAQs on bac water and peptide reconstitution.";
-
-  if (isIndexableFilter) {
-    const label =
-      single === "type"
-        ? CONTENT_TYPE_LABEL[f.type!]
-        : single === "topic"
-          ? TOPIC_LABEL[f.topic!]
-          : shortName(
-              PEPTIDES.find((p) => p.slug === f.peptide)?.name ?? f.peptide!
-            );
-    const canonical = hrefWith({}, { [single!]: f[single!] } as ActiveFilters);
-    schemaUrl = `${SITE_URL}${canonical}`;
-    schemaName = `${label} guides · BAC Water Learning center`;
-    schemaDescription = `Bac water and reconstitution content filtered to ${label}. Simple guides, comparisons, and FAQs.`;
-  }
+  const landing = learnLanding(f, results.length,
+    shortName(PEPTIDES.find(p => p.slug === f.peptide)?.name || f.peptide || ""));
+  const schemaUrl = `${SITE_URL}${landing.canonical}`;
+  const schemaName = landing.title;
+  const schemaDescription = landing.description;
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-12 sm:pt-16 pb-24 sm:pb-32 xl:max-w-6xl">
@@ -235,12 +139,10 @@ export default async function LearnPage({
       <div className="max-w-3xl">
         <div className="eyebrow">Learning center</div>
         <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
-          BAC Water &amp; Peptide Reconstitution Guides
+          {landing.title}
         </h1>
         <p className="mt-3 text-muted-foreground">
-          Filter our BAC water and peptide reconstitution guides, comparisons,
-          and FAQs by topic, content type, or peptide. Short, honest, and in
-          plain language.
+          {landing.description}
         </p>
       </div>
 
@@ -289,15 +191,16 @@ export default async function LearnPage({
           <div className="flex items-start justify-between gap-6">
             <div>
               <div className="eyebrow" style={{ color: "var(--color-accent-guide)" }}>
-                The honest part
+                Know the limits
               </div>
               <div className="mt-2 text-xl sm:text-2xl font-serif tracking-tight text-foreground">
                 What you cannot know about your vial
               </div>
               <p className="mt-2 max-w-2xl text-sm text-muted-foreground leading-relaxed">
                 The math here is exact for the numbers you type. It cannot tell
-                you what is actually in the powder. This is the honest part that a
-                site with something to sell will not put in front of you.
+                you what is actually in the powder or verify its sterility,
+                compatibility or stability. Learn which checks require evidence
+                beyond a calculator.
               </p>
               <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-foreground group-hover:gap-2.5 transition-all">
                 Read it <ArrowRight className="h-4 w-4" />

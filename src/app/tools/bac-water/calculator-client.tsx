@@ -62,7 +62,7 @@ export default function BacWaterCalculatorPage() {
   }
 
   return (
-    <CalculatorWorkspace title="BAC water calculator" description="Copy the amounts and final volume from your own instructions." help={<>
+    <CalculatorWorkspace title="BAC water calculator" description="Copy the amounts and final volume from your own instructions." help={<SupplyChecklist volumeMl={valid?volume:undefined} measurementMl={valid?measurementMl:undefined}/>} reference={<>
       <section className="mt-10 max-w-3xl space-y-3">
         <h2 className="text-2xl font-serif">How the volume changes concentration</h2>
         <p>Concentration in mg/mL equals the total amount in mg divided by the final liquid volume in mL. The volume for an entered measurement equals that measurement in mg divided by the concentration.</p>
@@ -74,7 +74,7 @@ export default function BacWaterCalculatorPage() {
         <p>This calculator cannot establish sterility or stability. Do not treat a preservative, a clear-looking solution or a correct calculation as proof that a mixture remains usable. Follow the exact product's storage and discard instructions.</p>
         <p>The <Link href="/learn/bac-water-shelf-life" className="underline">BAC water storage reference</Link> separates unopened expiry, opened-vial guidance and reconstituted-product instructions. They are different questions.</p>
       </section>
-      <UnitHelp/><SupplyChecklist volumeMl={valid?volume:undefined} measurementMl={valid?measurementMl:undefined}/>
+      <UnitHelp/>
       <section className="mt-9"><h2 className="text-2xl font-serif">Related calculations</h2><div className="mt-4 grid gap-3 sm:grid-cols-3">{[{ href: "/tools/syringe-units", title: "U-100 units and mL", text: "Convert volume units without assuming syringe markings." }, { href: "/tools/mg-to-mcg", title: "mg and mcg", text: "Check milligram and microgram conversions." }, { href: "/tools/dose", title: "Known concentration", text: "Check the amount in a stated liquid volume." }].map(tool => <Link key={tool.href} href={tool.href} className="rounded-xl border border-border p-4 transition-colors hover:bg-muted"><h3 className="font-medium">{tool.title}</h3><p className="mt-2 text-sm text-muted-foreground">{tool.text}</p></Link>)}</div></section>
 </>}>
       <div ref={panels} data-active-screen={screen} className="bac-screen-panels grid items-start gap-6 lg:grid-cols-2">

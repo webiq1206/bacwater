@@ -1,7 +1,8 @@
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
-export const metadata={title:"Compare Peptide and Unit Calculators: Tasks and Limits",description:"Compare public calculator interfaces by task, visible inputs and verification needs. Published by BACwater.ai, including our own tools, without a best-for-everyone ranking.",alternates:{canonical:"/compare-calculators"}};
+export const metadata=withSocialMetadata({title:"Compare Peptide and Unit Calculators: Tasks and Limits",description:"Compare public calculator interfaces by task, visible inputs and verification needs. Published by BACwater.ai, including our own tools, without a best-for-everyone ranking.",alternates:{canonical:"/compare-calculators"}});
 const entries=[
  {name:"BACwater.ai",href:"/tools",shown:"Separate mass, concentration, U-100 volume and inventory tools; optional saved calculations, PDFs and labels.",fit:"Users who want to see formulas, check units, and keep a calculation with private notes.",limit:"Software tests do not verify your input values, product, device or clinical suitability. Private notes require owner access."},
  {name:"PepFormula",href:"https://pepformula.com/",shown:"Its public page presents a peptide calculator, compound selections and a syringe visualization.",fit:"Visitors comparing a compound-selection interface with a more explicitly entered-value workflow.",limit:"Treat any preset as an interface default, not as product instructions. We did not run its authenticated workflows or audit its data handling."},
