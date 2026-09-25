@@ -283,7 +283,7 @@ export async function getCatalog(strict = false): Promise<LearnEntry[]> {
       peptideTags: isCustom ? [] : [p.slug],
       topicTags: isCustom
         ? (["reconstitution-method"] as Topic[])
-        : (["dosage", "reconstitution-method", "storage"] as Topic[]),
+        : (["dosage", "reconstitution-method"] as Topic[]),
       source: "peptide" as const,
     };
   });

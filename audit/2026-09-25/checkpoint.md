@@ -22,6 +22,8 @@ The full browser inventory now includes peptide-filter URLs, search and label ut
 
 The final discovery pass explicitly seeds all 24 supported compound-filter states from the canonical compound catalog. These GET form options are not all linked by anchors, so link crawling alone cannot establish their coverage. They are assessed as utility states, separately from the 169 link-discovered baseline URLs.
 
+Visual review of the storage collection found 23 general compound references ahead of the actual storage material. Removed their blanket storage tag, keeping their calculation and reconstitution tags and all original reference pages. The storage destination now presents the relevant shelf-life, prepared-product storage and calculation-limits resources.
+
 ## Verification state at this checkpoint
 
 The live HTTP inventory contains 169 public and utility URLs, plus discovery endpoints and four invalid-route probes. All regular URLs returned 200 and all four invalid routes returned 404. This is baseline evidence, not verification that the new code is deployed.
