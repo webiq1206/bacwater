@@ -34,7 +34,8 @@ check("calculation names update without changing numbers or explicit saved names
  const input={peptideSlug:"retatrutide",vialStrengthMg:12,doseMcg:300,bacWaterMl:4,syringeType:"insulin-1ml" as const};
  const before=calculate({...input,peptideName:"Retatrutide"}),after=calculate(input);
  assert.deepEqual(after.errors,[]);assert.equal(after.input.peptideName,"GLP-3 (RT)");assert.equal(before.input.peptideName,"Retatrutide");
- assert.equal(after.finalConcentrationMgPerMl,3);assert.equal(after.doseVolumeMl,.1);assert.equal(after.syringeUnits,10);assert.equal(after.dosesPerVial,40);
+ // The existing numeric engine uses binary floating point. Label changes must preserve its results exactly.
+ assert.equal(after.finalConcentrationMgPerMl,3);assert.ok(Math.abs(after.doseVolumeMl-.1)<1e-12);assert.ok(Math.abs(after.syringeUnits-10)<1e-12);assert.equal(after.dosesPerVial,40);
  for(const key of ["finalConcentrationMgPerMl","doseVolumeMl","syringeUnits","dosesPerVial"] as const){assert.equal(after[key],before[key]);}
  assert.equal(calculate({...input,peptideName:"My exact stored label"}).input.peptideName,"My exact stored label");
 });
