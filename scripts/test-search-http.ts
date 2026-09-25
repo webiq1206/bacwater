@@ -17,7 +17,7 @@ async function main() {
       child.once("error", error => { clearTimeout(timer); reject(error); });
       child.once("exit", code => { clearTimeout(timer); reject(new Error(`Test server exited: ${code}`)); });
     });
-    for (const path of ["/", "/tools/mg-to-mcg", "/tools/syringe-units", "/peptide-calculator", "/recommendations", "/privacy"]) {
+    for (const path of ["/", "/tools/bac-water", "/tools/mg-to-mcg", "/tools/syringe-units", "/learn/bac-water-shelf-life", "/peptide-calculator", "/recommendations", "/privacy"]) {
       const response = await fetch(origin + path, { signal: AbortSignal.timeout(30000) });
       assert.equal(response.status, 200, path);
       const html = await response.text();
@@ -30,6 +30,10 @@ async function main() {
       assert.ok(meta("og:image:alt").includes(shareImage(path).alt), path);
       assert.ok(meta("twitter:image:alt").includes(shareImage(path).alt), path);
       assert.ok(tags.some(t => t.includes('rel="icon"') && /href="[^\"]*\/icon(?:\?|\")/.test(t)), path);
+      if (["/tools/bac-water", "/tools/mg-to-mcg", "/tools/syringe-units"].includes(path)) {
+        assert.ok(html.includes("data-calculator-reference"), `Reference content missing from server HTML: ${path}`);
+        assert.ok(html.indexOf("data-calculator-reference") > html.indexOf("</details>"), `Reference must be outside the Help disclosure: ${path}`);
+      }
       results.push({ path, status: response.status, title: expected.title, imageAlt: shareImage(path).alt });
     }
     for (const path of ["/icon", "/favicon.ico", shareImage("/tools/mg-to-mcg").url]) {

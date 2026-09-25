@@ -12,7 +12,7 @@ const tools=[
 const guides=[
  {number:"01",tag:"LABEL BASICS",title:"An amount isn't a concentration.",text:"What the number on a vial tells you, and what it doesn't.",href:"/learn/how-to-read-a-peptide-vial",symbol:"mg ≠ mg/mL"},
  {number:"02",tag:"MEASUREMENT",title:"Make sense of the marks.",text:"What the lines on a U-100 scale mean.",href:"/learn/what-syringe-units-mean",symbol:"100 units = 1 mL"},
- {number:"03",tag:"STORAGE & LIMITS",title:"Some answers aren't math.",text:"Why math can't tell you how long a product will keep.",href:"/learn/what-you-cannot-know",symbol:"Check the label."}
+ {number:"03",tag:"STORAGE & LIMITS",title:"How long does BAC water last?",text:"Understand expiry, opened-vial dating and refrigeration instructions.",href:"/learn/bac-water-shelf-life",symbol:"Check the label."}
 ];
 export function ResearchHome({supplier}:{supplier?:ReactNode}){return <div className={styles.home}>
  <div className={styles.heroGround}><ResearchHero/><div className={styles.benefitRail}><p><Calculator size={16} aria-hidden="true"/>See how the math works.</p><p><FileText size={16} aria-hidden="true"/>Clear units. Visible steps.</p><p><LockKeyhole size={16} aria-hidden="true"/>Notes stay off shared links.</p></div></div>
