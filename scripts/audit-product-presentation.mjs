@@ -36,6 +36,9 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await card.getByRole('button',{name:`Read research details for ${name}`,exact:true}).click();
     const d=p.locator(`[data-product-detail="${id}"]`);await expect(d.getByRole('heading',{level:2})).toHaveText(name);
     for(const h of ['What it is','What researchers study','How it works'])await expect(d.getByRole('heading',{name:h,exact:true})).toBeVisible();
+    const paragraphs=d.locator('[data-mechanism-paragraph]');await expect(paragraphs).toHaveCount(2);
+    for(const paragraph of await paragraphs.all())assert.ok((await paragraph.textContent()).trim().split(/\s+/).length>=25,`${id}: incomplete mechanism paragraph`);
+    if(id==='dihexa')await expect(d.locator('[data-product-mechanism]')).toContainText('retracted');
     assert.doesNotMatch(await d.innerText(),/\blistings?\b|Listing review|Catalog identifier/i);
     await expect(d.getByRole('link',{name:/on the supplier website/})).toHaveAttribute('href',link(id));
     await d.getByRole('button',{name:'Read the sources'}).click();
@@ -66,6 +69,12 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await p.setViewportSize({width,height});await visit('/recommendations');await p.getByRole('searchbox',{name:'Find a product',exact:true}).fill(id);
     await p.locator(`[data-product="${id}"]`).getByRole('button',{name:/Read research details/}).click();const d=p.locator(`[data-product-detail="${id}"]`);
     await fit(p,d);await expect(d.getByRole('heading',{name:'What it is',exact:true})).toBeInViewport();await a11y(p);await p.screenshot({path:`${out}/${engine}-details-${id}-${width}.png`,fullPage:false});
+    const mechanism=d.locator('[data-product-mechanism]');
+    await mechanism.getByRole('heading',{name:'How it works',exact:true}).scrollIntoViewIfNeeded();
+    await expect(mechanism.getByRole('heading',{name:'How it works',exact:true})).toBeInViewport();
+    await fit(p,d);await p.screenshot({path:`${out}/${engine}-mechanism-${id}-${width}.png`,fullPage:false});
+    await mechanism.locator('[data-mechanism-paragraph]').last().scrollIntoViewIfNeeded();
+    await expect(mechanism.locator('[data-mechanism-paragraph]').last()).toBeInViewport();await fit(p,d);
     await d.getByRole('button',{name:'Read the sources'}).click();await expect(d.getByRole('link',{name:'Partner product information'})).toBeVisible();
     await d.getByRole('button',{name:'Close',exact:true}).click();await expect(p.getByRole('searchbox',{name:'Find a product',exact:true})).toHaveValue(id);
    }
