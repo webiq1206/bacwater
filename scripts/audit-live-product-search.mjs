@@ -6,6 +6,7 @@ const origin = process.env.AUDIT_ORIGIN || 'http://127.0.0.1:3000';
 const out = 'audit-evidence/live-product-search';
 await fs.mkdir(out, { recursive: true });
 const axe = await fs.readFile('node_modules/axe-core/axe.min.js', 'utf8');
+const names = JSON.parse(await fs.readFile('scripts/fixtures/partner-product-names.json', 'utf8'));
 const reports = [];
 const configurations = [
   { engine: chromium, name: 'chromium-desktop', width: 1440, height: 960 },
@@ -45,7 +46,6 @@ for (const config of configurations) {
     await noOverflow(page);
     report.checks.push('Search visible near top without scrolling');
 
-    // Real key events, no submit and no page navigation.
     await input.focus();
     for (const letter of 'bpc') {
       await input.pressSequentially(letter);
@@ -83,7 +83,7 @@ for (const config of configurations) {
 
     await input.fill('Show me lab water');
     await expect(directory.locator('[data-product-match]')).toHaveCount(1);
-    await expect(directory.locator('[data-product-match] strong')).toContainText(/BAC water/i);
+    await expect(directory.locator('[data-product-match] strong')).toHaveText(names['amino-h2o']);
     await input.fill('bpc-private-probe-zz91');
     await expect(directory.locator('[data-product-match]')).toHaveCount(0);
     await expect(directory.locator('[data-product-search-matches]')).toContainText('No matching products');
@@ -113,6 +113,19 @@ for (const config of configurations) {
       await expect(dialog).toBeVisible();
       const search = dialog.getByRole('searchbox', { name: 'Find a product', exact: true });
       await expect(search).toBeFocused();
+      if (route === '/' && config.name === 'chromium-desktop') {
+        await expect(dialog.locator('[data-product-match]')).toHaveCount(6);
+        await dialog.getByRole('button', { name: 'Show more products', exact: true }).click();
+        await expect(dialog.locator('[data-product-match]')).toHaveCount(18);
+        await dialog.locator('[data-product-search-matches]').evaluate(el => { el.scrollTop = 400; });
+        for (const [id, name] of Object.entries(names)) {
+          await search.fill(name);
+          const result = dialog.locator(`[data-product-match="${id}"]`);
+          await expect(result.locator('strong')).toHaveText(name);
+          await expect(result.getByRole('img')).toBeVisible();
+        }
+        report.checks.push('All 50 independently verified product names find their corresponding image; show-more and new-query reset work');
+      }
       await search.fill('RT');
       await expect(dialog.locator('[data-product-match]')).toHaveCount(1);
       await expect(dialog.locator('[data-product-match]').getByRole('img')).toBeVisible();
