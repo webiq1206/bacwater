@@ -57,7 +57,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await expect(p).toHaveURL(origin+'/calculate/product/glp-3');await expect(p.locator('h1')).toContainText('GLP-3 (RT)');
    await p.waitForLoadState('networkidle');
    await visit('/peptide-calculator');await p.getByRole('combobox',{name:'Product',exact:true}).click();
-   await p.getByLabel('Search products',{exact:true}).fill('Retatrutide');await p.getByRole('option',{name:'GLP-3 (RT)',exact:true}).click();
+   await p.getByRole('searchbox',{name:'Search products',exact:true}).fill('Retatrutide');await p.getByRole('option',{name:'GLP-3 (RT)',exact:true}).click();
    await expect(p.locator('[data-selected-product="glp-3"]')).toContainText('GLP-3 (RT)');
    for(const route of ['/calculate/retatrutide','/calculate/product/glp-3','/peptides/retatrutide']){await visit(route);await expect(p.locator('h1')).toContainText('GLP-3 (RT)');}
   });
