@@ -8,7 +8,7 @@ export function ResearchHero() {
   return <section id="quick-calculator" className={`${styles.hero} ${live.heroAccent}`} aria-labelledby="home-title" data-home-hero data-hero-design="editorial-live">
     <div className={styles.copy}>
       <h1 id="home-title" className={`${styles.headline} ${live.headlineAccent}`}>BAC water<br /><em>calculator.</em></h1>
-      <p className={`${styles.description} ${live.descriptionAccent}`}>A free peptide reconstitution calculator.<br />Check concentration, mL and U-100 units<br className={live.desktopOnly} /> from your own numbers.</p>
+      <p className={`${styles.description} ${live.descriptionAccent}`}>A free peptide reconstitution calculator. <br />Check concentration, mL and U-100 units<br className={live.desktopOnly} /> from your own numbers.</p>
       <div className={styles.actions}>
         <Link href="/peptide-calculator" className={styles.primary}>Open calculator <ArrowUpRight size={21} aria-hidden="true" /></Link>
         <Link href="/tools" className={styles.secondary}>More tools <ArrowRight size={18} aria-hidden="true" /></Link>
