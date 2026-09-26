@@ -81,7 +81,7 @@ check("Parent and background papers do not masquerade as formulation results",()
  }
 });
 check("Shared detail component renders paragraphs and source-specific qualifications",()=>{
- const text=fs.readFileSync("src/components/partners/product-quick-view.tsx","utf8");
+ const text=fs.readFileSync("src/components/partners/product-detail-content.tsx","utf8");
  assert.match(text,/data-product-mechanism/);assert.match(text,/data-mechanism-paragraph/);
  assert.match(text,/detail\.how\.split\("\\n\\n"\)/);assert.match(text,/source\.note/);
 });

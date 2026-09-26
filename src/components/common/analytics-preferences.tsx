@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ANALYTICS_CONSENT_KEY, ANALYTICS_READY, GA_ID, analyticsLocation } from "@/lib/analytics";
+import { ANALYTICS_CONSENT_KEY, ANALYTICS_READY, GA_ID, analyticsLocation, USAGE_EVENTS } from "@/lib/analytics";
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; [key: `ga-disable-${string}`]: boolean | undefined };
 export function AnalyticsPreferences() {
   const pathname = usePathname() || "/";
@@ -24,10 +24,13 @@ export function AnalyticsPreferences() {
     w.gtag("event", "page_view", { page_location: pageLocation, page_referrer: "", page_title: "BACwater.ai utility" });
     const usage = (e: Event) => {
       const name = (e as CustomEvent).detail;
-      if (["plan_saved", "plan_updated", "contact_saved", "calculation_completed", "label_printed"].includes(name)) w.gtag?.("event", name, { page_location: pageLocation, page_referrer: "" });
+      if (USAGE_EVENTS.includes(name)) w.gtag?.("event", name, { page_location: pageLocation, page_referrer: "" });
     };
     window.addEventListener("bacwater:usage", usage);
-    return () => { window.removeEventListener("bacwater:usage", usage); w[`ga-disable-${GA_ID}`] = true; };
+    const supplier = (event: MouseEvent) => { if (event.target instanceof Element && event.target.closest('a[rel~="sponsored"]')) usage(new CustomEvent("bacwater:usage", { detail: "supplier_clicked" })); };
+    const invalid = () => usage(new CustomEvent("bacwater:usage", { detail: "form_error" }));
+    document.addEventListener("click", supplier); document.addEventListener("invalid", invalid, true);
+    return () => { document.removeEventListener("click", supplier); document.removeEventListener("invalid", invalid, true); window.removeEventListener("bacwater:usage", usage); w[`ga-disable-${GA_ID}`] = true; };
   }, [choice, pathname]);
   function choose(value: string) {
     try { localStorage.setItem(ANALYTICS_CONSENT_KEY, value); } catch {}

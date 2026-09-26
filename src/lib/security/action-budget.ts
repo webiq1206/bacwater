@@ -1,8 +1,10 @@
 import { createHmac } from "node:crypto";
 import { prisma } from "@/lib/db";
 
-type Scope = "signin" | "signup" | "contact";
+type Scope = "signin" | "signup" | "contact" | "password-request" | "password-reset";
 const LIMITS = {
+  "password-request": { global: 20, account: 3, window: 15 * 60_000 },
+  "password-reset": { global: 30, account: 5, window: 15 * 60_000 },
   signin: { global: 120, account: 10, window: 15 * 60_000 },
   signup: { global: 10, account: 3, window: 60 * 60_000 },
   contact: { global: 30, account: 3, window: 5 * 60_000 },

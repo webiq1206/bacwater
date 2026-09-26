@@ -13,8 +13,21 @@ jobs:
     name: Typecheck, test, build
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: audit
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: bacwater_audit
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U audit -d bacwater_audit"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
-      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      DATABASE_URL: postgresql://audit:isolated-ci-only@127.0.0.1:5432/bacwater_audit
       AUTH_SECRET: ci-placeholder-not-a-real-secret
       AUTH_URL: http://localhost:3000
       NEXT_PUBLIC_SITE_URL: https://bacwater.ai
@@ -31,6 +44,12 @@ jobs:
         run: npm ci
       - name: Generate client
         run: npx prisma generate
+      - name: Prepare disposable database and verify account recovery
+        run: |
+          npx prisma db push --skip-generate
+          node --import tsx prisma/seed.ts
+          node --import tsx scripts/audit-password-recovery.ts
+          node --import tsx scripts/audit-action-budgets.ts
       - name: Typecheck
         run: npx tsc --noEmit
       - name: Unit tests

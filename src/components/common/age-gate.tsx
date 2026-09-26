@@ -82,13 +82,13 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
       data-age-gate
       onKeyDown={event => {
         if (!workspace || event.key !== "Tab") return;
-        const controls=[...event.currentTarget.querySelectorAll<HTMLButtonElement>("button")];
+        const controls=[...event.currentTarget.querySelectorAll<HTMLElement>("button, summary")];
         if(event.shiftKey && document.activeElement===controls[0]) { event.preventDefault(); controls.at(-1)?.focus(); }
         else if(!event.shiftKey && document.activeElement===controls.at(-1)) { event.preventDefault(); controls[0]?.focus(); }
       }}
       className={workspace ? "no-print fixed inset-0 z-[200] flex items-center overflow-auto bg-background p-3" : "no-print border-b border-border bg-card"}
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
           <div className="flex items-center gap-2 text-muted-foreground">
             <ShieldCheck className="h-4 w-4 shrink-0" />
@@ -99,20 +99,11 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
               Age check: are you 21 or older?
             </span>
           </div>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            {POSITIONING_STATEMENT}
-          </p>
-          <div className="mt-2 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
-            <FlaskConical className="h-3.5 w-3.5 mt-px shrink-0" />
-            <span>
-              By continuing you confirm you are 21 or older and understand this
-              site is a calculation and reference tool for research and
-              educational use.
-            </span>
-          </div>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Calculation and reference tools for research and education.</p>
+          <details className="mt-1 text-sm text-muted-foreground"><summary className="cursor-pointer py-1">Scope of use</summary><p className="mt-2 max-w-2xl leading-relaxed">{POSITIONING_STATEMENT} Continuing confirms you are 21 or older and understand this scope.</p></details>
         </div>
 
-        <div className="flex shrink-0 flex-col gap-2.5 sm:flex-row lg:flex-col xl:flex-row">
+        <div className="flex shrink-0 flex-col gap-2.5 sm:flex-row">
           <button
             type="button"
             ref={declinedButton}

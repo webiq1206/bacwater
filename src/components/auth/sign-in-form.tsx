@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -14,6 +15,7 @@ export function SignInForm() {
   const params = useSearchParams();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,8 +47,9 @@ export function SignInForm() {
       </div>
       <div>
         <Label htmlFor="password">Password</Label>
-        <Input id="password" name="password" type="password" autoComplete="current-password" required className="mt-2" />
+        <Input id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" required className="mt-2" />
       </div>
+      <div className="flex flex-wrap items-center justify-between gap-3 text-sm"><button type="button" className="min-h-11 underline" aria-pressed={showPassword} aria-controls="password" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide password" : "Show password"}</button><Link href="/forgot-password" className="min-h-11 inline-flex items-center underline">Forgot password?</Link></div>
       <Button type="submit" variant="brand" size="lg" className="w-full" disabled={pending}>
         {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         Sign in

@@ -87,15 +87,26 @@ export const TOPIC_REFERENCES: Record<string, Reference[]> = {
 
 export function guideReferences(slug: string): Reference[] | undefined {
   const reviewed = EDITORIAL_REVISIONS.find((item) => item.slug === slug);
-  if (reviewed) return reviewed.sources.map((url) => ({
-    title: url.includes("nist.gov") ? "SI prefix definitions" : url.includes("cdc.gov") ? "Injection safety and vial handling" : url.includes("pfizermedical") ? "Bacteriostatic water product labeling" : "FDA product and safety guidance",
-    source: new URL(url).hostname,
-    url,
-    note: "Supports the linked factual context, not a personalized dose or the identity of a user's product. Checked September 21, 2026.",
-  }));
+  if (reviewed) return reviewed.sources.map(sourceReference);
   return GUIDE_REFERENCES[slug];
 }
 
 export function topicReferences(slug: string): Reference[] | undefined {
   return TOPIC_REFERENCES[slug];
+}
+
+const SOURCE_DETAILS: Record<string, {title:string;note:string}> = {
+ "https://www.pfizermedical.com/sodium-chloride-injection": { title: "Sodium Chloride 0.9%, Bacteriostatic Vial", note: "Manufacturer labeling distinguishes sodium chloride from the added bacteriostatic preservative." },
+ "https://www.nist.gov/pml/owm/metric-si-prefixes": { title: "Metric (SI) Prefixes", note: "Defines the milli and micro prefixes used in the mass conversions." },
+ "https://www.pfizermedical.com/bacteriostatic-water": { title: "Bacteriostatic Water for Injection, USP", note: "Product labeling for ingredients, storage and the need for formulation-specific instructions." },
+ "https://www.pfizermedical.com/sterile-water": { title: "Sterile Water for Injection, USP", note: "Manufacturer labeling for the named water preparation." },
+ "https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html": { title: "Preventing Unsafe Injection Practices", note: "Container handling and multi-dose vial guidance, not a stability test for a mixed product." },
+ "https://www.fda.gov/drugs/human-drug-compounding/fda-alerts-health-care-providers-compounders-and-patients-dosing-errors-associated-compounded": { title: "FDA alerts health care providers, compounders and patients of dosing errors associated with compounded injectable semaglutide products", note: "Explains reported concentration and measurement-unit errors with these products." },
+ "https://www.fda.gov/drugs/drug-alerts-and-statements/fdas-concerns-unapproved-glp-1-drugs-used-weight-loss": { title: "FDA’s Concerns with Unapproved GLP-1 Drugs Used for Weight Loss", note: "Distinguishes approved medicines from unapproved products and describes formulation concerns." },
+ "https://www.fda.gov/drugs/human-drug-compounding/certain-bulk-drug-substances-use-compounding-may-present-significant-safety-risks": { title: "Certain Bulk Drug Substances for Use in Compounding that May Present Significant Safety Risks", note: "FDA's stated evidence and safety limitations for the listed substances." },
+ "https://www.aminoclub.com/us/products/glow": { title: "GLOW product listing", note: "Supplier source for the three listed components only; not independent product verification." },
+};
+export function sourceReference(url: string): Reference {
+ const known = Object.values(REF).find(r => r.url === url);
+ return known || { url, source: new URL(url).hostname, ...(SOURCE_DETAILS[url] || { title: url, note: "Read the original document and its formulation or study limitations." }) };
 }

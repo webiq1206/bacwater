@@ -1,109 +1,12 @@
-/**
- * Comparison infographic: a side-by-side visual of the two or three key
- * differences between bac water and the other liquid, plus the one-line
- * verdict. Complements the on-page table and gives image search and
- * multimodal answer engines a second, liftable path to the comparison.
- */
-
 import type { ComparisonTopic } from "@/lib/comparisons/content";
-import { PALETTE, esc, svgDoc } from "@/lib/infographics/svg";
-
-function firstSentence(text: string): string {
-  const m = text.match(/^[^.]*\./);
-  return (m ? m[0] : text).trim();
-}
-
-export function comparisonDims(c: ComparisonTopic): { width: number; height: number } {
-  const rows = c.table.slice(0, 3);
-  return { width: 720, height: 150 + rows.length * 72 + 74 };
-}
-
-export function comparisonAlt(c: ComparisonTopic): string {
-  const rows = c.table.slice(0, 3);
-  const parts = rows.map(
-    (r) => `${r.dimension}: bac water ${r.bac}, ${c.otherName} ${r.other}`
-  );
-  return `${c.title} infographic. ${parts.join("; ")}.`;
-}
-
-export function comparisonSvg(c: ComparisonTopic): string {
-  const rows = c.table.slice(0, 3);
-  const width = 720;
-  const padX = 32;
-  const colGap = 16;
-  const labelW = 150;
-  const colW = (width - padX * 2 - labelW - colGap * 2) / 2;
-  const bacX = padX + labelW + colGap;
-  const otherX = bacX + colW + colGap;
-
-  const headerY = 118;
-  const rowTop = 150;
-  const rowH = 72;
-  const height = rowTop + rows.length * rowH + 74;
-
-  const headers = `
-    <text x="${padX}" y="${headerY}" font-size="12" font-weight="600" fill="${PALETTE.muted}"></text>
-    <rect x="${bacX}" y="${headerY - 22}" width="${colW}" height="30" rx="4" fill="${PALETTE.accent}"/>
-    <text x="${bacX + colW / 2}" y="${headerY - 2}" text-anchor="middle" font-size="14" font-weight="700" fill="${PALETTE.white}">Bac water</text>
-    <rect x="${otherX}" y="${headerY - 22}" width="${colW}" height="30" rx="4" fill="${PALETTE.surface}"/>
-    <text x="${otherX + colW / 2}" y="${headerY - 2}" text-anchor="middle" font-size="14" font-weight="700" fill="${PALETTE.foreground}">${esc(c.otherName)}</text>
-  `;
-
-  const body = rows
-    .map((r, i) => {
-      const y = rowTop + i * rowH;
-      return `
-        <text x="${padX}" y="${y + 30}" font-size="13" font-weight="600" fill="${PALETTE.foreground}">${esc(r.dimension)}</text>
-        <rect x="${bacX}" y="${y + 8}" width="${colW}" height="${rowH - 16}" rx="4" fill="${PALETTE.accentSoft}"/>
-        ${wrap(r.bac, bacX + 12, y + 30, colW - 24, PALETTE.accent)}
-        <rect x="${otherX}" y="${y + 8}" width="${colW}" height="${rowH - 16}" rx="4" fill="${PALETTE.surface}"/>
-        ${wrap(r.other, otherX + 12, y + 30, colW - 24, PALETTE.foreground)}
-      `;
-    })
-    .join("");
-
-  const inner = `
-    <text x="${padX}" y="42" font-size="20" font-weight="700" fill="${PALETTE.foreground}">${esc(c.title.length > 57 ? c.title.slice(0,54) + "..." : c.title)}</text>
-    <rect x="${padX}" y="58" width="${width - padX * 2}" height="30" rx="4" fill="${PALETTE.accentSoft}"/>
-    <text x="${padX + 12}" y="78" font-size="13" font-weight="600" fill="${PALETTE.accent}">${esc("Read the exact product label; names alone do not establish compatibility.")}</text>
-    ${headers}
-    ${body}
-    <text x="${padX}" y="${height - 20}" font-size="11" fill="${PALETTE.muted}">For research and educational use only. bacwater.ai</text>
-  `;
-
-  return svgDoc({
-    width,
-    height,
-    title: c.title,
-    desc: comparisonAlt(c),
-    inner,
-  });
-}
-
-/** Very small word-wrap for cell text (max two lines). */
-function wrap(text: string, x: number, y: number, maxW: number, fill: string): string {
-  const approxChar = 6.4; // px per char at 12px
-  const maxChars = Math.max(6, Math.floor(maxW / approxChar));
-  const words = text.split(" ");
-  const lines: string[] = [];
-  let cur = "";
-  for (const w of words) {
-    if ((cur + " " + w).trim().length > maxChars && cur) {
-      lines.push(cur);
-      cur = w;
-    } else {
-      cur = (cur + " " + w).trim();
-    }
-    if (lines.length >= 2) break;
-  }
-  if (cur && lines.length < 2) lines.push(cur);
-  if (lines.length === 2 && words.join(" ").length > lines.join(" ").length) {
-    lines[1] = lines[1].replace(/\s*\S*$/, "") + "...";
-  }
-  return lines
-    .map(
-      (ln, i) =>
-        `<text x="${x}" y="${y + i * 15}" font-size="12" font-weight="600" fill="${fill}">${esc(ln)}</text>`
-    )
-    .join("");
+import { esc, svgDoc } from "@/lib/infographics/svg";
+function lines(text:string, max=29) { const result:string[]=[]; let line=""; for(const word of text.split(/\s+/)){ if(line && (line+" "+word).length>max){result.push(line);line=word;}else line=(line+" "+word).trim(); } if(line)result.push(line);return result; }
+function layout(c:ComparisonTopic){return c.table.map(r=>({r, h:Math.max(lines(r.dimension,19).length,lines(r.bac).length,lines(r.other).length)*21+32}));}
+export function comparisonDims(c:ComparisonTopic){return {width:900,height:190+layout(c).reduce((n,r)=>n+r.h,0)+62};}
+export function comparisonAlt(c:ComparisonTopic){return `${c.title}. `+c.table.map(r=>`${r.dimension}: BAC water: ${r.bac}; ${c.otherName}: ${r.other}.`).join(" ");}
+function text(value:string,x:number,y:number,max:number,weight=400){return lines(value,max).map((s,i)=>`<text x="${x}" y="${y+i*21}" font-size="16" font-weight="${weight}" fill="#18382d">${esc(s)}</text>`).join("");}
+export function comparisonSvg(c:ComparisonTopic){
+ const {width,height}=comparisonDims(c); const title=`BAC water vs ${c.otherName}`; let y=190;
+ const body=layout(c).map(({r,h})=>{const row=`<rect x="24" y="${y}" width="852" height="${h}" rx="8" fill="#f3f6ec"/>${text(r.dimension,40,y+27,19,600)}${text(r.bac,265,y+27,29)}${text(r.other,578,y+27,29)}`;y+=h;return row;}).join("");
+ return svgDoc({width,height,title:c.title,desc:comparisonAlt(c),inner:`${text(title,32,42,60,700)}${text("Read the exact label. A name alone does not establish compatibility.",32,94,83)}${text("Label detail",40,162,19,700)}${text("BAC water",265,162,29,700)}${text(c.otherName,578,141,29,700)}${body}<text x="32" y="${height-24}" font-size="15" fill="#45604e">Research and educational reference · BACwater.ai</text>`});
 }

@@ -3,6 +3,7 @@
 import { toast } from "@/components/ui/toaster";
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { trackUsage } from "@/lib/analytics";
 
 /**
  * Small copy-to-clipboard control for calculator results, so users don't have
@@ -25,6 +26,7 @@ export function CopyButton({
         try {
           await navigator.clipboard.writeText(value);
           setCopied(true);
+          trackUsage("result_copied");
           setTimeout(() => setCopied(false), 1500);
         } catch {
           toast({ title: "Copy unavailable", description: "Select the visible value and copy it manually.", variant: "destructive" });

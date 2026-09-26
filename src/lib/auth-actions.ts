@@ -13,7 +13,7 @@ export async function signupAction(formData: FormData) {
     password: formData.get("password"),
   });
   if (!parsed.success) {
-    return { ok: false, error: "Enter a name, valid email and a passphrase of at least 15 characters (maximum 72 UTF-8 bytes)." };
+    return { ok: false, error: parsed.error.issues.find(issue => issue.path[0] === "password")?.message || "Enter your name and a valid email address." };
   }
   const { name, email, password } = parsed.data;
   if (!await takeActionBudget("signup", email)) return { ok: false, error: "Account creation is temporarily limited. Keep your details here and try again later." };

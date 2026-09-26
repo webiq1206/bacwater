@@ -12,17 +12,18 @@ import styles from "./product-directory.module.css";
 const PAGE_SIZE=12;
 export function ProductDirectory({products}:{products:readonly DisplaySupplierProduct[]}) {
   const [query,setQuery]=useState(""),[kind,setKind]=useState<ProductKind|"all">("all"),[sort,setSort]=useState("az"),[page,setPage]=useState(1);
+  const [suggestions,setSuggestions]=useState(true);
   const input=useRef<HTMLInputElement>(null),results=useRef<HTMLHeadingElement>(null);
   const match=useMemo(()=>matchDirectory(products,query,kind),[products,query,kind]);
   const filtered=useMemo(()=>[...match.products].sort((a,b)=>sort==="za"?b.name.localeCompare(a.name):a.name.localeCompare(b.name)),[match.products,sort]);
   const pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE)),current=Math.min(page,pages),start=(current-1)*PAGE_SIZE;
-  function search(value:string){setQuery(value);setPage(1);}
+  function search(value:string){setQuery(value);setPage(1);setSuggestions(true);}
   function reset(){setQuery("");setKind("all");setPage(1);input.current?.focus();}
-  function browse(){input.current?.blur();results.current?.focus({preventScroll:true});results.current?.scrollIntoView({block:"start",behavior:"auto"});}
+  function browse(){setSuggestions(false);input.current?.blur();results.current?.focus({preventScroll:true});results.current?.scrollIntoView({block:"start",behavior:"auto"});}
   function turn(value:number){setPage(value);browse();}
   return <section className={styles.directory} data-product-directory aria-label="Research product directory">
     <div className={`${styles.searchPanel} ${searchStyles.directoryPanel}`}>
-      <ProductSearchField query={query} onChange={search} match={{...match,products:filtered}} inputId="research-product-search" inputRef={input} onBrowse={browse}/>
+      <ProductSearchField query={query} onChange={search} match={{...match,products:filtered}} inputId="research-product-search" inputRef={input} onBrowse={browse} suggestions={suggestions}/>
       <div className={styles.controls}>
         <label>Product type<select aria-label="Product type" value={kind} onChange={e=>{setKind(e.target.value as ProductKind|"all");setPage(1);}}>{DIRECTORY_KINDS.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
         <label>Sort by<select aria-label="Sort products" value={sort} onChange={e=>{setSort(e.target.value);setPage(1);}}><option value="az">Name: A to Z</option><option value="za">Name: Z to A</option></select></label>

@@ -1,3 +1,4 @@
+import { ARTICLE_GUIDES } from "@/lib/learn/article-presentation";
 import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { shortName } from "@/lib/peptides/page-data";
@@ -54,6 +55,8 @@ export const FACET_SNIPPETS: Record<string, Snippet> = Object.fromEntries([
 
 /** A bounded catalog prevents arbitrary/private text from becoming public image URLs. */
 export function searchSnippet(path: string): Snippet | undefined {
+  const guide = path.startsWith("/learn/") && Object.hasOwn(ARTICLE_GUIDES, path.slice(7)) ? ARTICLE_GUIDES[path.slice(7)] : undefined;
+  if (guide) return { title: guide.title, description: guide.description };
   if (Object.hasOwn(SEARCH_SNIPPETS, path)) return SEARCH_SNIPPETS[path];
   if (Object.hasOwn(FACET_SNIPPETS, path)) return FACET_SNIPPETS[path];
   const peptide = PEPTIDES.find(p => path === `/peptides/${p.slug}`);

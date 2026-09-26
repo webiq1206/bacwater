@@ -11,6 +11,7 @@
  * relevance is driven by the tag system rather than hardcoded per page.
  */
 
+import { ARTICLE_GUIDES } from "./article-presentation";
 import { cache } from "react";
 import { SEARCH_CONTENT_WHERE, RESERVED_LEARN_SLUGS } from "@/lib/seo/publication-policy";
 import { prisma } from "@/lib/db";
@@ -262,8 +263,8 @@ export async function getCatalog(strict = false): Promise<LearnEntry[]> {
       return {
         id: `db-${b.slug}`,
         url: `/learn/${b.slug}`,
-        title: b.title,
-        excerpt: excerptFrom(b.body),
+        title: ARTICLE_GUIDES[b.slug]?.title || b.title,
+        excerpt: ARTICLE_GUIDES[b.slug]?.description || excerptFrom(b.body),
         contentType: t.contentType,
         peptideTags: t.peptideTags ?? [],
         topicTags: t.topicTags,
@@ -277,7 +278,7 @@ export async function getCatalog(strict = false): Promise<LearnEntry[]> {
     return {
       id: `peptide-${p.slug}`,
       url: `/peptides/${p.slug}`,
-      title: `${short} bac water calculator & guide`,
+      title: `${p.slug === "glow-blend" ? "GLOW" : short} compound reference`,
       excerpt: PEPTIDE_CONTENT[p.slug]?.what ?? "",
       contentType: "peptide-guide" as const,
       peptideTags: isCustom ? [] : [p.slug],
@@ -344,7 +345,7 @@ export function relatedContent(
   { peptide, topics = [], types = [], excludeUrl, limit = 4 }: RelatedQuery
 ): LearnEntry[] {
   const hasSignal = Boolean(peptide) || topics.length > 0 || types.length > 0;
-  const pool = entries.filter((e) => e.url !== excludeUrl);
+  const pool = entries.filter((e) => e.url !== excludeUrl && (peptide || e.source !== "peptide"));
 
   if (!hasSignal) return genericFallback(pool, limit);
 

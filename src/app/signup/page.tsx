@@ -9,7 +9,7 @@ export default function SignUpPage() {
       <div className="eyebrow text-center">Sign up</div>
       <h1 className="mt-2 text-3xl sm:text-4xl font-serif font-medium tracking-tight text-center">Create your free account</h1>
       <p className="mt-2 text-center text-sm text-muted-foreground">
-        Save your calculations, download PDFs and print vial labels.
+        Keep saved calculations in your account and access them across devices. Basic calculations, PDFs and labels are also available without signing up.
       </p>
       <div className="mt-6 border border-border p-8">
         <SignUpForm />

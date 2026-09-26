@@ -1,3 +1,5 @@
+import { ARTICLE_GUIDES, presentArticle } from "@/lib/learn/article-presentation";
+import { GuideFigure } from "@/components/learn/guide-figure";
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -43,7 +45,9 @@ export async function generateMetadata({ params }: Props) {
       title: searchTitle,
       description,
       url: canonical,
-      type: "website",
+      type: "article",
+      publishedTime: g.createdAt.toISOString(),
+      modifiedTime: g.updatedAt.toISOString(),
       siteName: "BACwater.ai",
     },
     alternates: { canonical },
@@ -58,12 +62,14 @@ export default async function GuidePage({ params }: Props) {
   if (!guide) return notFound();
 
   const refs = guideReferences(slug);
+  const presentation = Object.hasOwn(ARTICLE_GUIDES, slug) ? ARTICLE_GUIDES[slug] : undefined;
+  const display = presentArticle(guide.body);
 
   // Tag-driven related content: surface the most relevant peptides, guides,
   // comparisons, and FAQs for this article, not just the newest guides.
   const catalog = await getCatalog();
   const self = catalog.find((e) => e.url === `/learn/${slug}`);
-  const relatedReading = relatedContent(catalog, {
+  const relatedReading = presentation ? presentation.related.map(url => catalog.find(e => e.url === url)).filter((e): e is NonNullable<typeof e> => Boolean(e)) : relatedContent(catalog, {
     peptide: self?.peptideTags[0],
     topics: self?.topicTags ?? [],
     excludeUrl: `/learn/${slug}`,
@@ -86,28 +92,35 @@ export default async function GuidePage({ params }: Props) {
         updated={guide.updatedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
       />
       <article className="mt-4 prose prose-neutral max-w-none">
-        {renderBody(guide.body)}
+        {renderBody(display.opening)}
+        <GuideFigure slug={slug}/>
+        {renderBody(display.body)}
+        {display.corrections.length > 0 && <aside className="mt-7 rounded-xl border p-4 text-sm not-prose"><h2 className="font-semibold">Correction note</h2>{display.corrections.map(note => <p className="mt-2" key={note}>{note}</p>)}</aside>}
       </article>
 
       <References references={refs} />
 
       <div className="section-dark mt-10 rounded-2xl p-6 sm:p-8 flex flex-wrap items-center gap-3 justify-between">
         <div>
-          <div className="font-medium">Ready to build a plan?</div>
+          <div className="font-medium">{presentation?.cta || "Choose your next calculation"}</div>
           <div className="text-sm text-muted-foreground">
-            Check the arithmetic using values from instructions you already have.
+            {presentation?.description || "Choose the product first, then enter values from instructions you already have."}
           </div>
         </div>
         <Button asChild variant="brand">
-          <Link href="/plan">
-            Build my plan <ArrowRight className="h-4 w-4" />
+          <Link href={presentation?.href || "/peptide-calculator"}>
+            {presentation?.cta || "Choose a product"} <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
       </div>
 
-      {/* Google's preferred-sources button belongs where a reader has just
-          finished something worth reading: the ask makes sense there, and
-          these guides are the fresh content the setting is meant to surface. */}
+      {relatedReading.length > 0 && (
+        <div className="mt-14">
+          <RelatedReadingPanel title="Also worth reading" items={relatedReading} />
+        </div>
+      )}
+
+      {/* Optional source preference follows the useful reading and task links. */}
       <div className="mt-6 rounded-2xl border border-border p-6 sm:p-8">
         <div className="font-medium">Want more of this in your search results?</div>
         <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
@@ -121,11 +134,7 @@ export default async function GuidePage({ params }: Props) {
         <PreferredSourceButton className="mt-4" />
       </div>
 
-      {relatedReading.length > 0 && (
-        <div className="mt-14">
-          <RelatedReadingPanel title="Also worth reading" items={relatedReading} />
-        </div>
-      )}
+
     </div>
   );
 }

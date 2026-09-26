@@ -1,3 +1,4 @@
+import { passwordStamp } from "@/lib/security/password-reset";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
@@ -68,9 +69,17 @@ export const authConfig: NextAuthConfig = {
       if (!id) { token.id = undefined; return token; }
       try {
         const stored = await prisma.user.findUnique({
-          where: { id }, select: { id: true, role: true, name: true, image: true },
+          where: { id }, select: { id: true, role: true, name: true, image: true, hashedPassword: true },
         });
         if (!stored) { token.id = undefined; return token; }
+        const stamp = passwordStamp(stored.hashedPassword);
+        if (user) token.passwordStamp = stamp;
+        else if (token.passwordStamp !== undefined && token.passwordStamp !== stamp) { token.id = undefined; token.sub = undefined; return token; }
+        else if (token.passwordStamp === undefined) {
+          const revoked = await prisma.verificationToken.findUnique({ where: { token: `password-session:${id}` } });
+          if (revoked && revoked.expires > new Date()) { token.id = undefined; token.sub = undefined; return token; }
+          token.passwordStamp = stamp;
+        }
         token.id = stored.id; token.role = storedRole(stored);
         token.name = stored.name; token.picture = stored.image;
       } catch { token.id = undefined; }

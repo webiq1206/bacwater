@@ -9,9 +9,9 @@ const tools: [string,string,string,string][] = [
  ["/tools/bac-water","BAC water calculator","Find how much is in each mL.","concentration liquid vial amount dilution bacteriostatic"],
  ["/tools/mg-to-mcg","mg to mcg converter","Change milligrams to micrograms, or the other way around.","mass units mg mcg conversion"],
  ["/tools/syringe-units","Syringe units to mL","Convert a U-100 scale reading to liquid volume.","100 units syringe insulin milliliter"],
- ["/tools/dose","Amount to measure","Use a known concentration to find mL.","dose volume measurement"],
+ ["/tools/dose","Amount-to-volume","Use a known concentration to find mL.","dose volume measurement"],
  ["/tools/reverse-bac","Find a total volume","Check the math for a concentration you already know.","reverse bac water dilution"],
- ["/tools/supplies","Count equal measurements","See how many entered amounts fit in a vial.","supplies portions vial count"],
+ ["/tools/supplies","Vial counts","See how many entered amounts fit in a vial.","supplies portions vial count"],
  ["/tools/vial-labels","Printable vial labels","Make a label from your saved numbers.","pdf label print qr"],
 ];
 export const BASE_SEARCH_ITEMS: readonly SearchItem[] = [

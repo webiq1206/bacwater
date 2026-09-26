@@ -147,6 +147,12 @@ export default async function LearnPage({
         </p>
       </div>
 
+      {activeCount === 0 && <nav className="mt-7 grid gap-3 sm:grid-cols-2" aria-label="Learn by task">{[
+        ["Read a label", "/learn/how-to-read-a-peptide-vial", "Identify total amount, concentration and volume."],
+        ["Check units", "/learn/what-syringe-units-mean", "Separate mg, mcg, mL and U-100 markings."],
+        ["Understand storage", "/learn/bac-water-shelf-life", "Find the instructions for the exact container."],
+        ["Compare water products", "/learn?type=comparison", "Understand ingredients and label terminology."],
+      ].map(([label,href,copy]) => <Link key={href} href={href} className="rounded-xl border bg-card p-5"><strong>{label}</strong><p className="mt-2 text-sm text-muted-foreground">{copy}</p></Link>)}</nav>}
       {activeCount === 0 && (
         <div className="mt-8 callout-panel">
           <div className="flex items-start gap-3">
@@ -184,6 +190,12 @@ export default async function LearnPage({
         </div>
       )}
 
+      {activeCount === 0 && <nav className="mt-7 grid gap-3 sm:grid-cols-2" aria-label="Learn by task">{[
+        ["Read a label", "/learn/how-to-read-a-peptide-vial", "Identify total amount, concentration and volume."],
+        ["Check units", "/learn/what-syringe-units-mean", "Separate mg, mcg, mL and U-100 markings."],
+        ["Understand storage", "/learn/bac-water-shelf-life", "Find the instructions for the exact container."],
+        ["Compare water products", "/learn?type=comparison", "Understand ingredients and label terminology."],
+      ].map(([label,href,copy]) => <Link key={href} href={href} className="rounded-xl border bg-card p-5"><strong>{label}</strong><p className="mt-2 text-sm text-muted-foreground">{copy}</p></Link>)}</nav>}
       {activeCount === 0 && (
         <Link
           href="/learn/what-you-cannot-know"
@@ -296,7 +308,7 @@ export default async function LearnPage({
       <div>
       {results.length > 0 ? (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-          {results.map((e) => (
+          {(activeCount ? results : results.filter(e => e.source !== "peptide")).map((e) => (
             <li key={e.id}>
               <Link
                 href={e.url}
@@ -338,17 +350,17 @@ export default async function LearnPage({
 
       </div>
       </div>
-
+      {activeCount === 0 && <section className="mt-12" id="compound-references"><h2 className="text-2xl font-serif">Compound references</h2><p className="mt-2 text-muted-foreground">Product identity, evidence context and the appropriate calculator.</p><ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{results.filter(e => e.source === "peptide").map(e => <li key={e.id}><Link href={e.url} className="block min-h-11 rounded-xl border p-4 font-medium">{e.title}</Link></li>)}</ul></section>}
       <div className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
           <div className="font-medium text-foreground">Done reading?</div>
           <p className="mt-1 text-sm text-muted-foreground">
-            Put what you learned into practice. The Plan Builder does the math for you.
+            Choose your product, then check the numbers from its label and instructions.
           </p>
         </div>
         <Button asChild variant="brand" className="shrink-0">
           <Link href="/plan">
-            Build my plan <ArrowRight className="h-4 w-4" />
+            Choose a product <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
       </div>

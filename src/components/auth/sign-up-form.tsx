@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -13,6 +14,7 @@ export function SignUpForm() {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,9 +49,11 @@ export function SignUpForm() {
       </div>
       <div>
         <Label htmlFor="password">Passphrase (15+ characters)</Label>
-        <Input id="password" name="password" type="password" required minLength={15} maxLength={72} aria-describedby="password-help" className="mt-2" autoComplete="new-password" />
-        <p id="password-help" className="mt-2 text-sm text-muted-foreground">Use a unique passphrase. Password managers and paste are supported. Maximum 72 UTF-8 bytes; accented characters and emoji can use more than one byte.</p>
+        <Input id="password" name="password" type={showPassword ? "text" : "password"} required minLength={15} maxLength={72} aria-describedby="password-help" className="mt-2" autoComplete="new-password" />
+        <p id="password-help" className="mt-2 text-sm text-muted-foreground">Use at least 15 characters. A few unrelated words work well. Password managers and paste are welcome.</p>
       </div>
+      <button type="button" className="min-h-11 text-sm underline" aria-pressed={showPassword} aria-controls="password" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide passphrase" : "Show passphrase"}</button>
+      <p className="text-sm text-muted-foreground">By creating an account, you agree to the <Link href="/terms" className="underline">Terms</Link>. Read how we handle your information in our <Link href="/privacy" className="underline">Privacy Policy</Link>.</p>
       <Button type="submit" variant="brand" size="lg" className="w-full" disabled={pending}>
         {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         Create account

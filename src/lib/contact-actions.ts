@@ -18,6 +18,6 @@ export async function submitContactAction(formData: FormData) {
     // Unique primary key provides race-safe deduplication of the same submission.
     const stored = await prisma.contactMessage.upsert({ where: { id: requestId }, update: {}, create: { id: requestId, name, email, subject: subject || null, message } });
     if (stored.name !== name || stored.email !== email || (stored.subject || "") !== subject || stored.message !== message) return { ok: false as const, error: "An earlier version of this message was already saved. Refresh before sending a different message." };
-    return { ok: true as const };
+    return { ok: true as const, reference: stored.id };
   } catch { return { ok: false as const, error: "Your message could not be saved. Your text is still here; please retry." }; }
 }

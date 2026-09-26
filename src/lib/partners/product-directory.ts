@@ -1,4 +1,3 @@
-import { PRODUCT_RESEARCH } from "./product-content";
 import { type SupplierProduct, type ProductKind } from "./supplier-catalog";
 
 export const DIRECTORY_KINDS: readonly [ProductKind | "all", string][] = [
@@ -9,12 +8,6 @@ export const PRODUCT_FORMATS: Record<ProductKind, string> = {
   single: "Single compound", blend: "Compound blend",
   spray: "Prepared research solution", water: "Laboratory water supply",
 };
-/** Facts and limits are read from the same reviewed record as product cards. */
-export function productOverview(product: SupplierProduct): string {
-  const details = PRODUCT_RESEARCH[product.id];
-  return details ? `${details.what} ${details.study} ${details.how}` : product.summary;
-}
-
 function normalize(value: string): string {
   return value.normalize("NFKC").toLowerCase().replace(/\+/g," plus ").replace(/&/g," and ").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
 }

@@ -1,3 +1,4 @@
+import { ARTICLE_GUIDES } from "../src/lib/learn/article-presentation";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { withSocialMetadata } from "../src/lib/seo/social-metadata";
@@ -9,7 +10,7 @@ import { GET } from "../src/app/share-image/route";
 import { GET as favicon } from "../src/app/favicon.ico/route";
 
 async function main() {
-  const paths = [...Object.keys(SEARCH_SNIPPETS), ...Object.keys(FACET_SNIPPETS), ...PEPTIDES.map(p => `/peptides/${p.slug}`), ...COMPARISONS.map(c => `/learn/vs/${c.slug}`)];
+  const paths = [...Object.keys(ARTICLE_GUIDES).map(slug => `/learn/${slug}`), ...Object.keys(SEARCH_SNIPPETS), ...Object.keys(FACET_SNIPPETS), ...PEPTIDES.map(p => `/peptides/${p.slug}`), ...COMPARISONS.map(c => `/learn/vs/${c.slug}`)];
   for (const page of STATIC_PAGES) assert.ok(searchSnippet(page.path || "/"), `Missing static page: ${page.path}`);
   const titles = new Set<string>();
   for (const path of paths) {
@@ -38,7 +39,7 @@ async function main() {
       fs.writeFileSync(`audit-evidence/search-appearance/${path === "/" ? "home" : path.split("/").at(-1)}.png`, bytes);
     }
   }
-  for (const path of ["/admin", "/plan/private-id", "/learn/unpublished", "__proto__", "<script>alert(1)</script>", "a".repeat(200)]) {
+  for (const path of ["/admin", "/plan/private-id", "/learn/unpublished", "/learn/__proto__", "/learn/constructor", "__proto__", "<script>alert(1)</script>", "a".repeat(200)]) {
     assert.equal(searchSnippet(path), undefined);
     assert.equal((await GET(new Request(`https://bacwater.ai/share-image?path=${encodeURIComponent(path)}`))).status, 404);
   }

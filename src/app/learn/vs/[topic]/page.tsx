@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
-import { topicReferences } from "@/lib/content/references";
+import { sourceReference, topicReferences } from "@/lib/content/references";
 import { SITE_URL } from "@/lib/seo/schema";
 import { LAST_REVIEWED_ISO } from "@/lib/content-meta";
 
@@ -75,7 +75,7 @@ export default async function ComparisonPage({
 
   const others = COMPARISONS.filter((x) => x.slug !== c.slug);
   const dims = comparisonDims(c);
-  const refs = c.sources.map((url) => ({ url, title: url.includes("cdc.gov") ? "CDC: injection safety and multi-dose containers" : "Manufacturer product labeling", source: new URL(url).hostname, note: "Label distinction checked September 21, 2026; not an individual compatibility assessment." }));
+  const refs = c.sources.map(sourceReference);
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-14 pb-24 sm:pb-32">
@@ -127,35 +127,29 @@ export default async function ComparisonPage({
 
       {/* Comparison table */}
       <div className="mt-8 overflow-x-auto border border-border" role="region" aria-label="Scrollable data table" tabIndex={0}>
-        <table className="w-full text-sm">
+        <table className="w-full text-sm responsive-comparison">
           <thead>
             <tr className="bg-surface text-left">
               <th scope="col" className="px-4 py-3 font-medium">Label detail</th>
-              <th className="px-4 py-3 font-medium">Bac water</th>
-              <th className="px-4 py-3 font-medium">{c.otherName}</th>
+              <th scope="col" className="px-4 py-3 font-medium">Bac water</th>
+              <th scope="col" className="px-4 py-3 font-medium">{c.otherName}</th>
             </tr>
           </thead>
           <tbody>
             {c.table.map((row) => (
               <tr key={row.dimension} className="border-t border-border">
-                <td className="px-4 py-3 font-medium text-muted-foreground">
-                  {row.dimension}
-                </td>
-                <td className="px-4 py-3">{row.bac}</td>
-                <td className="px-4 py-3">{row.other}</td>
+                <th scope="row" className="px-4 py-3 font-medium text-muted-foreground text-left">{row.dimension}</th>
+                <td data-label="BAC water" className="px-4 py-3">{row.bac}</td>
+                <td data-label={c.otherName} className="px-4 py-3">{row.other}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Comparison infographic */}
-      <div className="mt-6">
-        <Infographic
-          svg={comparisonSvg(c)}
-          caption={`${c.title}: the key differences at a glance.`}
-        />
-      </div>
+      <p className="mt-4 text-sm"><a className="inline-flex min-h-11 items-center underline" href={`/learn/vs/${c.slug}/infographic.svg`} target="_blank" rel="noopener noreferrer">Open the printable comparison graphic</a></p>
+      {c.slug === "saline" && <p className="mt-4"><Link className="underline" href="/learn/vs/sodium-chloride">Compare BAC water with bacteriostatic sodium chloride specifically</Link></p>}
+      {["acetic-acid","reconstitution-solution"].includes(c.slug) && <aside className="mt-6 rounded-xl border bg-muted p-5"><h2 className="font-semibold">What the label must identify</h2><ul className="mt-3 list-disc space-y-2 pl-5"><li>The exact ingredients and their concentrations</li><li>The complete product name and intended use</li><li>Preservative status, container instructions and storage</li></ul><Link className="mt-3 inline-block underline" href="/learn/glossary#diluent">Look up diluent and formulation terms</Link></aside>}
 
       {/* Body sections */}
       <div className="mt-12 space-y-10">
@@ -164,7 +158,7 @@ export default async function ComparisonPage({
             <h2 className="text-2xl font-serif font-medium tracking-tight">
               {s.h2}
             </h2>
-            <p className="mt-3 text-foreground/90 leading-relaxed">{s.p}</p>
+            <p className="mt-3 text-foreground/90 leading-relaxed">{s.p.replace("The earlier statement on this site that BAC water can always replace sterile water was incorrect.", "")}</p>
           </section>
         ))}
       </div>
@@ -203,37 +197,9 @@ export default async function ComparisonPage({
         </div>
       </section>
 
-      {/* Read a compound-specific reference (into the peptide hub) */}
-      <section className="mt-12">
-        <h2 className="text-xl font-serif font-medium tracking-tight">
-          Read a compound-specific reference
-        </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {[
-            { slug: "bpc-157", label: "BPC-157" },
-            { slug: "tb-500", label: "TB-500" },
-            { slug: "semaglutide", label: "Semaglutide" },
-            { slug: "tirzepatide", label: "Tirzepatide" },
-            { slug: "ipamorelin", label: "Ipamorelin" },
-            { slug: "ghk-cu", label: "GHK-Cu" },
-          ].map((pep) => (
-            <Link
-              key={pep.slug}
-              href={`/peptides/${pep.slug}`}
-              className="group flex items-center justify-between border border-border p-4 hover:bg-muted transition-colors"
-            >
-              <span className="font-medium">{productDisplayName(pep.slug,pep.label)}</span>
-              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          ))}
-        </div>
-        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-          <Link href="/peptides" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">All peptides</Link>
-          <Link href="/faq" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">BAC water FAQ</Link>
-          <Link href="/learn/bac-water-shelf-life" className="font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">Shelf life and storage</Link>
-        </div>
-      </section>
+      <section className="mt-10"><h2 className="text-xl font-serif">Read the next useful guide</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{[["/learn/bac-water-for-peptides","Compatibility and product instructions"],["/learn/bac-water-shelf-life","Storage and container dates"],["/learn/how-to-read-a-peptide-vial","Read amounts and concentrations"],["/learn/what-you-cannot-know","What calculations cannot verify"]].map(([href,label])=><Link className="rounded-xl border p-4" key={href} href={href}>{label}</Link>)}</div></section>
 
+      {c.slug === "sterile-water" && <aside className="mt-8 rounded-xl border p-4 text-sm"><h2 className="font-semibold">Correction note</h2><p className="mt-2">The earlier statement on this site that BAC water can always replace sterile water was incorrect. The exact product instructions determine the vehicle.</p></aside>}
       <References references={refs} />
 
       {/* CTA */}
@@ -246,15 +212,7 @@ export default async function ComparisonPage({
             Use the numbers from your instructions to check the math.
           </p>
         </div>
-        <div className="flex flex-wrap gap-3 shrink-0">
-          <Button asChild variant="brand">
-            <Link href="/plan">
-              Build a plan <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/tools/bac-water">Bac water calculator</Link>
-          </Button>
+        <div className="flex flex-wrap gap-3 shrink-0"><Button asChild variant="brand"><Link href="/tools/bac-water">Calculate concentration <ArrowRight className="h-4 w-4" /></Link></Button>
         </div>
       </section>
     </div>

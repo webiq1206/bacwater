@@ -1,4 +1,4 @@
-import { PRODUCT_RESEARCH } from "./product-content";
+import { PRODUCT_CATALOG_COPY } from "./product-catalog-copy";
 /** Reviewed supplier listings, not a live inventory feed or product endorsement. */
 export const SUPPLIER_SOURCES = {
   program: "https://www.aminoclub.com/us/affiliate",
@@ -89,7 +89,7 @@ const descriptions: Record<ProductKind, {label:string;summary:string}> = {
   water: {label:"Lab water",summary:"Check the water label, bottle sizes, and batch report."},
 };
 export const SUPPLIER_PRODUCTS: readonly SupplierProduct[] = PRODUCTS.map(([id,kind,reference],index) => {
-  const content = PRODUCT_RESEARCH[id];
+  const content = PRODUCT_CATALOG_COPY[id];
   if (!content) throw new Error(`Missing reviewed product content: ${id}`);
   return {id,kind,reference,...descriptions[kind],artworkTone:index%7,
     name:content.name,mark:content.name,summary:content.summary,aliases:content.aliases,

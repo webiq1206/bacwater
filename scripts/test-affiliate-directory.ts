@@ -1,14 +1,15 @@
+import { PRODUCT_RESEARCH } from "../src/lib/partners/product-content";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { APPROVED_AFFILIATE_URL, SUPPLIER_PRODUCTS, affiliateProductUrl, getApprovedSupplierCatalog, getSupplierCatalog } from "../src/lib/partners/supplier-catalog";
-import { matchDirectory, productOverview } from "../src/lib/partners/product-directory";
+import { matchDirectory } from "../src/lib/partners/product-directory";
 let count=0;
 const test=(name:string,fn:()=>void)=>{fn();count++;console.log(`PASS affiliate directory: ${name}`);};
 test("owner's exact referral URL retained",()=>assert.equal(APPROVED_AFFILIATE_URL,"https://aminoclub.com?utm_source=affiliate_marketing&code=WEBIQ"));
 test("every listing and client fallback carries exactly the two supplied parameters",()=>{for(const p of getApprovedSupplierCatalog()){const u=new URL(p.href);assert.equal(u.origin,"https://www.aminoclub.com");assert.equal(u.pathname,`/us/products/${p.id}`);assert.equal(u.searchParams.get("code"),"WEBIQ");assert.equal(u.searchParams.get("utm_source"),"affiliate_marketing");assert.equal([...u.searchParams].length,2);assert.equal(p.paid,true);}});
 test("default production catalog is active and the emergency pause works",()=>{const prior=process.env.AMINO_CLUB_AFFILIATE_PAUSED;try{delete process.env.AMINO_CLUB_AFFILIATE_PAUSED;assert.ok(getSupplierCatalog().every(p=>p.paid));process.env.AMINO_CLUB_AFFILIATE_PAUSED="true";assert.ok(getSupplierCatalog().every(p=>!p.paid&&p.href===p.sourceUrl));}finally{if(prior===undefined)delete process.env.AMINO_CLUB_AFFILIATE_PAUSED;else process.env.AMINO_CLUB_AFFILIATE_PAUSED=prior;}});
 for(const bad of ["http://www.aminoclub.com/us/products/bpc-157","https://www.aminoclub.com.attacker.invalid/us/products/bpc-157","https://user:pass@www.aminoclub.com/us/products/bpc-157","https://www.aminoclub.com/us/products/bpc-157?email=private","https://www.aminoclub.com/us/products/bpc-157#private","https://www.aminoclub.com/account","javascript:alert(1)"])test("reject unexpected destination",()=>assert.throws(()=>affiliateProductUrl(bad)));
-test("all 50 entries have distinct, nonempty research details",()=>{assert.equal(SUPPLIER_PRODUCTS.length,50);const texts=SUPPLIER_PRODUCTS.map(productOverview);assert.equal(new Set(texts).size,50);assert.ok(texts.every(s=>s.length>90));});
+test("all 50 entries have distinct, nonempty research details",()=>{assert.equal(SUPPLIER_PRODUCTS.length,50);const texts=SUPPLIER_PRODUCTS.map(p => { const d = PRODUCT_RESEARCH[p.id]; return `${d.what} ${d.study} ${d.how}`; });assert.equal(new Set(texts).size,50);assert.ok(texts.every(s=>s.length>90));});
 test("empty search retains all products",()=>assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"").products.length,50));
 for(const p of SUPPLIER_PRODUCTS)test(`exact listing name remains findable: ${p.id}`,()=>assert.ok(matchDirectory(SUPPLIER_PRODUCTS,p.name).products.some(x=>x.id===p.id)));
 test("natural wording finds laboratory water",()=>assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"Please show me lab water").products.map(p=>p.id),["amino-h2o"]));

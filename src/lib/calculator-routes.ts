@@ -4,11 +4,11 @@ export const CALCULATOR_ROUTES = [
   { href: "/plan", label: "Guided calculation" },
   { href: "/plan/new", label: "New calculation" },
   { href: "/tools/bac-water", label: "BAC water calculator" },
-  { href: "/tools/dose", label: "Known concentration" },
+  { href: "/tools/dose", label: "Amount-to-volume" },
   { href: "/tools/mg-to-mcg", label: "mg to mcg" },
   { href: "/tools/syringe-units", label: "U-100 units to mL" },
   { href: "/tools/reverse-bac", label: "Find final volume" },
-  { href: "/tools/supplies", label: "Count portions" },
+  { href: "/tools/supplies", label: "Vial counts" },
 ] as const;
 export function isCalculatorWorkspace(path: string): boolean {
   return CALCULATOR_ROUTES.some(route => route.href === path) ||

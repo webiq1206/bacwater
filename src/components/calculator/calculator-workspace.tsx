@@ -1,4 +1,5 @@
 "use client";
+import { CalculationEvents } from "./calculation-events";
 import Link from "next/link";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -32,7 +33,7 @@ export function CalculatorWorkspace({ title, description, children, help, refere
     else if(pathname==="/calculate/hcg")chooseCalculationProduct("hcg","iu","hcg");
     else if(/^\/tools\/(bac-water|reverse-bac|supplies|dose)$/.test(pathname||""))resumeMassCalculation();
   },[pathname,routeProduct]);
-  const hasOwnProductPicker = ["/peptide-calculator", "/plan", "/plan/new"].includes(pathname || "") || /^\/plan\/[^/]+\/edit$/.test(pathname || "");
+  const hasOwnProductPicker = ["/peptide-calculator", "/plan", "/plan/new", "/tools/bac-water", "/tools/dose", "/tools/reverse-bac", "/tools/supplies"].includes(pathname || "") || /^\/plan\/[^/]+\/edit$/.test(pathname || "");
   const [selectedProduct,setSelectedProduct]=useState<string|null>(()=>productForCalculatorPath(pathname||"")?.id||null);
   useEffect(()=>{const product=productForCalculatorPath(pathname||"");if(product)setSelectedProduct(product.id);},[pathname]);
   useEffect(() => { setHelpOpen(false); }, [pathname]);
@@ -88,7 +89,7 @@ export function CalculatorWorkspace({ title, description, children, help, refere
         <div className={styles.content}>
           <div className={styles.heading}><h1>{title}</h1><p>{description}</p></div>
           {!hasOwnProductPicker && <CalculatorProductTools selectedId={routeProduct?.id||(session.kind==="single"?session.productId:null)}/>}
-          {children}
+          <CalculationEvents/>{children}
           {reference && <div className="mt-10 border-t border-border pb-8 text-base leading-relaxed" data-calculator-reference>{reference}</div>}
         </div>
       </div>

@@ -46,7 +46,7 @@ export default function ContactPage() {
           <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
         </p>
       </div>
-      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">Your message is saved in the site's support inbox. The confirmation means the record was saved, not that a reply has been sent. For a calculator issue, include the public page, units and steps to reproduce it.</p>
+      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">Use this form for website support or a correction. Include the public page and steps to reproduce a calculator issue. We cannot promise a response time. For orders, shipping or product questions, contact the supplier directly.</p>
       <div className="mt-6 rounded-xl border border-border p-4 sm:p-6">
         <ContactForm />
       </div>

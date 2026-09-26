@@ -8,7 +8,7 @@ const tools=[
  {href:"/tools/bac-water",icon:Droplets,title:"Check BAC water math",body:"Enter the vial amount and final liquid volume. See how much is in each mL.",example:"mg ÷ mL"},
  {href:"/tools/mg-to-mcg",icon:Scale,title:"Change mg to mcg",body:"Switch between these two ways to write an amount. Either way works.",example:"mg ↔ mcg"},
  {href:"/tools/syringe-units",icon:Ruler,title:"Change units to mL",body:"Check a U-100 scale. On that scale, 100 units is 1 mL.",example:"units ↔ mL"},
- {href:"/tools/dose",icon:Beaker,title:"Find a measurement",body:"Already know the concentration? Check the amount in a volume, or the volume for an amount.",example:"amount ÷ mg/mL"},
+ {href:"/tools/dose",icon:Beaker,title:"Amount-to-volume",body:"Already know the concentration? Check the amount in a volume, or the volume for an amount.",example:"amount ÷ mg/mL"},
  {href:"/tools/supplies",icon:Package,title:"Count your vials",body:"Use your own amounts and count. See how many whole vials the math calls for.",example:"count → vials"},
  {href:"/tools/reverse-bac",icon:RotateCcw,title:"Try a different volume",body:"Explore how the numbers change. This does not tell you how to prepare a product.",example:"volume ↔ scale"},
  {href:"/tools/vial-labels",icon:FileText,title:"Print a label",body:"Keep the numbers with the vial. Make a label from a saved plan.",example:"save → print"},

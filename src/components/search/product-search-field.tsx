@@ -16,6 +16,7 @@ type Props = {
   inputRef?: RefObject<HTMLInputElement | null>;
   onBrowse?: () => void;
   showInitial?: boolean;
+  suggestions?: boolean;
   previewCount?: number;
   hideField?: boolean;
   activeProductId?: string | null;
@@ -23,7 +24,7 @@ type Props = {
 };
 
 /** Shared, entirely local product search. The result list is directly below the field. */
-export function ProductSearchField({ query, onChange, match, inputId, inputRef, onBrowse, showInitial = false, previewCount = 4, hideField = false, activeProductId, onActiveProductChange }: Props) {
+export function ProductSearchField({ query, onChange, match, inputId, inputRef, onBrowse, showInitial = false, suggestions = true, previewCount = 4, hideField = false, activeProductId, onActiveProductChange }: Props) {
   const uid = useId(), fallbackInput = useRef<HTMLInputElement>(null), root = useRef<HTMLDivElement>(null);
   const input = inputRef || fallbackInput, id = inputId || `${uid}-product-search`;
   const [limit, setLimit] = useState(previewCount);
@@ -32,7 +33,7 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
     const results = root.current?.querySelector<HTMLElement>("[data-product-search-matches]");
     if (results) results.scrollTop = 0;
   }, [query, previewCount]);
-  const showResults = showInitial || Boolean(query.trim());
+  const showResults = suggestions && (showInitial || Boolean(query.trim()));
   const visible = match.products.slice(0, limit);
   function firstResult() { return root.current?.querySelector<HTMLButtonElement>("[data-product-match] > button"); }
   function clear() { onChange(""); input.current?.focus(); }

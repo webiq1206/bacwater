@@ -104,7 +104,7 @@ export default function PeptideCalculatorPage() {
         }}
       />
 
-      <CalculatorWorkspace title="Peptide calculator" description="One question at a time. Use the numbers from your own instructions." backHref="/" help={<>
+      <CalculatorWorkspace title="Peptide calculator" description="Choose your product first. Its format determines the fields and units you need." backHref="/" help={<>
       {/* How it works: answer-first teaching, targets long-tail + AI overviews. */}
       <section className="mt-16 max-w-3xl">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">

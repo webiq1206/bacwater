@@ -46,7 +46,7 @@ export function DevicePlansList() {
           </div>
           <Button asChild variant="brand" className="mt-4">
             <Link href="/plan">
-              <Plus className="h-4 w-4" /> Build a plan
+              <Plus className="h-4 w-4" /> New calculation
             </Link>
           </Button>
         </div>

@@ -372,7 +372,7 @@ export const PEPTIDES: PeptideRef[] = [
   },
   {
     slug: "glow-blend",
-    name: "GHK-Cu + BPC-157 (Glow Blend)",
+    name: "GLOW (BPC-157 + TB-500 + GHK-Cu)",
     category: "cosmetic",
     commonVialStrengthsMg: [50],
     typicalDoseMcgRange: [500, 2000],

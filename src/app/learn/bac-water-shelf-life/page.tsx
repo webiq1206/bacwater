@@ -25,16 +25,16 @@ export default function ShelfLifePage() {
     <p className="mt-3 text-xs text-muted-foreground">Sources checked September 21, 2026. General reference, not a medical review or product-specific instruction.</p>
     <section className="mt-9"><h2 className="text-2xl font-serif">Three different dates</h2>
       <div className="mt-4 overflow-x-auto rounded-xl border border-border" role="region" aria-label="Storage and expiry comparison" tabIndex={0}>
-        <table className="w-full text-sm"><caption className="sr-only">Different dates apply to unopened water, opened multi-dose water and a reconstituted product.</caption><thead><tr className="text-left"><th scope="col" className="p-4">Container</th><th scope="col" className="p-4">Date to check</th><th scope="col" className="p-4">Storage source</th></tr></thead><tbody>
-          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Unopened BAC water</th><td className="p-4">Manufacturer expiry</td><td className="p-4">That water product's label</td></tr>
-          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Opened multi-dose vial</th><td className="p-4">Opened-vial instructions and original expiry</td><td className="p-4">Manufacturer instructions</td></tr>
-          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Reconstituted product</th><td className="p-4">Instructions for the exact formulation</td><td className="p-4">Product-specific instructions</td></tr>
+        <table className="w-full text-sm responsive-comparison"><caption className="sr-only">Different dates apply to unopened water, opened multi-dose water and a reconstituted product.</caption><thead><tr className="text-left"><th scope="col" className="p-4">Container</th><th scope="col" className="p-4">Date to check</th><th scope="col" className="p-4">Storage source</th></tr></thead><tbody>
+          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Unopened BAC water</th><td data-label="Date to check" className="p-4">Manufacturer expiry</td><td data-label="Storage source" className="p-4">That water product's label</td></tr>
+          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Opened multi-dose vial</th><td data-label="Date to check" className="p-4">Opened-vial instructions and original expiry</td><td data-label="Storage source" className="p-4">Manufacturer instructions</td></tr>
+          <tr className="border-t border-border"><th scope="row" className="p-4 text-left">Reconstituted product</th><td data-label="Date to check" className="p-4">Instructions for the exact formulation</td><td data-label="Storage source" className="p-4">Product-specific instructions</td></tr>
         </tbody></table>
       </div>
     </section>
     <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Does BAC water need refrigeration?</h2>
       <p className="leading-relaxed">Do not assume it does. Pfizer's Bacteriostatic Water for Injection labeling specifies 20 to 25°C (68 to 77°F). Follow the label for the exact product you have. Once a substance is added, its manufacturer's dilution and storage instructions govern; the water's instructions alone cannot answer that question.</p>
-      <p className="leading-relaxed">This replaces the site's earlier blanket recommendation to refrigerate opened BAC water.</p>
+
     </section>
     <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">What the 28-day guidance does not mean</h2>
       <p className="leading-relaxed">CDC's opened multi-dose guidance does not certify that a mixed solution remains stable for 28 days. Preservative also does not provide complete protection against contamination. Questionable sterility is a reason to discard a vial, even before its dated limit.</p>
@@ -44,6 +44,7 @@ export default function ShelfLifePage() {
       <p className="leading-relaxed">It converts entered amounts and volumes. For example, 10 mg in a final volume of 2 mL is 5 mg/mL. Neither that arithmetic nor a compound name establishes an expiry date.</p>
       <p className="leading-relaxed">Saved calculations and printed labels keep the calculation separate from product-specific storage instructions. They do not generate a safe-use date. See <Link href="/learn/what-you-cannot-know" className="underline">what no calculation can verify</Link> and the <Link href="/tools/vial-labels" className="underline">vial-label tool</Link>.</p>
     </section>
+    <aside className="mt-8 rounded-xl border p-4 text-sm"><h2 className="font-semibold">Correction note</h2><p className="mt-2">This page replaces the site’s earlier blanket recommendation to refrigerate opened BAC water. Storage must follow the exact product label.</p></aside>
     <References references={references} />
     <section className="section-dark mt-10 rounded-2xl p-6"><h2 className="text-xl font-serif">Check the math, not a shelf-life guess</h2><p className="mt-2 text-sm">Enter the numbers from your existing instructions. Keep the product label alongside your saved calculation.</p><Button asChild variant="brand" className="mt-4"><Link href="/peptide-calculator">Open the calculator</Link></Button></section>
   </div>;

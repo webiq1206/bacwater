@@ -233,7 +233,7 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
   },
   "hcg": {
     "what": "An HCG label may express biological activity in international units, abbreviated IU, rather than mass in mg.",
-    "uses": "Use the matching IU calculation below when that is how the product is labeled. Product IU and U-100 syringe-volume units are different quantities.",
+    "uses": "Open the dedicated hCG IU calculator when that is how the product is labeled. Product IU and U-100 syringe-volume units are different quantities.",
     "caveat": "There is no universal mg-to-IU conversion. The generic mass-based plan builder must not receive an IU value in its milligram field.",
     "sources": [
       "https://www.nist.gov/pml/owm/metric-si-prefixes"
@@ -246,10 +246,11 @@ export const PEPTIDE_CONTENT: Record<string, PeptideContent> = {
     ]
   },
   "glow-blend": {
-    "what": "Glow is a blend label, not a guaranteed ingredient list or fixed ratio. Read every component and its stated amount.",
-    "uses": "For a defined, uniformly mixed two-component solution, the mass ratio remains constant across portions. A total mass alone does not identify each component's contribution.",
-    "caveat": "The two-component planner does not validate compatibility and cannot represent an unknown or three-component formula. Do not collapse a blend into one component's amount.",
+    "what": "The catalog product GLOW lists BPC-157, TB-500 and GHK-Cu. Other products using a similar blend name may differ. Read every component and its stated amount on the exact label; no ratio is assumed here.",
+    "uses": "For a defined, uniformly mixed solution, each component concentration depends on its own stated mass and the final volume. A combined mass does not identify the amount of BPC-157, TB-500 or GHK-Cu separately.",
+    "caveat": "Use the GLOW product calculator to enter each of its three component amounts. Neither that calculator nor this reference validates compatibility, identity or uniform mixing. Do not treat combined mass as the amount of one component.",
     "sources": [
+      "https://www.aminoclub.com/us/products/glow",
       "https://www.nist.gov/pml/owm/metric-si-prefixes"
     ]
   },

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ArrowRight, Search, X } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { BASE_SEARCH_ITEMS, SEARCH_KIND_LABEL, searchItems, type SearchItem, type SearchKind } from "@/lib/search/public-index";
@@ -25,7 +25,6 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
   onNavigate?: () => void; standalone?: boolean;
   activeProductId?: string | null; onActiveProductChange?: (id: string | null) => void;
 }) {
-  const router = useRouter();
   const [query, setQuery] = useState(""), [kind, setKind] = useState<SearchKind | "all">("all");
   const [items, setItems] = useState<readonly SearchItem[]>(BASE_SEARCH_ITEMS), [loading, setLoading] = useState(true), [partial, setPartial] = useState(false), [limit, setLimit] = useState(14);
   const [localProduct, setLocalProduct] = useState<string | null>(null);
@@ -57,8 +56,7 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
   return <div className={styles.searchBody} ref={root} data-site-search-results data-standalone={standalone}>
     <form role="search" aria-label="Search products, calculators and guides" onSubmit={event => {
       event.preventDefault();
-      if (kind === "product") firstResult()?.click();
-      else if (visible[0]) { navigate(); router.push(visible[0].href); }
+      firstResult()?.click();
     }} className={styles.searchBox}>
       <label htmlFor={standalone ? "page-site-search" : "dialog-site-search"}>What are you looking for?</label>
       <div><Search size={20} aria-hidden="true" />
@@ -72,19 +70,19 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
       <ProductSearchField query={query} onChange={search} match={productMatch} inputRef={input} showInitial previewCount={6} hideField activeProductId={detailId} onActiveProductChange={selectProduct} />
     </div> : <>
       <p className={styles.status} role="status">{query ? `${matched.length} ${matched.length === 1 ? "match" : "matches"}` : kind === "all" ? "Search the site, or choose a category." : `${matched.length} ${kind === "reference" ? "references" : kind + "s"}`}{loading ? " Loading guides…" : partial ? " Guide search is temporarily unavailable." : ""}</p>
-      <div ref={resultList} className={styles.results} aria-label="Search results" tabIndex={0}>
+      <div ref={resultList} className={styles.results} aria-label="Search results" tabIndex={0} onKeyDown={event=>{
+        if(!["ArrowDown","ArrowUp"].includes(event.key)||!(event.target instanceof HTMLElement)||!event.target.matches("[data-search-result]"))return;
+        const links=Array.from(resultList.current?.querySelectorAll<HTMLElement>("[data-search-result]")||[]),index=links.indexOf(event.target);
+        event.preventDefault();
+        if(event.key==="ArrowUp"&&index===0)input.current?.focus();
+        else links[Math.max(0,Math.min(links.length-1,index+(event.key==="ArrowDown"?1:-1)))]?.focus();
+      }}>
         {visible.length ? <ul>{visible.map(item => {
           const product = item.kind === "product" ? products.find(p => p.id === item.productId) : undefined;
           return <li key={item.id}>
-            <Link href={item.href} className={styles.result} data-search-result={item.id} onClick={navigate} onKeyDown={event => {
-              if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
-              const links = Array.from(root.current?.querySelectorAll<HTMLAnchorElement>("[data-search-result]") || []), index = links.indexOf(event.currentTarget);
-              event.preventDefault();
-              if (event.key === "ArrowUp" && index === 0) input.current?.focus();
-              else links[Math.max(0, Math.min(links.length - 1, index + (event.key === "ArrowDown" ? 1 : -1)))]?.focus();
-            }}><SearchThumbnail item={item} /><span className={styles.resultText}><small>{SEARCH_KIND_LABEL[item.kind]}</small><strong><Highlight text={item.title} query={query} /></strong><span>{item.description}</span><b className={styles.openLabel}>{item.kind === "product" || item.kind === "calculator" ? "Open calculator" : item.kind === "reference" ? "Read reference" : "Open page"}</b></span><ArrowRight size={18} aria-hidden="true" /></Link>
+            {product ? <ProductQuickView product={product} className={styles.result} open={detailId === product.id} onOpenChange={open => selectProduct(open ? product.id : null)} resultId={item.id}><SearchThumbnail item={item}/><span className={styles.resultText}><small>Product</small><strong><Highlight text={item.title} query={query}/></strong><span>{item.description}</span><b className={styles.openLabel}>Read research details</b></span><ArrowRight size={18} aria-hidden="true"/></ProductQuickView> : <><Link href={item.href} className={styles.result} data-search-result={item.id} onClick={navigate}><SearchThumbnail item={item} /><span className={styles.resultText}><small>{SEARCH_KIND_LABEL[item.kind]}</small><strong><Highlight text={item.title} query={query} /></strong><span>{item.description}</span><b className={styles.openLabel}>{item.kind === "calculator" ? "Open calculator" : item.kind === "reference" ? "Read reference" : "Open page"}</b></span><ArrowRight size={18} aria-hidden="true" /></Link></>}
             {product && <div className={styles.productActions}>
-              <ProductQuickView product={product} className={styles.quickDetails} open={detailId === product.id} onOpenChange={open => selectProduct(open ? product.id : null)} />
+              <Link href={item.href} className={styles.quickDetails} onClick={navigate}>Use in calculator</Link>
               <p>{product.paid ? AFFILIATE_DISCLOSURE : "Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p>
               <a className={styles.supplierAction} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${item.title} product, opens a new tab`}>View product <span aria-hidden="true">↗</span></a>
             </div>}
