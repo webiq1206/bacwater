@@ -67,6 +67,7 @@ import { toast } from "@/components/ui/toaster";
 import { positiveDecimal } from "@/lib/calc/number-text";
 import { convertMassText } from "@/lib/calc/mass-text";
 import { cn } from "@/lib/utils";
+import { HeroPlanSteps } from "@/components/brand/hero-plan-steps";
 
 function usePlanDraft<T>(key:string, initial:T, isolated:boolean) {
   const [shared,setShared]=useSessionDraft(key,initial),[local,setLocal]=useState(initial);
@@ -88,8 +89,17 @@ export interface PlanFormInitial {
   secondary?: CalcInput["secondary"];
 }
 
+export interface PlanSaveState {
+  saving: boolean;
+  setSaving: (value: boolean) => void;
+  savedPlan: { publicId: string; ownedByUser: boolean } | null;
+  setSavedPlan: (value: { publicId: string; ownedByUser: boolean } | null) => void;
+}
 interface Props {
   mode: Mode;
+  presentation?: "workspace" | "hero";
+  /** Keeps an in-flight save and its result when the hero changes display mode. */
+  saveState?: PlanSaveState;
   /** Prefill the form (used when editing an existing plan). */
   initial?: PlanFormInitial;
   /**
@@ -287,10 +297,11 @@ function ModeToggle({
 
 // ---------- main ----------
 
-export function PlanForm({ mode: initialMode, initial, editing }: Props) {
+export function PlanForm({ mode: initialMode, initial, editing, presentation = "workspace", saveState }: Props) {
   const router = useRouter();
   const advancedRef = useRef<HTMLDivElement>(null);
   const [previewExpanded, setPreviewExpanded] = useState(false);
+  const [heroName, setHeroName] = useSessionDraft("plan-hero-name", "");
   const setSelectedProduct=useCalculatorProductSelection();
 
   // Derive first-render values from an optional prefill (edit flow). Computed
@@ -380,6 +391,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   // elsewhere on the site. It does NOT pre-fill vial/dose: the user enters
   // those (or picks a suggestion chip) so nothing is silently pre-populated.
   const selectPeptide = useCallback((slug: string) => {
+    if (presentation === "hero" && slug === "hcg") { chooseCalculationProduct("hcg", "iu", "hcg"); router.push("/calculate/hcg"); return; }
     if(slug.startsWith("product:")){
       const id=slug.slice(8);
       const p=SUPPLIER_PRODUCTS.find(p=>p.id===id);if(p){if(init)return;chooseCalculationProduct(p.id,p.kind,p.reference||"");router.push(productCalculatorPath(id));}
@@ -391,7 +403,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     setPeptideSlug(slug);
     if (slug !== "custom") setInterestPeptide(slug);
     // Changing a mass-based product preserves values and shows a label-check notice.
-  }, [router,peptideSlug,init]);
+  }, [router,peptideSlug,init,presentation]);
   useEffect(()=>{setSelectedProduct(productForReference(peptideSlug)?.id||null);},[peptideSlug,setSelectedProduct]);
 
   const [vialRaw,setVialRaw]=usePlanField("vialInput",init?String(init.vialMg):"",!!init);
@@ -429,10 +441,11 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
   const [secondaryVialInput, setSecondaryVialInput] = usePlanDraft<number>(`plan-secondary-mass:${peptideSlug}`,initial?.secondary?.vialStrengthMg || 0,!!init);
   const [secondaryVialUnit, setSecondaryVialUnit] = usePlanDraft<Unit>(`plan-secondary-unit:${peptideSlug}`,"mg",!!init);
 
-  const [saving, setSaving] = useState(false);
+  const [localSaving, setLocalSaving] = useState(false);
   // Set after a successful save; opens the post-save dialog (PDF download +
   // auth-aware next step) instead of a blind redirect.
-  const [savedPlan, setSavedPlan] = useState<{ publicId: string; ownedByUser: boolean } | null>(null);
+  const [localSavedPlan, setLocalSavedPlan] = useState<{ publicId: string; ownedByUser: boolean } | null>(null);
+  const { saving, setSaving, savedPlan, setSavedPlan } = saveState ?? {saving:localSaving,setSaving:setLocalSaving,savedPlan:localSavedPlan,setSavedPlan:setLocalSavedPlan};
   // null = untouched, so the editable field tracks the generated default name
   // as the numbers change. When editing, a name the user typed is pinned here
   // so it survives; a name we generated stays null so it follows the numbers,
@@ -526,7 +539,7 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
     ? `${primaryName} + ${secondaryName}`
     : primaryName;
   const nameValue =
-    planName ??
+    (presentation === "hero" ? heroName || null : planName) ??
     defaultPlanName({ peptideName: peptideNameForPlan, vialStrengthMg, dateMixed });
 
   // Editing and creating share this form, so the primary action has to say
@@ -645,6 +658,16 @@ export function PlanForm({ mode: initialMode, initial, editing }: Props) {
 
   // ---------- ADVANCED: all-at-once side-by-side ----------
   const preview = planPreviewState({ input, result, hasProduct: hasPeptide, vialText: vialRaw, vialUnit, volumeText: volumeRaw, amount: scheduleInput, secondaryReady: hasValidBlend, hydrated });
+  if (presentation === "hero") return <>
+    {!init && <SessionValuesNotice/>}
+    <HeroPlanSteps step={step} onStep={setStep} preview={preview} result={result}
+      product={<><ProductPicker value={peptideSlug} onChange={selectPeptide} label="Product"/>{peptideSlug === "custom" && <Input aria-label="Custom peptide name" placeholder="Type the name on your label" className="mt-3" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/>} {peptideSlug === "hcg" && <p className="mt-3 text-sm">hCG uses IU, not mg. <Link className="underline" href="/calculate/hcg">Open hCG IU calculator</Link></p>}</>}
+      secondary={showBlend ? <p className="mt-3 text-sm">This draft includes {secondaryName}: {secondaryVialMg} mg. <Link className="underline" href="/plan/new">Edit blend details in the workspace</Link>, or <button type="button" className="underline min-h-11" onClick={() => setShowBlend(false)}>remove the second product</button>.</p> : undefined}
+      vial={vialRaw} unit={vialUnit} onVial={setVialRaw} onUnit={unit => { const c = convertMassText(vialRaw, vialUnit); if (vialRaw.trim() && (c.kind !== "value" || c[unit].length > 64)) return; setVialRaw(c.kind === "value" ? c[unit] : ""); setVialUnit(unit); }}
+      schedule={scheduleFields} volume={volumeRaw} onVolume={setVolumeRaw} date={dateMixed} onDate={setDateMixed}
+      device={syringeType} onDevice={setSyringeType} name={nameValue} onName={setHeroName} onSave={handleSave} saving={saving}/>
+    {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={open => { if (!open) setSavedPlan(null); }}/>}
+  </>;
   function editPreviewField(field: PreviewField) {
     const section = { product: 1, vial: 2, amount: 3, volume: 5, blend: 1 }[field];
     const panel = advancedRef.current?.querySelector<HTMLElement>(`[data-plan-section="${section}"]`);

@@ -95,3 +95,16 @@ The established cream, sage, forest and lime palette, serif emphasis, calculator
 - Keep optional analytics disabled until the receiving property and sanitized event receipt are verified. Measure conversion and search CTR after release; no lift is assumed.
 - Lighthouse / real Core Web Vitals and authenticated Search Console data remain unavailable. The prior PageSpeed request returned 429.
 - Shareable product-detail URLs and naming a real individual editor remain ideas requiring business input, not invented additions to this release.
+
+## Follow-up: guided homepage calculator
+
+The homepage card now presents the existing PlanForm as six compact steps: product, vial label, amount/schedule, final volume, device/optional date, and review/save. Its forest header, cream/sage surfaces, product artwork, converter tabs and lime result panel are retained.
+
+- The homepage and full guided workspace use the same calculation engine, schedule interpretation, session fields, step draft and save action. This is a presentation variant, not a second calculation engine.
+- Product selection is required. Powder blends, ready-made solutions, water and IU selections open their dedicated calculators. Their total-premixed-blend defaults and optional ingredient breakdowns are unchanged.
+- Back/Continue, field-specific errors, review edit controls, copy and clear are available on mobile and desktop. The mobile flow can be completed inline, with full screen available as an explicit choice.
+- Only one form is mounted at a time. Entries, the current step, an edited plan name and in-flight save results survive moving between inline/full-screen mode. Converter tabs remain independent.
+- Restored drafts are clamped to the earliest missing prerequisite. Invalid or incomplete inputs remove dependent results and prevent continuing or saving.
+- Added pure step-gating tests and updated Chromium/WebKit CI journeys for inline mobile steps, full-screen switching, refresh, converter continuity, review edits, anonymous saving, product-specific routing, enlarged text and accessibility.
+- Local verification: full unit suite, new guided-flow tests, TypeScript, production build and 64 built-server HTML/image checks passed. Browser regression execution is delegated to the repository's existing isolated CI workflows; physical-device and published-site verification remain separate.
+- No production data, supplier inventory, affiliate attribution or deployment settings were changed. Publication still uses the normal Replit workflow.

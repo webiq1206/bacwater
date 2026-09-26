@@ -1,4 +1,4 @@
-import { chooseAuditMassProduct, openAuditOptional } from "./audit-flow-helpers.mjs";
+import { completeAuditHero, openAuditOptional } from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, webkit, expect } from '@playwright/test';
@@ -16,13 +16,11 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
  try{
   await check('Homepage to product keeps 40 mg, 2 mL and 20 mg/mL',async()=>{
    await p.goto(origin,{waitUntil:'networkidle'});
-   await chooseAuditMassProduct(p,p.locator('[data-hero-calculator]'));
-   await p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true}).click();
+   await p.getByRole('button',{name:'Open hero calculator full screen'}).click();
    const hero=p.locator('[data-hero-focus]');
-   await hero.getByLabel('Amount in vial',{exact:true}).fill('40');
-   await hero.getByLabel('Final liquid volume',{exact:true}).fill('2');
+   await completeAuditHero(p,hero,{vial:'40',amount:'2',volume:'2',review:false});
    await expect(hero.locator('[data-live-result]')).toContainText('20 mg/mL');
-   await hero.getByRole('button',{name:'Choose product',exact:true}).click();
+   await hero.getByRole('button',{name:'Change product',exact:true}).click();
    const picker=p.getByRole('dialog',{name:'Choose a product',exact:true});
    await picker.getByLabel('Find a product',{exact:true}).fill('Retatrutide');
    await picker.locator('[data-product-choice="glp-3"]').click();
@@ -50,9 +48,13 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
   });
   await check('Guided and all-at-once views inherit the same values and meaning',async()=>{
    await p.goto(origin+'/plan',{waitUntil:'networkidle'});
+   await expect(p.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');
+   await p.getByLabel('Go back',{exact:true}).click();
+   await p.getByLabel('Go back',{exact:true}).click();
+   await expect(p.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
+   await p.getByLabel('Go back',{exact:true}).click();
    await expect(p.getByRole('combobox',{name:'Product',exact:true})).toContainText('GLP-3 (RT)');
    await p.getByRole('button',{name:'Continue',exact:false}).click();
-   await expect(p.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
    await p.getByRole('button',{name:'Continue',exact:false}).click();
    await expect(p.getByRole('heading',{name:'How much, and how often?',exact:true})).toBeVisible();
    await expect(p.getByLabel('Total amount for one week',{exact:true})).toHaveValue('2');
@@ -86,12 +88,14 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await p.goto(origin+'/calculate/hcg',{waitUntil:'networkidle'});
    await expect(p.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('');
    await p.goto(origin,{waitUntil:'networkidle'});
+   await p.locator('[data-hero-calculator]').getByRole('button',{name:'Back',exact:true}).click();
    await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
   });
   await check('Clear does not allow old values to return on refresh',async()=>{
    await p.getByRole('button',{name:'Open hero calculator full screen',exact:true}).click();
    await p.locator('[data-hero-focus]').getByRole('button',{name:'Clear',exact:true}).click();
    await p.reload({waitUntil:'networkidle'});
+   await p.locator('[data-hero-calculator]').getByRole('button',{name:'Continue',exact:true}).click();
    await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('');
    assert.deepEqual(errors,[]);
   });

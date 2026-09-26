@@ -10,3 +10,17 @@ export async function openAuditOptional(page, label) {
   const open = await summary.evaluate(node => node.parentElement.hasAttribute('open'));
   if (!open) await summary.click();
 }
+/** Walk the homepage's real product-first questions, without seeding storage. */
+export async function completeAuditHero(page, scope, {vial='12', amount='0.3', volume='4', review=true} = {}) {
+  await chooseAuditMassProduct(page, scope);
+  await scope.getByRole('button', {name:'Continue',exact:true}).click();
+  await scope.getByLabel('Amount in vial',{exact:true}).fill(vial);
+  await scope.getByRole('button', {name:'Continue',exact:true}).click();
+  await scope.getByLabel('Amount for one time',{exact:true}).fill(amount);
+  await scope.getByRole('button', {name:'Continue',exact:true}).click();
+  await scope.getByLabel('Final liquid volume',{exact:true}).fill(volume);
+  if(review) {
+    await scope.getByRole('button', {name:'Continue',exact:true}).click();
+    await scope.getByRole('button', {name:'Review result',exact:true}).click();
+  }
+}

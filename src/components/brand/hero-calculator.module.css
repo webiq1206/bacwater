@@ -24,3 +24,26 @@
 .mathContext{max-width:1200px;margin:56px auto 0;padding:32px 40px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,5vw,64px);color:#18382d;overflow-wrap:anywhere}.mathContext h2{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.2;letter-spacing:-.045em;margin:0 0 18px}.mathContext p{font-size:.85rem;line-height:1.8;color:#51634c;margin:0 0 14px}.mathContext a{display:inline-flex;align-items:center;min-height:44px;font-size:.85rem;text-decoration:underline;text-underline-offset:4px}.mathSteps{border:1px solid #cad8be;border-radius:15px;background:#f3f6ec;padding:8px 22px;align-self:center}.mathSteps>div{padding:16px 0}.mathSteps>div+div{border-top:1px solid #cedac3}.mathSteps span{font-size:.6rem;letter-spacing:.11em;color:#486040;font-weight:600}.mathSteps p{margin:7px 0 3px;font-size:1rem;color:#18382d}.mathSteps small{font-family:var(--font-jetbrains),monospace;font-size:.72rem;color:#50634a}@media(max-width:780px){.mathContext{grid-template-columns:1fr;padding:16px 24px 40px}.mathSteps{padding-inline:18px}}
 
 @media(max-width:780px){.help,.error,.notice,.scaleNote,.focusBar p{font-size:.875rem;line-height:1.6}.tabs button,.actions button{font-size:.8125rem}.panel{padding-bottom:10px}}
+
+/* The existing card skin, with the guided calculator's shared step flow. */
+.guided{min-width:0;padding-bottom:12px;scroll-margin-top:110px}
+.progress{margin:0 0 16px;color:#506349;font-size:.75rem}
+.progress>div{display:flex;gap:5px}.progress span[data-complete]{height:4px;flex:1;border-radius:3px;background:#e4eadb}.progress span[data-complete=true]{background:#18382d}
+.progress p{display:flex;justify-content:space-between;gap:12px;margin:8px 0 0}
+.guided .stepTitle{font-size:1.25rem;line-height:1.35;font-weight:500;letter-spacing:-.025em;margin:0;color:#18382d}
+.stepHint{font-size:.8rem;line-height:1.65;color:#506349;margin:8px 0 14px;overflow-wrap:anywhere}
+.stepFields{margin-top:16px;min-width:0}.stepLabel{display:block;font-size:.8rem;line-height:1.5;color:#506349;margin:14px 0 7px}
+.guidedInputRow{display:grid;grid-template-columns:minmax(0,1fr) 84px;align-items:end;gap:12px}
+.stepUnit{display:block;font-size:.72rem;color:#506349}.stepUnit select,.stepSelect{display:block;min-height:48px;width:100%;max-width:100%;min-width:0;border:1px solid #acbe9f;border-radius:9px;background:#fff;color:#18382d;padding:10px;font-size:16px}
+.stepUnit select{margin-top:4px}.guided .inputWrap input{min-height:48px;font-size:16px}
+.stepNavigation{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:18px}
+.stepNavigation button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;max-width:100%;overflow-wrap:anywhere;padding:11px 17px;border:1px solid #acbe9f;border-radius:10px;font-size:.85rem;line-height:1.5;cursor:pointer}
+.stepNavigation .stepPrimary{background:#18382d;border-color:#18382d;color:#fffef9}.stepNavigation button:disabled{background:#e8eddf;color:#586551;border-color:#d0dac5;cursor:not-allowed}
+.stepActions{display:flex;align-items:center;flex-wrap:wrap;gap:5px 16px;margin-top:8px}.stepActions button,.stepActions a{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:.75rem;color:#365336;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.stepActions a{margin-left:auto}
+.stepSafety,.stepNotice{font-size:.75rem;line-height:1.65;color:#506349;margin:8px 0;overflow-wrap:anywhere}.stepNotice:empty{display:none}
+.stepWarnings,.stepErrors{padding:12px 12px 12px 28px;margin-top:12px;font-size:.8rem;line-height:1.6;border:1px solid #d7bd79;border-radius:9px;background:#fff7dc;color:#694b16;list-style:disc}.stepErrors{color:#923721;border-color:#cba595;background:#fff5ee}
+.reviewRows{margin:18px 0;overflow-wrap:anywhere}.reviewRows>div{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;border-bottom:1px solid #d1ddc5;padding:8px 0;font-size:.8rem;line-height:1.5}.reviewRows dt{color:#506349;font-size:.72rem}.reviewRows dd{grid-column:1;margin:2px 0 0}.reviewRows button{grid-column:2;grid-row:1 / span 2;min-height:44px;min-width:44px;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.guided [data-amount-schedule] fieldset>div{grid-template-columns:1fr}.guided [data-amount-schedule]{overflow-wrap:anywhere}
+.guided [data-amount-schedule] input,.guided [data-amount-schedule] select{min-width:0;max-width:100%;font-size:16px}
+.guided .resultTop{font-size:.8rem}.guided .formula{font-size:.75rem;line-height:1.6}
+@media(max-width:780px){.guided .stepTitle{font-size:1.15rem}.stepHint,.stepLabel,.stepSafety,.stepNotice,.stepWarnings,.stepErrors{font-size:.875rem}.stepNavigation{position:sticky;bottom:0;padding-block:10px;background:#fffef9;z-index:1}.focus .stepNavigation{background:#fbfcf7}.stepNavigation button{padding-inline:14px}.stepActions a,.stepActions button{font-size:.8125rem}.guided .result{margin-bottom:0}.guided .formula{font-size:.75rem}.guided .value .empty{font-size:1.45rem}}
