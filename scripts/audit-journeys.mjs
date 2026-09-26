@@ -92,7 +92,7 @@ try {
     await p.getByLabel('Message',{exact:true}).fill(`${prefix} controlled contact fixture`);
     const request=p.waitForRequest((r)=>r.method()==='POST'&&Boolean(r.headers()['next-action']));
     await p.getByRole('button',{name:'Send message',exact:true}).click();const actual=await request;
-    await expect(p.getByRole('heading',{name:'Your message has been saved.'})).toBeVisible();
+    await expect(p.getByRole('heading',{name:'We received your message.'})).toBeVisible();
     const rows=await prisma.contactMessage.findMany({where:{email}});assert.equal(rows.length,1);contactIds.push(rows[0].id);
     const h=actual.headers();await stranger.request.post(actual.url(),{headers:{'Next-Action':h['next-action'],'Content-Type':h['content-type'],Origin:origin},data:actual.postData()});
     assert.equal(await prisma.contactMessage.count({where:{email}}),1);await p.close();

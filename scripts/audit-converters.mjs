@@ -1,3 +1,4 @@
+import { chooseAuditMassProduct, openAuditOptional } from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, expect } from '@playwright/test';
@@ -45,6 +46,7 @@ try {
   });
   await page.screenshot({ path: `${out}/u100-mobile-320.png`, fullPage: true });
   await page.goto(`${origin}/tools/bac-water`);
+  await chooseAuditMassProduct(page);
   await step('BAC calculator starts with known-volume mode and no assumed answer', async () => {
     await expect(page.getByRole('button', { name: 'Use a known volume' })).toHaveAttribute('aria-pressed', 'true');
     await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('');
@@ -53,6 +55,7 @@ try {
   });
   await step('Known label values produce the expected concentration and measurement', async () => {
     await page.getByLabel('Total amount in the vial', { exact: true }).fill('10');
+    await openAuditOptional(page,'Optional: amount-to-volume calculation');
     await page.getByLabel('Amount for one time', { exact: true }).fill('0.4');
     await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('2');
     await page.getByRole('button',{name:'See my result',exact:true}).click();

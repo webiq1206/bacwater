@@ -1,3 +1,4 @@
+import { chooseAuditMassProduct } from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { createRequire } from 'node:module';
@@ -35,14 +36,14 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   });
   await check(`${engine}: live concentration, optional measurement, units, invalid input and copy`,async()=>journey(1440,1000,async p=>{
    const calc=p.locator('[data-hero-calculator]'),result=calc.locator('[data-live-result]');
-   await expect(calc.getByLabel('Amount in vial',{exact:true})).toHaveValue('');await expect(result).toContainText('Enter your values');
+   await expect(calc.getByLabel('Amount in vial',{exact:true})).toHaveValue('');await expect(calc.getByLabel('Amount in vial',{exact:true})).toBeDisabled();await expect(result).toContainText('Choose your product first');await chooseAuditMassProduct(p,calc);
    await calc.getByLabel('Amount in vial',{exact:true}).fill('12');await calc.getByLabel('Final liquid volume',{exact:true}).fill('4');
    await expect(result).toContainText('12 mg ÷ 4 mL = 3 mg/mL');
    await calc.getByText('Find the amount of liquid for each time',{exact:true}).click();await calc.getByLabel('Amount unit',{exact:true}).selectOption('mcg');await calc.getByLabel('Amount for one time',{exact:true}).fill('300');await expect(result).toContainText('0.1 mL');
    await calc.getByLabel('Final liquid volume',{exact:true}).fill('6');await expect(result).toContainText('0.15 mL');await expect(result).toContainText('15 U-100 units');
    await calc.getByLabel('Amount unit',{exact:true}).selectOption('mg');await expect(calc.getByLabel('Amount for one time',{exact:true})).toHaveValue('0.3');await expect(result).toContainText('0.15 mL');
    await calc.getByRole('button',{name:'Copy result',exact:true}).click();assert.match(await p.evaluate(()=>window.__copied),/0\.15 mL/);
-   await calc.getByLabel('Final liquid volume',{exact:true}).fill('0');await expect(calc.getByRole('alert')).toContainText('Check your entries');await expect(result).not.toContainText('0.15 mL');await expect(calc.getByRole('button',{name:'Copy result',exact:true})).toBeDisabled();
+   await calc.getByLabel('Final liquid volume',{exact:true}).fill('0');await expect(calc.getByRole('alert').filter({hasText:'greater than zero'}).first()).toBeVisible();await expect(result).not.toContainText('0.15 mL');await expect(calc.getByRole('button',{name:'Copy result',exact:true})).toBeDisabled();
    await calc.getByLabel('Final liquid volume',{exact:true}).fill('4');await calc.getByLabel('Amount for one time',{exact:true}).fill('-1');await expect(calc.getByRole('alert').filter({hasText:'greater than zero'}).first()).toBeVisible();await expect(result).not.toContainText('U-100 units');
    await calc.getByRole('button',{name:'Clear',exact:true}).click();await expect(calc.getByLabel('Amount in vial',{exact:true})).toHaveValue('');
    await calc.getByRole('button',{name:'Use example',exact:true}).click();await expect(result).toContainText('3 mg/mL');await expect(calc.getByText(/Example numbers only/)).toBeVisible();
@@ -56,7 +57,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await calc.getByRole('tab',{name:'mg to mcg',exact:true}).click();await expect(calc.getByLabel('Amount in milligrams',{exact:true})).toHaveValue('0.125');
   }));
   await check(`${engine}: mobile editing enters a full-screen calculator with persistent results`,async()=>journey(390,844,async p=>{
-   await p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true}).click();const focus=p.locator('[data-hero-focus]');await expect(focus).toBeVisible();await expect(p.getByRole('navigation',{name:'Primary navigation',exact:true})).toHaveCount(0);
+   await chooseAuditMassProduct(p,p.locator('[data-hero-calculator]'));await p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true}).click();const focus=p.locator('[data-hero-focus]');await expect(focus).toBeVisible();await expect(p.getByRole('navigation',{name:'Primary navigation',exact:true})).toHaveCount(0);
    await focus.getByLabel('Amount in vial',{exact:true}).fill('12');await focus.getByLabel('Final liquid volume',{exact:true}).fill('4');await expect(focus.locator('[data-live-result]')).toContainText('3 mg/mL');
    await focus.getByText('Find the amount of liquid for each time',{exact:true}).click();await focus.getByLabel('Amount unit',{exact:true}).selectOption('mcg');await focus.getByLabel('Amount for one time',{exact:true}).fill('300');await expect(focus.locator('[data-live-result]')).toContainText('0.1 mL');
    await expect(focus.getByRole('link',{name:'View Amino H2O, opens a new tab',exact:true})).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o?utm_source=affiliate_marketing&code=WEBIQ');
@@ -94,7 +95,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     const data=await p.locator('script[type="application/ld+json"]').allTextContents();assert.ok(data.some(s=>JSON.parse(s)['@type']==='SoftwareApplication'));await expect(p.getByRole('heading',{name:'How this peptide reconstitution calculator works'})).toBeVisible();
     await p.evaluate(axe);assert.deepEqual(await p.evaluate(async()=>(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
     await p.addStyleTag({content:'html{font-size:200%}p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
-    await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');await focus.getByLabel('Amount in vial',{exact:true}).fill('12');await focus.getByLabel('Final liquid volume',{exact:true}).fill('4');await expect(focus.locator('[data-live-result]')).toContainText('3 mg/mL');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
+    await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');await chooseAuditMassProduct(p,focus);await focus.getByLabel('Amount in vial',{exact:true}).fill('12');await focus.getByLabel('Final liquid volume',{exact:true}).fill('4');await expect(focus.locator('[data-live-result]')).toContainText('3 mg/mL');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     await p.evaluate(axe);assert.deepEqual(await p.evaluate(async()=>(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
     await focus.getByRole('button',{name:'Back to homepage',exact:true}).click();
    });

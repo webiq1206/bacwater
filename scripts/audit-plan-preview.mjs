@@ -159,7 +159,7 @@ for (const [name, engine, width, height] of process.env.AUDIT_QUICK ? configurat
     await header.getByRole('link', { name: 'Search site', exact: true }).click();
     searchDialog = page.locator('[data-unified-search-dialog]');
     await searchDialog.getByRole('searchbox').fill('RT');
-    await searchDialog.getByRole('button', { name: 'Read research details for GLP-3 (RT)', exact: true }).click();
+    await searchDialog.getByRole('button', { name: 'Open product details for GLP-3 (RT)', exact: true }).click();
     await expect(page.locator('[data-product-detail]')).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(searchDialog.getByRole('searchbox')).toHaveValue('RT');

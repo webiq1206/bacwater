@@ -83,7 +83,8 @@ The established cream, sage, forest and lime palette, serif emphasis, calculator
 - Production build passed.
 - 112 metadata/social-card pairs and branded icon checks passed.
 - 64 built-server HTML/image checks passed locally, including all 50 product routes, hCG and both recovery pages. This verifies server responses and markup, not browser hydration or visual layout.
-- CI now uses disposable PostgreSQL for atomic password-reset, token expiry/reuse, password replacement, session invalidation and action-budget tests. It also checks the 14 database-backed article routes. Its result must be checked before production release.
+- CI now uses disposable PostgreSQL for atomic password-reset, token expiry/reuse, password replacement, session invalidation and action-budget tests. It also checks the 14 database-backed article routes. The CI run for application commit `2e02b309a5b4eb25939ac754b721fa7cf08d50e5` passed all steps, including those database tests and all 78 HTML/image checks.
+- Existing browser regression fixtures were updated to choose products through the interface, open optional fields, check total-versus-ingredient blend results, follow product-detail navigation and recognize the stored contact receipt. Manual desktop/mobile rendering remains unconfirmed.
 - No production database was changed, no real support submission was made and no email was sent during local verification.
 
 ## Remaining operational checks

@@ -1,3 +1,4 @@
+import { chooseAuditMassProduct, openAuditOptional } from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {chromium,expect} from '@playwright/test';
@@ -17,7 +18,7 @@ try{
   await page.getByRole('button',{name:'Clear conversion'}).click();await expect(page.getByLabel('Milligrams (mg)',{exact:true})).toHaveValue('');
  });
  await step('Known concentration converts both directions without implicit dosing',async()=>{
-  await page.goto(`${origin}/tools/dose`);await page.getByLabel('Known concentration (mg/mL)').fill('3');await page.getByLabel('Amount for one time (mcg)',{exact:true}).fill('300');await expect(page.getByRole('status').filter({hasText:'U-100'})).toContainText('0.1 mL');
+  await page.goto(`${origin}/tools/dose`);await chooseAuditMassProduct(page);await page.getByLabel('Known concentration (mg/mL)').fill('3');await page.getByLabel('Amount for one time (mcg)',{exact:true}).fill('300');await expect(page.getByRole('status').filter({hasText:'U-100'})).toContainText('0.1 mL');
   await page.getByRole('button',{name:'Find amount from volume'}).click();await page.getByLabel('Measured volume (mL)').fill('0.1');await expect(page.getByRole('status').filter({hasText:'300 mcg'})).toBeVisible();
  });
  await step('Reverse volume and inventory use explicitly entered values',async()=>{
@@ -25,8 +26,8 @@ try{
   await page.goto(`${origin}/tools/supplies`);await page.getByLabel('Mass per vial (mg)').fill('10');await page.getByLabel('Amount for one time (mcg)',{exact:true}).fill('500');await page.getByLabel('Number of measurements').fill('41');await expect(page.getByRole('status').filter({hasText:'complete measurements'})).toContainText('3 vials');await page.getByLabel('Number of measurements').fill('41.5');await expect(page.getByRole('status').filter({hasText:'whole count'})).toBeVisible();
  });
  await step('Compound calculator inherits compatible values, clears deliberately and keeps hCG IU separate',async()=>{
-  await page.goto(`${origin}/peptides/bpc-157`);await page.getByRole('link',{name:'Open BPC-157 calculator',exact:true}).click();await expect(page.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('10');await page.getByRole('button',{name:'Clear inputs',exact:true}).click();await expect(page.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('');await page.getByLabel('Total in container (mg)',{exact:true}).fill('10');await page.getByLabel('Final volume (mL)',{exact:true}).fill('2');await page.getByLabel('Amount unit',{exact:true}).selectOption('mcg');await page.getByLabel('Amount for one time',{exact:true}).fill('400');await expect(page.getByRole('status').filter({hasText:'5 mg/mL'})).toContainText('8 U-100');
-  await page.getByLabel('Total in container (mg)',{exact:true}).fill('0x10');await expect(page.getByRole('status').filter({hasText:'positive, finite'})).toBeVisible();
+  await page.goto(`${origin}/peptides/bpc-157`);await page.getByRole('link',{name:'Open BPC-157 calculator',exact:true}).click();await expect(page.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('10');await page.getByRole('button',{name:'Clear inputs',exact:true}).click();await expect(page.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('');await page.getByLabel('Total in container (mg)',{exact:true}).fill('10');await page.getByLabel('Final volume (mL)',{exact:true}).fill('2');await openAuditOptional(page,'Optional: amount and schedule');await page.getByLabel('Amount unit',{exact:true}).selectOption('mcg');await page.getByLabel('Amount for one time',{exact:true}).fill('400');await expect(page.getByRole('status').filter({hasText:'5 mg/mL'})).toContainText('8 U-100');
+  await page.getByLabel('Total in container (mg)',{exact:true}).fill('0x10');await expect(page.getByRole('status').filter({hasText:'positive numbers'})).toBeVisible();
   await page.goto(`${origin}/calculate/hcg`);await expect(page.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('');await page.getByLabel('Total in container (IU)',{exact:true}).fill('1000');await page.getByLabel('Final volume (mL)',{exact:true}).fill('2');await expect(page.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('1000');await page.getByLabel('Amount for one time (IU)',{exact:true}).fill('50');await expect(page.getByRole('status').filter({hasText:'500 IU/mL'})).toContainText('10 U-100');
  });
  await step('Explainer endpoint recomputes values, rejects oversized/cross-origin requests and works without a provider',async()=>{

@@ -1,3 +1,4 @@
+import { chooseAuditMassProduct, openAuditOptional } from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, webkit, expect } from '@playwright/test';
@@ -15,6 +16,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
  try{
   await check('Homepage to product keeps 40 mg, 2 mL and 20 mg/mL',async()=>{
    await p.goto(origin,{waitUntil:'networkidle'});
+   await chooseAuditMassProduct(p,p.locator('[data-hero-calculator]'));
    await p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true}).click();
    const hero=p.locator('[data-hero-focus]');
    await hero.getByLabel('Amount in vial',{exact:true}).fill('40');
@@ -32,6 +34,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await expect(p.getByRole('contentinfo')).toHaveCount(0);
   });
   await check('Frequency never silently divides a per-time amount',async()=>{
+   await openAuditOptional(p,'Optional: amount and schedule');
    await p.getByLabel('Amount for one time',{exact:true}).fill('2');
    await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('2');
    await expect(p.locator('[data-product-result]')).toContainText('0.1 mL = 10 U-100');
