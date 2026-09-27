@@ -1,0 +1,111 @@
+{
+  "checkedAt": "2026-09-27T05:06:24.896Z",
+  "host": "bacwater.ai",
+  "results": [
+    {
+      "id": "embed-first-host",
+      "domain": "(first third-party site to install the widget)",
+      "placementUrl": null,
+      "destinationPath": "/tools/bac-water",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    },
+    {
+      "id": "alternativeto",
+      "domain": "alternativeto.net",
+      "placementUrl": null,
+      "destinationPath": "/peptide-calculator",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    },
+    {
+      "id": "saashub",
+      "domain": "saashub.com",
+      "placementUrl": null,
+      "destinationPath": "/peptide-calculator",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    },
+    {
+      "id": "producthunt",
+      "domain": "producthunt.com",
+      "placementUrl": null,
+      "destinationPath": "/peptide-calculator",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    },
+    {
+      "id": "wikidata-item",
+      "domain": "wikidata.org",
+      "placementUrl": null,
+      "destinationPath": "/",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    },
+    {
+      "id": "open-source-calc-package",
+      "domain": "(package registry aggregators)",
+      "placementUrl": null,
+      "destinationPath": "/methodology",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    },
+    {
+      "id": "methodology-deposit",
+      "domain": "zenodo.org",
+      "placementUrl": null,
+      "destinationPath": "/methodology",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    },
+    {
+      "id": "peptide-community-profile",
+      "domain": "(subject-matter forums and communities)",
+      "placementUrl": null,
+      "destinationPath": "/tools/bac-water",
+      "outcome": "not-submitted",
+      "httpStatus": null,
+      "rel": [],
+      "dofollow": false,
+      "anchorText": null,
+      "pageNofollow": false,
+      "detail": "No placement URL yet, so there is nothing to read."
+    }
+  ],
+  "problems": []
+}

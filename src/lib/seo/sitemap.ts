@@ -8,6 +8,7 @@ export function sitemapIndexXml(paths:string[]){return `<?xml version="1.0" enco
 export function xmlResponse(xml:string){return new Response(xml,{headers:{"Content-Type":"application/xml","Cache-Control":"public, max-age=0, s-maxage=0, must-revalidate"}});}
 export const STATIC_PAGES:SitemapUrl[]=[
  {path:"/recommendations",changeFrequency:"weekly",priority:0.7},
+ {path:"/embed",changeFrequency:"monthly",priority:0.6},
  {path:"/methodology",priority:0.6},{path:"/compare-calculators",priority:0.6},
  {path:"",lastModified:new Date("2026-09-25T00:00:00Z"),changeFrequency:"weekly",priority:1},{path:"/peptide-calculator",changeFrequency:"weekly",priority:1},
  {path:"/plan",changeFrequency:"weekly",priority:0.9},

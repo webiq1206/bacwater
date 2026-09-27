@@ -1,0 +1,95 @@
+{
+  "site": "https://bacwater.ai",
+  "host": "bacwater.ai",
+  "updated": "2026-09-27",
+  "placements": [
+    {
+      "id": "embed-first-host",
+      "domain": "(first third-party site to install the widget)",
+      "placementUrl": null,
+      "destinationPath": "/tools/bac-water",
+      "status": "opportunity",
+      "method": "Third-party installs the /embed snippet. The attribution anchor sits in the host page's own markup, outside the iframe, so it is a real external link the host editorially places and controls.",
+      "relevance": "Anyone explaining reconstitution arithmetic can frame a working calculator instead of rebuilding one. The link is on a page about the same subject as the destination.",
+      "nextStep": "The mechanism shipped in this change. Add one record per host page as installs appear in referrer data or a site: search, then run the verifier: a snippet that carried no rel can still be output with rel=\"ugc\" or rel=\"nofollow\" by the host's CMS.",
+      "notes": "This is the only channel here that scales without a submission, and it is the one Google scrutinises most. Compliance rests on three properties asserted by scripts/test-embed.ts: the anchor text is a brand credit rather than a commercial keyword, the pasted markup tells the publisher they may reword it, add rel=\"nofollow\", or delete it, and removing it does not disable the widget."
+    },
+    {
+      "id": "alternativeto",
+      "domain": "alternativeto.net",
+      "placementUrl": null,
+      "destinationPath": "/peptide-calculator",
+      "status": "opportunity",
+      "method": "Free listing created in the site's own submission flow. No email outreach.",
+      "relevance": "A long-established directory of software and web tools, organised by what a tool is an alternative to. A free browser-based calculator is squarely in scope, and the audience is people looking for exactly this kind of utility.",
+      "nextStep": "Needs an account on the platform, which needs an authorised identity and a mailbox the owner controls. Once the listing is live, record the listing URL here and run the verifier.",
+      "notes": "Attribute unverified and genuinely in doubt: sources disagree on whether the official-website field on a listing is dofollow, and it has changed before. Do not record this as dofollow on the strength of the directory's reputation."
+    },
+    {
+      "id": "saashub",
+      "domain": "saashub.com",
+      "placementUrl": null,
+      "destinationPath": "/peptide-calculator",
+      "status": "opportunity",
+      "method": "Free product listing submitted through the platform's own form.",
+      "relevance": "A software and web-service directory whose visitors are comparing tools. Weaker topical fit than a reconstitution-specific page, but the listing describes the tool honestly and the category is real.",
+      "nextStep": "Needs a platform account. After the listing is approved, add the listing URL and verify the attribute rather than assuming it.",
+      "notes": "Reported as dofollow on the free tier by third-party write-ups. That is a claim about the platform, not a measurement of our link, and it does not become a fact until the verifier reads our listing."
+    },
+    {
+      "id": "producthunt",
+      "domain": "producthunt.com",
+      "placementUrl": null,
+      "destinationPath": "/peptide-calculator",
+      "status": "opportunity",
+      "method": "Self-submitted product post.",
+      "relevance": "High-traffic launch platform. Relevance to a measurement utility is moderate: the audience is general-purpose rather than people reconstituting anything.",
+      "nextStep": "Decide whether it is worth the effort at all. Kept in the register mainly as the clearest example of why domain authority is not the criterion.",
+      "notes": "The outbound product link is widely reported as nofollow. Listed here deliberately: it is a high-authority domain that is expected to pass no ranking signal, which is exactly the assumption this register exists to prevent."
+    },
+    {
+      "id": "wikidata-item",
+      "domain": "wikidata.org",
+      "placementUrl": null,
+      "destinationPath": "/",
+      "status": "opportunity",
+      "method": "Create or extend the structured item for the site as an entity, with the official-website property.",
+      "relevance": "Not a ranking link. It is the entity record that search and AI answer engines reconcile against, which is the GEO half of the same job.",
+      "nextStep": "Only worth doing if the site meets the project's own notability and sourcing expectations. Judge that honestly first; an item that does not belong there will be deleted and the effort wasted.",
+      "notes": "Expected nofollow. Recorded so the value claimed for it stays accurate: entity clarity and knowledge-graph reconciliation, not link equity."
+    },
+    {
+      "id": "open-source-calc-package",
+      "domain": "(package registry aggregators)",
+      "placementUrl": null,
+      "destinationPath": "/methodology",
+      "status": "opportunity",
+      "method": "Publish the reconstitution arithmetic in src/lib/calc as a standalone open-source package with the site as its homepage field. Registry aggregators then generate pages that render that homepage URL, without anyone being contacted.",
+      "relevance": "Strong and durable. The package is the same tested arithmetic the site runs, so the homepage link is a genuine provenance link rather than a placement, and the pages that carry it are about the library itself.",
+      "nextStep": "Two blockers, both real. It needs a publish token for the registry, and it needs a decision on maintaining a public package (versioning, issues, a licence). Neither is settled, so nothing has been published.",
+      "notes": "The registry's own project page and the aggregators differ in whether they nofollow the homepage field, and they differ from each other. Every aggregator page has to be verified individually; none may be counted from the package existing."
+    },
+    {
+      "id": "methodology-deposit",
+      "domain": "zenodo.org",
+      "placementUrl": null,
+      "destinationPath": "/methodology",
+      "status": "opportunity",
+      "method": "Self-deposit the methodology and its worked arithmetic as a citable record with a DOI. Self-service, no outreach, no gatekeeper.",
+      "relevance": "Good fit if and only if the deposit is a real, standalone document worth citing. A deposit made to obtain a link is not, and would be the wrong thing to publish.",
+      "nextStep": "Decide whether the methodology is genuinely a citable artifact separate from the page. If it is, it needs an account, an author identity, and a licence choice by the owner.",
+      "notes": "Attribute unverified. Repository record pages frequently nofollow related-identifier and homepage links, so treat the value as citability and discovery until the verifier says otherwise."
+    },
+    {
+      "id": "peptide-community-profile",
+      "domain": "(subject-matter forums and communities)",
+      "placementUrl": null,
+      "destinationPath": "/tools/bac-water",
+      "status": "opportunity",
+      "method": "Answer reconstitution arithmetic questions where they are already being asked, linking the calculator only where it actually answers the question.",
+      "relevance": "The highest topical relevance available and the most likely to send people who need the tool.",
+      "nextStep": "Not started, and not something to automate. It needs a real, identified participant who can stand behind answers on a health-adjacent subject. Posting under a manufactured persona would be misrepresentation, and drive-by links are removed by moderators anyway.",
+      "notes": "Expected nofollow or ugc almost everywhere, which is the correct outcome for a community link. Recorded because the traffic and the credibility are the point, not the attribute."
+    }
+  ]
+}
