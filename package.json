@@ -18,7 +18,8 @@
     "backlinks:verify": "node --import tsx scripts/verify-backlinks.ts",
     "build:widget": "node scripts/build-growth-widget.mjs",
     "test:growth": "node --import tsx scripts/test-growth.ts",
-    "backlinks:discover": "node --import tsx scripts/discover-backlinks.ts"
+    "backlinks:discover": "node --import tsx scripts/discover-backlinks.ts",
+    "backlinks:dispatch": "NODE_USE_ENV_PROXY=1 node --import tsx scripts/dispatch-backlinks.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.109.0",

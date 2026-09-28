@@ -84,6 +84,40 @@ because an alert that fires on good news gets ignored.
 
 The job never force-pushes; it rebases, so a human commit landing mid-run wins.
 
+### When the cron does not fire
+
+GitHub deprioritises scheduled workflows and drops runs under load. It did so
+here: the first two `40 6 * * *` windows produced **no run at all**, while the
+same workflow dispatched manually succeeded and committed its result. The
+workflow is `state: active` and the cron is valid — GitHub simply did not run
+it.
+
+So the schedule is not the only trigger. The weekly upkeep Routine, which runs
+on a different scheduler, calls:
+
+```
+npm run backlinks:dispatch            # dispatch only if the cron looks missed
+npm run backlinks:dispatch -- --dry-run
+npm run backlinks:dispatch -- --force
+```
+
+`scripts/dispatch-backlinks.ts` reads when the workflow last ran and dispatches
+only if that was more than 26 hours ago, so it is a fallback rather than a
+second schedule; a run already queued or in progress is never piled onto. If
+the cron is healthy it reports that and does nothing.
+
+Watch for the fallback firing every week: that means the cron is still dead and
+the real cadence is weekly, not daily. The register's own git history shows
+which trigger produced each run.
+
+Authentication differs by environment and both work. GitHub Actions supplies a
+real token. A Claude Code container supplies a **placeholder** (`prox…`) and
+authenticates through its egress proxy instead, so the script deliberately does
+not send a token that is not shaped like a real one — sending the placeholder as
+a bearer is what makes GitHub answer `401` while plain `curl` through the same
+proxy answers `200`. The npm script sets `NODE_USE_ENV_PROXY=1` because Node's
+`fetch` otherwise ignores the proxy entirely.
+
 ### Discovery sources, and what they miss
 
 | Source | Needs | Finds |

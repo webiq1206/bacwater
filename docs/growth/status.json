@@ -25,10 +25,10 @@
     },
     {
       "title": "Backlink discovery, verification and reclamation",
-      "cadence": "Daily 06:40 UTC, GitHub Actions (.github/workflows/backlinks.yml)",
+      "cadence": "Daily 06:40 UTC via GitHub Actions cron, with a weekly fallback dispatch from the upkeep Routine",
       "enabled": true,
       "requiresAccount": false,
-      "note": "Runs without any connector or secret. Reads every placement in backlinks/ledger.json off the live web, records the real link attributes, commits the register to main, and opens a labelled issue when a link is lost or stops passing equity. Optional Search Console secrets widen discovery only."
+      "note": "Runs without any connector or secret. Reads every placement in backlinks/ledger.json off the live web, records the real link attributes, commits the register to main, and opens a labelled issue when a link is lost or stops passing equity. GitHub dropped the first two scheduled windows, so the weekly Routine also calls npm run backlinks:dispatch as a fallback trigger; it only dispatches when the last run is over 26 hours old. Optional Search Console secrets widen discovery only."
     }
   ],
   "blockedChannels": [

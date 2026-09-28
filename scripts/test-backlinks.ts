@@ -8,6 +8,7 @@ import { promisify } from "node:util";
 import { scanPage, parseRel, parseAttributes, targetsHost, anchorText } from "../src/lib/seo/link-attributes";
 import { verifyLedger, countByStatus, type Ledger } from "../src/lib/seo/backlink-ledger";
 import { mergeFound, canonicalUrl, placementId } from "../scripts/discover-backlinks";
+import { decide, bearerToken, type RunSummary } from "../scripts/dispatch-backlinks";
 
 const HOST = "bacwater.ai";
 const scan = (html: string, xRobotsTag?: string) => scanPage(html, { host: HOST, xRobotsTag });
@@ -142,6 +143,45 @@ assert.ok(placementId(`https://example.com/${"x".repeat(200)}`).length <= 70);
   assert.equal(mergeFound(ledger, [{ url: "https://en.wikipedia.org/wiki/Peptide", source: "wikimedia" }], "2026-09-29").length, 0);
 }
 
+
+// 6c. The fallback dispatcher. GitHub dropped the first two scheduled windows
+// for this workflow, so the weekly Routine triggers it when the cron misses.
+// It must stay a FALLBACK: a second unconditional daily trigger would double
+// every run and make the register's history meaningless.
+{
+  const now = new Date("2026-09-28T12:00:00Z");
+  const run = (hoursAgo: number, event = "schedule", status = "completed"): RunSummary =>
+    ({ created_at: new Date(now.getTime() - hoursAgo * 3_600_000).toISOString(), status, event });
+
+  // The schedule is keeping up: do nothing.
+  assert.equal(decide([run(2)], now).dispatch, false);
+  assert.equal(decide([run(25)], now).dispatch, false);
+  // Past the threshold: the cron missed, so step in.
+  assert.equal(decide([run(27)], now).dispatch, true);
+  assert.match(decide([run(30)], now).reason, /past the 26h threshold/);
+  // Never run at all.
+  assert.equal(decide([], now).dispatch, true);
+  assert.match(decide([], now).reason, /never run/);
+  // Newest run wins, whatever order the API returned them in.
+  assert.equal(decide([run(40), run(3), run(80)], now).dispatch, false);
+  assert.equal(decide([run(40), run(3), run(80)].reverse(), now).dispatch, false);
+  // Never pile onto a run that is already going.
+  assert.equal(decide([run(100, "schedule", "in_progress")], now).dispatch, false);
+  assert.match(decide([run(100, "schedule", "queued")], now).reason, /already queued or in progress/);
+  // --force overrides everything except nothing; it is the manual escape hatch.
+  assert.equal(decide([run(1)], now, 26, true).dispatch, true);
+  // An unparseable timestamp must not be read as "recent".
+  assert.equal(decide([{ created_at: "not a date", status: "completed", event: "schedule" }], now).dispatch, true);
+}
+
+// A proxy placeholder is not a credential. Sending it as a bearer is what made
+// GitHub answer 401 while plain curl through the same proxy answered 200.
+assert.equal(bearerToken({ GH_TOKEN: "proxy-managed" }), null);
+assert.equal(bearerToken({}), null);
+assert.equal(bearerToken({ GH_TOKEN: "" }), null);
+for (const real of ["ghp_" + "a".repeat(36), "ghs_" + "B".repeat(30), "github_pat_" + "c".repeat(30), "0".repeat(40)])
+  assert.equal(bearerToken({ GH_TOKEN: real }), real, real.slice(0, 12));
+
 async function main() {
   // 7. End to end. The verifier is the thing that decides what gets claimed, so
   // it is run for real against a local server that serves the three cases that
@@ -252,7 +292,9 @@ async function main() {
   assert.doesNotMatch(workflow, /--force/);
   assert.match(workflow, /git pull --rebase origin main/);
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
-  for (const script of ["backlinks:verify", "backlinks:discover"]) assert.ok(pkg.scripts[script], `package.json is missing ${script}`);
+  for (const script of ["backlinks:verify", "backlinks:discover", "backlinks:dispatch"]) assert.ok(pkg.scripts[script], `package.json is missing ${script}`);
+  assert.match(pkg.scripts["backlinks:dispatch"], /NODE_USE_ENV_PROXY=1/,
+    "without this, fetch ignores the container's egress proxy and cannot reach the API");
   assert.match(pkg.scripts.test, /test-backlinks\.ts/, "the backlink suite must run in npm test");
 
   const counts = countByStatus(shipped);
