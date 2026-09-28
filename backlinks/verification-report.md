@@ -1,7 +1,7 @@
 # Backlink verification
-Generated 2026-09-27T05:06:24.896Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
+Generated 2026-09-28T03:52:05.093Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
 Every row below is the result of reading the live page in this run. A placement is reported as dofollow only when an anchor to the destination host was found with no equity-blocking `rel` and no page-level nofollow. Rows under **Could not verify** are exactly that: no conclusion, in either direction.
-Ledger statuses: opportunity 8, submitted 0, live 0, live-nofollow 0, rejected 0.
+Ledger statuses: opportunity 8, submitted 0, discovered 0, live 0, live-nofollow 0, rejected 0.
 
 ## Published and verified dofollow
 _None._
@@ -11,7 +11,7 @@ These are live links that pass no ranking signal. They are kept in the register 
 
 _None._
 
-## Submitted, not yet live
+## Found or submitted, not yet confirmed live
 _None._
 
 ## Could not verify
