@@ -1,8 +1,8 @@
 {
   "updatedAt": "2026-09-28",
   "repository": "webiq1206/bacwater",
-  "productionDeployment": "blocked: Replit Cloudflare security verification in cloud browser",
-  "trafficBaseline": "not_available",
+  "productionDeployment": "Growth routes and matching widget verified live on 2026-09-28; full main deployment not verified because version.json returned two commit IDs absent from this repository.",
+  "trafficBaseline": "Search Console web-search baseline established for 2026-08-29 through 2026-09-25 versus 2026-08-01 through 2026-08-28. Search clicks are not users; calculator completions and returning users remain unmeasured.",
   "externalPostsPublished": 4,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
@@ -62,5 +62,134 @@
     "youtubePlaylist": "PLKfaE4AyuK2A",
     "redditTitlePrefix": "[BACwater.ai]",
     "preserveSharedBranding": true
+  },
+  "weeklyWebsiteReview": {
+    "checkedAt": "2026-09-28T14:17:44Z",
+    "reviewedMain": "bf2b0615a9a9ad8e5b01873f40cfc97fc5b91c32",
+    "changed": [
+      "Corrected stale deployment status using current public HTTP responses and widget blob comparison.",
+      "Recorded the first verified 28-day Search Console comparison and evidence-based page priority.",
+      "Recorded existing failed browser acceptance checks and release identity limits."
+    ],
+    "decision": "Status-only update. Growth functionality is present, but full deployment identity cannot be reconciled with main and browser acceptance checks are not all green. Prioritize release verification and regression triage before adding unrelated growth changes.",
+    "searchConsole": {
+      "property": "sc-domain:bacwater.ai",
+      "searchType": "web",
+      "dataState": "final",
+      "dateBasis": "Search Console reporting dates (Pacific time)",
+      "freshnessEvidence": {
+        "firstIncompleteDate": "2026-09-26",
+        "excludedDates": [
+          "2026-09-26",
+          "2026-09-27"
+        ]
+      },
+      "current": {
+        "start": "2026-08-29",
+        "end": "2026-09-25",
+        "clicks": 4,
+        "impressions": 2432,
+        "ctr": 0.001644736842105263,
+        "averagePosition": 35.153371710526315
+      },
+      "prior": {
+        "start": "2026-08-01",
+        "end": "2026-08-28",
+        "clicks": 1,
+        "impressions": 1981,
+        "ctr": 0.0005047955577990914,
+        "averagePosition": 48.29278142352347
+      },
+      "limits": [
+        "Clicks count Google Search clicks, not unique users or calculator completions.",
+        "Small click totals do not establish a reliable growth trend or attribution to this release.",
+        "Page and query breakdowns have different aggregation and privacy limitations; query rows do not reproduce property totals.",
+        "Only aggregate property and public-page metrics are recorded here; no raw queries, visitor data or connection credentials."
+      ],
+      "breakdownRows": {
+        "currentPages": 42,
+        "priorPages": 33,
+        "currentQueries": 331,
+        "priorQueries": 407,
+        "rowLimit": 1000,
+        "pagination": "Each result below limit; no additional page required."
+      },
+      "priority": {
+        "url": "https://www.bacwater.ai/tools/syringe-units",
+        "impressions": 819,
+        "clicks": 0,
+        "averagePosition": 10.904761904761905,
+        "evidence": "Largest page-level impression count in the current period. Live www URL redirects to the canonical non-www page; destination returns 200 and declares https://bacwater.ai/tools/syringe-units.",
+        "nextAction": "Reconcile production revision and failed acceptance checks, then inspect this page's search appearance and intent against page-filtered query data before any metadata change. No rewrite made this run."
+      }
+    },
+    "deployment": {
+      "fullyVerified": false,
+      "versionUrl": "https://bacwater.ai/version.json",
+      "observedRelease": "2026-09-23-calculator-first-design",
+      "observedCommits": [
+        "e8a5c3feb5491befbcc538d6b982026e32ad127d",
+        "bcdaab1598ee727b6bb5de766549e4c240997dcf"
+      ],
+      "commitLookup": "Both returned GitHub 422 No commit found. Comparing first observed commit to reviewed main returned 404. Cause not established; changing values alone do not prove a new deployment.",
+      "verifiedHttp200": [
+        "/",
+        "/version.json",
+        "/tools",
+        "/tools/bac-water",
+        "/tools/mg-to-mcg",
+        "/tools/syringe-units",
+        "/share-tools",
+        "/embed/mass-converter.js",
+        "/sitemap.xml",
+        "/sitemap-pages.xml"
+      ],
+      "widget": {
+        "path": "/embed/mass-converter.js",
+        "liveGitBlobSha": "cf45be73102fad0a7fea02ce790aa892b7e88430",
+        "matchesReviewedMain": true
+      },
+      "discovery": "Homepage links to tools, share-tools and product calculation routes. Tools hub links to individual calculators, share-tools and embed. Page sitemap includes growth and calculator routes.",
+      "sharing": "The three inspected calculator pages contain the Share this calculator without your values control. Main's share helper permits only known public routes and fixed campaign fields. No real saved plan or private data accessed.",
+      "limits": [
+        "HTTP and rendered HTML checks are not an interactive end-to-end calculator or sharing test.",
+        "An exact widget match proves that asset only, not all application code.",
+        "Earlier Replit access blocker was not retried; this run did not deploy."
+      ]
+    },
+    "validation": {
+      "codeChanged": false,
+      "localTestsAndBuild": "Not rerun: documentation/status-only change.",
+      "json": "Parsed and round-trip validated before commit.",
+      "existingMainCi": {
+        "url": "https://github.com/webiq1206/bacwater/actions/runs/36432620018",
+        "status": "success",
+        "verifiedSteps": [
+          "Typecheck",
+          "Unit tests",
+          "Verify search metadata, icons and every generated share card",
+          "Production build",
+          "Verify rendered search metadata and branded icon endpoints"
+        ]
+      },
+      "existingFailures": [
+        {
+          "url": "https://github.com/webiq1206/bacwater/actions/runs/36432619959",
+          "name": "Restored hero acceptance",
+          "evidence": "SEO metadata, visible primary heading and reflow assertion failed. Product-first and priority reference-content journeys passed in Chromium and WebKit."
+        },
+        {
+          "url": "https://github.com/webiq1206/bacwater/actions/runs/36432620032",
+          "name": "Browser and privacy regression",
+          "evidence": "Input and Back-button locator timeouts; product search expected /calculate/product/glp-3 but remained on /search; homepage at 320px and 200% text measured 325px scroll width. Logs do not establish which failures are stale tests versus application defects. Converter, account/private-plan and public-route checks passed."
+        }
+      ]
+    },
+    "limits": [
+      "No social writes, messages, paid services, production schema changes or seed operations.",
+      "No new website feature or metadata change while release reconciliation remains unresolved.",
+      "Recurring monitoring remains useful and is not disabled."
+    ],
+    "spend": 0
   }
 }
