@@ -3,7 +3,18 @@ import fs from "node:fs";
 import { calculate, type CalcInput } from "../src/lib/calc";
 import { CALCULATOR_ROUTES } from "../src/lib/calculator-routes";
 import { STATIC_PAGES } from "../src/lib/seo/sitemap";
-import { EMBED_WIDGETS, findEmbedWidget, embedSnippet, embedUrl, attributionUrl } from "../src/lib/embed/registry";
+import { EMBED_WIDGETS, findEmbedWidget, embedSnippet, embedUrl, attributionUrl, SITE_URL } from "../src/lib/embed/registry";
+
+/**
+ * The widget builds absolute URLs from NEXT_PUBLIC_SITE_URL, and the acceptance
+ * workflows run the app against http://127.0.0.1:3000. Assertions about the
+ * SERVED document therefore have to come from the same value the code uses;
+ * hardcoding the production host makes the suite pass locally and fail in CI.
+ * Assertions about the SNIPPET still pin a literal origin, because there the
+ * origin is an explicit argument rather than ambient configuration.
+ */
+const escapeRe = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const SITE_HOST = new URL(SITE_URL).host;
 import { concentrationMgPerMl, mgToMcg, mcgToMg, mlToU100, u100ToMl, positiveInput, displayNumber } from "../src/lib/embed/widget-math";
 import { GET } from "../src/app/embed/[tool]/route";
 
@@ -83,12 +94,12 @@ async function main() {
     assert.match(response.headers.get("x-robots-tag") || "", /noindex/);
     const html = await response.text();
     assert.match(html, /^<!doctype html>/);
-    assert.match(html, new RegExp(`<link rel="canonical" href="https://bacwater\\.ai${widget.canonicalPath.replace(/\//g, "\\/")}">`));
+    assert.match(html, new RegExp(`<link rel="canonical" href="${escapeRe(SITE_URL + widget.canonicalPath)}">`));
     assert.match(html, /<meta name="robots" content="noindex,follow">/);
     assert.equal((html.match(/<h1>/g) || []).length, 1);
     // No scripting and no third-party fetch inside somebody else's page.
     assert.doesNotMatch(html, /<script|onclick=|onload=|javascript:/i);
-    assert.doesNotMatch(html, /https?:\/\/(?!bacwater\.ai)/);
+    assert.doesNotMatch(html, new RegExp(`https?://(?!${escapeRe(SITE_HOST)})`), "the framed document must not reference any host but our own");
     assert.match(html, /<form method="get"/);
     // The boundary statement travels with the widget.
     assert.match(html, /does not choose an amount/);
