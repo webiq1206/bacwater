@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { growthArrivalEvent } from "@/lib/growth/sharing";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ANALYTICS_CONSENT_KEY, ANALYTICS_READY, GA_ID, analyticsLocation, USAGE_EVENTS } from "@/lib/analytics";
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; [key: `ga-disable-${string}`]: boolean | undefined };
 export function AnalyticsPreferences() {
   const pathname = usePathname() || "/";
+  const arrivalRecorded = useRef(false);
   const [choice, setChoice] = useState("denied");
   useEffect(() => { try { setChoice(localStorage.getItem(ANALYTICS_CONSENT_KEY) || "denied"); } catch {} }, []);
   useEffect(() => {
@@ -27,6 +29,10 @@ export function AnalyticsPreferences() {
       if (USAGE_EVENTS.includes(name)) w.gtag?.("event", name, { page_location: pageLocation, page_referrer: "" });
     };
     window.addEventListener("bacwater:usage", usage);
+    if (!arrivalRecorded.current) {
+      const arrival = growthArrivalEvent(window.location.search);
+      if (arrival) { usage(new CustomEvent("bacwater:usage", { detail: arrival })); arrivalRecorded.current = true; }
+    }
     const supplier = (event: MouseEvent) => { if (event.target instanceof Element && event.target.closest('a[rel~="sponsored"]')) usage(new CustomEvent("bacwater:usage", { detail: "supplier_clicked" })); };
     const invalid = () => usage(new CustomEvent("bacwater:usage", { detail: "form_error" }));
     document.addEventListener("click", supplier); document.addEventListener("invalid", invalid, true);

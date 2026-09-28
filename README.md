@@ -32,4 +32,8 @@ Optional analytics and session replay are off by default. Keep NEXT_PUBLIC_ANALY
 
 ## Audit and remaining acceptance
 
-See audit/2026-09-22/master-release.md and audit/manual-action-required.md. The private conversation handoff contains the full 115-parent source register, page briefs, evidence, all 28 growth dispositions, actual original demonstrations and reviewable external drafts. No external outreach, social publication, new account, purchase or future scheduled check is claimed by this repository release.
+See audit/2026-09-22/master-release.md and audit/manual-action-required.md. The private conversation handoff contains the full 115-parent source register, page briefs, evidence, all 28 growth dispositions, actual original demonstrations and reviewable external drafts. No external outreach, social publication, new account, purchase or future scheduled check was claimed by that earlier audit release. See the current growth status below for subsequent work.
+
+## Free calculator sharing and publishing assets
+
+The growth release adds a standalone mg-to-mcg widget, clean calculator sharing and original unit-reference graphics. See [growth operations](docs/growth/operations.md), [prepared content](docs/growth/content-queue.json) and [current status](docs/growth/status.json). Build the widget with `npm run build:widget`; it uses the same tested mass-conversion source as the site. The production build regenerates it before tests. External publishing and production deployment must be verified separately.

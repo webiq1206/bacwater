@@ -11,6 +11,7 @@ const FOOTER = {
     { href: "/plan", label: "Build My Plan" },
     { href: "/peptides", label: "Compound guide" },
     { href: "/tools", label: "Calculators" },
+    { href: "/share-tools", label: "Free embeds & reference cards" },
     { href: "/tools/reverse-bac", label: "Reverse Calculator" },
     { href: "/tools/vial-labels", label: "Vial Labels" },
   ],
