@@ -1,0 +1,49 @@
+{
+  "createdAt": "2026-09-28",
+  "videoBuildCommand": "ffmpeg -y -framerate 1/8 -i /tmp/bacwater-growth-video-slides/%d.png -c:v libx264 -r 24 -pix_fmt yuv420p -movflags +faststart public/growth/mg-to-mcg-explained.mp4",
+  "items": [
+    {
+      "id": "mg-to-mcg",
+      "channel": "pinterest",
+      "status": "prepared_not_published",
+      "title": "mg to mcg: a simple conversion",
+      "description": "1 mg equals 1,000 mcg. Multiply mg by 1,000, or divide mcg by 1,000. Our free converter shows both units. Mass conversion only; it does not choose an amount to take.",
+      "asset": "public/growth/mg-to-mcg.png",
+      "destination": "https://bacwater.ai/tools/mg-to-mcg?utm_source=pinterest&utm_medium=organic_social&utm_campaign=unit_reference",
+      "prerequisite": "Verify the connected BACwater account, channel rules and live destination before publication.",
+      "altText": "Mass conversion reference: 1 mg equals 1,000 mcg; 0.125 mg equals 125 mcg."
+    },
+    {
+      "id": "u100-to-ml",
+      "channel": "pinterest",
+      "status": "prepared_not_published",
+      "title": "U-100 units and mL: know the difference",
+      "description": "On a U-100 scale, 100 units equals 1 mL. A scale reading is not a mass in mg or a product amount in IU. Our free converter checks the arithmetic. Verify the actual device scale.",
+      "asset": "public/growth/u100-to-ml.png",
+      "destination": "https://bacwater.ai/tools/syringe-units?utm_source=pinterest&utm_medium=organic_social&utm_campaign=unit_reference",
+      "prerequisite": "Verify the connected BACwater account, channel rules and live destination before publication.",
+      "altText": "U-100 scale reference: 100 units equals 1 mL; 25 units equals 0.25 mL."
+    },
+    {
+      "id": "concentration",
+      "channel": "pinterest",
+      "status": "prepared_not_published",
+      "title": "What does mg/mL mean?",
+      "description": "Concentration is mass divided by final solution volume. In this arithmetic example, 12 mg in a final volume of 4 mL equals 3 mg/mL. Our calculator uses your own numbers. This is not a preparation instruction.",
+      "asset": "public/growth/concentration.png",
+      "destination": "https://bacwater.ai/tools/bac-water?utm_source=pinterest&utm_medium=organic_social&utm_campaign=unit_reference",
+      "prerequisite": "Verify the connected BACwater account, channel rules and live destination before publication.",
+      "altText": "Concentration example: 12 mg divided by a final volume of 4 mL equals 3 mg per mL."
+    },
+    {
+      "id": "mass-video",
+      "channel": "youtube",
+      "status": "prepared_not_published",
+      "title": "mg to mcg explained: milligrams and micrograms",
+      "description": "One milligram equals 1,000 micrograms. This 32-second visual guide explains the relationship and works through 0.125 mg = 125 mcg.\n\nTry our free converter: https://bacwater.ai/tools/mg-to-mcg?utm_source=youtube&utm_medium=organic_video&utm_campaign=unit_reference\n\nProduced by BACwater.ai. Arithmetic examples only. No dose, product or treatment is selected. Video has visible captions and no audio.",
+      "asset": "public/growth/mg-to-mcg-explained.mp4",
+      "captions": "public/growth/mg-to-mcg-explained.vtt",
+      "prerequisite": "Verify the connected BACwater channel, publication rules and destination. External clickable description links require YouTube advanced features."
+    }
+  ]
+}

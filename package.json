@@ -7,15 +7,17 @@
     "test:search-http": "node --import tsx scripts/test-search-http.ts",
     "postinstall": "node scripts/verify-next-security.mjs && node scripts/prepare-font-loader.mjs",
     "dev": "next dev",
-    "test": "node scripts/verify-next-security.mjs && node --import tsx src/lib/calc/__tests__/calc.test.ts && node --import tsx src/lib/ai/__tests__/guardrails.test.ts && node --import tsx src/lib/__tests__/workspaces.test.ts && node --import tsx src/lib/__tests__/audit-security.test.ts && node --import tsx src/lib/__tests__/audit-calculation.test.ts && node --import tsx src/lib/__tests__/remaining-scope.test.ts && npm run test:partners && node --import tsx scripts/test-research-design.ts && node --import tsx scripts/test-supplier-catalog.ts && node --import tsx scripts/test-audit-improvements.ts && node --import tsx scripts/test-affiliate-directory.ts && node --import tsx scripts/test-session-continuity.ts && node --import tsx scripts/test-plan-preview.ts && node --import tsx scripts/test-website-audit.ts && node --import tsx scripts/test-guided-hero.ts && node --import tsx scripts/test-embed.ts && node --import tsx scripts/test-backlinks.ts",
+    "test": "node scripts/verify-next-security.mjs && node --import tsx src/lib/calc/__tests__/calc.test.ts && node --import tsx src/lib/ai/__tests__/guardrails.test.ts && node --import tsx src/lib/__tests__/workspaces.test.ts && node --import tsx src/lib/__tests__/audit-security.test.ts && node --import tsx src/lib/__tests__/audit-calculation.test.ts && node --import tsx src/lib/__tests__/remaining-scope.test.ts && npm run test:partners && node --import tsx scripts/test-research-design.ts && node --import tsx scripts/test-supplier-catalog.ts && node --import tsx scripts/test-audit-improvements.ts && node --import tsx scripts/test-affiliate-directory.ts && node --import tsx scripts/test-session-continuity.ts && node --import tsx scripts/test-plan-preview.ts && node --import tsx scripts/test-website-audit.ts && node --import tsx scripts/test-guided-hero.ts && node --import tsx scripts/test-embed.ts && node --import tsx scripts/test-backlinks.ts && npm run test:growth",
     "test:partners": "node --import tsx scripts/test-amino-partner.ts",
-    "prebuild": "node scripts/clean-build-cache.mjs && npm run test",
+    "prebuild": "node scripts/clean-build-cache.mjs && npm run build:widget && npm run test",
     "build": "next build --webpack",
     "start": "next start",
     "db:push": "prisma db push --skip-generate",
     "db:seed": "node --import tsx prisma/seed.ts",
     "test:design": "node --import tsx scripts/test-amino-partner.ts && node --import tsx scripts/test-research-design.ts && node --import tsx scripts/test-sitewide-design.ts",
-    "backlinks:verify": "node --import tsx scripts/verify-backlinks.ts"
+    "backlinks:verify": "node --import tsx scripts/verify-backlinks.ts",
+    "build:widget": "node scripts/build-growth-widget.mjs",
+    "test:growth": "node --import tsx scripts/test-growth.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.109.0",
@@ -60,6 +62,7 @@
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "0.28.1",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5"

@@ -1,0 +1,47 @@
+{
+  "updatedAt": "2026-09-28",
+  "repository": "webiq1206/bacwater",
+  "productionDeployment": "blocked: Replit Cloudflare security verification in cloud browser",
+  "trafficBaseline": "not_available",
+  "externalPostsPublished": 0,
+  "newAccountsCreated": 0,
+  "partnerPlacements": 0,
+  "spend": 0,
+  "automations": [
+    {
+      "title": "BACwater growth research",
+      "cadence": "Daily evening, America/Boise",
+      "enabled": true
+    },
+    {
+      "title": "BACwater weekly improvements",
+      "cadence": "Monday morning, America/Boise",
+      "enabled": true
+    },
+    {
+      "title": "BACwater weekly content",
+      "cadence": "Tuesday morning, America/Boise",
+      "enabled": true
+    }
+  ],
+  "blockedChannels": [
+    "Search Console OAuth",
+    "Pinterest OAuth",
+    "YouTube OAuth",
+    "Reddit OAuth",
+    "Replit production deployment access"
+  ],
+  "validation": {
+    "growthTests": "passed",
+    "typecheck": "passed",
+    "mediaVisualReview": "passed",
+    "localBrowserPreview": "blocked: cloud browser cannot open localhost",
+    "productionDatabase": "not accessed",
+    "productionBuild": "passed; pre-existing database-dependent content used fallback because no production database was supplied",
+    "httpSmoke": "passed: share page, tools, converter, script, sitemap and five media assets"
+  },
+  "liveVersionAtSetup": {
+    "release": "2026-09-23-calculator-first-design",
+    "commit": "f5c81aa2a1ed1dc84ec853778f4757198ee97258"
+  }
+}

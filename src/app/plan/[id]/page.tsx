@@ -110,6 +110,8 @@ export default async function PublicPlanPage({ params }: Props) {
         </div>
       </div>
 
+      {!canEdit && <section className="mt-6 rounded-xl border border-border bg-accent p-5 no-print"><h2 className="font-serif text-xl">Check your own numbers</h2><p className="mt-2 text-sm">This is someone else&apos;s saved calculation. Use your own label and instructions for a separate calculation.</p><Button asChild variant="brand" className="mt-4"><Link href="/peptide-calculator?utm_source=shared&utm_medium=referral&utm_campaign=free_calculators">Open my calculator</Link></Button></section>}
+
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_260px]">
         <div className="min-w-0">
           <PlanResults result={result} />

@@ -15,6 +15,7 @@ const tools: [string,string,string,string][] = [
  ["/tools/vial-labels","Printable vial labels","Make a label from your saved numbers.","pdf label print qr"],
 ];
 export const BASE_SEARCH_ITEMS: readonly SearchItem[] = [
+ {id:"page:/share-tools",href:"/share-tools",title:"Free embeds and reference cards",description:"Add a mass converter to your website or share a unit reference graphic.",kind:"page",keywords:"embed widget share download infographic graphics publisher newsletter"},
  ...tools.map(([href,title,description,keywords])=>({id:`tool:${href}`,href,title,description,keywords,kind:"calculator" as const})),
  ...SUPPLIER_PRODUCTS.map(p=>({id:`product:${p.id}`,title:p.name,description:p.summary,href:productCalculatorPath(p.id),kind:"product" as const,productId:p.id,reference:p.reference,keywords:`${p.id} ${p.reference} ${p.mark} ${p.label} ${(p.aliases||[]).join(" ")} supplier buy product details`})),
  ...PEPTIDES.filter(p=>p.slug!=="custom").map(p=>({id:`reference:${p.slug}`,title:`${productDisplayName(p.slug,p.name)} reference`,description:"Read the label context and find the right calculator.",href:`/peptides/${p.slug}`,kind:"reference" as const,reference:p.slug,productId:productForReference(p.slug)?.id,keywords:`${p.slug} ${(p.aliases||[]).join(" ")} calculator reconstitution`})),
