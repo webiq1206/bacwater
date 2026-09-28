@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { calculate, type CalcInput } from "../src/lib/calc";
 import { CALCULATOR_ROUTES } from "../src/lib/calculator-routes";
 import { STATIC_PAGES } from "../src/lib/seo/sitemap";
+import { searchSnippet } from "../src/lib/seo/search-appearance";
 import { EMBED_WIDGETS, findEmbedWidget, embedSnippet, embedUrl, attributionUrl, SITE_URL } from "../src/lib/embed/registry";
 
 /**
@@ -138,6 +139,17 @@ async function main() {
   assert.match(hub, /<FaqJsonLd items=\{FAQ\}/);
   assert.match(hub, /<h1 /);
   assert.ok(fs.readFileSync("src/app/tools/page.tsx", "utf8").includes('href="/embed"'), "/tools must link to /embed");
+
+  // Putting a path in STATIC_PAGES without a search-appearance snippet breaks
+  // npm run test:search-appearance, which is a separate CI step rather than
+  // part of npm test, so the failure surfaces late. Assert it here.
+  const snippet = searchSnippet("/embed");
+  assert.ok(snippet, "/embed is in the sitemap, so it needs a SEARCH_SNIPPETS entry");
+  // withSocialMetadata resolves title and description from the registry, so the
+  // page's own constants are what a reader sees in the source and the registry
+  // is what ships. They must not drift apart.
+  assert.ok(hub.includes(`const TITLE = "${snippet.title}"`), "the hub page's TITLE must match its SEARCH_SNIPPETS entry");
+  assert.ok(hub.includes(snippet.description), "the hub page's DESCRIPTION must match its SEARCH_SNIPPETS entry");
 
   console.log("PASS embed widgets: shared arithmetic, rejected input, host-side dofollow attribution outside the frame, optional and non-coercive anchor text, script-free noindex framed document, framing carve-out scoped to /embed, and a discoverable hub page.");
 }

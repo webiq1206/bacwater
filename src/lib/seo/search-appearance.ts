@@ -13,6 +13,7 @@ type Snippet = { title: string; description: string };
 /** Editorial copy, not inferred keyword volume or a promise of search placement. */
 export const SEARCH_SNIPPETS: Record<string, Snippet> = {
   "/share-tools": { title: "Free Calculator Embed and Unit Reference Cards", description: "Add a free mg to mcg converter to your website, or share original unit reference cards. No account, API key or paid plan required." },
+  "/embed": { title: "Embed a Free BAC Water Calculator on Your Site", description: "Copy one line of HTML to put the BAC water concentration, syringe unit or mg to mcg calculator on your own page. Free, no account, no tracking script." },
   "/": { title: "BAC Water Calculator | Peptide Reconstitution | BACwater.ai", description: "Free BAC water and peptide reconstitution calculator. Check concentration, mL and U-100 units from your own numbers. Live results, no signup." },
   "/peptide-calculator": { title: "Peptide Reconstitution Calculator", description: "Calculate peptide concentration, mL and U-100 units from your label values. See the math, save a calculation or print a vial label. No dose advice." },
   "/tools": { title: "Free BAC Water and Peptide Calculators", description: "Choose a free calculator for concentration, mg to mcg, U-100 units, volume or vial counts. Check formulas and make printable labels from saved calculations." },
