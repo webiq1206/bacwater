@@ -3,7 +3,7 @@
   "repository": "webiq1206/bacwater",
   "productionDeployment": "blocked: Replit Cloudflare security verification in cloud browser",
   "trafficBaseline": "not_available",
-  "externalPostsPublished": 0,
+  "externalPostsPublished": 4,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
   "spend": 0,
@@ -32,11 +32,8 @@
     }
   ],
   "blockedChannels": [
-    "Search Console OAuth",
-    "Pinterest OAuth",
-    "YouTube OAuth",
-    "Reddit OAuth",
-    "Replit production deployment access"
+    "Replit production deployment access",
+    "YouTube uploaded video not retrievable"
   ],
   "validation": {
     "growthTests": "passed",
@@ -58,5 +55,12 @@
     "discovered": 0,
     "opportunities": 8,
     "note": "No backlink has been acquired. Acquisition is passive: the /embed and /share-tools widgets place an attribution anchor in the host page's own markup when a third party installs one. Directory and community lanes remain blocked on owner-authenticated accounts and are not automated."
+  },
+  "pendingYouTubeUpload": "wIHXYAaqOEg: accepted, not retrievable; playlist insertion failed videoNotFound",
+  "socialCategorization": {
+    "pinterestBoard": "1120129807261632904",
+    "youtubePlaylist": "PLKfaE4AyuK2A",
+    "redditTitlePrefix": "[BACwater.ai]",
+    "preserveSharedBranding": true
   }
 }

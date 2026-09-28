@@ -39,9 +39,11 @@ Use verified recurring questions to choose one arithmetic topic. Check all numbe
 
 ## Publishing and account boundaries
 
-Search Console, Pinterest, YouTube and Reddit were not connected through Composio during initial setup. Account-owner OAuth is required. Do not route around a pending authorization or silently use an unrelated brand's channel. Recheck connections only when the owner confirms completing authorization. Do not schedule workflows that depend on an unreadable connector. Independent public-web and GitHub workflows can continue.
+The owner authorized publishing BACwater content through shared WEB IQ accounts on September 28, 2026. Preserve WEB IQ names, bios and all other client content. Use only Pinterest board 1120129807261632904 (BACwater.ai | Calculators & Unit Guides) and YouTube playlist PLKfaE4AyuK2A (BACwater.ai | Calculator Guides). Reddit profile posts use a [BACwater.ai] title prefix and explicit affiliation. No unrelated boards, playlists, profile rebranding, unsolicited messages or repeated community promotion.
 
-New platform registration may require owner authentication, CAPTCHA or acceptance of terms. Stop only that lane at the actual boundary; continue available work. Never invent an identity or accept a paid plan. No external post, account signup, partner placement or message has been completed by this initial release.
+Read publications.json before any write and deduplicate. Three pins and one Reddit profile post have successful creation and read-back evidence. YouTube upload wIHXYAaqOEg returned success but could not be retrieved; playlist insertion returned videoNotFound. Do not re-upload or claim it is live. Check the existing video on the next content run and add it to the dedicated playlist only when retrievable. Publish at most one distinct new Pinterest guide per weekly content run. Keep further Reddit community participation in research until context and rules support it.
+
+All four connectors have verified read access. Search Console includes owner access to sc-domain:bacwater.ai. Connection identifiers stay in private automation configuration. No spend or new account registrations occurred.
 
 ## Measurement
 

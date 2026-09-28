@@ -1,0 +1,29 @@
+{
+  "updatedAt": "2026-09-28",
+  "spend": 0,
+  "sharedAccountPolicy": "Preserve WEB IQ branding and other client content. Publish only BACwater-labeled content to BACwater categories.",
+  "pinterest": {
+    "boardId": "1120129807261632904",
+    "username": "webiqco",
+    "verifiedPins": [
+      "1120129738630484217",
+      "1120129738630484240",
+      "1120129738630484241"
+    ],
+    "verification": "Listed all three in dedicated board after creation."
+  },
+  "reddit": {
+    "id": "1wset55",
+    "url": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wset55/bacwaterai_mg_to_mcg_a_quick_conversion_reference/",
+    "status": "published_read_back_verified",
+    "verification": "Retrieved post body, author and title by article ID."
+  },
+  "youtube": {
+    "videoId": "wIHXYAaqOEg",
+    "playlistId": "PLKfaE4AyuK2A",
+    "status": "upload_accepted_not_retrievable",
+    "playlistMembership": false,
+    "doNotDuplicate": true
+  },
+  "reach": "not_measured"
+}
