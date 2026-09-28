@@ -1,5 +1,5 @@
 # Backlink verification
-Generated 2026-09-28T03:52:05.093Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
+Generated 2026-09-28T13:54:41.048Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
 Every row below is the result of reading the live page in this run. A placement is reported as dofollow only when an anchor to the destination host was found with no equity-blocking `rel` and no page-level nofollow. Rows under **Could not verify** are exactly that: no conclusion, in either direction.
 Ledger statuses: opportunity 8, submitted 0, discovered 0, live 0, live-nofollow 0, rejected 0.
 
