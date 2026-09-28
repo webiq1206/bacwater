@@ -43,3 +43,5 @@ audit-evidence/
 # Transient: written by the backlinks workflow, read by the issue step in the
 # same run. The durable record is ledger.json and verification-report.md.
 backlinks/regressions.md
+# Local notification receipt; GitHub Actions persists this in its own cache.
+.indexnow-state/

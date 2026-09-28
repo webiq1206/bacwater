@@ -1,0 +1,39 @@
+name: Notify IndexNow of live changes
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/submit-indexnow.mjs'
+      - '.github/workflows/indexnow.yml'
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: indexnow-live
+  cancel-in-progress: false
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/cache/restore@v4
+        with:
+          path: .indexnow-state
+          key: indexnow-live-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: indexnow-live-
+      - name: Submit only after live content changes
+        run: node scripts/submit-indexnow.mjs
+      - uses: actions/cache/save@v4
+        with:
+          path: .indexnow-state
+          key: indexnow-live-${{ github.run_id }}-${{ github.run_attempt }}

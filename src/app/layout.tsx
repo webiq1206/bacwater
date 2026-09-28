@@ -87,7 +87,7 @@ export default async function RootLayout({
       lang="en"
       className={`${montserrat.variable} ${fraunces.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body data-clarity-mask="true" className="min-h-full flex flex-col bg-background text-foreground">
         <SupplierProvider water={catalog[0]} products={catalog}>
         <SiteSearchProvider>
         <OrgJsonLd />

@@ -1,6 +1,7 @@
 "use client";
 import { growthArrivalEvent } from "@/lib/growth/sharing";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { CLARITY_CONSENT_KEY, CLARITY_READY, syncClarity, stopClarity, updateClarityConsent } from "@/lib/clarity";
 import { usePathname } from "next/navigation";
 import { ANALYTICS_CONSENT_KEY, ANALYTICS_READY, GA_ID, analyticsLocation, USAGE_EVENTS } from "@/lib/analytics";
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; [key: `ga-disable-${string}`]: boolean | undefined };
@@ -8,7 +9,10 @@ export function AnalyticsPreferences() {
   const pathname = usePathname() || "/";
   const arrivalRecorded = useRef(false);
   const [choice, setChoice] = useState("denied");
+  const [replayChoice, setReplayChoice] = useState("denied");
   useEffect(() => { try { setChoice(localStorage.getItem(ANALYTICS_CONSENT_KEY) || "denied"); } catch {} }, []);
+  useEffect(() => { try { setReplayChoice(localStorage.getItem(CLARITY_CONSENT_KEY) || "denied"); } catch {} }, []);
+  useLayoutEffect(() => { syncClarity(); return stopClarity; }, [replayChoice, pathname]);
   useEffect(() => {
     const w = window as unknown as AnalyticsWindow;
     const pageLocation = analyticsLocation(pathname);
@@ -39,8 +43,10 @@ export function AnalyticsPreferences() {
     return () => { document.removeEventListener("click", supplier); document.removeEventListener("invalid", invalid, true); window.removeEventListener("bacwater:usage", usage); w[`ga-disable-${GA_ID}`] = true; };
   }, [choice, pathname]);
   function choose(value: string) {
-    try { localStorage.setItem(ANALYTICS_CONSENT_KEY, value); } catch {}
+    try { localStorage.setItem(ANALYTICS_CONSENT_KEY, value); localStorage.setItem(CLARITY_CONSENT_KEY, value); } catch {}
     setChoice(value);
+    setReplayChoice(value);
+    updateClarityConsent(value === "granted");
     if (value === "denied") {
       const w = window as unknown as AnalyticsWindow; w[`ga-disable-${GA_ID}`] = true;
       for (const cookie of document.cookie.split(";")) {
@@ -49,5 +55,5 @@ export function AnalyticsPreferences() {
       }
     }
   }
-  return <section className="bac-privacy-preferences border-t border-border px-4 py-5 text-sm" aria-label="Analytics preferences"><div className="mx-auto max-w-7xl flex flex-wrap items-center gap-3"><p className="min-w-0 basis-48 grow">{ANALYTICS_READY ? "Optional usage analytics are off unless you allow them. Calculations work either way." : "Optional analytics and session replay are off. Your calculations work without them."}</p><button type="button" className="min-h-11 rounded-lg border border-border px-4" aria-pressed={choice === "denied"} onClick={() => choose("denied")}>Keep analytics off</button>{ANALYTICS_READY && <button type="button" className="min-h-11 rounded-lg border border-border px-4" aria-pressed={choice === "granted"} onClick={() => choose("granted")}>Allow usage analytics</button>}<a href="/privacy" className="min-h-11 inline-flex items-center underline">Privacy</a></div></section>;
+  return <section className="bac-privacy-preferences border-t border-border px-4 py-5 text-sm" aria-label="Analytics preferences"><div className="mx-auto max-w-7xl flex flex-wrap items-center gap-3"><p className="min-w-0 basis-48 grow">{ANALYTICS_READY || CLARITY_READY ? "Optional usage analytics and masked session recordings are off unless you allow them. Calculations work either way." : "Optional analytics and session replay are off. Your calculations work without them."}</p><button type="button" className="min-h-11 rounded-lg border border-border px-4" aria-pressed={choice === "denied" && replayChoice === "denied"} onClick={() => choose("denied")}>Keep analytics off</button>{(ANALYTICS_READY || CLARITY_READY) && <button type="button" className="min-h-11 rounded-lg border border-border px-4" aria-pressed={replayChoice === "granted"} onClick={() => choose("granted")}>Allow usage analytics</button>}<a href="/privacy" className="min-h-11 inline-flex items-center underline">Privacy</a></div></section>;
 }
