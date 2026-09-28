@@ -22,6 +22,13 @@
       "title": "BACwater weekly content",
       "cadence": "Tuesday morning, America/Boise",
       "enabled": true
+    },
+    {
+      "title": "Backlink discovery, verification and reclamation",
+      "cadence": "Daily 06:40 UTC, GitHub Actions (.github/workflows/backlinks.yml)",
+      "enabled": true,
+      "requiresAccount": false,
+      "note": "Runs without any connector or secret. Reads every placement in backlinks/ledger.json off the live web, records the real link attributes, commits the register to main, and opens a labelled issue when a link is lost or stops passing equity. Optional Search Console secrets widen discovery only."
     }
   ],
   "blockedChannels": [
@@ -43,5 +50,13 @@
   "liveVersionAtSetup": {
     "release": "2026-09-23-calculator-first-design",
     "commit": "f5c81aa2a1ed1dc84ec853778f4757198ee97258"
+  },
+  "backlinks": {
+    "register": "backlinks/ledger.json",
+    "verifiedDofollow": 0,
+    "liveNofollow": 0,
+    "discovered": 0,
+    "opportunities": 8,
+    "note": "No backlink has been acquired. Acquisition is passive: the /embed and /share-tools widgets place an attribution anchor in the host page's own markup when a third party installs one. Directory and community lanes remain blocked on owner-authenticated accounts and are not automated."
   }
 }

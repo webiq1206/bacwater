@@ -113,7 +113,10 @@ async function check(placement: Placement, host: string): Promise<Checked> {
       ...shared,
       outcome: "link-missing",
       detail: `The page loaded (HTTP ${page.status}) but carries no anchor to ${host}. It may have been edited out, or rendered only by client-side script.`,
-      suggestedStatus: null,
+      // A lead a source handed us, whose page turns out not to link here, is a
+      // false lead and is closed. Something WE submitted stays pending, because
+      // a publisher may not have put it up yet.
+      suggestedStatus: placement.status === "discovered" ? "rejected" : null,
     };
   }
   return {
@@ -170,7 +173,7 @@ function report(ledger: Ledger, checks: Checked[], problems: string[]): string {
     c.link?.rel.length ? `rel="${c.link.rel.join(" ")}"` : "page-level nofollow", c.detail,
   ]), ["Domain", "Placement", "Destination", "Attributes", "Why"]));
 
-  lines.push("\n## Submitted, not yet live\n");
+  lines.push("\n## Found or submitted, not yet confirmed live\n");
   lines.push(table(of("link-missing", "page-error").map(c => [
     c.placement.domain, c.placement.placementUrl ? `[link](${c.placement.placementUrl})` : "—",
     c.placement.status, c.detail,

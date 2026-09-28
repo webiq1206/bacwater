@@ -7,6 +7,8 @@
  *
  *   opportunity  researched, nothing submitted. No link exists.
  *   submitted    sent or published by us, not yet seen live by the verifier.
+ *   discovered   a page found automatically that appears to link here, not yet
+ *                read by the verifier. Finding a page is not reading its rel.
  *   live         the anchor was read on the live page and passes equity.
  *   live-nofollow the anchor was read and does NOT pass equity.
  *   rejected     the platform declined, removed it, or the page is gone.
@@ -17,7 +19,7 @@
  * and verifyLedger() fails the run when a record claims otherwise.
  */
 
-export type PlacementStatus = "opportunity" | "submitted" | "live" | "live-nofollow" | "rejected";
+export type PlacementStatus = "opportunity" | "submitted" | "discovered" | "live" | "live-nofollow" | "rejected";
 
 export interface VerifiedAttributes {
   /** ISO timestamp of the run that read the page. */
@@ -46,6 +48,10 @@ export interface Placement {
   status: PlacementStatus;
   /** How the link is or would be earned, in one line. No outreach implied. */
   method: string;
+  /** For an automatically found placement, which source found it. */
+  discoveredBy?: string;
+  /** ISO date the record was added by an automated run. */
+  discoveredAt?: string;
   /** Why this platform is relevant to a reconstitution calculator. */
   relevance: string;
   /** What still has to happen, and who can do it. Empty when live. */
@@ -94,6 +100,12 @@ export function verifyLedger(ledger: Ledger): string[] {
     if (placement.status === "live-nofollow" && placement.attributes?.dofollow) {
       problems.push(`${where}: recorded as live-nofollow but the verified attributes say it is dofollow`);
     }
+    if (placement.status === "discovered" && !placement.placementUrl) {
+      problems.push(`${where}: a discovered placement is a page that was found, so it must carry that page's URL`);
+    }
+    if (placement.status === "discovered" && !placement.discoveredBy) {
+      problems.push(`${where}: a discovered placement must name the source that found it`);
+    }
     if (placement.status === "opportunity" && placement.placementUrl) {
       problems.push(`${where}: an opportunity has no placement URL yet; put the target page in notes instead`);
     }
@@ -106,7 +118,7 @@ export function verifyLedger(ledger: Ledger): string[] {
 }
 
 export function countByStatus(ledger: Ledger): Record<PlacementStatus, number> {
-  const counts: Record<PlacementStatus, number> = { opportunity: 0, submitted: 0, live: 0, "live-nofollow": 0, rejected: 0 };
+  const counts: Record<PlacementStatus, number> = { opportunity: 0, submitted: 0, discovered: 0, live: 0, "live-nofollow": 0, rejected: 0 };
   for (const placement of ledger.placements) counts[placement.status] += 1;
   return counts;
 }

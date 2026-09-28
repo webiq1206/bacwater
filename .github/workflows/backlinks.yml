@@ -1,0 +1,107 @@
+name: Backlinks
+
+# Unattended link monitoring. Discovery finds pages that appear to link here,
+# verification reads each one and records the real attributes, and the register
+# is committed back to main so its history is the audit trail.
+#
+# The point of running this daily is reclamation, not accumulation: a dofollow
+# link that becomes nofollow, or a page that disappears, is silent damage that
+# nobody notices for months. An issue is opened the day it happens.
+on:
+  schedule:
+    # 06:40 UTC. Off the hour, because every scheduler in the world fires at :00
+    # and GitHub delays the queue.
+    - cron: '40 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: backlinks
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Discover, verify and record
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install the deployment lockfile
+        run: npm ci
+
+      # Neither step touches a database or the production site; they read the
+      # register and the public web only.
+      - name: Discover pages that link here
+        id: discover
+        continue-on-error: true
+        env:
+          GSC_CLIENT_ID: ${{ secrets.GSC_CLIENT_ID }}
+          GSC_CLIENT_SECRET: ${{ secrets.GSC_CLIENT_SECRET }}
+          GSC_REFRESH_TOKEN: ${{ secrets.GSC_REFRESH_TOKEN }}
+          GSC_PROPERTY: ${{ secrets.GSC_PROPERTY }}
+        run: npm run backlinks:discover
+
+      # --promote writes only what this run actually read. It is allowed to fail
+      # the step: a non-zero exit means the register contradicts the live web,
+      # which is exactly what should raise an issue rather than be swallowed.
+      - name: Verify every placement and record the result
+        id: verify
+        continue-on-error: true
+        run: npm run backlinks:verify -- --promote
+
+      - name: Detect regressions
+        id: regressions
+        run: node --import tsx scripts/report-backlink-changes.ts
+        env:
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+
+      - name: Commit the updated register
+        run: |
+          if [ -z "$(git status --porcelain backlinks/)" ]; then
+            echo "Register unchanged."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backlinks/
+          git commit -m "Record backlink verification for $(date -u +%Y-%m-%d)
+
+          Written by .github/workflows/backlinks.yml from pages it read. Link
+          attributes in this commit come from live HTML, not from assumption."
+          # Rebase rather than force: a human commit on main during the run wins.
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Open an issue when something regressed
+        if: steps.regressions.outputs.alert == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('backlinks/regressions.md', 'utf8');
+            const title = 'Backlink regression detected';
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'backlinks',
+            });
+            const existing = open.find(issue => issue.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: existing.number, body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['backlinks'],
+              });
+            }

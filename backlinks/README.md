@@ -60,6 +60,50 @@ add `rel="nofollow"`, or delete the line, and the widget keeps working without i
 installs will legitimately be `live-nofollow`, and that is a correct outcome, not a
 failure to fix.
 
+## What runs without anyone
+
+`.github/workflows/backlinks.yml` runs daily at 06:40 UTC, and on demand. It needs
+no secrets to be useful:
+
+1. **Discover** — `npm run backlinks:discover` asks each source for pages that
+   appear to link here and adds them as `discovered`.
+2. **Verify** — `npm run backlinks:verify -- --promote` reads every placement and
+   records the real attributes.
+3. **Commit** — the updated register is pushed back to `main`, so its git history
+   is the audit trail of what was true on which day.
+4. **Raise** — `scripts/report-backlink-changes.ts` compares the register before
+   and after. If a dofollow link became nofollow, a link disappeared, or the
+   register contradicts the live web, it opens (or comments on) a GitHub issue
+   labelled `backlinks`.
+
+Step 4 is the reason this runs daily. Acquiring a link is an event someone
+notices; **losing** one is silent. A platform rewriting `rel` on output, a page
+edited, a post deleted — none of that notifies anybody, and it is usually found
+months later if at all. Gains are reported for context but never raise an issue,
+because an alert that fires on good news gets ignored.
+
+The job never force-pushes; it rebases, so a human commit landing mid-run wins.
+
+### Discovery sources, and what they miss
+
+| Source | Needs | Finds |
+| --- | --- | --- |
+| `wikimedia-exturlusage` | nothing | Every page on the major Wikimedia wikis citing this domain. Exact, not an estimate. These links are nofollow, which the verifier records rather than assumes. |
+| `google-search-console` | `GSC_CLIENT_ID`, `GSC_CLIENT_SECRET`, `GSC_REFRESH_TOKEN` repository secrets | Validates access to the property. Referring pages are not exposed by the public API, so it adds no leads on its own. |
+
+Be clear-eyed about the gap: finding *everyone* who links to a domain needs
+either that domain's Search Console links report or a paid backlink index, and
+neither is available to this repository today. A source that is not configured
+says so in the log and returns nothing, so an empty run is never mistaken for
+"no backlinks exist".
+
+The gap that would close this properly is capturing the `Referer` header on the
+`/embed/*` requests, since every install fetches the widget from our own server
+and announces the host page for free. That needs somewhere durable to write, and
+the only store here is the production database — whose schema is changed as a
+separate reviewed operational step, never from a build. It is deliberately not
+done unilaterally.
+
 ## Adding a placement
 
 Add the record with `status: "opportunity"` (no `placementUrl`) or `"submitted"`

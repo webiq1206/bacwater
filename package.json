@@ -17,7 +17,8 @@
     "test:design": "node --import tsx scripts/test-amino-partner.ts && node --import tsx scripts/test-research-design.ts && node --import tsx scripts/test-sitewide-design.ts",
     "backlinks:verify": "node --import tsx scripts/verify-backlinks.ts",
     "build:widget": "node scripts/build-growth-widget.mjs",
-    "test:growth": "node --import tsx scripts/test-growth.ts"
+    "test:growth": "node --import tsx scripts/test-growth.ts",
+    "backlinks:discover": "node --import tsx scripts/discover-backlinks.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.109.0",

@@ -7,6 +7,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { scanPage, parseRel, parseAttributes, targetsHost, anchorText } from "../src/lib/seo/link-attributes";
 import { verifyLedger, countByStatus, type Ledger } from "../src/lib/seo/backlink-ledger";
+import { mergeFound, canonicalUrl, placementId } from "../scripts/discover-backlinks";
 
 const HOST = "bacwater.ai";
 const scan = (html: string, xRobotsTag?: string) => scanPage(html, { host: HOST, xRobotsTag });
@@ -106,6 +107,41 @@ for (const placement of shipped.placements) {
   if (placement.status === "live" || placement.status === "live-nofollow") assert.ok(placement.attributes, `${placement.id} claims a live status`);
 }
 
+
+// 6b. Automated discovery. Its job is to add leads without ever adding a claim,
+// and without adding the same page twice however it is spelled.
+assert.equal(canonicalUrl("https://WWW.Example.com/a/?x=1#frag"), "https://example.com/a?x=1");
+assert.equal(canonicalUrl("https://example.com/a/"), "https://example.com/a");
+assert.equal(canonicalUrl("https://example.com"), "https://example.com/");
+assert.equal(placementId("https://en.wikipedia.org/wiki/Peptide"), "en-wikipedia-org-wiki-peptide");
+assert.equal(placementId("not a url"), "");
+assert.ok(placementId(`https://example.com/${"x".repeat(200)}`).length <= 70);
+
+{
+  const ledger: Ledger = {
+    site: "https://bacwater.ai", host: HOST, updated: "2026-09-27",
+    placements: [{ ...opportunity, id: "en-wikipedia-org-wiki-peptide", placementUrl: null }],
+  };
+  const added = mergeFound(ledger, [
+    { url: "https://en.wikipedia.org/wiki/Peptide", source: "wikimedia" },
+    { url: "https://en.wikipedia.org/wiki/Peptide/", source: "wikimedia" },   // same page
+    { url: "https://WWW.en.wikipedia.org/wiki/Peptide", source: "wikimedia" }, // same page
+    { url: "ftp://example.com/x", source: "wikimedia" },                       // not a web page
+    { url: "nonsense", source: "wikimedia" },
+  ], "2026-09-28");
+  assert.equal(added.length, 1, "discovery must collapse the same page to one record");
+  // The id already existed on an unrelated record, so it must not be reused.
+  assert.equal(added[0].id, "en-wikipedia-org-wiki-peptide-2");
+  assert.equal(added[0].status, "discovered");
+  assert.equal(added[0].discoveredBy, "wikimedia");
+  assert.equal(added[0].discoveredAt, "2026-09-28");
+  assert.equal(added[0].attributes, undefined, "discovery must never write attributes");
+  // Whatever discovery produces has to satisfy the register's own invariants.
+  assert.deepEqual(verifyLedger(ledger), []);
+  // A second pass over the same leads adds nothing.
+  assert.equal(mergeFound(ledger, [{ url: "https://en.wikipedia.org/wiki/Peptide", source: "wikimedia" }], "2026-09-29").length, 0);
+}
+
 async function main() {
   // 7. End to end. The verifier is the thing that decides what gets claimed, so
   // it is run for real against a local server that serves the three cases that
@@ -114,6 +150,7 @@ async function main() {
     "/good": { status: 200, body: '<html><head><title>g</title></head><body><p>Handy: <a href="https://bacwater.ai/tools/bac-water">BAC water calculator by BACwater.ai</a></p></body></html>' },
     "/ugc": { status: 200, body: '<html><body><a href="https://bacwater.ai/tools/bac-water" rel="ugc noopener">calc</a></body></html>' },
     "/gone": { status: 404, body: "not found" },
+    "/nolink": { status: 200, body: "<html><body><p>An article that mentions nothing.</p></body></html>" },
   };
   const server = http.createServer((request, response) => {
     const page = pages[(request.url || "").split("?")[0]];
@@ -134,6 +171,8 @@ async function main() {
         { id: "gone", domain: "127.0.0.1", placementUrl: `${origin}/gone`, destinationPath: "/tools/bac-water", status: "submitted", method: "m", relevance: "r", nextStep: "wait" },
         { id: "unreachable", domain: "127.0.0.1", placementUrl: "http://127.0.0.1:1/x", destinationPath: "/tools/bac-water", status: "submitted", method: "m", relevance: "r", nextStep: "wait" },
         { id: "future", domain: "example.com", placementUrl: null, destinationPath: "/peptide-calculator", status: "opportunity", method: "m", relevance: "r", nextStep: "decide" },
+        // A lead a source handed us that turns out not to link here at all.
+        { id: "falselead", domain: "127.0.0.1", placementUrl: `${origin}/nolink`, destinationPath: "/tools/bac-water", status: "discovered", method: "found automatically", relevance: "unassessed", nextStep: "verify", discoveredBy: "wikimedia", discoveredAt: "2026-09-28" },
       ],
     };
     fs.writeFileSync(path.join(dir, "ledger.json"), JSON.stringify(fixture, null, 2));
@@ -173,6 +212,10 @@ async function main() {
     assert.equal(byId.unreachable.status, "submitted");
     assert.equal(byId.unreachable.attributes, undefined);
     assert.equal(byId.future.status, "opportunity");
+    // A false lead is closed rather than left pending forever. Something WE
+    // submitted would stay pending, because a publisher may not have put it up.
+    assert.equal(byId.falselead.status, "rejected");
+    assert.equal(byId.falselead.attributes, undefined);
     assert.deepEqual(verifyLedger(promoted), [], "promoted ledger must still satisfy its own invariants");
 
     const report = fs.readFileSync(path.join(dir, "verification-report.md"), "utf8");
@@ -183,7 +226,7 @@ async function main() {
     assert.match(report, /BAC water calculator by BACwater\.ai/);
     assert.match(report, /rel="ugc noopener"/);
     const results = JSON.parse(fs.readFileSync(path.join(dir, "verification.json"), "utf8"));
-    assert.deepEqual(results.results.map((r: { outcome: string }) => r.outcome), ["dofollow", "nofollow", "page-error", "unreachable", "not-submitted"]);
+    assert.deepEqual(results.results.map((r: { outcome: string }) => r.outcome), ["dofollow", "nofollow", "page-error", "unreachable", "not-submitted", "link-missing"]);
 
     // A hand-written claim the live page contradicts must fail the run.
     const lying = { ...promoted, placements: promoted.placements.map(p => p.id === "ugc" ? { ...p, status: "live" as const, attributes: { ...p.attributes!, dofollow: true } } : p) };
@@ -196,6 +239,21 @@ async function main() {
     server.close();
     fs.rmSync(dir, { recursive: true, force: true });
   }
+
+  const workflow = fs.readFileSync(path.join(".github", "workflows", "backlinks.yml"), "utf8");
+  assert.match(workflow, /schedule:/, "the workflow must run on a schedule, not only by hand");
+  assert.match(workflow, /cron: '40 6 \* \* \*'/);
+  assert.match(workflow, /contents: write/, "it commits the register back to main");
+  assert.match(workflow, /issues: write/, "it raises an issue on a regression");
+  assert.match(workflow, /npm run backlinks:discover/);
+  assert.match(workflow, /npm run backlinks:verify -- --promote/);
+  assert.match(workflow, /report-backlink-changes\.ts/);
+  // A force-push from a scheduled job would silently discard a human commit.
+  assert.doesNotMatch(workflow, /--force/);
+  assert.match(workflow, /git pull --rebase origin main/);
+  const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+  for (const script of ["backlinks:verify", "backlinks:discover"]) assert.ok(pkg.scripts[script], `package.json is missing ${script}`);
+  assert.match(pkg.scripts.test, /test-backlinks\.ts/, "the backlink suite must run in npm test");
 
   const counts = countByStatus(shipped);
   console.log(`PASS backlinks: attribute parsing across real-world markup, host matching, rel and page-level nofollow detection, ledger invariants refusing unverified dofollow claims, and an end-to-end verifier run that promotes only what it read. Shipped register: ${Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(", ")}.`);

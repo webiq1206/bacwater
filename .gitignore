@@ -39,3 +39,7 @@ prisma/prisma/
 
 # Private crawl and test artifacts, never production content
 audit-evidence/
+
+# Transient: written by the backlinks workflow, read by the issue step in the
+# same run. The durable record is ledger.json and verification-report.md.
+backlinks/regressions.md
