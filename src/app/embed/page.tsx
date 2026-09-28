@@ -100,7 +100,18 @@ export default function EmbedPage() {
                 <h4 className="text-sm font-medium">Paste this</h4>
                 <CopyButton value={snippet} label="Copy HTML" />
               </div>
-              <pre className="mt-2 overflow-x-auto rounded-lg border border-border bg-muted/50 p-3 text-xs leading-relaxed">
+              {/* The block scrolls sideways, so it has to be reachable and
+                  scrollable from the keyboard: axe flags a scrollable region
+                  with no focusable content as a serious failure, and someone
+                  who cannot use a mouse would otherwise never see the end of
+                  the line they are being asked to copy. role="group" carries
+                  the name without adding another landmark to the page. */}
+              <pre
+                role="group"
+                aria-label={`Embed code for the ${widget.title} calculator`}
+                tabIndex={0}
+                className="mt-2 overflow-x-auto rounded-lg border border-border bg-muted/50 p-3 text-xs leading-relaxed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              >
                 <code>{snippet}</code>
               </pre>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">

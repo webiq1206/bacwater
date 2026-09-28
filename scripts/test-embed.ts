@@ -143,6 +143,15 @@ async function main() {
   // Putting a path in STATIC_PAGES without a search-appearance snippet breaks
   // npm run test:search-appearance, which is a separate CI step rather than
   // part of npm test, so the failure surfaces late. Assert it here.
+  // The snippet block scrolls sideways. axe rates a scrollable region with no
+  // focusable content a serious failure, and it is a real one: without this a
+  // keyboard user cannot scroll to the end of the line they are told to copy.
+  // It failed master-audit.yml step 18, which is not part of npm test.
+  assert.match(hub, /tabIndex=\{0\}/, "the embed code block must be keyboard focusable");
+  assert.match(hub, /role="group"/);
+  assert.match(hub, /aria-label=\{`Embed code for the \$\{widget\.title\} calculator`\}/);
+  assert.match(hub, /focus-visible:outline/, "a focusable block needs a visible focus indicator");
+
   const snippet = searchSnippet("/embed");
   assert.ok(snippet, "/embed is in the sitemap, so it needs a SEARCH_SNIPPETS entry");
   // withSocialMetadata resolves title and description from the registry, so the
