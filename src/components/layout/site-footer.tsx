@@ -4,9 +4,12 @@ import { Wordmark } from "@/components/brand/wordmark";
 import { SupplierWaterLink } from "@/components/partners/supplier-context";
 import { POSITIONING_STATEMENT } from "@/lib/positioning";
 import { PreferredSourceButton } from "@/components/common/preferred-source-button";
+import { Info } from "lucide-react";
+import { RESEARCH_DISCLAIMER, FDA_DISCLAIMER, AFFILIATE_DISCLAIMER } from "@/lib/disclaimer";
 
 const FOOTER = {
   Product: [
+    { href: "/research-finder", label: "Research finder" },
     { href: "/peptide-calculator", label: "Peptide Calculator" },
     { href: "/plan", label: "Build My Plan" },
     { href: "/peptides", label: "Compound guide" },
@@ -79,6 +82,11 @@ export function SiteFooter() {
           ))}
         </div>
         <div className="mt-8 flex flex-wrap items-start gap-6"><SupplierWaterLink compact/><RecommendationsNavLink /></div>
+        <aside aria-labelledby="footer-research-notice" className="mt-10 rounded-2xl border border-white/20 border-l-4 border-l-[var(--color-accent-guide)] bg-white/5 p-5 sm:p-6">
+          <h2 id="footer-research-notice" className="flex items-center gap-2 text-base font-semibold"><Info size={19} aria-hidden="true"/> Research, FDA & affiliate notice</h2>
+          <div className="mt-3 grid gap-3 text-sm leading-relaxed text-white/85 lg:grid-cols-3"><p>{RESEARCH_DISCLAIMER}</p><p>{FDA_DISCLAIMER}</p><p>{AFFILIATE_DISCLAIMER}</p></div>
+          <Link href="/disclaimer" className="mt-4 inline-flex min-h-11 items-center font-semibold underline underline-offset-4">Read the full disclaimer</Link>
+        </aside>
         <div className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
             © {new Date().getFullYear()} BACwater.ai. All rights reserved.

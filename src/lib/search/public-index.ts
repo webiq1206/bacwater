@@ -15,6 +15,7 @@ const tools: [string,string,string,string][] = [
  ["/tools/vial-labels","Printable vial labels","Make a label from your saved numbers.","pdf label print qr"],
 ];
 export const BASE_SEARCH_ITEMS: readonly SearchItem[] = [
+ {id:"page:/research-finder",href:"/research-finder",title:"Research finder",description:"Ask a lab question. Explore relevant catalog entries and linked studies in plain language.",kind:"page",keywords:"research question chat conversational study studies evidence topics"},
  {id:"page:/share-tools",href:"/share-tools",title:"Free embeds and reference cards",description:"Add a mass converter to your website or share a unit reference graphic.",kind:"page",keywords:"embed widget share download infographic graphics publisher newsletter"},
  ...tools.map(([href,title,description,keywords])=>({id:`tool:${href}`,href,title,description,keywords,kind:"calculator" as const})),
  ...SUPPLIER_PRODUCTS.map(p=>({id:`product:${p.id}`,title:p.name,description:p.summary,href:`/products/${p.id}`,kind:"product" as const,productId:p.id,reference:p.reference,keywords:`${p.id} ${p.reference} ${p.mark} ${p.label} ${(p.aliases||[]).join(" ")} supplier buy product details`})),

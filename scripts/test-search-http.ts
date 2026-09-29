@@ -39,11 +39,21 @@ async function main() {
       }
       results.push({ path, status: response.status, title: expected.title, imageAlt: shareImage(path).alt });
     }
-    for (const path of ["/forgot-password", "/reset-password", "/calculate/hcg", ...SUPPLIER_PRODUCTS.flatMap(p=>[`/calculate/product/${p.id}`,`/products/${p.id}`]), ...(process.env.DATABASE_URL ? Object.keys(ARTICLE_GUIDES).map(slug=>`/learn/${slug}`) : [])]) {
+    for (const path of ["/research-finder", "/disclaimer", "/forgot-password", "/reset-password", "/calculate/hcg", ...SUPPLIER_PRODUCTS.flatMap(p=>[`/calculate/product/${p.id}`,`/products/${p.id}`]), ...(process.env.DATABASE_URL ? Object.keys(ARTICLE_GUIDES).map(slug=>`/learn/${slug}`) : [])]) {
       const response=await fetch(origin+path,{signal:AbortSignal.timeout(30000)});
       assert.equal(response.status,200,path);
       const html=await response.text();
       assert.equal([...html.matchAll(/<h1(?:\s|>)/g)].length,1,path);
+      if(path==="/research-finder"){
+        assert.ok(html.includes('data-research-finder'));
+        assert.ok(html.includes('research-question'));
+        assert.ok(html.includes('footer-research-notice'));
+        assert.ok(html.includes('href="/disclaimer#finder"'));
+      }
+      if(path==="/disclaimer"){
+        for(const id of ["purpose","products","calculators","finder","evidence","fda","affiliate","links"])assert.ok(html.includes(`id="${id}"`));
+        assert.ok(html.includes('https://www.fda.gov/drugs/enforcement-activities-fda/unapproved-drugs'));
+      }
       if(path.includes("password")) {
         assert.match(html,/<meta name="robots" content="noindex, nofollow"/);
         assert.match(html,/<meta name="referrer" content="no-referrer"/);

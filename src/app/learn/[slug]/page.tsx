@@ -17,13 +17,15 @@ import { ReviewedBy } from "@/components/common/reviewed-by";
 import { guideReferences } from "@/lib/content/references";
 import { renderBody } from "@/lib/content/render";
 import { extractMetaDescription } from "@/lib/content/checks";
+import { readableContent } from "@/lib/content/plain-articles";
 
 interface Props { params: Promise<{ slug: string }>; }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const g = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
-  if (!g) return withSocialMetadata({ title: "Guide not found", robots: { index: false, follow: false } });
+  const stored = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
+  if (!stored) return withSocialMetadata({ title: "Guide not found", robots: { index: false, follow: false } });
+  const g = readableContent(stored);
 
   // FAQ content blocks are canonicalized to /faq; noindex the /learn/faq-* URLs
   // so search engines see one authoritative version of each FAQ answer.
@@ -59,8 +61,9 @@ export const dynamic = "force-dynamic";
 
 export default async function GuidePage({ params }: Props) {
   const { slug } = await params;
-  const guide = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
-  if (!guide) return notFound();
+  const stored = await prisma.contentBlock.findFirst({ where: { slug, published: true } });
+  if (!stored) return notFound();
+  const guide = readableContent(stored);
 
   const refs = guideReferences(slug);
   const presentation = Object.hasOwn(ARTICLE_GUIDES, slug) ? ARTICLE_GUIDES[slug] : undefined;

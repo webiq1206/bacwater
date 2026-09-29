@@ -1,6 +1,7 @@
 import { STATIC_PAGES, SITE_URL } from "./sitemap";
 import type { LearnEntry } from "@/lib/learn/catalog";
 const labels: Record<string, string> = {
+  "/research-finder": "Conversational research finder with linked studies and evidence limits",
   "/": "BACwater.ai: concentration and measurement tools",
   "/peptide-calculator": "Peptide concentration calculator",
   "/plan": "Plan Builder", "/plan/new": "Guided Plan Builder",

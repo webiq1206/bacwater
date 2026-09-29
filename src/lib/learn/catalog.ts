@@ -12,6 +12,7 @@
  */
 
 import { ARTICLE_GUIDES } from "./article-presentation";
+import { readableContent } from "../content/plain-articles";
 import { cache } from "react";
 import { SEARCH_CONTENT_WHERE, RESERVED_LEARN_SLUGS } from "@/lib/seo/publication-policy";
 import { prisma } from "@/lib/db";
@@ -257,6 +258,7 @@ export async function getCatalog(strict = false): Promise<LearnEntry[]> {
     );
 
   const dbEntries: LearnEntry[] = blocks
+    .map(readableContent)
     .filter((b) => !REDIRECTED.has(b.slug) && !RESERVED_LEARN_SLUGS.has(b.slug))
     .map((b) => {
       const t = DB_TAGS[b.slug] ?? inferTagging(b.slug, b.kind);

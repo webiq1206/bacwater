@@ -4,7 +4,7 @@ export type ArticlePresentation = {title:string;description:string;cta:string;hr
 export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   "what-is-bac-water": {
     "title": "What Is BAC Water? Ingredients & Purpose",
-    "description": "Understand bacteriostatic water, its preservative and label limits. Compare water products and find storage guidance.",
+    "description": "Learn what BAC water contains, what its preservative does and why each product needs its own label and storage instructions.",
     "cta": "Compare water products",
     "href": "/learn/vs/sterile-water",
     "related": [
@@ -14,15 +14,15 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
       "/learn/where-to-buy-bacteriostatic-water"
     ],
     "faqs": [
-      { "q": "What does BAC water stand for?", "a": "BAC water is short for bacteriostatic water. The FDA-listed product is sterile water for injection with benzyl alcohol added as a bacteriostatic preservative, supplied in a multiple-dose container. The abbreviation describes the preservative, not a brand." },
-      { "q": "What is BAC water used for?", "a": "Pfizer's label indicates Bacteriostatic Water for Injection only for diluting or dissolving drugs for intravenous, intramuscular or subcutaneous injection, according to the instructions of the drug's manufacturer. The label says it is not for fluid replacement and must not be used in neonates." },
+      { "q": "What does BAC water stand for?", "a": "BAC water is short for bacteriostatic water. The referenced water product has benzyl alcohol added to slow bacterial growth. Its label describes a container intended for more than one entry under set rules. BAC is a short name, not a brand." },
+      { "q": "What is BAC water used for?", "a": "Pfizer’s label describes using this water to dissolve or dilute drugs only as their instructions direct. Dilute means spread the same amount of material through more liquid. The label does not list it as a fluid replacement and says it must not be used in newborns." },
       { "q": "What is BAC water made of?", "a": "Water for injection plus benzyl alcohol as the preservative. Pfizer's labeling describes products with 0.9% or 1.1% benzyl alcohol, so the exact container states the concentration. It contains no sodium chloride and no other active ingredient." },
-      { "q": "Is BAC water the same as sterile water or saline?", "a": "No. Sterile water for injection lists no preservative, and saline is a sodium chloride solution. Similar names do not make the products interchangeable; the instructions for the drug being prepared name the vehicle." }
+      { "q": "Is BAC water the same as sterile water or saline?", "a": "No. Sterile water for injection lists no preservative, and saline is a sodium chloride solution. Similar names do not mean the products can replace one another. The exact drug instructions must name the liquid to use." }
     ]
   },
   "how-peptide-reconstitution-works": {
     "title": "Peptide Concentration: How the Math Works",
-    "description": "Separate mass, final volume and concentration. Follow a worked equation using known label values without choosing a preparation.",
+    "description": "See how total mg and final mL give the amount in each mL. Follow simple math examples without choosing a mixing method.",
     "cta": "Calculate concentration",
     "href": "/tools/bac-water",
     "related": [
@@ -33,7 +33,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "how-to-read-a-peptide-vial": {
     "title": "How to Read a Vial Label: Mass vs Concentration",
-    "description": "Learn the difference between total mass, concentration and final volume with a fictitious label example and a notation checklist.",
+    "description": "Tell total mg apart from mg in each mL. Use simple label examples to check each number and its unit.",
     "cta": "Check concentration",
     "href": "/tools/bac-water",
     "related": [
@@ -44,7 +44,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "how-to-use-an-insulin-syringe": {
     "title": "Syringe Scale Basics & Calculation Limits",
-    "description": "Understand what device instructions must establish before interpreting scale markings. This guide explains units, not administration.",
+    "description": "Learn which scale details a calculator needs. Check the actual device instructions. This page does not teach injection use.",
     "cta": "Read scale intervals",
     "href": "/learn/how-to-read-an-insulin-syringe",
     "related": [
@@ -55,7 +55,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "what-syringe-units-mean": {
     "title": "U-100 Units, mL & Mass: What Each Means",
-    "description": "Convert U-100 markings to volume, then use a known concentration to connect volume with mass. Product IU are a separate unit.",
+    "description": "See how U-100 marks show liquid volume and why mg needs another number. Learn why product IU is a different unit.",
     "cta": "Convert U-100 units and mL",
     "href": "/tools/syringe-units",
     "related": [
@@ -66,7 +66,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "how-to-store-reconstituted-peptides": {
     "title": "Storing Reconstituted Peptides: Follow the Label",
-    "description": "Record product-specific storage temperature, light protection, opening limits and discard instructions. Math cannot set a shelf life.",
+    "description": "Find the temperature, light and date instructions for an exact product. Learn why a calculation cannot set a storage time.",
     "cta": "Make a record label",
     "href": "/tools/vial-labels",
     "related": [
@@ -77,7 +77,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "common-mistakes-to-avoid": {
     "title": "Calculator Mistakes: Units, Labels & Saved Results",
-    "description": "Check common input mistakes, including mg versus mcg, total mass versus concentration and stale values from another product.",
+    "description": "Catch common mistakes with mg, mcg, mL, blend amounts and old saved values before relying on a calculation.",
     "cta": "Choose a calculation tool",
     "href": "/tools",
     "related": [
@@ -88,7 +88,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "how-to-reconstitute-bpc-157": {
     "title": "BPC-157: Calculation Inputs & Evidence Limits",
-    "description": "Review known input requirements and evidence limits for BPC-157. This is a calculation reference, not a preparation recipe.",
+    "description": "Learn which label numbers the BPC-157 calculator needs and what the research cannot prove. This is not a mixing recipe.",
     "cta": "Open BPC-157 calculator",
     "href": "/calculate/product/bpc-157",
     "related": [
@@ -99,7 +99,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "how-to-reconstitute-tirzepatide": {
     "title": "Tirzepatide Calculation Inputs & Units",
-    "description": "Distinguish exact formulation instructions from concentration math. Check mass, volume and unit inputs without assuming a preparation.",
+    "description": "Check the exact product, total amount, final liquid and units. A tirzepatide name alone is not a mixing instruction.",
     "cta": "Check an amount and concentration",
     "href": "/tools/dose",
     "related": [
@@ -110,7 +110,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "how-to-reconstitute-semaglutide": {
     "title": "Semaglutide: Concentration, Formulation & Units",
-    "description": "Learn why concentration and formulation must come from the exact product. Understand U-100 volume markings and mass without dose advice.",
+    "description": "Learn why the amount in each mL must come from the exact product. U-100 marks show liquid, not a fixed amount in mg.",
     "cta": "Check an amount and concentration",
     "href": "/tools/dose",
     "related": [
@@ -121,7 +121,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "how-to-read-an-insulin-syringe": {
     "title": "Read Syringe Scale Intervals & U-100 Units",
-    "description": "Count intervals between labeled numbers without assuming tick size. Use a readable number-line example and check actual device instructions.",
+    "description": "Count the gaps between scale numbers with a simple example. Check the actual device before applying a U-100 conversion.",
     "cta": "Convert U-100 units and mL",
     "href": "/tools/syringe-units",
     "related": [
@@ -132,7 +132,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "insulin-syringe-sizes": {
     "title": "Syringe Capacity, U-100 Scale & Tick Spacing",
-    "description": "Separate syringe capacity from graduation spacing. Compare volume labels and understand why device markings must be checked independently.",
+    "description": "Compare how much a syringe holds with the gaps between its marks. Size alone does not tell you the value of each mark.",
     "cta": "Read scale intervals",
     "href": "/learn/how-to-read-an-insulin-syringe",
     "related": [
@@ -143,7 +143,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "too-much-bac-water": {
     "title": "More BAC Water: What Dilution Math Tells You",
-    "description": "See how a larger final volume changes concentration while idealized total mass stays constant. Product compatibility is a separate question.",
+    "description": "See how more liquid changes the amount in each mL while total mg stays the same. The math cannot check a mixing mistake.",
     "cta": "Compare concentration values",
     "href": "/tools/bac-water",
     "related": [
@@ -154,7 +154,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   },
   "peptide-reconstitution-chart": {
     "title": "Peptide Concentration Chart: Worked Arithmetic",
-    "description": "Read and print a concentration chart with transparent mass and final-volume examples. The chart does not select product mixing instructions.",
+    "description": "Follow a chart of made-up mg and mL examples. See the division clearly. The chart does not choose mixing amounts or doses.",
     "cta": "Check a calculation",
     "href": "/tools/bac-water",
     "related": [

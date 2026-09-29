@@ -15,10 +15,9 @@ export function ResearchDisclaimer({ className = "" }: { className?: string }) {
     >
       <Info className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
       <p>
-        This is general reconstitution math for research and educational use
-        only. BACwater.ai is not a medical company, and this is not medical
-        advice. Always check your product&apos;s own paperwork and talk to your
-        doctor before making any health decision.{" "}
+        These tools check the numbers you enter. They do not choose a dose,
+        tell you how to use a product or confirm that it is safe. Check the
+        label, units and result. Research products are not for people or animals.{" "}
         <Link href="/disclaimer" className="underline hover:text-foreground">
           Read the full disclaimer
         </Link>

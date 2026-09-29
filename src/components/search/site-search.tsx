@@ -39,7 +39,7 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
       if (!response.ok) throw Error("unavailable");
       const data = await response.json();
       if (!Array.isArray(data.items)) throw Error("invalid");
-      const safe = data.items.filter((i: SearchItem) => i && typeof i.title === "string" && typeof i.description === "string" && typeof i.keywords === "string" && typeof i.href === "string" && /^\/(?:tools(?:\/|$)|peptide-calculator$|peptides(?:\/|$)|calculate\/product\/|products\/|learn(?:\/|$)|faq$|methodology$|recommendations$|contact$|privacy$|disclaimer$)/.test(i.href) && !/[?#\\]/.test(i.href) && Object.hasOwn(SEARCH_KIND_LABEL, i.kind));
+      const safe = data.items.filter((i: SearchItem) => i && typeof i.title === "string" && typeof i.description === "string" && typeof i.keywords === "string" && typeof i.href === "string" && /^\/(?:tools(?:\/|$)|peptide-calculator$|peptides(?:\/|$)|calculate\/product\/|products\/|learn(?:\/|$)|faq$|methodology$|recommendations$|research-finder$|contact$|privacy$|disclaimer$)/.test(i.href) && !/[?#\\]/.test(i.href) && Object.hasOwn(SEARCH_KIND_LABEL, i.kind));
       setItems(safe); setPartial(!!data.partial);
     }).catch(error => { if (error.name !== "AbortError") setPartial(true); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
@@ -65,6 +65,7 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
         {query && <button type="button" onClick={() => { search(""); input.current?.focus(); }} aria-label="Clear search"><X size={18} aria-hidden="true" /></button>}
       </div>
     </form>
+    <Link href="/research-finder" onClick={navigate} className="mx-4 my-2 flex min-h-12 items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-medium">Have a research question? Explore it with the research finder <ArrowRight size={18} className="shrink-0" aria-hidden="true"/></Link>
     <div className={styles.filters} role="group" aria-label="Search categories">{categories.map(([key, label]) => <button key={key} type="button" aria-pressed={key === kind} onClick={() => { setKind(key); setLimit(14); if (resultList.current) resultList.current.scrollTop = 0; }}>{label}</button>)}</div>
     {kind === "product" ? <div className={styles.productPane}>
       <ProductSearchField query={query} onChange={search} match={productMatch} inputRef={input} showInitial previewCount={6} hideField activeProductId={detailId} onActiveProductChange={selectProduct} />

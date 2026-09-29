@@ -7,7 +7,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "bacteriostatic water",
       "H2O"
     ],
-    "summary": "Whether this water is a good match for a lab sample."
+    "summary": "Whether a lab sample dissolves in this water and stays unchanged."
   },
   "glp-1": {
     "name": "GLP-1 (SM)",
@@ -16,7 +16,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "SM",
       "glp1"
     ],
-    "summary": "How one lab-made signal attaches to a cell and passes on a message."
+    "summary": "How a lab-made message changes what a cell does when sugar is present."
   },
   "glp-2": {
     "name": "GLP-2 (TR)",
@@ -25,7 +25,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "TR",
       "glp2"
     ],
-    "summary": "How one molecule can send messages through two different cell receptors."
+    "summary": "How one lab-made message acts through two different proteins on cells."
   },
   "glp-3": {
     "name": "GLP-3 (RT)",
@@ -35,21 +35,21 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "LY3437943",
       "glp3"
     ],
-    "summary": "How one molecule interacts with three kinds of cell receiving points."
+    "summary": "How one molecule starts three different kinds of messages in cells."
   },
   "bpc-157": {
     "name": "BPC-157",
     "aliases": [
       "bpc157"
     ],
-    "summary": "How cells grip a surface, move and respond to stress in lab tests."
+    "summary": "How cells grip a surface and move across it in a lab test."
   },
   "ghk-cu": {
     "name": "GHK-Cu",
     "aliases": [
       "ghkcu"
     ],
-    "summary": "How a copper-binding peptide affects the support material around cells."
+    "summary": "How a copper-holding chain affects the support that cells build around them."
   },
   "tb-500": {
     "name": "TB-500",
@@ -57,7 +57,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "tb500",
       "thymosin beta 4"
     ],
-    "summary": "How a related peptide affects the inner frame that helps cells move."
+    "summary": "How a related molecule changes the inner frame that helps a cell move."
   },
   "tesamorlin": {
     "name": "Tesamorlin",
@@ -65,14 +65,14 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Tesamorelin",
       "TES"
     ],
-    "summary": "How a message reaches the gland that controls growth-hormone release."
+    "summary": "How a copied message makes a small gland release a stored hormone."
   },
   "mots-c": {
     "name": "MOTS-C",
     "aliases": [
       "motsc"
     ],
-    "summary": "How cells sense their fuel supply and adjust the way they use it."
+    "summary": "How cells change their chemical work when their fuel supply changes."
   },
   "nad-plus": {
     "name": "NAD+",
@@ -80,7 +80,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "NAD",
       "nicotinamide adenine dinucleotide"
     ],
-    "summary": "How a small molecule helps cells pass materials between chemical reactions."
+    "summary": "How cells reuse a small chemical helper while they process fuel."
   },
   "cjc-ipa-no-dac": {
     "name": "CJC-1295 / Ipamorelin (No DAC)",
@@ -88,31 +88,31 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "CJC IPA",
       "CJC1295 Ipamorelin"
     ],
-    "summary": "How two separate signals reach the gland involved in hormone release."
+    "summary": "How two ingredients start different messages in a hormone-releasing gland."
   },
   "kpv": {
     "name": "KPV",
     "aliases": [],
-    "summary": "How a tiny peptide gets into cells and changes their alarm messages."
+    "summary": "How a tiny chain enters cells and changes some of their alarm messages."
   },
   "klow": {
     "name": "KLOW",
     "aliases": [],
-    "summary": "How four ingredients relate to cell movement, cell support and cell signals."
+    "summary": "How four separate ingredients relate to cell movement, support and alarm messages."
   },
   "semax": {
     "name": "SEMAX",
     "aliases": [
       "Semax"
     ],
-    "summary": "How a peptide may change the messages passed between nerve cells."
+    "summary": "How a short chain changes messages that help nerve cells form connections."
   },
   "glutathione": {
     "name": "Glutathione",
     "aliases": [
       "GSH"
     ],
-    "summary": "How cells handle certain reactive chemicals and recycle the helpers they use."
+    "summary": "How cells change certain harmful chemicals into less reactive ones."
   },
   "melanotan-ii": {
     "name": "Melanotan II",
@@ -120,21 +120,21 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Melanotan 2",
       "MTII"
     ],
-    "summary": "How a ring-shaped peptide interacts with several cell receiving points."
+    "summary": "How a ring-shaped chain starts different kinds of messages in cells."
   },
   "glow": {
     "name": "GLOW",
     "aliases": [
       "GLOW blend"
     ],
-    "summary": "How three ingredients relate to cell movement and the support around cells."
+    "summary": "How three separate ingredients relate to cell movement and cell support."
   },
   "selank": {
     "name": "SELANK",
     "aliases": [
       "Selank"
     ],
-    "summary": "Whether a peptide changes how cells respond to a nerve-signaling message."
+    "summary": "Whether a short chain changes how nerve-like cells respond to a stop message."
   },
   "melanotan-i": {
     "name": "Melanotan I",
@@ -142,14 +142,14 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Melanotan 1",
       "MTI"
     ],
-    "summary": "How a peptide message activates a receptor involved in pigment-cell signals."
+    "summary": "How a copied message starts chemical steps in pigment cells."
   },
   "igf-1-lr3": {
     "name": "IGF-1 LR3",
     "aliases": [
       "IGF1 LR3"
     ],
-    "summary": "How a changed cell signal stays available to reach its receptor."
+    "summary": "How a changed growth message stays free to reach cells in a lab test."
   },
   "5-amino-1mq": {
     "name": "5-Amino-1MQ",
@@ -157,7 +157,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "1MQ",
       "5 amino 1 mq"
     ],
-    "summary": "What happens when a compound slows one enzyme’s chemical job."
+    "summary": "What changes when a compound slows one chemical job inside cells."
   },
   "wolverine-stack": {
     "name": "BPC-157/TB-500 (Wolverine)",
@@ -165,7 +165,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Wolverine",
       "BPC TB blend"
     ],
-    "summary": "How two ingredients relate to cell movement and the frame inside cells."
+    "summary": "How two separate ingredients relate to the way cells move."
   },
   "pt-141": {
     "name": "PT-141",
@@ -173,26 +173,26 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Bremelanotide",
       "pt141"
     ],
-    "summary": "How a peptide reaches receptors involved in nerve-cell messages."
+    "summary": "How a copied chemical message changes activity in linked nerve cells."
   },
   "cagrilintide": {
     "name": "Cagrilintide",
     "aliases": [
       "CAG"
     ],
-    "summary": "How a peptide fits receiving points made from a receptor and helper proteins."
+    "summary": "How a chemical message fits a cell protein with added helper parts."
   },
   "aod-9604": {
     "name": "AOD-9604",
     "aliases": [
       "AOD"
     ],
-    "summary": "Whether a small piece based on a hormone changes fat-cell signals in experiments."
+    "summary": "Whether a small copied part of a hormone changes fat-cell chemistry."
   },
   "dsip": {
     "name": "DSIP",
     "aliases": [],
-    "summary": "How a small peptide may affect the release of nerve-cell messages."
+    "summary": "Whether a short chemical chain changes the messages released by nerve tissue."
   },
   "epithalon": {
     "name": "Epithalon",
@@ -200,21 +200,21 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Epitalon",
       "EPI"
     ],
-    "summary": "How a short peptide relates to the end sections of DNA in lab-grown cells."
+    "summary": "Whether a short chain changes the ends of a cell’s stored instructions."
   },
   "ipamorelin": {
     "name": "Ipamorelin",
     "aliases": [
       "IPA"
     ],
-    "summary": "How a peptide message reaches cells involved in hormone release."
+    "summary": "How a short chemical message makes gland cells release a stored hormone."
   },
   "snap-8": {
     "name": "SNAP-8",
     "aliases": [
       "Acetyl octapeptide 3"
     ],
-    "summary": "Whether a short copy of a protein part could affect how cells release messages."
+    "summary": "Whether a small copy of a protein part could change how cells release messages."
   },
   "thymosin-alpha-1": {
     "name": "Thymosin Alpha-1",
@@ -222,26 +222,26 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Thymalfasin",
       "TA1"
     ],
-    "summary": "How certain immune cells detect a signal and pass messages to other cells."
+    "summary": "How some cells detect a trigger and tell other cells about it."
   },
   "ll-37": {
     "name": "LL-37",
     "aliases": [],
-    "summary": "How a peptide interacts with the thin outer barriers of cells and microbes."
+    "summary": "How a short chain can make openings in a cell’s outer barrier."
   },
   "cartalax": {
     "name": "Cartalax",
     "aliases": [
       "AED"
     ],
-    "summary": "Whether a short peptide changes which instructions lab-grown cells read."
+    "summary": "Whether a short chain changes which built-in instructions a cell reads."
   },
   "sermorelin": {
     "name": "Sermorelin",
     "aliases": [
       "SERM"
     ],
-    "summary": "How a shortened hormone-release message reaches the gland that receives it."
+    "summary": "How a short copy of a natural message can trigger hormone release."
   },
   "kisspeptin": {
     "name": "Kisspeptin",
@@ -249,87 +249,87 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Kisspeptin-10",
       "KP10"
     ],
-    "summary": "How an early message starts a chain of signals between nerve cells and a gland."
+    "summary": "How one nerve-cell message starts the next message in a chain."
   },
   "dihexa": {
     "name": "Dihexa",
     "aliases": [
       "PNB-0408"
     ],
-    "summary": "A proposed nerve-cell signaling route whose key supporting paper was withdrawn."
+    "summary": "An idea about nerve-cell connections whose key supporting paper was withdrawn."
   },
   "vip": {
     "name": "VIP",
     "aliases": [
       "Vasoactive intestinal peptide"
     ],
-    "summary": "How one peptide message leads to different responses in different cell types."
+    "summary": "How one chemical message changes salt and fluid movement in certain cell tests."
   },
   "ara-290": {
     "name": "ARA-290",
     "aliases": [
       "Cibinetide"
     ],
-    "summary": "How a small peptide may affect signals in cells under stress."
+    "summary": "Whether a small copied piece of a signal protein changes a cell’s stress response."
   },
   "pinealon": {
     "name": "Pinealon",
     "aliases": [
       "EDR"
     ],
-    "summary": "How cells respond when reactive chemicals build up during stress."
+    "summary": "How cells respond when chemicals that can damage their parts build up."
   },
   "ahk-cu": {
     "name": "AHK-Cu",
     "aliases": [
       "ahkcu"
     ],
-    "summary": "How a copper-binding peptide affects cells taken from hair follicles."
+    "summary": "How a copper-holding chain affects lab-grown cells from the base of a hair."
   },
   "ghkcu-spray": {
     "name": "GHK-Cu SPRAY",
     "aliases": [],
-    "summary": "How a copper-binding peptide affects the support material around cells. The prepared liquid is a separate research question."
+    "summary": "How a copper-holding chain affects the support that cells build around them. The prepared liquid is a separate research question."
   },
   "nad-plus-spray": {
     "name": "NAD+ SPRAY",
     "aliases": [],
-    "summary": "How a small molecule helps cells pass materials between chemical reactions. The prepared liquid is a separate research question."
+    "summary": "How cells reuse a small chemical helper while they process fuel. The prepared liquid is a separate research question."
   },
   "semax-spray": {
     "name": "SEMAX SPRAY",
     "aliases": [],
-    "summary": "How a peptide may change the messages passed between nerve cells. The prepared liquid is a separate research question."
+    "summary": "How a short chain changes messages that help nerve cells form connections. The prepared liquid is a separate research question."
   },
   "selank-spray": {
     "name": "SELANK SPRAY",
     "aliases": [],
-    "summary": "Whether a peptide changes how cells respond to a nerve-signaling message. The prepared liquid is a separate research question."
+    "summary": "Whether a short chain changes how nerve-like cells respond to a stop message. The prepared liquid is a separate research question."
   },
   "pt-141-spray": {
     "name": "PT-141 SPRAY",
     "aliases": [],
-    "summary": "How a peptide reaches receptors involved in nerve-cell messages. The prepared liquid is a separate research question."
+    "summary": "How a copied chemical message changes activity in linked nerve cells. The prepared liquid is a separate research question."
   },
   "melanotan-ii-spray": {
     "name": "Melanotan II Spray",
     "aliases": [],
-    "summary": "How a ring-shaped peptide interacts with several cell receiving points. The prepared liquid is a separate research question."
+    "summary": "How a ring-shaped chain starts different kinds of messages in cells. The prepared liquid is a separate research question."
   },
   "dsip-spray": {
     "name": "DSIP Spray",
     "aliases": [],
-    "summary": "How a small peptide may affect the release of nerve-cell messages. The prepared liquid is a separate research question."
+    "summary": "Whether a short chemical chain changes the messages released by nerve tissue. The prepared liquid is a separate research question."
   },
   "bpc-tb-spray": {
     "name": "BPC-157/TB-500 Spray (Wolverine)",
     "aliases": [],
-    "summary": "How two ingredients relate to cell movement and the frame inside cells. The prepared liquid is a separate research question."
+    "summary": "How two separate ingredients relate to the way cells move. The prepared liquid is a separate research question."
   },
   "bpc-spray": {
     "name": "BPC-157 Spray",
     "aliases": [],
-    "summary": "How cells grip a surface, move and respond to stress in lab tests. The prepared liquid is a separate research question."
+    "summary": "How cells grip a surface and move across it in a lab test. The prepared liquid is a separate research question."
   },
   "adalank-spray": {
     "name": "Adalank Spray",

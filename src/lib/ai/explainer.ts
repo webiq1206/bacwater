@@ -27,19 +27,19 @@ export function topicFor(text:string):Topic|null {
 }
 export function explanation(topic:Topic, r:CalcResult):string {
  const n=(x:number)=>x.toLocaleString("en-US",{maximumSignificantDigits:10});
- const concentration=`Your stated ${n(r.input.vialStrengthMg)} mg in ${n(r.usedBacMl)} mL gives ${n(r.finalConcentrationMgPerMl)} mg/mL. This assumes a uniform solution in that final volume.`;
+ const concentration=`Your stated ${n(r.input.vialStrengthMg)} mg in ${n(r.usedBacMl)} mL gives ${n(r.finalConcentrationMgPerMl)} mg/mL. This assumes the material is spread evenly through that final amount of liquid.`;
  const amount=r.schedule?.dosePerInjectionMcg??r.input.doseMcg;
  const volume=`The entered amount per measurement is ${n(amount)} mcg. At that concentration, its calculated volume is ${n(r.doseVolumeMl)} mL.`;
  switch(topic){
  case "overview":return concentration+" "+volume+" These are input-based calculations, not a recommended amount or preparation.";
- case "concentration":return concentration+" More final volume at the same total mass means a lower concentration. Recalculate after changing a known input.";
- case "volume":return `The calculation uses the final volume you entered: ${n(r.usedBacMl)} mL. It does not choose a compatible liquid, an appropriate mixing volume or a vial capacity. `+volume;
- case "units":return r.syringeReadout.kind==="u100"?`On a U-100 scale, 100 units equal 1 mL. This calculation corresponds to ${n(r.syringeUnits)} U-100 units. That is a volume reading, not a milligram dose or a device recommendation. Verify the actual scale and graduation spacing.`:volume+" Your selected illustration uses an mL scale, not U-100 markings. Follow the actual device instructions.";
+ case "concentration":return concentration+" With the same amount of material, more liquid means less material in each mL. Change a known number to check the math again.";
+ case "volume":return `The calculation uses the final volume you entered: ${n(r.usedBacMl)} mL. It does not choose a liquid, how much to add or how much the vial can hold. `+volume;
+ case "units":return r.syringeReadout.kind==="u100"?`On a U-100 scale, 100 units equal 1 mL. This calculation corresponds to ${n(r.syringeUnits)} U-100 units. That is a liquid amount. It does not choose an amount in mg or a device. Check the actual scale and the gap between its smallest marks.`:volume+" Your selected illustration uses an mL scale, not U-100 markings. Follow the actual device instructions.";
  case "portions":return `Before accounting for losses, the stated total contains ${n(r.dosesPerVial)} complete portions of the entered per-measurement amount. This count is not a treatment schedule or a guarantee that every portion can be recovered from a vial.`;
- case "storage":return "The calculation does not establish shelf life or a safe discard date. Use the instructions for the exact formulation; a mixing date, clear appearance or a correct concentration cannot verify sterility or stability.";
- case "rounding":return "The diagram uses stated scale assumptions; displayed values may be rounded. Compare the actual device graduations and product instructions. A between-mark or capacity warning is a reason to resolve the mismatch, not permission to change a formulation. Read /methodology for the calculation limits.";
- case "inputs":return "Keep mass, final liquid volume and scale units separate. Copy the relevant values from instructions you already have. Vial mass alone cannot determine a suitable diluent, amount to take or storage period. Missing instructions need clarification from the appropriate professional.";
- default:return "This tool checks numerical relationships. It cannot verify product identity, purity, compatibility, an appropriate treatment, an injection technique or storage stability. Choose a question about concentration, volume, scale units, portion counts or rounding.";
+ case "storage":return "The math cannot tell you how long a product lasts or when to throw it away. Check the exact product instructions. A date or clear liquid cannot show whether germs are present or the material has changed.";
+ case "rounding":return "The diagram is an example scale. Some numbers are rounded to fit the display. Check the smallest marks on the actual device. If the result falls between marks or exceeds the amount it holds, the tool cannot fix that mismatch. Read /methodology for the limits.";
+ case "inputs":return "Keep the amount of material, the amount of liquid and the scale markings separate. Copy numbers from instructions you already have. A vial amount alone cannot tell you which liquid to use, how to use a product or how long it lasts. Ask the supplier or relevant professional about missing instructions.";
+ default:return "This tool checks math. It cannot tell what is in a vial, whether it is clean, which products can be mixed or how to use them. Ask about the amount in each mL, liquid volume, scale markings, portion counts or rounded numbers.";
  }
 }
 export async function boundedJson(req:Request):Promise<unknown> {
