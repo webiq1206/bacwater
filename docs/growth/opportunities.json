@@ -43,6 +43,61 @@
         "verifiedVia": "Browser rendered success state after a single Submit for Review action."
       },
       "consent": "Owner explicitly approved this site's age confirmation and research-only disclaimer on September 29, 2026. The entry gate was no longer present when the form was resumed."
+    },
+    {
+      "id": "finderslist-tool-submission",
+      "status": "submitted_pending_review",
+      "channel": "tool_directory",
+      "canonicalUrl": "https://www.finderslist.com/submit",
+      "discoveredAt": "2026-09-29",
+      "submittedAt": "2026-09-29",
+      "specificNeed": "General tool directory accepts free browser software; listed BACwater under Productivity Tools with explicit laboratory-arithmetic positioning.",
+      "matchingTool": {
+        "name": "BACwater.ai",
+        "url": "https://bacwater.ai"
+      },
+      "submission": {
+        "name": "BACwater.ai",
+        "category": "Productivity Tools",
+        "pricing": "Free",
+        "tagline": "Free research calculators for concentration, mg to mcg, and U-100 units to mL.",
+        "contactIdentity": "Authorized WEB IQ business email",
+        "affiliationDisclosed": true
+      },
+      "confirmation": {
+        "heading": "Submission received!",
+        "message": "We'll review your tool and you'll get an email once it's live, usually within 24 hours.",
+        "verifiedVia": "Browser success state after a single form submission"
+      },
+      "nextStep": "Check for a public listing starting September 30. No listing ID or public BACwater listing URL was returned. Do not resubmit.",
+      "spend": 0
+    },
+    {
+      "id": "thefreetoolsdirectory-calculator-submission",
+      "status": "submitted_pending_review",
+      "channel": "calculator_directory",
+      "canonicalUrl": "https://thefreetoolsdirectory.com/submit",
+      "discoveredAt": "2026-09-29",
+      "submittedAt": "2026-09-29",
+      "specificNeed": "Free calculator directory has a Concentration category. Its own search showed no matches for BACwater before submission.",
+      "matchingTool": {
+        "name": "BACwater.ai Research Calculators",
+        "url": "https://bacwater.ai"
+      },
+      "submission": {
+        "name": "BACwater.ai Research Calculators",
+        "category": "Concentration",
+        "contactIdentity": "Authorized WEB IQ business email",
+        "affiliationDisclosed": true,
+        "researchOnly": true
+      },
+      "confirmation": {
+        "heading": "Submission received!",
+        "message": "Thank you for your submission. We will review it and add it to the directory if it meets our criteria.",
+        "verifiedVia": "Browser rendered success state after a single submission"
+      },
+      "nextStep": "Check public listing status in a future growth run, initially October 6; no specific review deadline or submission ID was provided. Do not resubmit.",
+      "spend": 0
     }
   ],
   "researchNotes": [
@@ -67,6 +122,24 @@
       "status": "not_qualified",
       "reviewedAt": "2026-09-28",
       "reason": "The September 22 post is an educational explanation, not a request for another calculator; its only comment asks for individualized advice. The subreddit explicitly prohibits self-promotion and requires posts to relate directly to its YouTube channel. Do not post or link BACwater there."
+    },
+    {
+      "url": "https://launch.ignlab.net/submit.html",
+      "reviewedAt": "2026-09-29",
+      "status": "skipped_unrelated_redirect",
+      "reason": "Submission page initially showed a challenge field, then the same tab navigated to an unrelated TotalAV paid antivirus page without a submission. Closed the tab; no BACwater details submitted."
+    },
+    {
+      "url": "https://www.alltoolsdirectory.com/submit",
+      "reviewedAt": "2026-09-29",
+      "status": "requires_owner_email_authentication",
+      "reason": "Current submit URL redirects to passwordless email login. No login link requested and no listing submitted."
+    },
+    {
+      "url": "https://www.flowpath.cloud/contact-us/",
+      "reviewedAt": "2026-09-29",
+      "status": "qualified_email_route_not_submitted",
+      "reason": "Official homepage invites free tool submissions by contact email; core calculators need no account. Contact page has no submission form. Authenticated WEB IQ sender has not been verified for this route; no email sent."
     }
   ]
 }
