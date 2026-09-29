@@ -62,12 +62,25 @@ jobs:
           npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
           npx playwright install --with-deps chromium webkit
       - name: Verify full-height hero and dedicated calculator navigation
+        id: hero
         run: |
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
+          node scripts/audit-hero-restoration.mjs
+      - name: Make hero screenshots available for review
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.hero.outcome != 'skipped' }}
+        with:
+          name: hero-layout-${{ github.sha }}
+          path: |
+            audit-evidence/live-hero/
+            audit-evidence/source-commit.txt
+          retention-days: 14
+      - name: Verify labels, research assistant and search regressions
+        if: ${{ !cancelled() && steps.hero.outcome != 'skipped' }}
+        run: |
           result=0
           node scripts/audit-small-labels.mjs || result=1
-          node scripts/audit-hero-restoration.mjs || result=1
           node scripts/audit-research-assistant.mjs || result=1
           node scripts/audit-search-clarity.mjs || result=1
           exit "$result"

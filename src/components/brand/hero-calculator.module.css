@@ -35,4 +35,5 @@
 .focusBody .startFields{min-height:0}.focusBody .startGuide{flex:none;max-width:none;min-height:150px}
 .startGuide{margin-block:16px 12px;padding:20px}.startGuide>p{margin-bottom:18px}.startGuide small{margin-top:14px}
 @media(min-width:781px) and (max-height:800px){.startGuide{padding:16px;margin-block:14px 8px}.startGuide>p{font-size:1.125rem;margin-bottom:12px}.startGuide small{display:none}.startOutputs strong{font-size:1.125rem}}
-@media(max-width:780px){.startGuide{margin-block:12px 8px;padding:14px 16px}.startGuide>p{font-size:1.125rem;margin-bottom:12px}.startGuide small{display:none}}
+@media(max-width:780px){.calculator .startHint{display:none}.startGuide{margin-block:12px 8px;padding:14px 16px}.startGuide>p{font-size:1.125rem;margin-bottom:12px}.startGuide small{display:none}}
+@media(max-width:780px) and (max-height:620px){.calculator .progress p,.calculator .startHint{display:none}.calculator .tabs{margin-top:6px}.calculator .stepNavigation{padding-top:6px}.calculator .stepSafety{margin-block:4px 6px}}

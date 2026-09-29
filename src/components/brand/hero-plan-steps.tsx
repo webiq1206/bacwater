@@ -76,7 +76,7 @@ export function HeroPlanSteps(p: Props) {
       <p className={styles.startHint}>Match the name on your label. We’ll show the right fields.</p>
       <div className={styles.startGuide} data-hero-start-guide>
         <p>Your numbers. <em>A clear result.</em></p>
-        <div className={styles.startOutputs} aria-label="What the calculator can show">
+        <div className={styles.startOutputs} role="group" aria-label="What the calculator can show">
           <div><strong>mg/mL</strong><span>Amount per mL</span></div>
           <div><strong>mL</strong><span>Liquid volume</span></div>
           <div><strong>U-100</strong><span>Scale reading</span></div>

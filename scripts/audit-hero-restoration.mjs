@@ -24,7 +24,8 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
  }
  try{
   await check(`${engine}: full, balanced hero and usable calculator above the fold at eight widths`,async()=>{
-   for(const [width,height] of [[320,568],[375,667],[390,844],[430,932],[768,1024],[1024,768],[1440,900],[1920,1080]])await journey(width,height,async p=>{
+   const layoutFailures=[];
+   for(const [width,height] of [[320,568],[375,667],[390,844],[430,932],[768,1024],[1024,768],[1440,900],[1920,1080]])try{await journey(width,height,async p=>{
     const hero=p.locator('[data-home-hero]');await expect(hero).toHaveAttribute('data-hero-design','editorial-live');
     const h=await hero.boundingBox(),next=await p.locator('#toolkit').boundingBox(),cta=await hero.locator('[data-hero-calculator]').boundingBox();
     assert.ok(h&&h.y+h.height>=height-1,JSON.stringify({width,height,h}));assert.ok(next&&next.y>=height-1);
@@ -37,7 +38,8 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await expect(p.locator('[data-hero-calculator]').getByRole('combobox',{name:'Product',exact:true})).toBeVisible();
     await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveCount(0);
     await p.screenshot({path:`${out}/${engine}-home-${width}.png`,fullPage:false});
-   });
+   });}catch(error){layoutFailures.push({width,height,error:String(error)});}
+   assert.deepEqual(layoutFailures,[]);
   });
   await check(`${engine}: product-first steps, unit conversion, review, editing, validation and copy`,async()=>journey(1440,1000,async p=>{
    const calc=p.locator('[data-hero-calculator]'),result=calc.locator('[data-live-result]');
