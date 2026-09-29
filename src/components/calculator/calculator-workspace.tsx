@@ -1,5 +1,6 @@
 "use client";
 import { ShareToolButton } from "@/components/common/share-tool-button";
+import { UnitHelp } from "@/components/tools/unit-help";
 import { CalculationEvents } from "./calculation-events";
 import Link from "next/link";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
@@ -88,7 +89,7 @@ export function CalculatorWorkspace({ title, description, children, help, refere
       </header>
       <div className={styles.body} data-calculator-scroll tabIndex={0} role="region" aria-label="Calculation workspace">
         <div className={styles.content}>
-          <div className={styles.heading}><h1>{title}</h1><p>{description}</p></div>
+          <div className={styles.heading}><h1>{title}</h1><p>{description}</p><UnitHelp/></div>
           {!hasOwnProductPicker && <CalculatorProductTools selectedId={routeProduct?.id||(session.kind==="single"?session.productId:null)}/>}
           <CalculationEvents/>{children}
           {reference && <div className="mt-10 border-t border-border pb-8 text-base leading-relaxed" data-calculator-reference>{reference}</div>}

@@ -20,10 +20,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    const hero=p.locator('[data-hero-focus]');
    await completeAuditHero(p,hero,{vial:'40',amount:'2',volume:'2',review:false});
    await expect(hero.locator('[data-live-result]')).toContainText('20 mg/mL');
-   await hero.getByRole('button',{name:'Change product',exact:true}).click();
-   const picker=p.getByRole('dialog',{name:'Choose a product',exact:true});
-   await picker.getByLabel('Find a product',{exact:true}).fill('Retatrutide');
-   await picker.locator('[data-product-choice="glp-3"]').click();
+   await p.goto(origin+'/calculate/product/glp-3',{waitUntil:'networkidle'});
    await expect(p).toHaveURL(origin+'/calculate/product/glp-3');
    await expect(p.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('40');
    await expect(p.getByLabel('Final volume (mL)',{exact:true})).toHaveValue('2');

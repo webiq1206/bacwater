@@ -6,7 +6,6 @@ import { useState, useRef } from "react";
 import { CalculatorWorkspace, WorkspaceActions } from "@/components/calculator/calculator-workspace";
 
 import Link from "next/link";
-import { UnitHelp } from "@/components/tools/unit-help";
 import { SupplyChecklist } from "@/components/tools/supply-checklist";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -79,7 +78,7 @@ export default function BacWaterCalculatorPage() {
         <p>This calculator cannot establish sterility or stability. Do not treat a preservative, a clear-looking solution or a correct calculation as proof that a mixture remains usable. Follow the exact product's storage and discard instructions.</p>
         <p>The <Link href="/learn/bac-water-shelf-life" className="underline">BAC water storage reference</Link> separates unopened expiry, opened-vial guidance and reconstituted-product instructions. They are different questions.</p>
       </section>
-      <UnitHelp/>
+
       <section className="mt-9 max-w-3xl" aria-labelledby="bac-water-faq-title">
         <h2 id="bac-water-faq-title" className="text-2xl font-serif">Common questions</h2>
         <dl className="mt-4 space-y-5">{BAC_WATER_FAQS.map(item => <div key={item.q}><dt className="font-medium">{item.q}</dt><dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.a}</dd></div>)}</dl>

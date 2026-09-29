@@ -4,14 +4,15 @@ import * as Dialog from "@radix-ui/react-dialog";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ArrowUpRight, Calculator, Check, Copy, Expand, RotateCcw, X } from "lucide-react";
-import { QUICK_EXAMPLE, type QuickMode } from "@/lib/brand/quick-calculation";
+import { type QuickMode } from "@/lib/brand/quick-calculation";
 import { trackUsage } from "@/lib/analytics";
-import { decimalError } from "@/lib/calc/number-text";
-import { heroResult, EMPTY_HERO } from "@/lib/brand/hero-calculation";
 import { SiteSearchButton } from "@/components/search/site-search";
 import { CalculatorProductTools } from "@/components/partners/calculator-products";
 import { useCalculationSession, useSessionDraft } from "@/lib/session/calculation-session";
 import { convertMassText } from "@/lib/calc/mass-text";
+import { scaleConversion as convertScale, switchMassDirection, switchScaleDirection } from "@/lib/calc/conversion-direction";
+import { ConversionDirection, MASS_DIRECTIONS, SCALE_DIRECTIONS } from "@/components/calculator/conversion-direction";
+import { UnitHelp } from "@/components/tools/unit-help";
 import styles from "./hero-calculator.module.css";
 import type { PlanSaveState } from "@/components/plan/plan-form";
 
@@ -29,16 +30,32 @@ export function HeroCalculator() {
   const [massConversion, setMassConversion] = useSessionDraft<{unit:"mg"|"mcg";text:string}>("mass-conversion", {unit:"mg",text:""});
   const [scaleConversion, setScaleConversion] = useSessionDraft<{direction:"units"|"ml";text:string}>("scale-conversion", {direction:"units",text:""});
   const [open, setOpen] = useState(false), [notice, setNotice] = useState(""), [example, setExample] = useState(false);
+  const [directionError,setDirectionError]=useState("");
   const [saving, setSaving] = useState(false), [savedPlan, setSavedPlan] = useState<PlanSaveState["savedPlan"]>(null);
   const dialogRef = useRef<HTMLDivElement>(null), expandRef = useRef<HTMLButtonElement>(null);
   const wantedField = useRef<string | null>(null), started = useRef(false), hadError = useRef(false);
   const converted = convertMassText(massConversion.text, massConversion.unit);
-  const values = { ...EMPTY_HERO,
-    mass: massConversion.unit === "mg" ? massConversion.text : converted.kind === "value" ? converted.mg : "",
-    units: scaleConversion.direction === "units" ? scaleConversion.text : scaleConversion.text.trim() && Number.isFinite(Number(scaleConversion.text)) && Number(scaleConversion.text) >= 0 ? String(Number(scaleConversion.text) * 100) : "",
-  };
-  const result = mode === "concentration" ? null : heroResult(mode, values);
-  const error = mode === "units" ? decimalError(values.units, "U-100 scale units") : mode === "mass" && values.mass.trim() && !result ? "Check the mass value. Use a number without unit words or commas." : "";
+  const scale = convertScale(scaleConversion);
+  const result = mode === "mass" && converted.kind === "value" ? {
+    value: massConversion.unit === "mg" ? converted.mcg : converted.mg,
+    unit: massConversion.unit === "mg" ? "mcg" : "mg",
+    formula: massConversion.unit === "mg" ? `${converted.mg} mg × 1,000 = ${converted.mcg} mcg` : `${converted.mcg} mcg ÷ 1,000 = ${converted.mg} mg`,
+  } : mode === "units" && scale.kind === "value" ? {
+    value: scaleConversion.direction === "units" ? scale.ml : scale.units,
+    unit: scaleConversion.direction === "units" ? "mL" : "U-100 units",
+    formula: scaleConversion.direction === "units" ? `${scale.units} U-100 units ÷ 100 = ${scale.ml} mL` : `${scale.ml} mL × 100 = ${scale.units} U-100 units`,
+  } : null;
+  const error = directionError || (mode === "mass" && converted.kind === "error" ? converted.message : mode === "units" && scale.kind === "error" ? scale.message : "");
+  function changeMass(unit: "mg" | "mcg") {
+    const next = switchMassDirection(massConversion, unit);
+    if (!next) { setDirectionError("Check the number before switching units. Your entry has been kept."); return; }
+    setMassConversion(next); setDirectionError(""); setNotice(""); setExample(false);
+  }
+  function changeScale(direction: "units" | "ml") {
+    const next = switchScaleDirection(scaleConversion, direction);
+    if (!next) { setDirectionError("Check the number before switching units. Your entry has been kept."); return; }
+    setScaleConversion(next); setDirectionError(""); setNotice(""); setExample(false);
+  }
   useEffect(() => {
     if (!open) return;
     const viewport = window.visualViewport;
@@ -55,10 +72,10 @@ export function HeroCalculator() {
   function focusScreen(key?: string) { wantedField.current = key || null; setOpen(true); }
   function update(key: "mass" | "units", value: string) {
     if (!started.current) { trackUsage("tool_started"); started.current = true; }
-    if (key === "mass") setMassConversion({unit:"mg",text:value}); else setScaleConversion({direction:"units",text:value});
-    setExample(false); setNotice("");
+    if (key === "mass") setMassConversion({...massConversion,text:value}); else setScaleConversion({...scaleConversion,text:value});
+    setExample(false); setNotice(""); setDirectionError("");
   }
-  function select(id: QuickMode) { setMode(id); setNotice(""); setExample(false); }
+  function select(id: QuickMode) { setMode(id); setNotice(""); setExample(false); setDirectionError(""); }
   function tabKey(e: KeyboardEvent<HTMLButtonElement>, index: number, scope: string) {
     const next = e.key === "ArrowRight" ? (index + 1) % modes.length : e.key === "ArrowLeft" ? (index + modes.length - 1) % modes.length : e.key === "Home" ? 0 : e.key === "End" ? modes.length - 1 : null;
     if (next === null) return;
@@ -71,14 +88,20 @@ export function HeroCalculator() {
   }
   function content(scope: "inline" | "focus") {
     const id = uid + "-" + scope, key = mode === "mass" ? "mass" : "units";
+    const inputLabel = mode === "mass" ? massConversion.unit === "mg" ? "Amount in milligrams" : "Amount in micrograms" : scaleConversion.direction === "units" ? "U-100 scale units" : "Volume in milliliters";
+    const inputUnit = mode === "mass" ? massConversion.unit : scaleConversion.direction === "units" ? "units" : "mL";
+    const inputText = mode === "mass" ? massConversion.text : scaleConversion.text;
+    const exampleValue = mode === "mass" ? massConversion.unit === "mg" ? "0.125" : "125" : scaleConversion.direction === "units" ? "25" : "0.25";
     return <>
-      <div role="tablist" aria-label="Quick calculation type" className={styles.tabs}>{modes.map((tab, index) => <button type="button" role="tab" key={tab.id} id={id + "-tab-" + tab.id} aria-controls={id + "-panel"} aria-selected={mode === tab.id} tabIndex={mode === tab.id ? 0 : -1} onClick={() => select(tab.id)} onKeyDown={e => tabKey(e, index, scope)}>{tab.label}</button>)}</div>
+      <div role="tablist" aria-label="Quick calculation type" className={styles.tabs}>{modes.map((tab, index) => <button type="button" role="tab" key={tab.id} id={id + "-tab-" + tab.id} aria-controls={id + "-panel"} aria-selected={mode === tab.id} tabIndex={mode === tab.id ? 0 : -1} onClick={() => select(tab.id)} onKeyDown={e => tabKey(e, index, scope)}>{tab.id === "mass" ? "mg ↔ mcg" : tab.id === "units" ? "U-100 ↔ mL" : tab.label}</button>)}</div>
       <div className={styles.panel} id={id + "-panel"} role="tabpanel" aria-labelledby={id + "-tab-" + mode}>
+        <UnitHelp/>
         {mode === "concentration" ? <GuidedPlan mode="beginner" presentation="hero" saveState={{saving,setSaving,savedPlan,setSavedPlan}}/> : <>
-          <div className={styles.fields}><div className={styles.field}><label htmlFor={id + "-" + key}>{mode === "mass" ? "Amount in milligrams" : "U-100 scale units"}</label><div className={styles.inputWrap}><input id={id + "-" + key} data-hero-field={key} type="text" inputMode="decimal" value={values[key]} placeholder={mode === "mass" ? "e.g. 0.125" : "e.g. 25"} maxLength={64} autoComplete="off" spellCheck={false} onChange={e => update(key, e.target.value)} onFocus={() => { if (scope === "inline" && smallScreen()) focusScreen(key); }} aria-invalid={!!error} aria-describedby={id + "-help " + id + "-error"}/><span>{mode === "mass" ? "mg" : "units"}</span></div></div><p className={styles.unitNote}>{mode === "mass" ? <>1 mg equals<br/><strong>1,000 mcg</strong></> : <>100 U-100 units equal<br/><strong>1 mL</strong></>}</p></div>
+          {mode === "mass" ? <ConversionDirection value={massConversion.unit} onChange={changeMass} options={MASS_DIRECTIONS} label="Mass conversion direction"/> : <ConversionDirection value={scaleConversion.direction} onChange={changeScale} options={SCALE_DIRECTIONS} label="U-100 conversion direction"/>}
+          <div className={styles.fields}><div className={styles.field}><label htmlFor={id + "-" + key}>{inputLabel}</label><div className={styles.inputWrap}><input id={id + "-" + key} data-hero-field={key} type="text" inputMode="decimal" value={inputText} placeholder={`e.g. ${exampleValue}`} maxLength={64} autoComplete="off" spellCheck={false} onChange={e => update(key, e.target.value)} onFocus={() => { if (scope === "inline" && smallScreen()) focusScreen(key); }} aria-invalid={!!error} aria-describedby={id + "-help " + id + "-error"}/><span>{inputUnit}</span></div></div><p className={styles.unitNote}>{mode === "mass" ? <>1 mg equals<br/><strong>1,000 mcg</strong></> : <>100 U-100 units equal<br/><strong>1 mL</strong></>}</p></div>
           <div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Your converted number</span>{result && <Check size={18} aria-hidden="true"/>}</div><p className={styles.value}>{result ? <><strong className={result.value.length > 9 ? styles.longValue : undefined}>{result.value}</strong><span>{result.unit}</span></> : <span className={styles.empty}>Your numbers.<br/>A clear result.</span>}</p><p className={styles.formula}>{result?.formula || "Enter your value above to see the math."}</p></div>
           <p id={id + "-error"} className={styles.error} role={error ? "alert" : undefined}>{error}</p>
-          <div className={styles.actions}><button type="button" onClick={copy} disabled={!result}><Copy size={15} aria-hidden="true"/>Copy result</button><button type="button" onClick={() => { update(key, ""); setNotice(""); }}><RotateCcw size={15} aria-hidden="true"/>Clear</button><button type="button" onClick={() => { update(key, QUICK_EXAMPLE[key]); setExample(true); if (scope === "inline" && smallScreen()) focusScreen(); }}>Use example</button></div>
+          <div className={styles.actions}><button type="button" onClick={copy} disabled={!result}><Copy size={15} aria-hidden="true"/>Copy result</button><button type="button" onClick={() => { update(key, ""); setNotice(""); }}><RotateCcw size={15} aria-hidden="true"/>Clear</button><button type="button" onClick={() => { update(key, exampleValue); setExample(true); if (scope === "inline" && smallScreen()) focusScreen(); }}>Use example</button></div>
           <p id={id + "-help"} className={styles.help}>{example ? "Example numbers only. " : "Use your own label and instructions. "}{mode === "mass" ? "mg and mcg measure mass, not volume." : "Check that the actual device uses a U-100 scale."}</p><p className={styles.notice} role="status">{notice}</p>
         </>}
       </div>

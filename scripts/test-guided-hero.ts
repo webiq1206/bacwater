@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./test-unit-switching";
 import fs from "node:fs";
 import { calculate, type CalcInput } from "../src/lib/calc";
 import { planPreviewState, type PlanPreviewInput } from "../src/lib/calc/plan-preview";

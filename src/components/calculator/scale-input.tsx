@@ -1,0 +1,11 @@
+"use client";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { scaleConversion, switchScaleDirection, editableDecimal, type ScaleEntry } from "@/lib/calc/conversion-direction";
+export function ScaleInput({id,label,value,onChange,canonicalUnit,hint}:{id:string;label:string;value:string;onChange:(value:string)=>void;canonicalUnit:ScaleEntry["direction"];hint?:string}) {
+ const [stored,setStored]=useState({direction:canonicalUnit,text:value,canonical:value});
+ const [error,setError]=useState("");
+ let draft=stored;
+ if(draft.canonical!==value){const r=scaleConversion({direction:canonicalUnit,text:value});const text=r.kind==="value"?editableDecimal(r[draft.direction]):value;draft=text===null?{direction:canonicalUnit,text:value,canonical:value}:{...draft,text,canonical:value};}
+ return <div className="min-w-0"><label htmlFor={id} className="block text-sm font-medium">{`${label} (${draft.direction==="units"?"U-100 units":"mL"})`}</label><div className="mt-2 flex items-center gap-2"><Input id={id} value={draft.text} type="text" inputMode="decimal" autoComplete="off" maxLength={64} className="min-h-12 min-w-0 flex-1" aria-describedby={`${id}-unit-help`} aria-invalid={Boolean(error)||draft.canonical==="invalid"} onChange={e=>{const text=e.target.value,r=scaleConversion({direction:draft.direction,text}),canonical=r.kind==="value"?editableDecimal(r[canonicalUnit])??"invalid":text;setStored({...draft,text,canonical});setError("");onChange(canonical);}}/><select aria-label={`${label} unit`} value={draft.direction} className="min-h-12 max-w-[8rem] shrink-0 rounded-md border border-border bg-background px-2 text-sm" onChange={e=>{const next=switchScaleDirection(draft,e.target.value as ScaleEntry["direction"]);if(!next){setError("Check the number before changing units. Your entry has been kept.");return;}setStored({...draft,...next});setError("");}}><option value="units">U-100 units</option><option value="ml">mL</option></select></div><p id={`${id}-unit-help`} className="mt-2 text-xs leading-relaxed text-muted-foreground">{hint?`${hint} `:""}Changing units keeps the same volume. Only a U-100 scale has 100 units per mL.</p>{error&&<p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}</div>;
+}
