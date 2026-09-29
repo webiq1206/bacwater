@@ -19,12 +19,12 @@ for(const product of SUPPLIER_PRODUCTS){
  });
  check(`${product.id}: three useful sections with a specific evidence limit`,()=>{
   const detail=PRODUCT_RESEARCH[product.id];assert.equal(detail.name,product.name);assert.equal(product.summary,detail.summary);
-  for(const key of ["what","study","how","limit"] as const){assert.ok(detail[key].length>=45,`${product.id}.${key}`);assert.ok(detail[key].split(/\s+/).length<=(key==="how"?145:75),`${product.id}.${key} is too long`);assert.doesNotMatch(detail[key],/\blistings?\b|Listing review|\u2014|--/i);}
+  for(const key of ["what","study","plain","how","limit"] as const){assert.ok(detail[key].length>=45,`${product.id}.${key}`);assert.ok(detail[key].split(/\s+/).length<=(key==="how"?145:key==="plain"?60:75),`${product.id}.${key} is too long`);assert.doesNotMatch(detail[key],/\blistings?\b|Listing review|\u2014|--/i);}
   assert.equal(new Set([detail.what,detail.study,detail.how]).size,3);
   assert.equal(detail.sources.filter(s=>s.type==="product").length,1);
   assert.equal(detail.sources.find(s=>s.type==="product")!.url,product.sourceUrl);
   for(const source of detail.sources){const u=new URL(source.url);assert.equal(u.protocol,"https:");assert.ok(["www.aminoclub.com","pubmed.ncbi.nlm.nih.gov","pmc.ncbi.nlm.nih.gov","pubchem.ncbi.nlm.nih.gov","www.nature.com"].includes(u.hostname));assert.equal(u.search,"");}
-  assert.doesNotMatch([detail.what,detail.study,detail.how].join(" "),/you should (?:take|inject)|recommended dose|burns fat|boosts testosterone|promotes healing|guaranteed results|clinically proven/i);
+  assert.doesNotMatch([detail.summary,detail.what,detail.study,detail.plain,detail.how].join(" "),/you should (?:take|inject)|recommended dose|burns fat|boosts testosterone|promotes healing|guaranteed results|clinically proven/i);
  });
 }
 for(const [alias,id] of [["Retatrutide","glp-3"],["Tirzepatide","glp-2"],["Semaglutide","glp-1"],["Tesamorelin","tesamorlin"],["Kisspeptin-10","kisspeptin"],["BAC water","amino-h2o"]]){
@@ -44,4 +44,19 @@ check("non-peptides and uncertain research forms are not misrepresented",()=>{as
 check("all outbound product links retain owner attribution",()=>{for(const p of getSupplierCatalog()){assert.ok(p.paid);const u=new URL(p.href);assert.equal(u.search,"?utm_source=affiliate_marketing&code=WEBIQ");}});
 check("detail panel removes review metadata and attributes source product links",()=>{const s=fs.readFileSync("src/components/partners/product-detail-content.tsx","utf8");assert.doesNotMatch(s,/Listing review|CATALOG_CHECKED_AT|Catalog identifier|<time/);assert.match(s,/source.type===\"product\"\?product.href:source.url/);for(const h of ["What it is","What researchers study","How it works","Sources &amp; product checks"])assert.ok(s.includes(h));});
 check("public commerce components use products, not listings",()=>{for(const folder of ["src/components/partners"]){for(const file of fs.readdirSync(folder).filter(f=>f.endsWith(".tsx"))){assert.doesNotMatch(fs.readFileSync(`${folder}/${file}`,"utf8"),/\blistings\b|Listing review|What this listing is/i);}}});
+check("plain explanations cover every product without replacing detailed evidence",()=>{
+ const records=Object.values(PRODUCT_RESEARCH);
+ assert.equal(new Set(records.map(r=>r.plain)).size,50);
+ for(const r of records){assert.notEqual(r.plain,r.how);assert.notEqual(r.plain,r.study);}
+ assert.match(PRODUCT_RESEARCH["glp-2"].plain,/not.*natural GLP-2 hormone/);
+ assert.match(PRODUCT_RESEARCH["dihexa"].plain,/retracted/);
+ assert.match(PRODUCT_RESEARCH["cjc-ipa-no-dac"].plain,/lacks.*albumin-binding/);
+ assert.match(PRODUCT_RESEARCH["glow"].plain,/does not include.*KPV/);
+ for(const id of ["klow","glow","wolverine-stack"]){assert.match(PRODUCT_RESEARCH[id].plain,/does not|cannot/);}
+ for(const id of Object.keys(PRODUCT_RESEARCH).filter(id=>id.endsWith("spray"))){assert.match(PRODUCT_RESEARCH[id].plain,/does not|do not|did not/);}
+ const component=fs.readFileSync("src/components/partners/product-detail-content.tsx","utf8");
+ assert.match(component,/<p data-product-plain>\{detail.plain\}<\/p><details/);
+ assert.match(component,/Read the mechanism and its limits/);
+ assert.match(component,/data-product-sources/);
+});
 console.log(`${count} product naming, research content and presentation checks passed.`);

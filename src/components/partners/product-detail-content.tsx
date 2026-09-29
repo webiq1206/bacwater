@@ -33,11 +33,11 @@ export default function ProductDetailContent({product}:{product:DisplaySupplierP
           <div className={styles.copy}>
             <section className={styles.section} aria-labelledby={`${uid}-what`}><span className={styles.number} aria-hidden="true">01</span><div><h3 id={`${uid}-what`}>What it is</h3><p>{detail.what}</p></div></section>
             <section className={styles.section} aria-labelledby={`${uid}-study`}><span className={styles.number} aria-hidden="true">02</span><div><h3 id={`${uid}-study`}>What researchers study</h3><p>{detail.study}</p></div></section>
-            <section className={styles.section} aria-labelledby={`${uid}-how`}><span className={styles.number} aria-hidden="true">03</span><div data-product-mechanism><h3 id={`${uid}-how`}>How it works</h3>{detail.how.split("\n\n").map((paragraph,index)=><p key={index} data-mechanism-paragraph>{paragraph}</p>)}</div></section>
+            <section className={styles.section} aria-labelledby={`${uid}-how`}><span className={styles.number} aria-hidden="true">03</span><div data-product-mechanism><h3 id={`${uid}-how`}>How it works</h3><p data-product-plain>{detail.plain}</p><details className={styles.mechanismDetail} data-mechanism-detail><summary>Read the mechanism and its limits</summary><div>{detail.how.split("\n\n").map((paragraph,index)=><p key={index} data-mechanism-paragraph>{paragraph}</p>)}</div></details></div></section>
             <div className={styles.limit}><Info size={18} aria-hidden="true"/><div><h3>What this does not prove</h3><p>{detail.limit}</p></div></div>
           </div>
         </div>
-        <details ref={sources} id={`${uid}-sources`} className={styles.sources} open={sourcesOpen} onToggle={e=>setSourcesOpen(e.currentTarget.open)}>
+        <details ref={sources} id={`${uid}-sources`} className={styles.sources} data-product-sources open={sourcesOpen} onToggle={e=>setSourcesOpen(e.currentTarget.open)}>
           <summary><BookOpen size={17} aria-hidden="true"/>Sources &amp; product checks<ChevronDown size={17} aria-hidden="true"/></summary>
           <div className={styles.sourceBody}>
             <p>The explanations above describe the compound, not results from testing this supplier’s product. We have not independently tested these products.</p>

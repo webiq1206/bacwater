@@ -36,13 +36,16 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await card.getByRole('button',{name:`Read research details for ${name}`,exact:true}).click();
     const d=p.locator(`[data-product-detail="${id}"]`);await expect(d.getByRole('heading',{level:2})).toHaveText(name);
     for(const h of ['What it is','What researchers study','How it works'])await expect(d.getByRole('heading',{name:h,exact:true})).toBeVisible();
+    await expect(d.locator('[data-product-plain]')).toBeVisible();
+    await d.locator('[data-mechanism-detail] > summary').click();
     const paragraphs=d.locator('[data-mechanism-paragraph]');await expect(paragraphs).toHaveCount(2);
+    await expect(paragraphs.first()).toBeVisible();
     for(const paragraph of await paragraphs.all())assert.ok((await paragraph.textContent()).trim().split(/\s+/).length>=25,`${id}: incomplete mechanism paragraph`);
     if(id==='dihexa')await expect(d.locator('[data-product-mechanism]')).toContainText('retracted');
     assert.doesNotMatch(await d.innerText(),/\blistings?\b|Listing review|Catalog identifier/i);
     await expect(d.getByRole('link',{name:/on the supplier website/})).toHaveAttribute('href',link(id));
     await d.getByRole('button',{name:'Read the sources'}).click();
-    await expect(d.locator('details')).toHaveAttribute('open','');
+    await expect(d.locator('[data-product-sources]')).toHaveAttribute('open','');
     const partnerSource=d.getByRole('link',{name:'Partner product information'});
     await expect(partnerSource).toHaveAttribute('href',link(id));await expect(partnerSource).toHaveAttribute('rel',/sponsored/);
     await fit(p,d);await p.waitForLoadState('networkidle');await p.keyboard.press('Escape');await expect(card.getByRole('button',{name:/Read research details/})).toBeFocused();
@@ -73,6 +76,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await mechanism.getByRole('heading',{name:'How it works',exact:true}).scrollIntoViewIfNeeded();
     await expect(mechanism.getByRole('heading',{name:'How it works',exact:true})).toBeInViewport();
     await fit(p,d);await p.screenshot({path:`${out}/${engine}-mechanism-${id}-${width}.png`,fullPage:false});
+    await mechanism.locator('[data-mechanism-detail] > summary').click();
     await mechanism.locator('[data-mechanism-paragraph]').last().scrollIntoViewIfNeeded();
     await expect(mechanism.locator('[data-mechanism-paragraph]').last()).toBeInViewport();await fit(p,d);
     await d.getByRole('button',{name:'Read the sources'}).click();await expect(d.getByRole('link',{name:'Partner product information'})).toBeVisible();

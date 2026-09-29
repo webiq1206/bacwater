@@ -25,3 +25,6 @@
 
 /* Keep the expanded mechanism readable without moving the fixed affiliate action. */
 .section p + p{margin-top:14px}
+.mechanismDetail{margin-top:14px;border-top:1px solid #e0e5d9}
+.mechanismDetail summary{min-height:44px;padding:12px 0;cursor:pointer;font-size:13px;font-weight:500;line-height:1.6;color:#34523d}
+.mechanismDetail>div{padding:0 0 4px}
