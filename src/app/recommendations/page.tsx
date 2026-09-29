@@ -1,5 +1,5 @@
-import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
+import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ProductDirectory } from "@/components/partners/product-directory";
 import { getSupplierCatalog, RESEARCH_ONLY_NOTICE, SUPPLIER_SOURCES } from "@/lib/partners/supplier-catalog";
@@ -9,13 +9,12 @@ import searchStyles from "@/components/search/product-search.module.css";
 export const metadata=withSocialMetadata({title:"Research Product Directory: BAC Water and Compounds",description:"Browse research compound, blend, solution and BAC water products. Search by name or format and review product details. Laboratory research only, not for human use.",alternates:{canonical:"/recommendations"},openGraph:{title:"Research Product Directory",description:"Find a research product by name or format. Read labels, batch-document guidance and affiliate disclosures.",url:"/recommendations"}});
 export default function RecommendationsPage(){
   const products=getSupplierCatalog(),paid=products.some(p=>p.paid);
-  return <div className={styles.page} data-search-first-directory>
+  return <div className={`${styles.page} ${searchStyles.directoryPage}`} data-search-first-directory>
     <Breadcrumbs items={[{label:"Home",href:"/"},{label:"Research supplies",href:"/recommendations"}]}/>
     <header className={`${styles.hero} ${searchStyles.directoryHero}`}>
       <p className={styles.eyebrow}>THE RESEARCH DIRECTORY</p>
       <h1>Research products.</h1>
       <p className={styles.lead}>Browse by research category, product type or name. Open a quick look, then explore the full guide.</p>
-      <Link href="/research-finder" className="mt-5 inline-flex min-h-12 items-center rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background">Have a question? Try the research finder →</Link>
     </header>
     <ProductDirectory products={products}/>
     <div className={searchStyles.directoryDisclosure}><strong>{RESEARCH_ONLY_NOTICE}</strong><p>{paid?"We are an independent affiliate and may earn a commission from purchases through supplier links.":"These are supplier links. No paid referral is active."} We do not represent the supplier, endorse suitability or provide medical advice.</p></div>

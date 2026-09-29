@@ -423,7 +423,7 @@ h1, h2, h3, h4, h5, h6 {
 .section-dark { --color-mist: #b8beb9; --color-accent-guide: #b6c3a8; }
 html { scroll-padding-top: 5rem; }
 [id] { scroll-margin-top: 5rem; }
-.bac-bottom-spacer { height: calc(3.5rem + env(safe-area-inset-bottom)); }
+.bac-bottom-spacer { height: calc(8rem + env(safe-area-inset-bottom)); }
 @media (max-width: 1023px) {
   body[data-bac-input-active="true"] .bac-bottom-nav,
   body:has([role="dialog"][data-state="open"]) .bac-bottom-nav { display: none; }

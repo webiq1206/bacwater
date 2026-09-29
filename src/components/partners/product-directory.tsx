@@ -35,6 +35,7 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
       </div>
       <div className={styles.examples} aria-label="Example product searches"><span>Try:</span>{["Show me lab water","Find BPC-157","Show me sprays"].map(value=><button key={value} type="button" onClick={()=>{setKind("all");setCategory("all");search(value);}}>{value}</button>)}</div>
     </div>
+    <Link href="/research-finder" className={searchStyles.assistantLink}>Have a research question? Ask the research assistant <ArrowRight size={16} aria-hidden="true"/></Link>
     <div className={styles.resultsHeader}>
       <div><h2 ref={results} tabIndex={-1} className={styles.resultsTitle}>Browse the directory</h2><p role="status" aria-live="polite" aria-atomic="true">{filtered.length?`${filtered.length} ${filtered.length===1?"product":"products"}. Showing ${start+1} to ${Math.min(start+PAGE_SIZE,filtered.length)}.`:match.message}</p></div>
       {(query||kind!=="all"||category!=="all")&&<button type="button" className={styles.reset} onClick={reset}>Clear filters <X size={15} aria-hidden="true"/></button>}

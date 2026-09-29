@@ -115,9 +115,9 @@ export default async function RootLayout({
         <AgeGate initialVerified={ageVerified} />
         <main id="main" className="flex-1 min-w-0"><SiteFrame shelf={<ResearchDirectoryLink/>}>{children}</SiteFrame></main>
         <SiteChrome><SiteFooter /></SiteChrome>
-        <SiteChrome><MobileBottomNav /></SiteChrome>
         <Toaster />
         <SiteChrome><AnalyticsPreferences /></SiteChrome>
+        <SiteChrome><MobileBottomNav /></SiteChrome>
         </ResearchAssistantProvider>
         </SiteSearchProvider>
         </SupplierProvider>
