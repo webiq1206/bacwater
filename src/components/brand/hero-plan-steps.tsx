@@ -71,7 +71,19 @@ export function HeroPlanSteps(p: Props) {
     </div>
     <h2 data-guided-heading tabIndex={-1} className={styles.stepTitle}>{current.title}</h2>
     <div className={styles.stepScroll} data-step-scroll tabIndex={0} role="region" aria-label={`${current.label} step fields`}>
-    {step === 0 && <div className={styles.stepFields}>{p.product}{p.secondary}</div>}
+    {step === 0 && <div className={`${styles.stepFields} ${styles.startFields}`}>
+      {p.product}{p.secondary}
+      <p className={styles.startHint}>Match the name on your label. We’ll show the right fields.</p>
+      <div className={styles.startGuide} data-hero-start-guide>
+        <p>Your numbers. <em>A clear result.</em></p>
+        <div className={styles.startOutputs} aria-label="What the calculator can show">
+          <div><strong>mg/mL</strong><span>Amount per mL</span></div>
+          <div><strong>mL</strong><span>Liquid volume</span></div>
+          <div><strong>U-100</strong><span>Scale reading</span></div>
+        </div>
+        <small>Enter your label numbers to see the math. No amount is chosen for you.</small>
+      </div>
+    </div>}
     {step === 1 && <div className={styles.stepFields}>
       <label className={styles.stepLabel} htmlFor={`${id}-vial`}>Amount in vial</label>
       <div className={styles.guidedInputRow}><div className={styles.inputWrap}><input id={`${id}-vial`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" value={p.vial} placeholder="e.g. 12" onChange={e => p.onVial(e.target.value)} aria-invalid={!!vialError} aria-describedby={`${id}-vial-error`}/></div>

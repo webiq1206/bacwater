@@ -23,16 +23,20 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   finally{closing=true;await c.close();}
  }
  try{
-  await check(`${engine}: compact calculator and controls above the fold at eight widths`,async()=>{
+  await check(`${engine}: full, balanced hero and usable calculator above the fold at eight widths`,async()=>{
    for(const [width,height] of [[320,568],[375,667],[390,844],[430,932],[768,1024],[1024,768],[1440,900],[1920,1080]])await journey(width,height,async p=>{
     const hero=p.locator('[data-home-hero]');await expect(hero).toHaveAttribute('data-hero-design','editorial-live');
     const h=await hero.boundingBox(),next=await p.locator('#toolkit').boundingBox(),cta=await hero.locator('[data-hero-calculator]').boundingBox();
     assert.ok(h&&h.y+h.height>=height-1,JSON.stringify({width,height,h}));assert.ok(next&&next.y>=height-1);
     assert.ok(cta&&cta.y>=0&&cta.y+cta.height<=height,JSON.stringify({width,height,cta}));
+    if(width>=1440)assert.ok(cta.width>=640&&cta.height>=550,JSON.stringify({width,height,cta}));
+    if(width<=780)assert.ok(height-(cta.y+cta.height)<=130,JSON.stringify({width,height,cta,issue:'Unused lower hero space'}));
+    const body=await hero.locator('[data-step-scroll]').evaluate(el=>({available:el.clientHeight,content:el.scrollHeight}));
+    assert.ok(body.content<=body.available+2,JSON.stringify({width,height,body,issue:'Initial step should not need an inner scroll'}));
     assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     await expect(p.locator('[data-hero-calculator]').getByRole('combobox',{name:'Product',exact:true})).toBeVisible();
     await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveCount(0);
-    if(engine==='chromium'&&[320,390,1440].includes(width))await p.screenshot({path:`${out}/home-${width}.png`,fullPage:false});
+    await p.screenshot({path:`${out}/${engine}-home-${width}.png`,fullPage:false});
    });
   });
   await check(`${engine}: product-first steps, unit conversion, review, editing, validation and copy`,async()=>journey(1440,1000,async p=>{
