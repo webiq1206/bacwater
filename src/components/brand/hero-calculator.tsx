@@ -89,14 +89,14 @@ export function HeroCalculator() {
       <div className={styles.top}><span><Calculator size={18} aria-hidden="true"/>LIVE CALCULATOR</span><button type="button" ref={expandRef} onClick={() => focusScreen()} aria-label="Open hero calculator full screen"><Expand size={15} aria-hidden="true"/><span>Full screen</span></button></div>
       {/* Only one form is mounted. Session-backed steps and fields survive this move. */}
       {!open ? content("inline") : <p className={styles.stepHint}>Your calculator is open full screen.</p>}
-      {!open && <div className={styles.products}><CalculatorProductTools selectedId={shared.productId || null}/></div>}
+      {!open && <div className={styles.products}><CalculatorProductTools selectedId={shared.productId || null} showProductPicker={false}/></div>}
       <noscript><p className={styles.stepHint}>Enable JavaScript to use this calculator. <Link href="/methodology">Read the formulas</Link>.</p></noscript>
     </div>
     <Dialog.Portal><Dialog.Overlay className={styles.overlay}/><Dialog.Content ref={dialogRef} className={styles.focus} data-hero-focus
       onOpenAutoFocus={e => { e.preventDefault(); requestAnimationFrame(() => { const root = dialogRef.current, field = wantedField.current; const target = field ? root?.querySelector<HTMLElement>('[data-hero-field="' + field + '"]') : root?.querySelector<HTMLElement>("[data-hero-title]"); target?.focus({preventScroll:true}); }); }}
       onCloseAutoFocus={e => { e.preventDefault(); expandRef.current?.focus({preventScroll:true}); }}>
       <div className={styles.focusBar}><div><Dialog.Title data-hero-title tabIndex={-1}>BAC water calculator</Dialog.Title><Dialog.Description>One step at a time. Your entries stay when you close this screen.</Dialog.Description></div><SiteSearchButton compact/><Dialog.Close aria-label="Return to homepage"><X size={22} aria-hidden="true"/></Dialog.Close></div>
-      <div className={styles.focusBody} data-hero-scroll>{content("focus")}<div className={styles.products}><CalculatorProductTools selectedId={shared.productId || null}/></div></div>
+      <div className={styles.focusBody} data-hero-scroll>{content("focus")}<div className={styles.products}><CalculatorProductTools selectedId={shared.productId || null} showProductPicker={false}/></div></div>
       <div className={styles.focusFooter}><Dialog.Close>Back to homepage</Dialog.Close><Link href="/peptide-calculator">Guided workspace<ArrowUpRight size={17} aria-hidden="true"/></Link></div>
     </Dialog.Content></Dialog.Portal>
   </Dialog.Root>;

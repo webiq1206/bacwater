@@ -18,14 +18,14 @@ export function useCalculatorProductSelection(){return useContext(ProductSelecti
 export function AdditionalProductOptions(){
  return <>{SUPPLIER_PRODUCTS.filter(p=>!p.reference||!PEPTIDES.some(ref=>ref.slug===p.reference)).map(p=><SelectItem key={p.id} value={`product:${p.id}`}>{p.name}{p.kind==="blend"?" (blend)":""}{p.kind==="water"?" (supply)":""}</SelectItem>)}</>;
 }
-export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
+export function CalculatorProductTools({selectedId,showProductPicker=true}:{selectedId:string|null;showProductPicker?:boolean}) {
  const catalog=useSupplierCatalog(),product=catalog.find(p=>p.id===selectedId),water=catalog[0];
  const [open,setOpen]=useState(false),[query,setQuery]=useState(""),[kind,setKind]=useState("all");
  const path=usePathname();useEffect(()=>{setOpen(false);},[path]);
  const filtered=catalog.filter(p=>(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.reference} ${(p.aliases||[]).join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
  return <div className={styles.tools} data-calculator-products>
   <div className={styles.toolbar}>
-   <Dialog open={open} onOpenChange={setOpen}>
+   {showProductPicker && <Dialog open={open} onOpenChange={setOpen}>
     <DialogTrigger asChild><button className={styles.choose} type="button"><Search size={16} aria-hidden="true"/>{product?"Change product":"Choose product"}<ChevronDown size={15} aria-hidden="true"/></button></DialogTrigger>
     <DialogContent className={styles.dialog}>
      <DialogTitle className={styles.title}>Choose a product</DialogTitle>
@@ -43,7 +43,7 @@ export function CalculatorProductTools({selectedId}:{selectedId:string|null}) {
      </div>
      <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>Our own artwork, not product packaging. {catalog.some(p=>p.paid)&&"We may earn a commission from supplier purchases."}</p>
     </DialogContent>
-   </Dialog>
+   </Dialog>}
    <a className={styles.water} href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${water.name}, opens a new tab`}><Droplets size={16} aria-hidden="true"/>{water.name}<ArrowUpRight size={14} aria-hidden="true"/></a>
   </div>
   {product&&<div className={styles.selected} data-selected-product={product.id}>
