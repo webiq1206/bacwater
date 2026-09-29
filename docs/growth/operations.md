@@ -1,6 +1,6 @@
 # BACwater organic growth operations
 
-Updated September 28, 2026. Repository: webiq1206/bacwater. Public site: https://bacwater.ai.
+Updated September 29, 2026. Repository: webiq1206/bacwater. Public site: https://bacwater.ai.
 
 ## Goal and budget
 
@@ -21,13 +21,17 @@ Clear math from the visitor's own numbers. Existing BACwater wordmark, forest gr
 
 These paths are only public after this release is deployed. Check /version.json, the page and widget before directing readers to them. Repository main and production are separate states.
 
+## Autonomous execution authorization
+
+On September 29, 2026, the owner explicitly directed that helpful BACwater growth opportunities be acted on autonomously. Submit relevant free directory listings, publish useful on-brand material through authorized accounts, and execute qualified placements without asking for routine approval. Verify relevance, current rules, exact destination, correct business contact identity and duplicates before writing. Preserve zero incremental spend and WEB IQ client separation. Honor authentication, access controls and mandatory action-time confirmations; finish all other authorized work before reporting a blocker. Record submitted, pending review, approved and live as distinct states. Check pending submissions after the stated review window; never repeat an uncertain write without verifying its status.
+
 ## Recurring workflow
 
-### Daily opportunity research
+### Daily opportunity execution
 
 Search publicly accessible discussions and resource pages for a current, specific need related to concentration arithmetic, mass conversion, scale conversion, or calculator usability. Read actual context when available; snippets alone do not verify a posting opportunity. Check dates and community rules. Record at most five qualified, new opportunities in docs/growth/opportunities.json. Deduplicate by canonical URL. A competitor's launch thread is not an invitation to advertise.
 
-Use the appropriate existing calculator URL. Keep arithmetic education separate from personal medical instructions. Do not fabricate research findings, keyword volumes or firsthand product use. Do not post repeated links or send unsolicited automated messages. Research tasks do not imply that posts or outreach were sent.
+Use the appropriate existing calculator URL. Keep arithmetic education separate from personal medical instructions. Do not fabricate research findings, keyword volumes or firsthand product use. Do not post repeated links or send unsolicited automated messages. Record actual submission and publication evidence; discovery alone is not completion.
 
 ### Weekly website improvement
 
@@ -41,7 +45,7 @@ Use verified recurring questions to choose one arithmetic topic. Check all numbe
 
 The owner authorized publishing BACwater content through shared WEB IQ accounts on September 28, 2026. Preserve WEB IQ names, bios and all other client content. Use only Pinterest board 1120129807261632904 (BACwater.ai | Calculators & Unit Guides) and YouTube playlist PLKfaE4AyuK2A (BACwater.ai | Calculator Guides). Reddit profile posts use a [BACwater.ai] title prefix and explicit affiliation. No unrelated boards, playlists, profile rebranding, unsolicited messages or repeated community promotion.
 
-Read publications.json before any write and deduplicate. Three pins and one Reddit profile post have successful creation and read-back evidence. YouTube upload wIHXYAaqOEg returned success but could not be retrieved; playlist insertion returned videoNotFound. Do not re-upload or claim it is live. Check the existing video on the next content run and add it to the dedicated playlist only when retrievable. Publish at most one distinct new Pinterest guide per weekly content run. Keep further Reddit community participation in research until context and rules support it.
+Read publications.json before any write and deduplicate. Three pins and one Reddit profile post have successful creation and read-back evidence. YouTube upload wIHXYAaqOEg returned success but could not be retrieved; playlist insertion returned videoNotFound. Do not re-upload or claim it is live. Check the existing video on the next content run and add it to the dedicated playlist only when retrievable. Publish at most one distinct new Pinterest guide per weekly content run. Make useful community contributions when verified current context and rules permit affiliated promotion, with natural disclosure and no repetitive posting.
 
 All four connectors have verified read access. Search Console includes owner access to sc-domain:bacwater.ai. Connection identifiers stay in private automation configuration. No spend or new account registrations occurred.
 
