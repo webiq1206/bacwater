@@ -1,0 +1,29 @@
+import assert from "node:assert/strict";
+import { PRODUCT_GUIDES, productGuideDetails, productGuideFaq } from "../src/lib/partners/product-guides";
+import { PRODUCT_RESEARCH } from "../src/lib/partners/product-content";
+import { SUPPLIER_PRODUCTS } from "../src/lib/partners/supplier-catalog";
+import { STATIC_PAGES } from "../src/lib/seo/sitemap";
+assert.deepEqual(Object.keys(PRODUCT_GUIDES).sort(),SUPPLIER_PRODUCTS.map(p=>p.id).sort());
+for(const p of SUPPLIER_PRODUCTS){
+ const g=PRODUCT_GUIDES[p.id];
+ assert.ok(g.how.split(/\s+/).length<=85,p.id);
+ assert.equal(g.steps.length,2);
+ assert.ok(g.steps.every(s=>s.split(/\s+/).length>=25),p.id);
+ assert.ok(g.caution.length>45,p.id);
+ assert.ok(g.model&&g.finding,p.id);
+ if(g.paper)assert.ok(PRODUCT_RESEARCH[p.id].sources.some(s=>s.url===g.paper),`${p.id}: unsupported summary source`);
+ else assert.equal(p.id,"amino-h2o");
+ assert.ok(productGuideDetails(p).length>=6);
+ assert.ok(productGuideFaq(p).length>=5);
+ assert.ok(STATIC_PAGES.some(s=>s.path===`/products/${p.id}`),p.id);
+ assert.doesNotMatch([g.how,g.finding,...g.steps].join(" "),/you should (take|inject)|recommended dose|clinically proven|guaranteed results|\u2014|--/i);
+ if(p.kind==="spray")assert.match(g.caution,/not|own evidence|unknown/i,p.id);
+}
+assert.match(PRODUCT_GUIDES.dihexa.how,/retracted in 2025/);
+assert.match(PRODUCT_GUIDES["glp-2"].how,/not the natural GLP-2 hormone/);
+assert.match(PRODUCT_GUIDES.glow.how,/does not include.*KPV/);
+assert.match(PRODUCT_GUIDES.klow.finding,/None tests this finished/);
+assert.match(PRODUCT_GUIDES.selank.finding,/alone did not change/);
+assert.match(PRODUCT_GUIDES["tb-500"].caution,/exact peptide chain/);
+assert.match(PRODUCT_GUIDES["ahk-cu"].finding,/not reach statistical significance/);
+console.log("PASS: all 50 plain-language guides have bounded quick looks, expanded explanations, qualified research, source links, FAQs and sitemap entries.");

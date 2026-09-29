@@ -39,7 +39,7 @@ async function main() {
       }
       results.push({ path, status: response.status, title: expected.title, imageAlt: shareImage(path).alt });
     }
-    for (const path of ["/forgot-password", "/reset-password", "/calculate/hcg", ...SUPPLIER_PRODUCTS.map(p=>`/calculate/product/${p.id}`), ...(process.env.DATABASE_URL ? Object.keys(ARTICLE_GUIDES).map(slug=>`/learn/${slug}`) : [])]) {
+    for (const path of ["/forgot-password", "/reset-password", "/calculate/hcg", ...SUPPLIER_PRODUCTS.flatMap(p=>[`/calculate/product/${p.id}`,`/products/${p.id}`]), ...(process.env.DATABASE_URL ? Object.keys(ARTICLE_GUIDES).map(slug=>`/learn/${slug}`) : [])]) {
       const response=await fetch(origin+path,{signal:AbortSignal.timeout(30000)});
       assert.equal(response.status,200,path);
       const html=await response.text();
@@ -53,6 +53,14 @@ async function main() {
         assert.ok(html.includes("Total premixed blend"),path);
         assert.ok(html.includes("Total blend in container (mg)"),path);
         assert.ok(html.includes("Optional: calculate the amount in a sample"),path);
+      }
+      if(path.startsWith("/products/")) {
+        const id=path.split("/").at(-1)!;
+        assert.ok(html.includes(`data-full-product="${id}"`),path);
+        for(const section of ["how-it-works","research","details","questions","sources"])assert.ok(html.includes(`id="${section}"`),`${path}: ${section}`);
+        assert.ok(html.includes(`href="https://bacwater.ai/products/${id}"`),path);
+        assert.ok(html.includes(`href="/calculate/product/${id}"`),path);
+        assert.ok(html.includes('data-study-summary'),path);
       }
       if(path.startsWith("/learn/")) {
         assert.ok(html.includes(shareImage(path).url),path);

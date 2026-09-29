@@ -10,7 +10,7 @@ import { useSupplierCatalog } from "@/components/partners/supplier-context";
 import { ProductQuickView } from "@/components/partners/product-quick-view";
 import { ProductSearchField } from "./product-search-field";
 import { matchDirectory } from "@/lib/partners/product-directory";
-import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE } from "@/lib/partners/supplier-catalog";
+import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, productCalculatorPath } from "@/lib/partners/supplier-catalog";
 import { SearchThumbnail } from "./search-thumbnail";
 import styles from "./search.module.css";
 
@@ -39,7 +39,7 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
       if (!response.ok) throw Error("unavailable");
       const data = await response.json();
       if (!Array.isArray(data.items)) throw Error("invalid");
-      const safe = data.items.filter((i: SearchItem) => i && typeof i.title === "string" && typeof i.description === "string" && typeof i.keywords === "string" && typeof i.href === "string" && /^\/(?:tools(?:\/|$)|peptide-calculator$|peptides(?:\/|$)|calculate\/product\/|learn(?:\/|$)|faq$|methodology$|recommendations$|contact$|privacy$|disclaimer$)/.test(i.href) && !/[?#\\]/.test(i.href) && Object.hasOwn(SEARCH_KIND_LABEL, i.kind));
+      const safe = data.items.filter((i: SearchItem) => i && typeof i.title === "string" && typeof i.description === "string" && typeof i.keywords === "string" && typeof i.href === "string" && /^\/(?:tools(?:\/|$)|peptide-calculator$|peptides(?:\/|$)|calculate\/product\/|products\/|learn(?:\/|$)|faq$|methodology$|recommendations$|contact$|privacy$|disclaimer$)/.test(i.href) && !/[?#\\]/.test(i.href) && Object.hasOwn(SEARCH_KIND_LABEL, i.kind));
       setItems(safe); setPartial(!!data.partial);
     }).catch(error => { if (error.name !== "AbortError") setPartial(true); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
@@ -82,7 +82,7 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
           return <li key={item.id}>
             {product ? <ProductQuickView product={product} className={styles.result} open={detailId === product.id} onOpenChange={open => selectProduct(open ? product.id : null)} resultId={item.id}><SearchThumbnail item={item}/><span className={styles.resultText}><small>Product</small><strong><Highlight text={item.title} query={query}/></strong><span>{item.description}</span><b className={styles.openLabel}>Read research details</b></span><ArrowRight size={18} aria-hidden="true"/></ProductQuickView> : <><Link href={item.href} className={styles.result} data-search-result={item.id} onClick={navigate}><SearchThumbnail item={item} /><span className={styles.resultText}><small>{SEARCH_KIND_LABEL[item.kind]}</small><strong><Highlight text={item.title} query={query} /></strong><span>{item.description}</span><b className={styles.openLabel}>{item.kind === "calculator" ? "Open calculator" : item.kind === "reference" ? "Read reference" : "Open page"}</b></span><ArrowRight size={18} aria-hidden="true" /></Link></>}
             {product && <div className={styles.productActions}>
-              <Link href={item.href} className={styles.quickDetails} onClick={navigate}>Use in calculator</Link>
+              <Link href={productCalculatorPath(product.id)} className={styles.quickDetails} onClick={navigate}>Use in calculator</Link>
               <p>{product.paid ? AFFILIATE_DISCLOSURE : "Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p>
               <a className={styles.supplierAction} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${item.title} product, opens a new tab`}>View product <span aria-hidden="true">↗</span></a>
             </div>}

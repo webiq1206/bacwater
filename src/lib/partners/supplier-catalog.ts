@@ -2,7 +2,7 @@ import { PRODUCT_CATALOG_COPY } from "./product-catalog-copy";
 /** Reviewed supplier listings, not a live inventory feed or product endorsement. */
 export const SUPPLIER_SOURCES = {
   program: "https://www.aminoclub.com/us/affiliate",
-  terms: "https://www.aminoclub.com/shop/affiliate-terms",
+  terms: "https://www.aminoclub.com/us/affiliate-terms",
   coa: "https://www.aminoclub.com/us/coa",
   researchUse: "https://www.aminoclub.com/us/research-use",
 } as const;

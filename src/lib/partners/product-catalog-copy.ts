@@ -7,7 +7,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "bacteriostatic water",
       "H2O"
     ],
-    "summary": "Preserved laboratory water, not an active peptide."
+    "summary": "Whether this water is a good match for a lab sample."
   },
   "glp-1": {
     "name": "GLP-1 (SM)",
@@ -16,7 +16,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "SM",
       "glp1"
     ],
-    "summary": "A research compound linked to the GLP-1 cell-signaling pathway."
+    "summary": "How one lab-made signal attaches to a cell and passes on a message."
   },
   "glp-2": {
     "name": "GLP-2 (TR)",
@@ -25,7 +25,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "TR",
       "glp2"
     ],
-    "summary": "A research compound studied at two different cell receptors."
+    "summary": "How one molecule can send messages through two different cell receptors."
   },
   "glp-3": {
     "name": "GLP-3 (RT)",
@@ -35,21 +35,21 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "LY3437943",
       "glp3"
     ],
-    "summary": "A research compound studied at three different cell receptors."
+    "summary": "How one molecule interacts with three kinds of cell receiving points."
   },
   "bpc-157": {
     "name": "BPC-157",
     "aliases": [
       "bpc157"
     ],
-    "summary": "A peptide examined in cell attachment and movement experiments."
+    "summary": "How cells grip a surface, move and respond to stress in lab tests."
   },
   "ghk-cu": {
     "name": "GHK-Cu",
     "aliases": [
       "ghkcu"
     ],
-    "summary": "A copper-binding peptide studied in cell and tissue chemistry."
+    "summary": "How a copper-binding peptide affects the support material around cells."
   },
   "tb-500": {
     "name": "TB-500",
@@ -57,7 +57,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "tb500",
       "thymosin beta 4"
     ],
-    "summary": "A product name that requires an exact peptide-sequence check."
+    "summary": "How a related peptide affects the inner frame that helps cells move."
   },
   "tesamorlin": {
     "name": "Tesamorlin",
@@ -65,14 +65,14 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Tesamorelin",
       "TES"
     ],
-    "summary": "A peptide studied in growth-hormone signaling research."
+    "summary": "How a message reaches the gland that controls growth-hormone release."
   },
   "mots-c": {
     "name": "MOTS-C",
     "aliases": [
       "motsc"
     ],
-    "summary": "A short peptide studied in cellular fuel-sensing pathways."
+    "summary": "How cells sense their fuel supply and adjust the way they use it."
   },
   "nad-plus": {
     "name": "NAD+",
@@ -80,7 +80,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "NAD",
       "nicotinamide adenine dinucleotide"
     ],
-    "summary": "A non-peptide molecule central to cellular chemical reactions."
+    "summary": "How a small molecule helps cells pass materials between chemical reactions."
   },
   "cjc-ipa-no-dac": {
     "name": "CJC-1295 / Ipamorelin (No DAC)",
@@ -88,31 +88,31 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "CJC IPA",
       "CJC1295 Ipamorelin"
     ],
-    "summary": "Two peptides associated with different hormone-signaling receptors."
+    "summary": "How two separate signals reach the gland involved in hormone release."
   },
   "kpv": {
     "name": "KPV",
     "aliases": [],
-    "summary": "A three-part peptide examined in cellular signaling experiments."
+    "summary": "How a tiny peptide gets into cells and changes their alarm messages."
   },
   "klow": {
     "name": "KLOW",
     "aliases": [],
-    "summary": "A four-ingredient blend with separate bodies of research."
+    "summary": "How four ingredients relate to cell movement, cell support and cell signals."
   },
   "semax": {
     "name": "SEMAX",
     "aliases": [
       "Semax"
     ],
-    "summary": "A peptide examined in experimental nerve-cell signaling."
+    "summary": "How a peptide may change the messages passed between nerve cells."
   },
   "glutathione": {
     "name": "Glutathione",
     "aliases": [
       "GSH"
     ],
-    "summary": "A three-part molecule studied in cellular oxidation reactions."
+    "summary": "How cells handle certain reactive chemicals and recycle the helpers they use."
   },
   "melanotan-ii": {
     "name": "Melanotan II",
@@ -120,21 +120,21 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Melanotan 2",
       "MTII"
     ],
-    "summary": "A ring-shaped peptide studied across melanocortin receptors."
+    "summary": "How a ring-shaped peptide interacts with several cell receiving points."
   },
   "glow": {
     "name": "GLOW",
     "aliases": [
       "GLOW blend"
     ],
-    "summary": "A three-ingredient blend, distinct from four-ingredient KLOW."
+    "summary": "How three ingredients relate to cell movement and the support around cells."
   },
   "selank": {
     "name": "SELANK",
     "aliases": [
       "Selank"
     ],
-    "summary": "A peptide examined in GABA-related laboratory experiments."
+    "summary": "Whether a peptide changes how cells respond to a nerve-signaling message."
   },
   "melanotan-i": {
     "name": "Melanotan I",
@@ -142,14 +142,14 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Melanotan 1",
       "MTI"
     ],
-    "summary": "A linear peptide studied in melanocortin cell signaling."
+    "summary": "How a peptide message activates a receptor involved in pigment-cell signals."
   },
   "igf-1-lr3": {
     "name": "IGF-1 LR3",
     "aliases": [
       "IGF1 LR3"
     ],
-    "summary": "A modified IGF-1 molecule studied with binding proteins."
+    "summary": "How a changed cell signal stays available to reach its receptor."
   },
   "5-amino-1mq": {
     "name": "5-Amino-1MQ",
@@ -157,7 +157,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "1MQ",
       "5 amino 1 mq"
     ],
-    "summary": "A non-peptide compound studied as an enzyme inhibitor."
+    "summary": "What happens when a compound slows one enzyme’s chemical job."
   },
   "wolverine-stack": {
     "name": "BPC-157/TB-500 (Wolverine)",
@@ -165,7 +165,7 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Wolverine",
       "BPC TB blend"
     ],
-    "summary": "A two-ingredient blend that needs combination-specific evidence."
+    "summary": "How two ingredients relate to cell movement and the frame inside cells."
   },
   "pt-141": {
     "name": "PT-141",
@@ -173,26 +173,26 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Bremelanotide",
       "pt141"
     ],
-    "summary": "A peptide examined in melanocortin nerve-signaling research."
+    "summary": "How a peptide reaches receptors involved in nerve-cell messages."
   },
   "cagrilintide": {
     "name": "Cagrilintide",
     "aliases": [
       "CAG"
     ],
-    "summary": "An amylin-related peptide studied at receptor complexes."
+    "summary": "How a peptide fits receiving points made from a receptor and helper proteins."
   },
   "aod-9604": {
     "name": "AOD-9604",
     "aliases": [
       "AOD"
     ],
-    "summary": "A hormone-fragment analogue with an unresolved mechanism."
+    "summary": "Whether a small piece based on a hormone changes fat-cell signals in experiments."
   },
   "dsip": {
     "name": "DSIP",
     "aliases": [],
-    "summary": "A nine-part peptide whose mechanism remains uncertain."
+    "summary": "How a small peptide may affect the release of nerve-cell messages."
   },
   "epithalon": {
     "name": "Epithalon",
@@ -200,21 +200,21 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Epitalon",
       "EPI"
     ],
-    "summary": "A short peptide studied in telomerase-related cell experiments."
+    "summary": "How a short peptide relates to the end sections of DNA in lab-grown cells."
   },
   "ipamorelin": {
     "name": "Ipamorelin",
     "aliases": [
       "IPA"
     ],
-    "summary": "A peptide studied at the ghrelin receptor."
+    "summary": "How a peptide message reaches cells involved in hormone release."
   },
   "snap-8": {
     "name": "SNAP-8",
     "aliases": [
       "Acetyl octapeptide 3"
     ],
-    "summary": "A short peptide with a proposed, not established, mechanism."
+    "summary": "Whether a short copy of a protein part could affect how cells release messages."
   },
   "thymosin-alpha-1": {
     "name": "Thymosin Alpha-1",
@@ -222,26 +222,26 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Thymalfasin",
       "TA1"
     ],
-    "summary": "A peptide examined in immune-cell signaling experiments."
+    "summary": "How certain immune cells detect a signal and pass messages to other cells."
   },
   "ll-37": {
     "name": "LL-37",
     "aliases": [],
-    "summary": "A peptide studied in membrane and cell-signaling experiments."
+    "summary": "How a peptide interacts with the thin outer barriers of cells and microbes."
   },
   "cartalax": {
     "name": "Cartalax",
     "aliases": [
       "AED"
     ],
-    "summary": "A three-part peptide with limited cell-culture evidence."
+    "summary": "Whether a short peptide changes which instructions lab-grown cells read."
   },
   "sermorelin": {
     "name": "Sermorelin",
     "aliases": [
       "SERM"
     ],
-    "summary": "A GHRH-related peptide studied in pituitary signaling."
+    "summary": "How a shortened hormone-release message reaches the gland that receives it."
   },
   "kisspeptin": {
     "name": "Kisspeptin",
@@ -249,100 +249,100 @@ export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly 
       "Kisspeptin-10",
       "KP10"
     ],
-    "summary": "A peptide studied in a multi-step hormone-signaling pathway."
+    "summary": "How an early message starts a chain of signals between nerve cells and a gland."
   },
   "dihexa": {
     "name": "Dihexa",
     "aliases": [
       "PNB-0408"
     ],
-    "summary": "A compound with a key mechanism paper that was retracted."
+    "summary": "A proposed nerve-cell signaling route whose key supporting paper was withdrawn."
   },
   "vip": {
     "name": "VIP",
     "aliases": [
       "Vasoactive intestinal peptide"
     ],
-    "summary": "A peptide studied at VPAC cell-signaling receptors."
+    "summary": "How one peptide message leads to different responses in different cell types."
   },
   "ara-290": {
     "name": "ARA-290",
     "aliases": [
       "Cibinetide"
     ],
-    "summary": "An erythropoietin-derived peptide with a proposed receptor pathway."
+    "summary": "How a small peptide may affect signals in cells under stress."
   },
   "pinealon": {
     "name": "Pinealon",
     "aliases": [
       "EDR"
     ],
-    "summary": "A three-part peptide examined in cell-stress experiments."
+    "summary": "How cells respond when reactive chemicals build up during stress."
   },
   "ahk-cu": {
     "name": "AHK-Cu",
     "aliases": [
       "ahkcu"
     ],
-    "summary": "A copper-binding peptide examined in follicle-cell research."
+    "summary": "How a copper-binding peptide affects cells taken from hair follicles."
   },
   "ghkcu-spray": {
     "name": "GHK-Cu SPRAY",
     "aliases": [],
-    "summary": "A prepared GHK-Cu liquid, distinct from the studied molecule."
+    "summary": "How a copper-binding peptide affects the support material around cells. The prepared liquid is a separate research question."
   },
   "nad-plus-spray": {
     "name": "NAD+ SPRAY",
     "aliases": [],
-    "summary": "A prepared NAD+ liquid; NAD+ is not a peptide."
+    "summary": "How a small molecule helps cells pass materials between chemical reactions. The prepared liquid is a separate research question."
   },
   "semax-spray": {
     "name": "SEMAX SPRAY",
     "aliases": [],
-    "summary": "A prepared Semax liquid without formulation-specific validation."
+    "summary": "How a peptide may change the messages passed between nerve cells. The prepared liquid is a separate research question."
   },
   "selank-spray": {
     "name": "SELANK SPRAY",
     "aliases": [],
-    "summary": "A prepared Selank liquid, not a tested GABA formulation."
+    "summary": "Whether a peptide changes how cells respond to a nerve-signaling message. The prepared liquid is a separate research question."
   },
   "pt-141-spray": {
     "name": "PT-141 SPRAY",
     "aliases": [],
-    "summary": "A prepared PT-141 liquid with separate formulation questions."
+    "summary": "How a peptide reaches receptors involved in nerve-cell messages. The prepared liquid is a separate research question."
   },
   "melanotan-ii-spray": {
     "name": "Melanotan II Spray",
     "aliases": [],
-    "summary": "A prepared Melanotan II liquid, not a validated delivery method."
+    "summary": "How a ring-shaped peptide interacts with several cell receiving points. The prepared liquid is a separate research question."
   },
   "dsip-spray": {
     "name": "DSIP Spray",
     "aliases": [],
-    "summary": "A prepared DSIP liquid with an unresolved parent mechanism."
+    "summary": "How a small peptide may affect the release of nerve-cell messages. The prepared liquid is a separate research question."
   },
   "bpc-tb-spray": {
     "name": "BPC-157/TB-500 Spray (Wolverine)",
     "aliases": [],
-    "summary": "A prepared two-peptide liquid requiring blend-specific evidence."
+    "summary": "How two ingredients relate to cell movement and the frame inside cells. The prepared liquid is a separate research question."
   },
   "bpc-spray": {
     "name": "BPC-157 Spray",
     "aliases": [],
-    "summary": "A prepared BPC-157 liquid, separate from cell-study evidence."
+    "summary": "How cells grip a surface, move and respond to stress in lab tests. The prepared liquid is a separate research question."
   },
   "adalank-spray": {
     "name": "Adalank Spray",
     "aliases": [
       "N acetyl Selank amidate"
     ],
-    "summary": "A modified Selank-related compound with limited direct evidence."
+    "summary": "How changes to a Selank-like peptide might change the molecule’s behavior."
   },
   "adamax-spray": {
     "name": "Adamax Spray",
     "aliases": [
       "Ac MEHFPGPAG"
     ],
-    "summary": "A modified Semax-related compound without a confirmed mechanism."
+    "summary": "How changing a Semax-like peptide could affect its shape and behavior."
   }
 };

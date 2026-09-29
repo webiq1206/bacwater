@@ -14,7 +14,7 @@ export default function RecommendationsPage(){
     <header className={`${styles.hero} ${searchStyles.directoryHero}`}>
       <p className={styles.eyebrow}>THE RESEARCH DIRECTORY</p>
       <h1>Research products.</h1>
-      <p className={styles.lead}>Search all {products.length} products by name or format. See matching products as you type.</p>
+      <p className={styles.lead}>Browse by research category, product type or name. Open a quick look, then explore the full guide.</p>
     </header>
     <ProductDirectory products={products}/>
     <div className={searchStyles.directoryDisclosure}><strong>{RESEARCH_ONLY_NOTICE}</strong><p>{paid?"We are an independent affiliate and may earn a commission from purchases through supplier links.":"These are supplier links. No paid referral is active."} We do not represent the supplier, endorse suitability or provide medical advice.</p></div>

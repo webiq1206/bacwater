@@ -19,7 +19,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "amino-h2o": {
     "name": "Amino H2O",
     "aliases": ["BAC water", "bacteriostatic water", "H2O"],
-    "summary": "Preserved laboratory water, not an active peptide.",
+    "summary": "Whether this water is a good match for a lab sample.",
     "what": "Amino H2O is water with 0.9% benzyl alcohol, a preservative. It is a lab supply, not a peptide.",
     "study": "The question is whether a liquid is compatible with a particular laboratory sample. Dissolving a compound, limiting bacterial growth and confirming sterility are separate checks.",
     "plain": "Water holds compounds that can dissolve in it. Benzyl alcohol slows bacterial growth, but does not sterilize contaminated material. Neither ingredient establishes whether this liquid is compatible with a specific sample.",
@@ -32,7 +32,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "glp-1": {
     "name": "GLP-1 (SM)",
     "aliases": ["Semaglutide", "SM", "glp1"],
-    "summary": "A research compound linked to the GLP-1 cell-signaling pathway.",
+    "summary": "How one lab-made signal attaches to a cell and passes on a message.",
     "what": "GLP-1 (SM) is a lab-made peptide. A peptide is a chain of small building blocks called amino acids.",
     "study": "Researchers test how the semaglutide molecule interacts with GLP-1 receptors, which receive chemical messages at the cell surface. Molecular-design studies also examine how it resists breakdown and binds to a carrier protein.",
     "plain": "Semaglutide mimics a natural signal received by the GLP-1 receptor. Experiments examine the resulting cell messages and the molecule's structure. Those findings describe a studied compound, not the identity or performance of a supplier's vial.",
@@ -46,7 +46,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "glp-2": {
     "name": "GLP-2 (TR)",
     "aliases": ["Tirzepatide", "TR", "glp2"],
-    "summary": "A research compound studied at two different cell receptors.",
+    "summary": "How one molecule can send messages through two different cell receptors.",
     "what": "GLP-2 (TR) is a lab-made peptide with 39 amino-acid building blocks.",
     "study": "Researchers compare tirzepatide's activity at GIP and GLP-1 receptors. The question is how one molecule interacts with two receiving points, and how the responses differ between experimental systems.",
     "plain": "Tirzepatide can activate two kinds of cell receptors: GIP and GLP-1. Activity at one does not imply an equal response at the other. GLP-2 (TR) is the supplier's product name, not the name of the natural GLP-2 hormone.",
@@ -61,7 +61,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "glp-3": {
     "name": "GLP-3 (RT)",
     "aliases": ["Retatrutide", "RT", "LY3437943", "glp3"],
-    "summary": "A research compound studied at three different cell receptors.",
+    "summary": "How one molecule interacts with three kinds of cell receiving points.",
     "what": "GLP-3 (RT) is a lab-made peptide with 39 amino-acid building blocks.",
     "study": "Researchers measure retatrutide's activity at GIP, GLP-1 and glucagon receptors. They examine each pathway separately because three receptor targets do not represent three interchangeable effects.",
     "plain": "Retatrutide interacts with three cell-signaling pathways. Each receptor passes on a different message, so counting targets cannot predict the combined response. These molecular studies do not establish results for a purchased research product.",
@@ -76,7 +76,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "bpc-157": {
     "name": "BPC-157",
     "aliases": ["bpc157"],
-    "summary": "A peptide examined in cell attachment and movement experiments.",
+    "summary": "How cells grip a surface, move and respond to stress in lab tests.",
     "what": "BPC-157 is a lab-made chain of 15 amino acids, the small building blocks of peptides.",
     "study": "Researchers examine how tendon cells attach, move and change their internal signals in laboratory experiments. Measurements include FAK and paxillin, proteins involved in the connection between a cell and its surroundings.",
     "plain": "Experiments with cultured rat tendon cells measured changes in attachment-related proteins after exposure to BPC-157. That is evidence about a laboratory cell response, not proof of tissue repair. The molecule's first binding target remains unresolved.",
@@ -91,7 +91,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "ghk-cu": {
     "name": "GHK-Cu",
     "aliases": ["ghkcu"],
-    "summary": "A copper-binding peptide studied in cell and tissue chemistry.",
+    "summary": "How a copper-binding peptide affects the support material around cells.",
     "what": "GHK-Cu is a chain of three amino acids joined to copper. The letters name the three building blocks; Cu means copper.",
     "study": "Researchers examine how the GHK peptide binds copper and how cells change proteins in the material around them. This surrounding material, called the extracellular matrix, helps give tissue its structure.",
     "plain": "GHK holds a copper ion. Laboratory studies examine changes in collagen and other components of the framework around cells. The compound is not replacement collagen, and those experiments do not establish an effect from this supplier's product.",
@@ -105,7 +105,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "tb-500": {
     "name": "TB-500",
     "aliases": ["tb500", "thymosin beta 4"],
-    "summary": "A product name that requires an exact peptide-sequence check.",
+    "summary": "How a related peptide affects the inner frame that helps cells move.",
     "what": "TB-500 is a name used for peptide products related to thymosin beta-4. The exact amino-acid chain matters.",
     "study": "Research on full-length thymosin beta-4 examines actin, a protein that forms part of a cell's internal framework. A key question is whether a TB-500 product contains that same molecule or a different fragment.",
     "plain": "Full-length thymosin beta-4 interacts with actin, which helps cells maintain shape and move. TB-500 can refer to different related forms. Findings for the full molecule cannot automatically be assigned to a fragment or an unverified product.",
@@ -119,7 +119,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "tesamorlin": {
     "name": "Tesamorlin",
     "aliases": ["Tesamorelin", "TES"],
-    "summary": "A peptide studied in growth-hormone signaling research.",
+    "summary": "How a message reaches the gland that controls growth-hormone release.",
     "what": "Tesamorlin is the partner’s name for a lab-made peptide modeled on growth hormone-releasing hormone, often shortened to GHRH.",
     "study": "Researchers examine the interaction between a GHRH-like molecule and receptors on pituitary cells. The focus is on the signal that precedes hormone release, not on supplying growth hormone itself.",
     "plain": "Tesamorelin resembles a message received by the pituitary gland, a small hormone-signaling organ. Research measures the response to that message. Tesamorlin is the supplier's spelling; the compound is not growth hormone itself.",
@@ -133,7 +133,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "mots-c": {
     "name": "MOTS-C",
     "aliases": ["motsc"],
-    "summary": "A short peptide studied in cellular fuel-sensing pathways.",
+    "summary": "How cells sense their fuel supply and adjust the way they use it.",
     "what": "MOTS-C is a 16-part peptide linked to mitochondria, the tiny structures that help cells release energy from fuel.",
     "study": "Researchers examine how cells detect changes in available fuel. Studies of MOTS-c track molecules such as AICAR and AMPK, which participate in the cell's response to its energy conditions.",
     "plain": "MOTS-c research examines signals that help cells respond to changing fuel availability. AICAR and AMPK are parts of that signaling network. Measurements in experimental models do not establish an energy or performance benefit from a research product.",
@@ -147,7 +147,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "nad-plus": {
     "name": "NAD+",
     "aliases": ["NAD", "nicotinamide adenine dinucleotide"],
-    "summary": "A non-peptide molecule central to cellular chemical reactions.",
+    "summary": "How a small molecule helps cells pass materials between chemical reactions.",
     "what": "NAD+ is a small molecule found in cells. It helps enzymes, the tiny workers that carry out chemical reactions. It is not a peptide.",
     "study": "Researchers examine how NAD participates in electron-transfer reactions and how enzymes consume it. A separate question is whether NAD outside a cell becomes available inside that cell.",
     "plain": "NAD carries electrons between chemical reactions, changing between NAD+ and NADH. Some enzymes also use it as a starting material. Finding NAD in a liquid does not establish that it reaches the inside of cells.",
@@ -162,7 +162,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "cjc-ipa-no-dac": {
     "name": "CJC-1295 / Ipamorelin (No DAC)",
     "aliases": ["CJC IPA", "CJC1295 Ipamorelin"],
-    "summary": "Two peptides associated with different hormone-signaling receptors.",
+    "summary": "How two separate signals reach the gland involved in hormone release.",
     "what": "This product combines CJC-1295 without DAC and Ipamorelin. DAC is an added chemical group used in a different form of CJC-1295.",
     "study": "Researchers study GHRH-receptor and ghrelin-receptor signals separately. For this blend, ingredient identity and the No DAC form matter because evidence from a different CJC form does not establish the same behavior.",
     "plain": "The two ingredients are associated with different receiving points on pituitary cells. No DAC means the CJC component lacks the albumin-binding group used in DAC forms. Studies of individual compounds do not prove the blend's combined response or duration.",
@@ -177,7 +177,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "kpv": {
     "name": "KPV",
     "aliases": [],
-    "summary": "A three-part peptide examined in cellular signaling experiments.",
+    "summary": "How a tiny peptide gets into cells and changes their alarm messages.",
     "what": "KPV is a very short peptide made from three amino acids: lysine, proline and valine.",
     "study": "Researchers examine how KPV enters certain cells and how experimental signaling markers change. Studies include PepT1, a transport protein, and NF-kappa B, a system involved in switching on cellular-response genes.",
     "plain": "KPV is a chain of three amino acids. Some experiments link its entry into cells to a transporter called PepT1, then measure changes in cell-response signals. This is a proposed experimental pathway, not evidence of a treatment effect.",
@@ -191,7 +191,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "klow": {
     "name": "KLOW",
     "aliases": [],
-    "summary": "A four-ingredient blend with separate bodies of research.",
+    "summary": "How four ingredients relate to cell movement, cell support and cell signals.",
     "what": "KLOW combines BPC-157, TB-500, GHK-Cu and KPV. Each is a separate compound within the same product.",
     "study": "The ingredients are BPC-157, TB-500, GHK-Cu and KPV. Their papers examine different cell processes; the important unanswered question is how the exact four-part mixture behaves when studied as one formulation.",
     "plain": "KLOW combines four named ingredients, not four proven outcomes. Research on each ingredient does not establish how the mixture works. Its composition and proportions must come from the label, and the finished blend requires its own evidence.",
@@ -207,7 +207,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "semax": {
     "name": "SEMAX",
     "aliases": ["Semax"],
-    "summary": "A peptide examined in experimental nerve-cell signaling.",
+    "summary": "How a peptide may change the messages passed between nerve cells.",
     "what": "SEMAX is a lab-made chain of seven amino acids. Its design is based on a piece of another peptide called ACTH.",
     "study": "Researchers measure changes in BDNF and TrkB, proteins involved in nerve-cell signaling. The cited rat-brain research examines these markers, not a demonstrated effect on human thinking or memory.",
     "plain": "Studies measured changes in a signaling protein called BDNF and its receptor, TrkB, after Semax exposure in an experimental model. That does not establish that Semax binds directly to TrkB, or that the same findings apply to a supplier's product.",
@@ -221,7 +221,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "glutathione": {
     "name": "Glutathione",
     "aliases": ["GSH"],
-    "summary": "A three-part molecule studied in cellular oxidation reactions.",
+    "summary": "How cells handle certain reactive chemicals and recycle the helpers they use.",
     "what": "Glutathione is made from three amino acids. Cells make it and use it in many chemical reactions.",
     "study": "Researchers examine the chemical cycle between reduced glutathione, GSH, and its oxidized form, GSSG. They measure how enzymes use and replenish these forms during reactions involving peroxides.",
     "plain": "Glutathione participates in reactions that convert peroxides into other substances. It changes chemical form in the process and can be recycled by an enzyme system. That cellular chemistry does not establish a detoxification benefit from a product.",
@@ -236,7 +236,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "melanotan-ii": {
     "name": "Melanotan II",
     "aliases": ["Melanotan 2", "MTII"],
-    "summary": "A ring-shaped peptide studied across melanocortin receptors.",
+    "summary": "How a ring-shaped peptide interacts with several cell receiving points.",
     "what": "Melanotan II is a lab-made peptide shaped like a small ring. It is related to a natural signal called alpha-MSH.",
     "study": "Researchers compare responses at several melanocortin receptors, including MC1 and MC4. These receiving points occur in different biological systems, so an observation at one target cannot describe the molecule's entire activity.",
     "plain": "Melanotan II resembles part of a natural cell message but can interact with more than one melanocortin receptor. Different receptors trigger different signals. Its ring-shaped structure and multiple targets distinguish it from Melanotan I.",
@@ -251,7 +251,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "glow": {
     "name": "GLOW",
     "aliases": ["GLOW blend"],
-    "summary": "A three-ingredient blend, distinct from four-ingredient KLOW.",
+    "summary": "How three ingredients relate to cell movement and the support around cells.",
     "what": "GLOW contains three compounds: BPC-157, TB-500 and GHK-Cu. It is not the four-compound KLOW blend.",
     "study": "GLOW contains BPC-157, TB-500 and GHK-Cu. Researchers would need to test this exact combination to determine its behavior; separate ingredient papers cannot answer questions about the finished formulation.",
     "plain": "GLOW combines three ingredients and does not include the KPV found in KLOW. Each ingredient has a separate research background. Combining them does not establish a shared mechanism, an additive response or a proven outcome for the blend.",
@@ -267,7 +267,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "selank": {
     "name": "SELANK",
     "aliases": ["Selank"],
-    "summary": "A peptide examined in GABA-related laboratory experiments.",
+    "summary": "Whether a peptide changes how cells respond to a nerve-signaling message.",
     "what": "SELANK is a lab-made peptide based on tuftsin, another short peptide. It has seven amino-acid building blocks.",
     "study": "Researchers measure gene activity associated with GABA, a chemical messenger between nerve cells. Studies distinguish Selank alone from Selank combined with GABA because those are different experimental conditions.",
     "plain": "Selank research includes changes in GABA-related gene activity. A response observed with GABA present does not establish the same response to Selank alone. These measurements also do not prove that Selank binds directly to a GABA receptor.",
@@ -282,7 +282,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "melanotan-i": {
     "name": "Melanotan I",
     "aliases": ["Melanotan 1", "MTI"],
-    "summary": "A linear peptide studied in melanocortin cell signaling.",
+    "summary": "How a peptide message activates a receptor involved in pigment-cell signals.",
     "what": "Melanotan I is a lab-made chain related to alpha-MSH, a natural cell signal. It is different from ring-shaped Melanotan II.",
     "study": "Researchers examine MC1-receptor activity and downstream cell signals involved in pigment biology. The research question concerns a receptor pathway, not a demonstrated cosmetic result from a supplier's formulation.",
     "plain": "Melanotan I is a linear peptide related to the natural alpha-MSH signal. MC1-receptor experiments examine messages passed inside pigment-producing cells. It is structurally different from ring-shaped Melanotan II, and the two should not be treated as interchangeable.",
@@ -296,7 +296,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "igf-1-lr3": {
     "name": "IGF-1 LR3",
     "aliases": ["IGF1 LR3"],
-    "summary": "A modified IGF-1 molecule studied with binding proteins.",
+    "summary": "How a changed cell signal stays available to reach its receptor.",
     "what": "IGF-1 LR3 is a lab-made version of IGF-1, a protein signal. It has an added section and a changed building block.",
     "study": "Researchers compare how modified IGF-1 interacts with receptors and with proteins that bind IGF. The amount of binding protein in a cell experiment can change how much of the compound is available.",
     "plain": "IGF-1 LR3 has changes that reduce its interaction with certain IGF-binding proteins. Those proteins normally affect how much IGF is available to cells. A different response in culture does not necessarily mean stronger receptor binding.",
@@ -310,7 +310,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "5-amino-1mq": {
     "name": "5-Amino-1MQ",
     "aliases": ["1MQ", "5 amino 1 mq"],
-    "summary": "A non-peptide compound studied as an enzyme inhibitor.",
+    "summary": "What happens when a compound slows one enzyme’s chemical job.",
     "what": "5-Amino-1MQ is a small chemical compound, not a peptide. Its target is an enzyme called NNMT.",
     "study": "Researchers test whether 5-amino-1MQ inhibits NNMT, an enzyme that changes nicotinamide into another molecule. Enzyme activity and downstream cellular measurements are separate from any claimed personal benefit.",
     "plain": "NNMT is an enzyme that carries out a chemical conversion involving nicotinamide. 5-amino-1MQ is studied for interference with that reaction. It is a small molecule, not a peptide, and enzyme inhibition alone does not establish a product outcome.",
@@ -324,7 +324,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "wolverine-stack": {
     "name": "BPC-157/TB-500 (Wolverine)",
     "aliases": ["Wolverine", "BPC TB blend"],
-    "summary": "A two-ingredient blend that needs combination-specific evidence.",
+    "summary": "How two ingredients relate to cell movement and the frame inside cells.",
     "what": "This product combines BPC-157 and TB-500. Wolverine is the partner’s name for this two-compound blend.",
     "study": "BPC-157 and TB-500 have different research backgrounds. Studies examine attachment-related cell signals or actin biology, but the exact TB-500 form and the behavior of the combined mixture must be established separately.",
     "plain": "The Wolverine blend combines BPC-157 and TB-500. Evidence about one ingredient does not validate the other or prove a combined effect. Research on full thymosin beta-4 also cannot automatically describe every product sold as TB-500.",
@@ -339,7 +339,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "pt-141": {
     "name": "PT-141",
     "aliases": ["Bremelanotide", "pt141"],
-    "summary": "A peptide examined in melanocortin nerve-signaling research.",
+    "summary": "How a peptide reaches receptors involved in nerve-cell messages.",
     "what": "PT-141 is a lab-made, ring-shaped peptide related to alpha-MSH, a natural cell signal.",
     "study": "Researchers examine melanocortin receptors, especially MC3 and MC4, in experimental nerve-signaling systems. Studies ask which receptors and circuits contribute to an observed response, rather than assuming one simple pathway.",
     "plain": "PT-141 is related to a natural melanocortin message. Research examines how it interacts with receptors involved in nerve signaling. A response in a studied circuit does not establish the effects, safety or identity of a commercial research product.",
@@ -353,7 +353,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "cagrilintide": {
     "name": "Cagrilintide",
     "aliases": ["CAG"],
-    "summary": "An amylin-related peptide studied at receptor complexes.",
+    "summary": "How a peptide fits receiving points made from a receptor and helper proteins.",
     "what": "Cagrilintide is a changed form of amylin, a natural peptide signal. It has 37 amino-acid building blocks.",
     "study": "Researchers compare activity at receptor combinations formed by a calcitonin receptor and helper proteins. These combinations help explain why amylin-related signaling is different from the GLP-1 pathway.",
     "plain": "Cagrilintide resembles amylin, a natural signaling peptide. Its receptor system includes a main receptor and helper proteins that influence the response. It is not a GLP-1 compound, and findings from one pathway cannot substitute for evidence about the other.",
@@ -367,7 +367,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "aod-9604": {
     "name": "AOD-9604",
     "aliases": ["AOD"],
-    "summary": "A hormone-fragment analogue with an unresolved mechanism.",
+    "summary": "Whether a small piece based on a hormone changes fat-cell signals in experiments.",
     "what": "AOD-9604 is a lab-made peptide modeled on a small end section of growth hormone. It is not the whole hormone.",
     "study": "Researchers examine this modified growth-hormone fragment in experimental models, including measurements of fat-cell chemistry and beta-3-receptor-related pathways. These measurements do not establish a complete or confirmed mechanism.",
     "plain": "AOD-9604 resembles a small part of growth hormone, not the entire hormone. Animal experiments have examined possible links to fat-cell signaling. Its precise mechanism remains unresolved, so these observations should not be presented as a proven product effect.",
@@ -382,7 +382,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "dsip": {
     "name": "DSIP",
     "aliases": [],
-    "summary": "A nine-part peptide whose mechanism remains uncertain.",
+    "summary": "How a small peptide may affect the release of nerve-cell messages.",
     "what": "DSIP is a short peptide with nine amino-acid building blocks.",
     "study": "Researchers investigate experimental nerve-signaling observations associated with DSIP. Its historical name refers to sleep, but a name is not evidence of a confirmed sleep-related action or a defined receptor target.",
     "plain": "DSIP's first molecular target has not been firmly established. Some rat-tissue experiments measured release of a nerve-signaling molecule called Met-enkephalin. That observation does not prove direct opioid-receptor binding or establish a sleep effect for this product.",
@@ -396,7 +396,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "epithalon": {
     "name": "Epithalon",
     "aliases": ["Epitalon", "EPI"],
-    "summary": "A short peptide studied in telomerase-related cell experiments.",
+    "summary": "How a short peptide relates to the end sections of DNA in lab-grown cells.",
     "what": "Epithalon is a lab-made chain of four amino acids. It is a short peptide, not a whole protein.",
     "study": "Researchers measure telomerase activity and telomeres, the repeated DNA sequences at chromosome ends, in cultured cells. These are laboratory measurements, not demonstrations of longer life or an anti-aging effect.",
     "plain": "Cell-culture studies examine markers associated with chromosome ends after Epithalon exposure. The initial molecular interaction remains uncertain. Changes in those markers do not establish effects on lifespan or validate a supplier's research product.",
@@ -411,7 +411,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "ipamorelin": {
     "name": "Ipamorelin",
     "aliases": ["IPA"],
-    "summary": "A peptide studied at the ghrelin receptor.",
+    "summary": "How a peptide message reaches cells involved in hormone release.",
     "what": "Ipamorelin is a lab-made peptide with five amino-acid building blocks.",
     "study": "Researchers examine how ipamorelin interacts with the ghrelin receptor, also called GHS-R. This signal is distinct from the GHRH-receptor pathway, even though both are studied in pituitary signaling.",
     "plain": "Ipamorelin interacts with a receptor that receives ghrelin-related messages. Experiments measure the downstream signaling response. It is not growth hormone itself, and its pathway should not be confused with the different receptor used by GHRH-like peptides.",
@@ -425,7 +425,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "snap-8": {
     "name": "SNAP-8",
     "aliases": ["Acetyl octapeptide 3"],
-    "summary": "A short peptide with a proposed, not established, mechanism.",
+    "summary": "Whether a short copy of a protein part could affect how cells release messages.",
     "what": "SNAP-8 is a lab-made peptide with eight amino acids. Its design copies a small part of the protein SNAP-25.",
     "study": "The cited background research examines SNAP-25 and SNARE proteins, which help cells release packets of chemical messages. It explains the proposed mechanism's context but is not direct testing of SNAP-8.",
     "plain": "SNAP-8 resembles a short piece of SNAP-25, part of the machinery cells use to release chemical messages. Interference with that machinery is a proposed explanation. The linked background papers do not demonstrate that SNAP-8 itself produces that response.",
@@ -440,7 +440,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "thymosin-alpha-1": {
     "name": "Thymosin Alpha-1",
     "aliases": ["Thymalfasin", "TA1"],
-    "summary": "A peptide examined in immune-cell signaling experiments.",
+    "summary": "How certain immune cells detect a signal and pass messages to other cells.",
     "what": "Thymosin Alpha-1 is a lab-made version of a peptide with 28 amino acids.",
     "study": "Researchers examine how dendritic cells, which help detect and present biological material, change their signals. Studies include Toll-like-receptor pathways and IL-12, rather than a general claim of stronger immunity.",
     "plain": "Thymosin alpha-1 research measures how certain immune cells respond in experimental conditions. These responses depend on the cell type and signals already present. A change in an immune marker does not establish an immune benefit from a supplier's product.",
@@ -454,7 +454,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "ll-37": {
     "name": "LL-37",
     "aliases": [],
-    "summary": "A peptide studied in membrane and cell-signaling experiments.",
+    "summary": "How a peptide interacts with the thin outer barriers of cells and microbes.",
     "what": "LL-37 is a peptide with 37 amino acids. It belongs to a group called host-defense peptides.",
     "study": "Researchers examine interactions between LL-37 and cell membranes, as well as signals in non-microbial cells. The experimental conditions matter because membrane effects are not restricted to one type of cell.",
     "plain": "LL-37 has a positive charge that contributes to its interaction with membranes. Laboratory studies examine both membrane disruption and cell signaling. Those observations do not establish selective activity, safety or an antibiotic effect for this product.",
@@ -469,7 +469,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "cartalax": {
     "name": "Cartalax",
     "aliases": ["AED"],
-    "summary": "A three-part peptide with limited cell-culture evidence.",
+    "summary": "Whether a short peptide changes which instructions lab-grown cells read.",
     "what": "Cartalax is a lab-made peptide of three amino acids. Their sequence is often shortened to AED.",
     "study": "Researchers examine changes in IGF-1-related gene activity in cultured cells exposed to the AED peptide. Proposed interactions with DNA remain a hypothesis rather than a fully established mechanism.",
     "plain": "Cartalax is associated with the short peptide AED. Cell experiments measured changes in gene activity, but the first molecular interaction is not settled. Those findings do not demonstrate cartilage formation or a tissue-level outcome.",
@@ -484,7 +484,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "sermorelin": {
     "name": "Sermorelin",
     "aliases": ["SERM"],
-    "summary": "A GHRH-related peptide studied in pituitary signaling.",
+    "summary": "How a shortened hormone-release message reaches the gland that receives it.",
     "what": "Sermorelin is a 29-part peptide based on the active end of growth hormone-releasing hormone, or GHRH.",
     "study": "Researchers examine the active section of GHRH, a natural message received by pituitary cells. The question concerns receptor signaling, not whether a research vial supplies growth hormone or has a demonstrated personal effect.",
     "plain": "Sermorelin contains the active end of the GHRH message. That message is received by pituitary-cell receptors and starts a signaling sequence. It is distinct from growth hormone itself, and molecular background does not validate a supplier's vial.",
@@ -498,7 +498,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "kisspeptin": {
     "name": "Kisspeptin",
     "aliases": ["Kisspeptin-10", "KP10"],
-    "summary": "A peptide studied in a multi-step hormone-signaling pathway.",
+    "summary": "How an early message starts a chain of signals between nerve cells and a gland.",
     "what": "This product is the 10-part form of kisspeptin, a peptide signal. The partner names it Kisspeptin.",
     "study": "Researchers examine how kisspeptin activates KISS1R and how that signal connects to GnRH and later hormone measurements. The exact kisspeptin form matters when comparing experiments.",
     "plain": "Kisspeptin starts a signaling sequence at a receptor called KISS1R. Downstream measurements may involve several additional hormones, so they are not all direct actions of the peptide. Research on this pathway does not establish a reproductive benefit from a product.",
@@ -513,7 +513,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "dihexa": {
     "name": "Dihexa",
     "aliases": ["PNB-0408"],
-    "summary": "A compound with a key mechanism paper that was retracted.",
+    "summary": "A proposed nerve-cell signaling route whose key supporting paper was withdrawn.",
     "what": "Dihexa is a small lab-made compound modeled on part of a peptide called angiotensin IV.",
     "study": "A proposed connection to HGF and the c-Met receptor has been discussed in Dihexa research. A key 2014 mechanism paper was retracted in 2025, so it cannot be treated as reliable confirmation of that explanation.",
     "plain": "Dihexa's proposed HGF/c-Met mechanism is not established by the cited retracted paper. The retraction is an evidence warning, not a positive finding. We do not present that mechanism as a demonstrated action of this product.",
@@ -527,7 +527,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "vip": {
     "name": "VIP",
     "aliases": ["Vasoactive intestinal peptide"],
-    "summary": "A peptide studied at VPAC cell-signaling receptors.",
+    "summary": "How one peptide message leads to different responses in different cell types.",
     "what": "VIP is a peptide made from 28 amino acids. It acts as a chemical message between cells.",
     "study": "Researchers examine VIP activity at VPAC1 and VPAC2 receptors and the resulting intracellular messenger, cAMP. Different experimental systems measure fluid-related cell signals or smooth-muscle responses.",
     "plain": "VIP carries a message to receptors called VPAC1 and VPAC2. These receptors can increase cAMP, a messenger inside cells. What happens next depends on the tissue and experimental conditions, rather than a single universal effect.",
@@ -542,7 +542,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "ara-290": {
     "name": "ARA-290",
     "aliases": ["Cibinetide"],
-    "summary": "An erythropoietin-derived peptide with a proposed receptor pathway.",
+    "summary": "How a small peptide may affect signals in cells under stress.",
     "what": "ARA-290 is an 11-part peptide modeled on a small surface of erythropoietin, often shortened to EPO.",
     "study": "Researchers examine a proposed receptor complex involving the erythropoietin receptor and CD131. The question is whether this fragment engages a signaling pathway distinct from the one associated with red-blood-cell production.",
     "plain": "ARA-290 is a small fragment based on erythropoietin, not the full protein. Research proposes a different receptor arrangement for some observed responses. That proposal does not establish tissue repair or a confirmed effect of this supplier's product.",
@@ -556,7 +556,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "pinealon": {
     "name": "Pinealon",
     "aliases": ["EDR"],
-    "summary": "A three-part peptide examined in cell-stress experiments.",
+    "summary": "How cells respond when reactive chemicals build up during stress.",
     "what": "Pinealon is a lab-made peptide of three amino acids. Their sequence is often shortened to EDR.",
     "study": "Researchers measure reactive oxygen species and ERK signaling in experimental cells. These are indicators of cellular conditions; they do not by themselves identify Pinealon's first target or establish a tissue-level effect.",
     "plain": "Pinealon research tracks changes in cell-stress markers and signaling proteins. The initial molecular interaction remains unclear. A change in a laboratory marker is not the same as demonstrating a cognitive or protective benefit.",
@@ -570,7 +570,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "ahk-cu": {
     "name": "AHK-Cu",
     "aliases": ["ahkcu"],
-    "summary": "A copper-binding peptide examined in follicle-cell research.",
+    "summary": "How a copper-binding peptide affects cells taken from hair follicles.",
     "what": "AHK-Cu joins three amino acids to copper. Its first building block differs from GHK-Cu, so they are not the same molecule.",
     "study": "Researchers examine cultured dermal papilla cells and isolated follicles, including measurements of cell-survival-related proteins. These model-specific findings are not demonstrations of a cosmetic result from this formulation.",
     "plain": "AHK-Cu binds copper and differs from GHK-Cu by one amino acid. Laboratory studies measured responses in follicle-related cells, with limits on which results were statistically supported. They do not establish a hair-growth effect for a supplier's product.",
@@ -584,7 +584,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "ghkcu-spray": {
     "name": "GHK-Cu SPRAY",
     "aliases": [],
-    "summary": "A prepared GHK-Cu liquid, distinct from the studied molecule.",
+    "summary": "How a copper-binding peptide affects the support material around cells. The prepared liquid is a separate research question.",
     "what": "GHK-Cu SPRAY is a prepared liquid containing GHK-Cu. It is a different product from the non-spray form.",
     "study": "The cited research concerns GHK-Cu and cell-matrix chemistry, not testing of this prepared spray. Separate formulation studies would be needed to establish the liquid's stability and behavior.",
     "plain": "The parent peptide binds copper, and laboratory research examines changes in the framework around cells. Putting it in a prepared liquid introduces separate formulation questions. Parent-compound evidence does not demonstrate the spray's delivery, stability or effects.",
@@ -598,7 +598,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "nad-plus-spray": {
     "name": "NAD+ SPRAY",
     "aliases": [],
-    "summary": "A prepared NAD+ liquid; NAD+ is not a peptide.",
+    "summary": "How a small molecule helps cells pass materials between chemical reactions. The prepared liquid is a separate research question.",
     "what": "NAD+ SPRAY is a prepared liquid containing NAD+. It is a different product from the non-spray form.",
     "study": "The research background concerns NAD's role in chemical reactions within cells. For a prepared liquid, an additional question is whether the molecule remains intact and becomes available in the experimental system.",
     "plain": "NAD participates in electron-transfer reactions inside cells. Its presence in a spray does not establish that it reaches those cells or participates in the same reactions. The finished liquid needs evidence separate from NAD's basic chemistry.",
@@ -613,7 +613,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "semax-spray": {
     "name": "SEMAX SPRAY",
     "aliases": [],
-    "summary": "A prepared Semax liquid without formulation-specific validation.",
+    "summary": "How a peptide may change the messages passed between nerve cells. The prepared liquid is a separate research question.",
     "what": "SEMAX SPRAY is a prepared liquid containing SEMAX. It is a different product from the non-spray form.",
     "study": "The cited rat-brain research examines Semax-related BDNF and TrkB measurements. It does not test this supplier's spray or establish that the liquid reproduces those experimental conditions.",
     "plain": "Parent-compound research measured nerve-signaling markers after Semax exposure. It did not validate this prepared spray. The formulation's composition, stability and delivery must be evaluated separately rather than inferred from the peptide's name.",
@@ -627,7 +627,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "selank-spray": {
     "name": "SELANK SPRAY",
     "aliases": [],
-    "summary": "A prepared Selank liquid, not a tested GABA formulation.",
+    "summary": "Whether a peptide changes how cells respond to a nerve-signaling message. The prepared liquid is a separate research question.",
     "what": "SELANK SPRAY is a prepared liquid containing SELANK. It is a different product from the non-spray form.",
     "study": "The cited experiments examine Selank and GABA-related gene activity under specific laboratory conditions. They do not establish the behavior of this spray or show that it works like GABA itself.",
     "plain": "Selank research includes measurements of GABA-related signals, not a confirmed simple receptor mechanism. Those findings concern the studied compound and conditions. They do not establish how this prepared liquid behaves or reaches an experimental target.",
@@ -642,7 +642,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "pt-141-spray": {
     "name": "PT-141 SPRAY",
     "aliases": [],
-    "summary": "A prepared PT-141 liquid with separate formulation questions.",
+    "summary": "How a peptide reaches receptors involved in nerve-cell messages. The prepared liquid is a separate research question.",
     "what": "PT-141 SPRAY is a prepared liquid containing PT-141. It is a different product from the non-spray form.",
     "study": "The background studies examine melanocortin receptors and nerve-signaling circuits. The supplier's spray would need its own evidence; studies of the parent compound do not establish the finished liquid's behavior.",
     "plain": "PT-141 research focuses on melanocortin signaling, including MC3 and MC4 receptors. A prepared spray is a separate formulation. The parent compound's research does not demonstrate this liquid's stability, delivery or effects.",
@@ -656,7 +656,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "melanotan-ii-spray": {
     "name": "Melanotan II Spray",
     "aliases": [],
-    "summary": "A prepared Melanotan II liquid, not a validated delivery method.",
+    "summary": "How a ring-shaped peptide interacts with several cell receiving points. The prepared liquid is a separate research question.",
     "what": "Melanotan II Spray is a prepared liquid containing Melanotan II. It is a different product from the non-spray form.",
     "study": "Researchers study the parent peptide at multiple melanocortin receptors. The exact prepared liquid is a different research question because formulation and delivery are not established by receptor studies.",
     "plain": "Melanotan II can interact with several melanocortin receptors in experimental systems. Those observations concern the studied molecule. They do not establish which responses, if any, occur with this supplier's prepared spray.",
@@ -671,7 +671,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "dsip-spray": {
     "name": "DSIP Spray",
     "aliases": [],
-    "summary": "A prepared DSIP liquid with an unresolved parent mechanism.",
+    "summary": "How a small peptide may affect the release of nerve-cell messages. The prepared liquid is a separate research question.",
     "what": "DSIP Spray is a prepared liquid containing DSIP. It is a different product from the non-spray form.",
     "study": "The background research concerns limited DSIP nerve-signaling observations. Neither the historical sleep-related name nor those experiments establish a mechanism or result for this prepared spray.",
     "plain": "The parent peptide's initial target remains uncertain. A spray format does not resolve that uncertainty or establish a sleep-related action. Both the molecule's proposed mechanism and the finished liquid's behavior require separate evidence.",
@@ -685,7 +685,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "bpc-tb-spray": {
     "name": "BPC-157/TB-500 Spray (Wolverine)",
     "aliases": [],
-    "summary": "A prepared two-peptide liquid requiring blend-specific evidence.",
+    "summary": "How two ingredients relate to cell movement and the frame inside cells. The prepared liquid is a separate research question.",
     "what": "BPC-157/TB-500 Spray (Wolverine) is a prepared liquid containing BPC-157 and TB-500. It is a different product from the non-spray form.",
     "study": "The ingredients have separate research backgrounds involving cell attachment and actin biology. The exact TB-500 form, combined mixture and prepared liquid each introduce questions not answered by individual-compound papers.",
     "plain": "This spray combines BPC-157 and TB-500 in a liquid. Ingredient studies do not prove how the blend behaves, and full thymosin beta-4 research may not describe the TB-500 form supplied. The finished formulation needs its own testing.",
@@ -700,7 +700,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "bpc-spray": {
     "name": "BPC-157 Spray",
     "aliases": [],
-    "summary": "A prepared BPC-157 liquid, separate from cell-study evidence.",
+    "summary": "How cells grip a surface, move and respond to stress in lab tests. The prepared liquid is a separate research question.",
     "what": "BPC-157 Spray is a prepared liquid containing BPC-157. It is a different product from the non-spray form.",
     "study": "The cited studies examine BPC-157 in experimental cell systems, including attachment-related signals. They do not test this prepared spray or establish that its formulation recreates the studied conditions.",
     "plain": "Cultured-cell studies measured attachment and movement-related signals after BPC-157 exposure. They do not establish this spray's behavior or delivery. The parent compound's first binding target also remains unresolved.",
@@ -715,7 +715,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "adalank-spray": {
     "name": "Adalank Spray",
     "aliases": ["N acetyl Selank amidate"],
-    "summary": "A modified Selank-related compound with limited direct evidence.",
+    "summary": "How changes to a Selank-like peptide might change the molecule’s behavior.",
     "what": "Adalank Spray contains a modified SELANK peptide. The partner identifies it as N-acetyl Selank amidate, meaning small chemical groups cap both ends of the chain.",
     "study": "Adalank changes the ends of the Selank-related peptide. The central question is how those changes affect the exact molecule; research on unmodified Selank cannot answer that by itself.",
     "plain": "Adalank is not simply another name for Selank. Chemical changes at the peptide's ends create a different compound. A direct mechanism has not been established by the cited parent research, which also does not validate the spray's stability or delivery.",
@@ -729,7 +729,7 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "adamax-spray": {
     "name": "Adamax Spray",
     "aliases": ["Ac MEHFPGPAG"],
-    "summary": "A modified Semax-related compound without a confirmed mechanism.",
+    "summary": "How changing a Semax-like peptide could affect its shape and behavior.",
     "what": "Adamax Spray contains a modified SEMAX-like peptide. The partner describes an acetylated chain with nine amino acids, compared with seven in SEMAX.",
     "study": "Adamax differs from Semax in both length and chemical modification. Research needs to address that exact structure and the prepared liquid, rather than transferring results from the shorter parent peptide.",
     "plain": "Adamax contains a modified, extended Semax-related sequence. Those changes mean it cannot be assumed to behave like Semax. The cited parent-compound studies do not establish a direct mechanism or validate this spray's formulation.",

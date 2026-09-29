@@ -81,8 +81,8 @@ check("Parent and background papers do not masquerade as formulation results",()
  }
 });
 check("Shared detail component renders paragraphs and source-specific qualifications",()=>{
- const text=fs.readFileSync("src/components/partners/product-detail-content.tsx","utf8");
+ const text=fs.readFileSync("src/app/products/[id]/page.tsx","utf8");
  assert.match(text,/data-product-mechanism/);assert.match(text,/data-mechanism-paragraph/);
- assert.match(text,/detail\.how\.split\("\\n\\n"\)/);assert.match(text,/source\.note/);
+ assert.match(text,/guide\.steps\.map/);assert.match(text,/source\.note/);
 });
 console.log(`${checks} mechanism checks passed. Content anchors do not substitute for scientific review or certify a reading grade.`);

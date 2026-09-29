@@ -1,3 +1,4 @@
+import "./test-product-guides";
 import "./test-product-mechanisms";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -13,7 +14,7 @@ check("independent partner-name fixture covers all fifty stable IDs",()=>{assert
 for(const product of SUPPLIER_PRODUCTS){
  check(`${product.id}: exact product name in catalog, artwork and searchable result`,()=>{
   assert.equal(product.name,names[product.id]);assert.equal(product.mark,names[product.id]);assert.equal(product.sourceUrl,`https://www.aminoclub.com/us/products/${product.id}`);
-  const result=BASE_SEARCH_ITEMS.find(i=>i.id===`product:${product.id}`)!;assert.equal(result.title,names[product.id]);assert.equal(result.description,product.summary);assert.equal(result.href,`/calculate/product/${product.id}`);
+  const result=BASE_SEARCH_ITEMS.find(i=>i.id===`product:${product.id}`)!;assert.equal(result.title,names[product.id]);assert.equal(result.description,product.summary);assert.equal(result.href,`/products/${product.id}`);
   assert.ok(productChoices().some(p=>p.product?.id===product.id&&p.name===product.name));
   assert.ok(matchDirectory(SUPPLIER_PRODUCTS,product.name).products.some(p=>p.id===product.id));
  });
@@ -42,7 +43,7 @@ check("calculation names update without changing numbers or explicit saved names
 });
 check("non-peptides and uncertain research forms are not misrepresented",()=>{assert.match(PRODUCT_RESEARCH["nad-plus"].what,/not a peptide/);assert.match(PRODUCT_RESEARCH["5-amino-1mq"].what,/not a peptide/);assert.match(PRODUCT_RESEARCH["tb-500"].limit,/full thymosin|one form/);assert.match(PRODUCT_RESEARCH["adalank-spray"].limit,/parent|direct|not/i);assert.match(PRODUCT_RESEARCH["adamax-spray"].how,/not|unknown|unclear/i);});
 check("all outbound product links retain owner attribution",()=>{for(const p of getSupplierCatalog()){assert.ok(p.paid);const u=new URL(p.href);assert.equal(u.search,"?utm_source=affiliate_marketing&code=WEBIQ");}});
-check("detail panel removes review metadata and attributes source product links",()=>{const s=fs.readFileSync("src/components/partners/product-detail-content.tsx","utf8");assert.doesNotMatch(s,/Listing review|CATALOG_CHECKED_AT|Catalog identifier|<time/);assert.match(s,/source.type===\"product\"\?product.href:source.url/);for(const h of ["What it is","What researchers study","How it works","Sources &amp; product checks"])assert.ok(s.includes(h));});
+check("quick look has a full-page link and leaves sources on the full page",()=>{const s=fs.readFileSync("src/components/partners/product-detail-content.tsx","utf8");assert.doesNotMatch(s,/Listing review|CATALOG_CHECKED_AT|Catalog identifier|<time/);assert.match(s,/View Full Details/);for(const h of ["What it is","What researchers study","How it works","What is not established"])assert.ok(s.includes(h));assert.ok(fs.readFileSync("src/app/products/[id]/page.tsx","utf8").includes("source.note"));});
 check("public commerce components use products, not listings",()=>{for(const folder of ["src/components/partners"]){for(const file of fs.readdirSync(folder).filter(f=>f.endsWith(".tsx"))){assert.doesNotMatch(fs.readFileSync(`${folder}/${file}`,"utf8"),/\blistings\b|Listing review|What this listing is/i);}}});
 check("plain explanations cover every product without replacing detailed evidence",()=>{
  const records=Object.values(PRODUCT_RESEARCH);
@@ -55,8 +56,8 @@ check("plain explanations cover every product without replacing detailed evidenc
  for(const id of ["klow","glow","wolverine-stack"]){assert.match(PRODUCT_RESEARCH[id].plain,/does not|cannot/);}
  for(const id of Object.keys(PRODUCT_RESEARCH).filter(id=>id.endsWith("spray"))){assert.match(PRODUCT_RESEARCH[id].plain,/does not|do not|did not/);}
  const component=fs.readFileSync("src/components/partners/product-detail-content.tsx","utf8");
- assert.match(component,/<p data-product-plain>\{detail.plain\}<\/p><details/);
- assert.match(component,/Read the mechanism and its limits/);
- assert.match(component,/data-product-sources/);
+ assert.match(component,/<p data-product-plain>\{guide.how\}<\/p>/);
+ assert.match(component,/View Full Details/);
+ assert.match(fs.readFileSync("src/app/products/[id]/page.tsx","utf8"),/data-product-sources/);
 });
 console.log(`${count} product naming, research content and presentation checks passed.`);

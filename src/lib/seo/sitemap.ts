@@ -1,4 +1,5 @@
 /** Shared public route inventory for segmented sitemaps and discovery exports. */
+import { SUPPLIER_PRODUCTS } from "../partners/supplier-catalog";
 export const SITE_URL=process.env.NEXT_PUBLIC_SITE_URL||"https://bacwater.ai";
 export type ChangeFreq="always"|"hourly"|"daily"|"weekly"|"monthly"|"yearly"|"never";
 export interface SitemapUrl{path:string;lastModified?:Date;changeFrequency?:ChangeFreq;priority?:number}
@@ -7,6 +8,7 @@ export function urlsetXml(urls:SitemapUrl[]){const body=[...new Map(urls.map(u=>
 export function sitemapIndexXml(paths:string[]){return `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${paths.map(p=>`<sitemap><loc>${escapeXml(SITE_URL+p)}</loc></sitemap>`).join("")}</sitemapindex>`;}
 export function xmlResponse(xml:string){return new Response(xml,{headers:{"Content-Type":"application/xml","Cache-Control":"public, max-age=0, s-maxage=0, must-revalidate"}});}
 export const STATIC_PAGES:SitemapUrl[]=[
+ ...SUPPLIER_PRODUCTS.map(p=>({path:`/products/${p.id}`,changeFrequency:"monthly" as const,priority:0.6})),
  {path:"/share-tools",lastModified:new Date("2026-09-28T00:00:00Z"),changeFrequency:"monthly",priority:0.6},
  {path:"/recommendations",changeFrequency:"weekly",priority:0.7},
  {path:"/embed",changeFrequency:"monthly",priority:0.6},

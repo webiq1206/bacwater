@@ -68,11 +68,7 @@ for (const config of configurations) {
     await rt.press('Enter');
     const detail = page.locator('[data-product-detail]');
     await expect(detail.getByRole('heading', { name: 'GLP-3 (RT)', exact: true })).toBeVisible();
-    const supplier = detail.getByRole('link', { name: 'View GLP-3 (RT) on the supplier website, opens a new tab', exact: true });
-    const href = new URL(await supplier.getAttribute('href'));
-    assert.equal(href.searchParams.get('code'), 'WEBIQ');
-    assert.equal(href.searchParams.get('utm_source'), 'affiliate_marketing');
-    assert.match(await supplier.getAttribute('rel'), /sponsored/);
+    await expect(detail.getByRole('link', {name:'View Full Details',exact:true})).toHaveAttribute('href','/products/glp-3');
     await page.keyboard.press('Escape');
     await expect(detail).toHaveCount(0);
     await expect(rt).toBeFocused();

@@ -1,4 +1,4 @@
-import { productDisplayName } from "@/lib/partners/supplier-catalog";
+import { productDisplayName, SUPPLIER_PRODUCTS } from "@/lib/partners/supplier-catalog";
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -40,6 +40,7 @@ export const metadata: Metadata = withSocialMetadata({
  * page still renders a sensible link rather than being dropped.
  */
 const LABELS: Record<string, string> = {
+  ...Object.fromEntries(SUPPLIER_PRODUCTS.map(p=>[`/products/${p.id}`,`${p.name}: research guide`])),
   "": "Home",
   "/recommendations": "Research product directory",
   "/methodology": "Calculator formulas and limitations",

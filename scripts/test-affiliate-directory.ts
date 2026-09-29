@@ -1,5 +1,6 @@
 import { PRODUCT_RESEARCH } from "../src/lib/partners/product-content";
 import assert from "node:assert/strict";
+import { RESEARCH_CATEGORIES, researchCategory } from "../src/lib/partners/research-categories";
 import fs from "node:fs";
 import { APPROVED_AFFILIATE_URL, SUPPLIER_PRODUCTS, affiliateProductUrl, getApprovedSupplierCatalog, getSupplierCatalog } from "../src/lib/partners/supplier-catalog";
 import { matchDirectory } from "../src/lib/partners/product-directory";
@@ -11,6 +12,20 @@ test("default production catalog is active and the emergency pause works",()=>{c
 for(const bad of ["http://www.aminoclub.com/us/products/bpc-157","https://www.aminoclub.com.attacker.invalid/us/products/bpc-157","https://user:pass@www.aminoclub.com/us/products/bpc-157","https://www.aminoclub.com/us/products/bpc-157?email=private","https://www.aminoclub.com/us/products/bpc-157#private","https://www.aminoclub.com/account","javascript:alert(1)"])test("reject unexpected destination",()=>assert.throws(()=>affiliateProductUrl(bad)));
 test("all 50 entries have distinct, nonempty research details",()=>{assert.equal(SUPPLIER_PRODUCTS.length,50);const texts=SUPPLIER_PRODUCTS.map(p => { const d = PRODUCT_RESEARCH[p.id]; return `${d.what} ${d.study} ${d.how}`; });assert.equal(new Set(texts).size,50);assert.ok(texts.every(s=>s.length>90));});
 test("empty search retains all products",()=>assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"").products.length,50));
+test("research categories retain every product exactly once",()=>{
+ const ids=RESEARCH_CATEGORIES.flatMap(c=>matchDirectory(SUPPLIER_PRODUCTS,"","all",c.id).products.map(p=>p.id));
+ assert.equal(ids.length,50);assert.equal(new Set(ids).size,50);
+ const sourced=RESEARCH_CATEGORIES.filter(c=>!["lab-supplies","additional"].includes(c.id)).flatMap(c=>[...c.products]);
+ assert.equal(sourced.length,29);assert.equal(new Set(sourced).size,29);
+ for(const id of sourced)assert.ok(SUPPLIER_PRODUCTS.some(p=>p.id===id),id);
+ assert.equal(researchCategory("semax-spray").id,"additional");
+});
+test("category, format and name filters intersect without suggesting substitutes",()=>{
+ assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"","blend","dermal").products.map(p=>p.id).sort(),["glow","klow"]);
+ assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"BPC-157","all","tissue").products.map(p=>p.id),["bpc-157","wolverine-stack"]);
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"BPC-157","all","cellular").products.length,0);
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"best for skin","all","dermal").scope,"restricted");
+});
 for(const p of SUPPLIER_PRODUCTS)test(`exact listing name remains findable: ${p.id}`,()=>assert.ok(matchDirectory(SUPPLIER_PRODUCTS,p.name).products.some(x=>x.id===p.id)));
 test("natural wording finds laboratory water",()=>assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"Please show me lab water").products.map(p=>p.id),["amino-h2o"]));
 test("natural wording respects solution format",()=>{const found=matchDirectory(SUPPLIER_PRODUCTS,"Find NAD+ solutions").products;assert.deepEqual(found.map(p=>p.id),["nad-plus-spray"]);});

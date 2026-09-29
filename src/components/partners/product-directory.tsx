@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
 import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct, type ProductKind } from "@/lib/partners/supplier-catalog";
@@ -7,39 +8,43 @@ import { ProductSearchField } from "@/components/search/product-search-field";
 import searchStyles from "@/components/search/product-search.module.css";
 import { ProductArtwork } from "./product-artwork";
 import { ProductQuickView } from "./product-quick-view";
+import { ResearchCategoryFilter } from "@/components/partners/research-category-filter";
+import { matchesResearchCategory, researchCategory, type ResearchCategory } from "@/lib/partners/research-categories";
 import styles from "./product-directory.module.css";
 
 const PAGE_SIZE=12;
 export function ProductDirectory({products}:{products:readonly DisplaySupplierProduct[]}) {
   const [query,setQuery]=useState(""),[kind,setKind]=useState<ProductKind|"all">("all"),[sort,setSort]=useState("az"),[page,setPage]=useState(1);
+  const [category,setCategory]=useState<ResearchCategory|"all">("all");
   const [suggestions,setSuggestions]=useState(true);
   const input=useRef<HTMLInputElement>(null),results=useRef<HTMLHeadingElement>(null);
-  const match=useMemo(()=>matchDirectory(products,query,kind),[products,query,kind]);
+  const match=useMemo(()=>matchDirectory(products,query,kind,category),[products,query,kind,category]);
   const filtered=useMemo(()=>[...match.products].sort((a,b)=>sort==="za"?b.name.localeCompare(a.name):a.name.localeCompare(b.name)),[match.products,sort]);
   const pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE)),current=Math.min(page,pages),start=(current-1)*PAGE_SIZE;
   function search(value:string){setQuery(value);setPage(1);setSuggestions(true);}
-  function reset(){setQuery("");setKind("all");setPage(1);input.current?.focus();}
+  function reset(){setQuery("");setKind("all");setCategory("all");setPage(1);input.current?.focus();}
   function browse(){setSuggestions(false);input.current?.blur();results.current?.focus({preventScroll:true});results.current?.scrollIntoView({block:"start",behavior:"auto"});}
   function turn(value:number){setPage(value);browse();}
   return <section className={styles.directory} data-product-directory aria-label="Research product directory">
     <div className={`${styles.searchPanel} ${searchStyles.directoryPanel}`}>
       <ProductSearchField query={query} onChange={search} match={{...match,products:filtered}} inputId="research-product-search" inputRef={input} onBrowse={browse} suggestions={suggestions}/>
       <div className={styles.controls}>
+        <ResearchCategoryFilter value={category} onChange={value=>{setCategory(value);setPage(1);}} products={products}/>
         <label>Product type<select aria-label="Product type" value={kind} onChange={e=>{setKind(e.target.value as ProductKind|"all");setPage(1);}}>{DIRECTORY_KINDS.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
         <label>Sort by<select aria-label="Sort products" value={sort} onChange={e=>{setSort(e.target.value);setPage(1);}}><option value="az">Name: A to Z</option><option value="za">Name: Z to A</option></select></label>
       </div>
-      <div className={styles.examples} aria-label="Example product searches"><span>Try:</span>{["Show me lab water","Find BPC-157","Show me sprays"].map(value=><button key={value} type="button" onClick={()=>{setKind("all");search(value);}}>{value}</button>)}</div>
+      <div className={styles.examples} aria-label="Example product searches"><span>Try:</span>{["Show me lab water","Find BPC-157","Show me sprays"].map(value=><button key={value} type="button" onClick={()=>{setKind("all");setCategory("all");search(value);}}>{value}</button>)}</div>
     </div>
     <div className={styles.resultsHeader}>
       <div><h2 ref={results} tabIndex={-1} className={styles.resultsTitle}>Browse the directory</h2><p role="status" aria-live="polite" aria-atomic="true">{filtered.length?`${filtered.length} ${filtered.length===1?"product":"products"}. Showing ${start+1} to ${Math.min(start+PAGE_SIZE,filtered.length)}.`:match.message}</p></div>
-      {(query||kind!=="all")&&<button type="button" className={styles.reset} onClick={reset}>Clear filters <X size={15} aria-hidden="true"/></button>}
+      {(query||kind!=="all"||category!=="all")&&<button type="button" className={styles.reset} onClick={reset}>Clear filters <X size={15} aria-hidden="true"/></button>}
     </div>
     {!filtered.length?<div className={styles.empty} data-search-scope={match.scope}><h3>{match.scope==="restricted"?"Research products, not personal-use advice.":"No matching products."}</h3><p>{match.message}</p><button type="button" onClick={reset}>Browse all products</button></div>:<>
       <div className={styles.grid}>
         {/* Avoid native hidden: the CSS reset gives it layered !important priority over the no-script fallback. */}
         {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} data-page-hidden={index<start||index>=start+PAGE_SIZE?"true":undefined} style={index<start||index>=start+PAGE_SIZE?{display:"none"}:undefined}>
           <div className={styles.art}><ProductArtwork product={product}/></div>
-          <div className={styles.cardBody}><p className={styles.eyebrow}>{product.label}</p><h3>{product.name}</h3><p className={styles.summary}>{product.summary}</p><p className={styles.researchNote}>{RESEARCH_ONLY_NOTICE}</p><ProductQuickView product={product}/><p className={styles.disclosure}>{product.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."}</p><a className={styles.cardSupplier} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View product <ArrowUpRight size={17} aria-hidden="true"/></a></div>
+          <div className={styles.cardBody}><p className={styles.eyebrow}>{researchCategory(product.id).label} · {product.label}</p><h3><Link href={`/products/${product.id}`}>{product.name}</Link></h3><p className={styles.summary}>{product.summary}</p><p className={styles.researchNote}>{RESEARCH_ONLY_NOTICE}</p><ProductQuickView product={product}/><p className={styles.disclosure}>{product.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."}</p><a className={styles.cardSupplier} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View product <ArrowUpRight size={17} aria-hidden="true"/></a></div>
         </article>)}
       </div>
       {pages>1&&<nav className={styles.pagination} aria-label="Product pages"><button type="button" disabled={current===1} onClick={()=>turn(current-1)}><ArrowLeft size={18} aria-hidden="true"/>Previous</button><span>Page {current} of {pages}</span><button type="button" disabled={current===pages} onClick={()=>turn(current+1)}>Next<ArrowRight size={18} aria-hidden="true"/></button></nav>}

@@ -10,6 +10,8 @@ import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, SUPPLIER_PRODUCTS, productC
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { useSupplierCatalog } from "./supplier-context";
 import { ProductArtwork } from "./product-artwork";
+import { ResearchCategoryFilter } from "@/components/partners/research-category-filter";
+import { matchesResearchCategory, researchCategory, type ResearchCategory } from "@/lib/partners/research-categories";
 import styles from "./calculator-products.module.css";
 const ignoreSelection = (_id: string | null) => {};
 export const ProductSelectionContext = createContext<(id:string|null)=>void>(ignoreSelection);
@@ -22,7 +24,8 @@ export function CalculatorProductTools({selectedId,showProductPicker=true}:{sele
  const catalog=useSupplierCatalog(),product=catalog.find(p=>p.id===selectedId),water=catalog[0];
  const [open,setOpen]=useState(false),[query,setQuery]=useState(""),[kind,setKind]=useState("all");
  const path=usePathname();useEffect(()=>{setOpen(false);},[path]);
- const filtered=catalog.filter(p=>(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.reference} ${(p.aliases||[]).join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
+ const [category,setCategory]=useState<ResearchCategory|"all">("all");
+ const filtered=catalog.filter(p=>matchesResearchCategory(p.id,category)&&(kind==="all"||p.kind===kind)&&`${p.name} ${p.id} ${p.reference} ${(p.aliases||[]).join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
  return <div className={styles.tools} data-calculator-products>
   <div className={styles.toolbar}>
    {showProductPicker && <Dialog open={open} onOpenChange={setOpen}>
@@ -31,15 +34,16 @@ export function CalculatorProductTools({selectedId,showProductPicker=true}:{sele
      <DialogTitle className={styles.title}>Choose a product</DialogTitle>
      <DialogDescription>Pick the exact product. Your entered numbers follow you between matching calculator types in this tab. Check them against the new label. Blends, solutions, water and IU use separate fields. {RESEARCH_ONLY_NOTICE}</DialogDescription>
      <label className={styles.search}>Find a product<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search by name" autoComplete="off" /></label>
+     <ResearchCategoryFilter value={category} onChange={setCategory} products={catalog}/>
      <label className={styles.search}>Product type<select aria-label="Product type" value={kind} onChange={e=>setKind(e.target.value)}><option value="all">All products</option><option value="single">Single compounds</option><option value="blend">Blends</option><option value="spray">Sprays and solutions</option><option value="water">Lab water</option></select></label>
      <p className={styles.count} role="status">{filtered.length} of {catalog.length} products</p>
      <div className={styles.list} role="region" aria-label="Product choices" tabIndex={0}>
       {filtered.length?<ul>{filtered.map(p=><li key={p.id}>
        <Link className={styles.option} href={productCalculatorPath(p.id)} onClick={()=>{chooseCalculationProduct(p.id,p.kind,p.reference||"");setOpen(false);}} data-product-choice={p.id}>
         <span className={styles.thumb}><ProductArtwork product={p} compact/></span>
-        <span><strong>{p.name}</strong><small>{p.label}</small></span><ChevronDown size={15} aria-hidden="true" style={{transform:"rotate(-90deg)"}}/>
+        <span><strong>{p.name}</strong><small>{researchCategory(p.id).label} · {p.label}</small></span><ChevronDown size={15} aria-hidden="true" style={{transform:"rotate(-90deg)"}}/>
        </Link>
-      </li>)}</ul>:<p>No matches. Try another name or choose All products.</p>}
+      </li>)}</ul>:<p>No matches. Try another name, or choose All categories and All products.</p>}
      </div>
      <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>Our own artwork, not product packaging. {catalog.some(p=>p.paid)&&"We may earn a commission from supplier purchases."}</p>
     </DialogContent>
