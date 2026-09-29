@@ -1,9 +1,9 @@
 /** Compact catalog copy. Keep in sync with the reviewed research records. */
 export const PRODUCT_CATALOG_COPY: Record<string, {name:string;aliases:readonly string[];summary:string}> = {
   "amino-h2o": {
-    "name": "Amino H2O",
+    "name": "BAC Water",
     "aliases": [
-      "BAC water",
+      "Amino H2O",
       "bacteriostatic water",
       "H2O"
     ],

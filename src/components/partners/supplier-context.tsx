@@ -9,11 +9,11 @@ const WaterContext = createContext<DisplaySupplierProduct>(approved[0]);
 export function SupplierProvider({water, products, children}:{water:DisplaySupplierProduct;products?:readonly DisplaySupplierProduct[];children:ReactNode}) {
   return <CatalogContext.Provider value={products||approved}><WaterContext.Provider value={water}>{children}</WaterContext.Provider></CatalogContext.Provider>;
 }
-export function SupplierWaterLink({compact=false}:{compact?:boolean}) {
+export function SupplierWaterLink({compact=false,showNotice=true}:{compact?:boolean;showNotice?:boolean}) {
   const water=useContext(WaterContext);
   return <div className={compact ? "bac-water-link compact" : "bac-water-link"} data-bac-water-link>
     <a href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`Buy ${water.name} from our partner, opens a new tab`}>
       <Droplets size={18} aria-hidden="true"/><span>Buy {water.name}</span><ArrowUpRight size={17} aria-hidden="true"/>
-    </a><p style={{fontSize:13,lineHeight:1.6}}>{water.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p>
+    </a>{showNotice&&<p style={{fontSize:13,lineHeight:1.6}}>{water.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p>}
   </div>;
 }

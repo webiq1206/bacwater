@@ -17,10 +17,10 @@ export interface ProductResearch {
 }
 export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
   "amino-h2o": {
-    "name": "Amino H2O",
-    "aliases": ["BAC water", "bacteriostatic water", "H2O"],
+    "name": "BAC Water",
+    "aliases": ["Amino H2O", "bacteriostatic water", "H2O"],
     "summary": "Whether a lab sample dissolves in this water and stays unchanged.",
-    "what": "Amino H2O is water with 0.9% benzyl alcohol, a preservative. It is a lab supply, not a peptide.",
+    "what": "BAC Water is water with 0.9% benzyl alcohol, a preservative that slows bacterial growth. It is a lab supply, not a peptide.",
     "study": "The question is whether a liquid is compatible with a particular laboratory sample. Dissolving a compound, limiting bacterial growth and confirming sterility are separate checks.",
     "plain": "Water holds compounds that can dissolve in it. Benzyl alcohol slows bacterial growth, but does not sterilize contaminated material. Neither ingredient establishes whether this liquid is compatible with a specific sample.",
     "how": "Water molecules surround and separate parts of a compound that can dissolve in water. That lets the material spread through the liquid instead of remaining a dry powder. Whether a particular compound dissolves and stays intact depends on its chemistry.\n\nThe added benzyl alcohol is a preservative that slows bacterial growth in the liquid. It is not a filter, does not remove toxins, and does not turn contaminated material into a sterile sample. Water and preservative do different jobs: one holds the sample; the other limits microbial growth.",

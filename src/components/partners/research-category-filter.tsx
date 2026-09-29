@@ -10,6 +10,5 @@ export function ResearchCategoryFilter({value,onChange,products}:{value:Research
         return count>0?<option key={category.id} value={category.id}>{category.label} ({count})</option>:null;
       })}
     </select>
-    <span className={styles.note}>Browse research topics. Categories do not establish a product’s effects or suitability.</span>
   </label>;
 }

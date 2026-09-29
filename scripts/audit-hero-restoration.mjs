@@ -123,7 +123,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await expect.poll(()=>focus.evaluate(el=>Math.round(el.getBoundingClientRect().height))).toBe(420);const back=focus.getByRole('button',{name:'Back to homepage',exact:true});await expect(back).toBeInViewport();await back.click();
   }));
   await check(`${engine}: product-first routes retain product-specific blend, solution, water and IU tools`,async()=>{
-   for(const [name,path] of [['GLOW','/calculate/product/glow'],['KLOW','/calculate/product/klow'],['CJC-1295 / Ipamorelin (No DAC)','/calculate/product/cjc-ipa-no-dac'],['BPC-157/TB-500 (Wolverine)','/calculate/product/wolverine-stack'],['BPC-157/TB-500 Spray (Wolverine)','/calculate/product/bpc-tb-spray'],['Amino H2O','/calculate/product/amino-h2o'],['HCG (Research)','/calculate/hcg']])await journey(390,844,async p=>{
+   for(const [name,path] of [['GLOW','/calculate/product/glow'],['KLOW','/calculate/product/klow'],['CJC-1295 / Ipamorelin (No DAC)','/calculate/product/cjc-ipa-no-dac'],['BPC-157/TB-500 (Wolverine)','/calculate/product/wolverine-stack'],['BPC-157/TB-500 Spray (Wolverine)','/calculate/product/bpc-tb-spray'],['BAC Water','/calculate/product/amino-h2o'],['HCG (Research)','/calculate/hcg']])await journey(390,844,async p=>{
     await p.locator('[data-hero-calculator]').getByRole('combobox',{name:'Product',exact:true}).click();
     const picker=p.getByRole('dialog',{name:'Choose your product',exact:true});await picker.getByRole('searchbox',{name:'Search products',exact:true}).fill(name);
     await picker.getByRole('option',{name,exact:true}).click();await expect(p).toHaveURL(origin+path);await expect(p.locator('[data-calculator-workspace]')).toBeVisible();
