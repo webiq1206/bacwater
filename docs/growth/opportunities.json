@@ -98,6 +98,99 @@
       },
       "nextStep": "Check public listing status in a future growth run, initially October 6; no specific review deadline or submission ID was provided. Do not resubmit.",
       "spend": 0
+    },
+    {
+      "id": "publictools-calculator-submission",
+      "status": "submitted_pending_review",
+      "channel": "tool_directory",
+      "canonicalUrl": "https://public.tools/",
+      "submissionUrl": "https://tally.so/r/Gx75Qz",
+      "discoveredAt": "2026-09-29",
+      "submittedAt": "2026-09-29",
+      "specificNeed": "Curated free no-account tool catalog includes a Utilities category for calculators and converters. Official footer linked to this Tally submission form.",
+      "matchingTool": {
+        "name": "BACwater.ai Research Calculators",
+        "url": "https://bacwater.ai"
+      },
+      "submission": {
+        "category": "Utilities",
+        "researchOnly": true,
+        "affiliationDisclosed": true,
+        "affiliateLinksDisclosed": true
+      },
+      "confirmation": {
+        "heading": "Thanks for completing this form!",
+        "message": "Form submitted",
+        "verifiedVia": "Rendered Tally success page following submission",
+        "receipt": "bacwater-publictools-receipt.jpg"
+      },
+      "nextStep": "Check public catalog around October 6. No review deadline, submission ID or listing URL was returned. Do not resubmit.",
+      "spend": 0
+    },
+    {
+      "id": "nouploadtools-calculator-submission",
+      "status": "submitted_pending_review",
+      "channel": "calculator_directory",
+      "canonicalUrl": "https://nouploadtools.com/submit",
+      "discoveredAt": "2026-09-29",
+      "submittedAt": "2026-09-29",
+      "specificNeed": "Free directory includes Data & Calculators and accepts tools whose core functions work without login. Current repository confirms the mass converter calculates in a client component.",
+      "matchingTool": {
+        "name": "BACwater.ai Research Calculators",
+        "url": "https://bacwater.ai"
+      },
+      "submission": {
+        "category": "Data & Calculators",
+        "privacyFeatures": [
+          "Zero login"
+        ],
+        "contactIdentity": "Authorized WEB IQ business email",
+        "researchOnly": true,
+        "affiliationDisclosed": true,
+        "affiliateLinksDisclosed": true,
+        "description": "Free browser calculators using your own values for laboratory research arithmetic. Core tools need no login. No dosing, treatment or mixing recommendations. Optional saved plans are separate. Submitted by WEB IQ for BACwater.ai; supplier links are disclosed affiliate links."
+      },
+      "confirmation": {
+        "heading": "Submission received",
+        "message": "Will review and email when it goes live. Usually 1-3 days. Site also warns of a submission backlog.",
+        "verifiedVia": "Browser rendered success state",
+        "receipt": "bacwater-nouploadtools-confirmed.jpg"
+      },
+      "nextStep": "Check for public listing October 2, then October 6 if backlog persists. Do not resubmit.",
+      "spend": 0
+    },
+    {
+      "id": "nosignuptools-calculator-submission",
+      "status": "submission_attempted_receipt_unconfirmed",
+      "channel": "tool_directory",
+      "canonicalUrl": "https://nosignuptools.com/submit",
+      "discoveredAt": "2026-09-29",
+      "lastAttemptAt": "2026-09-29",
+      "specificNeed": "Math & STEM category accepts free core calculator features without signup.",
+      "matchingTool": {
+        "name": "BACwater.ai Research Calculators",
+        "url": "https://bacwater.ai"
+      },
+      "submission": {
+        "category": "Math & STEM",
+        "tags": [
+          "Mobile Friendly"
+        ],
+        "contactIdentity": "Authorized WEB IQ business email",
+        "researchOnly": true,
+        "affiliationDisclosed": true,
+        "affiliateLinksDisclosed": true,
+        "assets": [
+          "Existing droplet brand icon reconstructed exactly from src/app/icon.tsx",
+          "Live homepage screenshot including age-check banner"
+        ]
+      },
+      "confirmation": {
+        "verifiedVia": "After client validation for required icon and screenshot was resolved, submit button changed to disabled Submitting, then the form reset. No explicit success message or receipt was captured.",
+        "certainty": "Unconfirmed; do not count as confirmed submission or live listing."
+      },
+      "nextStep": "Check directory and any authorized business-mail confirmation after the advertised 24-48 hour review period, initially October 1. Do not resubmit until the first attempt's outcome is resolved.",
+      "spend": 0
     }
   ],
   "researchNotes": [
@@ -140,6 +233,30 @@
       "reviewedAt": "2026-09-29",
       "status": "qualified_email_route_not_submitted",
       "reason": "Official homepage invites free tool submissions by contact email; core calculators need no account. Contact page has no submission form. Authenticated WEB IQ sender has not been verified for this route; no email sent."
+    },
+    {
+      "url": "https://www.directree.io/submit",
+      "status": "requires_account",
+      "reason": "Official submit page requires free account before URL submission. No account created or listing submitted.",
+      "reviewedAt": "2026-09-29"
+    },
+    {
+      "url": "https://www.justsimple.tools/submit",
+      "status": "skipped_reciprocal_link_requirement",
+      "reason": "Free listing requires sign-in plus validated dofollow backlink. Paid alternative skipped under zero-spend constraint.",
+      "reviewedAt": "2026-09-29"
+    },
+    {
+      "url": "https://www.thelaunchwall.com/submit",
+      "status": "prepared_missing_verified_x_handle",
+      "reason": "Filled a free Already launched entry in Education. Submission validation requires an X handle so the publisher can tag the owner. No verified BACwater or WEB IQ X handle was available; no fabricated handle entered and no successful submission.",
+      "reviewedAt": "2026-09-29"
+    },
+    {
+      "url": "https://www.launchingnext.com/submit/",
+      "status": "blocked_verification_redirect_error",
+      "reason": "Browser displayed request verification then a 404 at its generated verification URL after one reload. No form reached and nothing submitted.",
+      "reviewedAt": "2026-09-29"
     }
   ]
 }
