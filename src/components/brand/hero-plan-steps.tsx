@@ -91,7 +91,7 @@ export function HeroPlanSteps(p: Props) {
     </div>}
     {ready && step >= 3 && <div className={`${styles.result} ${step < 5 ? styles.resultPreview : ""}`} data-live-result role="status" aria-live="polite" aria-atomic="true">
       <div className={styles.resultTop}><span>Liquid for each time</span>{step === 5 ? <button type="button" onClick={copy} aria-label="Copy result" title="Copy result"><Copy size={16} aria-hidden="true"/></button> : <Check size={16} aria-hidden="true"/>}</div>
-      <p className={styles.value}><strong className={volume.length > 11 ? styles.longValue : undefined}>{volume.replace(/ mL$/, "")}</strong><span>mL</span><span className={styles.readout}>{readout} on {p.result.syringeReadout.kind === "u100" ? "U-100" : "mL"} scale</span></p>
+      <p className={styles.value}><strong className={volume.length > 11 ? styles.longValue : undefined}>{volume.replace(/ mL$/, "")}</strong>{" "}<span>mL</span><span className={styles.readout}>{readout} on {p.result.syringeReadout.kind === "u100" ? "U-100" : "mL"} scale</span></p>
       {step === 5 && <><p className={styles.formula}>{formula}</p><p className={styles.formula}>{formatDose(p.result.schedule?.dosePerInjectionMcg ?? p.result.input.doseMcg)} for one time = {volume}</p><p className={styles.scaleNote}>Readings may be rounded. Check your device's markings.</p></>}
     </div>}
     {p.preview.issues.length > 0 && step >= 4 && <ul className={styles.stepErrors} role="alert">{p.preview.issues.map(issue => <li key={issue}>{issue}</li>)}</ul>}

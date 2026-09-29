@@ -4,13 +4,14 @@ import fs from "node:fs";
 import { withSocialMetadata } from "../src/lib/seo/social-metadata";
 import { SEARCH_SNIPPETS, FACET_SNIPPETS, searchSnippet, shareImage } from "../src/lib/seo/search-appearance";
 import { STATIC_PAGES } from "../src/lib/seo/sitemap";
+import { SUPPLIER_PRODUCTS } from "../src/lib/partners/supplier-catalog";
 import { PEPTIDES } from "../src/lib/calc/peptides";
 import { COMPARISONS } from "../src/lib/comparisons/content";
 import { GET } from "../src/app/share-image/route";
 import { GET as favicon } from "../src/app/favicon.ico/route";
 
 async function main() {
-  const paths = [...Object.keys(ARTICLE_GUIDES).map(slug => `/learn/${slug}`), ...Object.keys(SEARCH_SNIPPETS), ...Object.keys(FACET_SNIPPETS), ...PEPTIDES.map(p => `/peptides/${p.slug}`), ...COMPARISONS.map(c => `/learn/vs/${c.slug}`)];
+  const paths = [...SUPPLIER_PRODUCTS.map(p => `/products/${p.id}`), ...Object.keys(ARTICLE_GUIDES).map(slug => `/learn/${slug}`), ...Object.keys(SEARCH_SNIPPETS), ...Object.keys(FACET_SNIPPETS), ...PEPTIDES.map(p => `/peptides/${p.slug}`), ...COMPARISONS.map(c => `/learn/vs/${c.slug}`)];
   for (const page of STATIC_PAGES) assert.ok(searchSnippet(page.path || "/"), `Missing static page: ${page.path}`);
   const titles = new Set<string>();
   for (const path of paths) {

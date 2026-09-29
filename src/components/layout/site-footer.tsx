@@ -9,7 +9,7 @@ import { RESEARCH_DISCLAIMER, FDA_DISCLAIMER, AFFILIATE_DISCLAIMER } from "@/lib
 
 const FOOTER = {
   Product: [
-    { href: "/research-finder", label: "Research finder" },
+    { href: "/research-finder", label: "Research assistant" },
     { href: "/peptide-calculator", label: "Peptide Calculator" },
     { href: "/plan", label: "Build My Plan" },
     { href: "/peptides", label: "Compound guide" },

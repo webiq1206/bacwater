@@ -10,7 +10,8 @@ export const RESEARCH_TOPICS:readonly ResearchTopic[]=[
  {id:"support",label:"The support around cells",words:/\b(copper|collagen|matrix|support around cells|ghk|ahk|follicle\w*|skin|hair|wrinkle\w*)\b/i,question:"the material that supports cells, and copper-related research",products:["ghk-cu","ahk-cu","glow","klow","ghkcu-spray"]},
  {id:"fuel",label:"How cells use fuel",words:/\b(fuel|metaboli\w*|nad|mitochondri\w*|ampk|aicar|nnmt|nicotinamide|electron\w*|energy|longevity)\b/i,question:"how cells use fuel and reuse the chemicals that help",products:["mots-c","nad-plus","5-amino-1mq","nad-plus-spray"]},
  {id:"sugar",label:"Sugar-related cell messages",words:/\b(glucose|sugar|insulin|glp|gip|glucagon|amylin|calcitonin)\b/i,question:"cell messages related to sugar and food",products:["glp-1","glp-2","glp-3","cagrilintide"]},
- {id:"nerve",label:"Messages between nerve cells",words:/\b(nerve\w*|neuron\w*|brain|gaba|bdnf|trkb|enkephalin|snap|synap\w*|memory|focus|sleep|anxiety)\b/i,question:"how nerve cells pass, release or respond to messages",products:["semax","selank","dsip","snap-8","semax-spray","selank-spray","dsip-spray","adalank-spray","adamax-spray"]},
+ {id:"nerve",label:"Messages between nerve cells",words:/\b(nerve\w*|neuron\w*|brain|gaba|bdnf|trkb|enkephalin|snap|synap\w*|memory|focus|anxiety)\b/i,question:"how nerve cells pass, release or respond to messages",products:["semax","selank","dsip","snap-8","semax-spray","selank-spray","dsip-spray","adalank-spray","adamax-spray"]},
+ {id:"sleep",label:"Sleep research",words:/\b(sleep|insomnia)\b/i,question:"sleep in early DSIP studies",products:["dsip","dsip-spray"]},
  {id:"gland",label:"How glands release messages",words:/\b(pituitary|gland\w*|ghrelin|ghrh|growth hormone|hormone release)\b/i,question:"how a small gland releases chemical messages called hormones",products:["ipamorelin","tesamorlin","sermorelin","cjc-ipa-no-dac"]},
  {id:"immune",label:"How cells detect threats",words:/\b(immune|inflamm\w*|alarm|dendritic|pept1|toll|il 12|detect threats)\b/i,question:"how cells detect a trigger and send alarm messages",products:["kpv","thymosin-alpha-1","klow"]},
  {id:"barrier",label:"The thin barrier around a cell",words:/\b(membrane\w*|barrier\w*|bacteri\w*|microb\w*|antimicrobial)\b/i,question:"how a peptide changes a cell’s thin outer barrier",products:["ll-37"]},
@@ -27,7 +28,15 @@ export interface FinderContext { topic?:string; productIds?:string[]; format?:Pr
 export interface FinderMatch { id:string; why:string; finding:string; model:string; source:string; limit:string; evidence:string; }
 export interface FinderReply { text:string; options:string[]; matches:FinderMatch[]; context:FinderContext; scope:"results"|"clarify"|"restricted"|"unknown"|"tools"; links?:FinderLink[]; detail?:"study"|"how"; }
 export interface FinderLink {label:string;href:string;}
-export const FINDER_STARTERS=["Weight-loss research","How do cells move?","Find a calculator","What can you help with?"];
+export const FINDER_SUGGESTIONS=[
+ {label:"Weight-loss research",question:"What products are studied for weight loss?"},
+ {label:"Skin and hair",question:"What products are studied for skin and hair?"},
+ {label:"Tissue repair",question:"What products are studied for tissue repair?"},
+ {label:"Sleep research",question:"What products are studied for sleep?"},
+ {label:"Cell energy",question:"What products are studied for cell energy?"},
+ {label:"Immune system",question:"What products are studied for the immune system?"},
+] as const;
+export const FINDER_STARTERS=FINDER_SUGGESTIONS.map(s=>s.question);
 const normalize=(s:string)=>s.normalize("NFKC").toLowerCase().replace(/[\u200b-\u200f\ufeff]/g,"").replace(/[^a-z0-9+]+/g," ").trim();
 const catalogIds=new Set(SUPPLIER_PRODUCTS.map(p=>p.id));
 const reply=(text:string,options:string[]=FINDER_STARTERS,context:FinderContext={},scope:FinderReply["scope"]="clarify"):FinderReply=>({text,options,matches:[],context,scope});
@@ -61,6 +70,8 @@ export const WEIGHT_RESEARCH:Record<string,Pick<FinderMatch,"why"|"finding"|"mod
  "glp-3":{why:"Linked to retatrutide research on body weight and three hormone messages.",finding:"In this trial, retatrutide groups lost more weight on average than the placebo group. A placebo has no active drug. Stomach and bowel problems were common. Heart rate also rose with increasing study amounts. This was a mid-stage trial, not a test of a catalog product.",model:"Phase 2 trial, 2023: 338 adults, 48 weeks",source:"https://pubmed.ncbi.nlm.nih.gov/37366315/",limit:"These findings concern the study medicine. They do not show that the supplier’s GLP-3 vial is safe or suitable for use in people.",evidence:"Human trial of a study medicine"},
  "cagrilintide":{why:"Studied for weight change because it copies amylin, a message linked to feeling full.",finding:"Across the study groups, cagrilintide led to greater average weight loss than placebo, which had no active drug. Nausea, constipation, diarrhea and reactions where the study medicine was given were reported. The study followed selected adults under clinical supervision.",model:"Phase 2 trial, 2021: 706 adults, 26 weeks",source:"https://pubmed.ncbi.nlm.nih.gov/34798060/",limit:"The study did not test this supplier’s product. Results from separate trials cannot tell us which catalog product is best.",evidence:"Human trial of a study medicine"}
 };
+/** Bes et al. (1992), primary abstract reviewed September 29, 2026. */
+export const SLEEP_RESEARCH:Omit<FinderMatch,"id">={why:"DSIP has been studied for sleep. The small study linked here found limited effects.",finding:"A 1992 study followed 16 people with long-term trouble sleeping. Some measured sleep changes favored DSIP, but the effects were weak. People did not report better sleep quality. The authors concluded that short-term DSIP was unlikely to offer much benefit.",model:"Small human study, 1992: 16 people, five nights in a lab",source:"https://pubmed.ncbi.nlm.nih.gov/1299794/",limit:"This small, short study did not test the supplier’s vial or spray. It does not establish safety or a sleep benefit for either product.",evidence:"Small human study of DSIP, not a catalog product"};
 function exactProducts(s:string):string[]{
  const exact=SUPPLIER_PRODUCTS.filter(p=>[p.name,p.id,...(p.aliases||[])].some(n=>normalize(n)===s));
  if(exact.length)return exact.map(p=>p.id);
@@ -119,6 +130,7 @@ export function researchReply(input:string,previous:FinderContext={}):FinderRepl
  const matches=ids.slice(offset,offset+3).map(id=>{
   const g=PRODUCT_GUIDES[id];
   if(topic?.id==="weight"&&WEIGHT_RESEARCH[id])return {id,...WEIGHT_RESEARCH[id]};
+  if(topic?.id==="sleep")return {id,...SLEEP_RESEARCH};
   return {id,why:g.study,finding:g.finding,model:g.model,source:g.paper,limit:g.caution,evidence:evidenceLabel(id)};
  });
  const options:string[]=["Study results","How it works"];

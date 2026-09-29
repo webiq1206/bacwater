@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { researchReply, RESEARCH_TOPICS, WEIGHT_RESEARCH } from "../src/lib/search/research-finder";
+import { researchReply, RESEARCH_TOPICS, WEIGHT_RESEARCH, SLEEP_RESEARCH, FINDER_SUGGESTIONS } from "../src/lib/search/research-finder";
 import { SUPPLIER_PRODUCTS } from "../src/lib/partners/supplier-catalog";
 import { PRODUCT_GUIDES } from "../src/lib/partners/product-guides";
 import { PRODUCT_RESEARCH } from "../src/lib/partners/product-content";
@@ -13,7 +13,7 @@ check("every exact catalog name can be found without inventing an entry",()=>{
  for(const p of SUPPLIER_PRODUCTS){const r=researchReply(p.name);assert.equal(r.scope,"results",p.name);assert.ok(r.matches.some(m=>m.id===p.id),p.name);}
 });
 check("plain questions produce linked, qualified evidence",()=>{
- for(const topic of RESEARCH_TOPICS){const r=researchReply(topic.label);assert.equal(r.scope,"results",topic.id);for(const m of r.matches){assert.ok(topic.products.includes(m.id),topic.id);assert.equal(m.finding,topic.id==="weight"?WEIGHT_RESEARCH[m.id].finding:PRODUCT_GUIDES[m.id].finding);assert.ok(m.limit);if(m.source)assert.ok(topic.id==="weight"?Object.values(WEIGHT_RESEARCH).some(r=>r.source===m.source):PRODUCT_RESEARCH[m.id].sources.some(s=>s.url===m.source));}}
+ for(const topic of RESEARCH_TOPICS){const r=researchReply(topic.label);assert.equal(r.scope,"results",topic.id);for(const m of r.matches){assert.ok(topic.products.includes(m.id),topic.id);assert.equal(m.finding,topic.id==="weight"?WEIGHT_RESEARCH[m.id].finding:topic.id==="sleep"?SLEEP_RESEARCH.finding:PRODUCT_GUIDES[m.id].finding);assert.ok(m.limit);if(m.source)assert.ok(topic.id==="weight"?Object.values(WEIGHT_RESEARCH).some(r=>r.source===m.source):topic.id==="sleep"?m.source===SLEEP_RESEARCH.source:PRODUCT_RESEARCH[m.id].sources.some(s=>s.url===m.source));}}
  for(const input of ["How do cells move?","How do cells use fuel?","How do nerve cells pass messages?","I study AMPK activity in cells","For my lab, how do cells move?","I want to study how cells move","I am researching cell movement"]){assert.equal(researchReply(input).scope,"results",input);}
 });
 check("broad and mixed topics ask a question before returning cards",()=>{
@@ -45,6 +45,10 @@ check("everyday health topics are educational searches, not automatic refusals",
  const blocked=researchReply("Which product should I take to lose weight?");assert.equal(blocked.scope,"restricted");assert.equal(researchReply("Explain weight-loss research",blocked.context).scope,"results");
  assert.equal(researchReply("Study results",weight.context).detail,"study");assert.equal(researchReply("How it works",weight.context).detail,"how");
 });
+check("plain category suggestions open grounded research answers",()=>{
+ for(const suggestion of FINDER_SUGGESTIONS){assert.match(suggestion.question,/^What products are studied for /);const r=researchReply(suggestion.question);assert.equal(r.scope,"results",suggestion.label);assert.ok(r.matches.length,suggestion.label);}
+});
+check("sleep questions keep a direct evidence match",()=>{assert.deepEqual(researchReply("What products are studied for sleep?").matches.map(m=>m.id),["dsip","dsip-spray"]);});
 check("calculator and website questions have working educational routes",()=>{
  for(const q of ["Find a calculator","Can I use the calculator?","How do I use your calculator?","Help me find a converter","How many mcg are in 1 mg?","5 mg BPC-157","What can you help with?"]){const r=researchReply(q);assert.equal(r.scope,"tools",q);assert.ok(r.links?.some(l=>l.href==="/peptide-calculator"),q);}
  for(const q of ["privacy","affiliate commission","catalog"]){const r=researchReply(q);assert.equal(r.scope,"tools",q);assert.ok(r.links?.length);}

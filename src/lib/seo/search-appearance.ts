@@ -1,5 +1,5 @@
 import { ARTICLE_GUIDES } from "@/lib/learn/article-presentation";
-import { productDisplayName } from "@/lib/partners/supplier-catalog";
+import { productDisplayName, SUPPLIER_PRODUCTS } from "@/lib/partners/supplier-catalog";
 import { PEPTIDES } from "@/lib/calc/peptides";
 import { shortName, referenceDisplayName } from "@/lib/peptides/page-data";
 import { COMPARISONS } from "@/lib/comparisons/content";
@@ -25,6 +25,7 @@ export const SEARCH_SNIPPETS: Record<string, Snippet> = {
   "/tools/supplies": { title: "Vial Count Calculator", description: "Calculate how many vials cover a known number of measurements using your stated vial amount and amount per measurement. No schedule is recommended." },
   "/tools/vial-labels": { title: "Printable Peptide Vial Labels: Free PDF Tool", description: "Create a PDF of small vial labels from a saved calculation. Choose label dimensions, include concentration and entered dates, then print at actual size." },
   "/peptides": { title: "Peptide Calculators and Compound References", description: "Find a peptide reconstitution calculator by compound. Check concentration examples, label units, original references and what the calculation cannot verify." },
+  "/research-finder": { title: "Research Assistant: Products, Studies and Calculators", description: "Ask about research in plain language. Find related catalog products, linked studies, clear explanations and useful calculators." },
   "/recommendations": { title: "Research Peptides and BAC Water Directory", description: "Search research compounds, blends and BAC water products by name or format. Review product details and supplier links. Research only; affiliate disclosure." },
   "/faq": { title: "BAC Water FAQ: Ingredients, Storage and Math", description: "Get clear answers about BAC water ingredients, storage, final volume and syringe units, with links to product labeling and free calculation tools." },
   "/learn/glossary": { title: "BAC Water Glossary: mg, mcg, mL and U-100", description: "Look up BAC water, reconstitution, concentration, benzyl alcohol and syringe-scale terms. Understand label language without confusing mass and volume." },
@@ -61,6 +62,8 @@ export function searchSnippet(path: string): Snippet | undefined {
   if (guide) return { title: guide.title, description: guide.description };
   if (Object.hasOwn(SEARCH_SNIPPETS, path)) return SEARCH_SNIPPETS[path];
   if (Object.hasOwn(FACET_SNIPPETS, path)) return FACET_SNIPPETS[path];
+  const product = SUPPLIER_PRODUCTS.find(p => path === `/products/${p.id}`);
+  if (product) return { title: `${product.name}: Research Explained Simply`, description: `What ${product.name} is, how researchers study it, and what is still unknown. Read simple explanations, study summaries, sources and product details.` };
   const peptide = PEPTIDES.find(p => path === `/peptides/${p.slug}`);
   if (peptide) {
     // Search copy keeps the compound name searchers use alongside the partner's label.

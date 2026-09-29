@@ -2,7 +2,7 @@
 import { useEffect, useId, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUp, BookOpen, Plus } from "lucide-react";
-import { researchReply, FINDER_STARTERS } from "@/lib/search/research-finder";
+import { researchReply, FINDER_SUGGESTIONS } from "@/lib/search/research-finder";
 import { useSupplierCatalog } from "@/components/partners/supplier-context";
 import { ProductQuickView } from "@/components/partners/product-quick-view";
 import { PRODUCT_GUIDES } from "@/lib/partners/product-guides";
@@ -11,7 +11,7 @@ import { useSearchViewport } from "./use-search-viewport";
 import styles from "./research-finder.module.css";
 
 export function ResearchFinder(){
- const products=useSupplierCatalog(),{session,setSession,closeAssistant}=useResearchAssistant();
+ const products=useSupplierCatalog(),{session,setSession,closeAssistant,activeQuickView,selectQuickView}=useResearchAssistant();
  const {question,turns}=session,last=turns.at(-1),uid=useId();
  const input=useRef<HTMLTextAreaElement>(null),conversation=useRef<HTMLDivElement>(null),lastTurn=useRef<HTMLElement>(null);
  // Scroll only the conversation. Keep focus in the composer, and never scroll the page.
@@ -20,11 +20,11 @@ export function ResearchFinder(){
   if(!text.trim())return;
   setSession(old=>{const answer=researchReply(text,old.context),id=old.sequence+1;return {question:"",context:answer.context,sequence:id,turns:[...old.turns,{id,question:text.trim(),answer}].slice(-12)};});
  }
- function reset(){setSession(emptyResearchSession());input.current?.focus({preventScroll:true});}
+ function reset(){selectQuickView(null);setSession(emptyResearchSession());input.current?.focus({preventScroll:true});}
  return <div className={styles.finder} data-research-finder>
   <div className={styles.toolbar}><Link href="/recommendations" onClick={closeAssistant}><BookOpen size={15} aria-hidden="true"/>Browse products</Link><button type="button" onClick={reset}><Plus size={16} aria-hidden="true"/>New chat</button></div>
   <div ref={conversation} className={styles.conversation} data-clarity-mask="true" tabIndex={0} role="region" aria-label="Research conversation">
-   {!last&&<section className={styles.welcome}><h2>What would you like to explore?</h2><p>Ask about a research topic, a product or a calculator. Start with everyday words.</p><div className={styles.starters}>{FINDER_STARTERS.map(s=><button key={s} onClick={()=>submit(s)} type="button">{s}<ArrowRight size={15} aria-hidden="true"/></button>)}</div><p className={styles.welcomeNote}>Answers use reviewed sources. No personal treatment or dosing advice.</p></section>}
+   {!last&&<section className={styles.welcome}><h2>What would you like to explore?</h2><p>Ask about a research topic, a product or a calculator. Start with everyday words.</p><div className={styles.starters}>{FINDER_SUGGESTIONS.map(s=><button key={s.label} onClick={()=>submit(s.question)} aria-label={s.question} title={s.question} type="button">{s.question}<ArrowRight size={15} aria-hidden="true"/></button>)}</div><p className={styles.welcomeNote}>Answers use reviewed sources. No personal treatment or dosing advice.</p></section>}
    {turns.map(turn=><section key={turn.id} ref={turn===last?lastTurn:undefined} className={styles.turn} aria-labelledby={`${uid}-answer-${turn.id}`}>
     <div className={styles.user}><span className={styles.srOnly}>Your question: </span><p>{turn.question}</p></div>
     <div className={styles.answer}>
@@ -41,7 +41,7 @@ export function ResearchFinder(){
         {match.source?<a className={styles.source} href={match.source} target="_blank" rel="noopener noreferrer">{match.id==="dihexa"?"Read withdrawal notice":"Read the study"}<span className={styles.srOnly}> (opens a new tab)</span><span aria-hidden="true">↗</span></a>:<p className={styles.model}>Supplier description. See the full guide for sources.</p>}
         <p className={styles.limit}><strong>Limit: </strong>{match.limit}</p>
        </details>
-       <div className={styles.actions}><ProductQuickView product={product} className={styles.quick}/><Link href={`/products/${product.id}`} onClick={closeAssistant}>Full details <ArrowRight size={14} aria-hidden="true"/></Link></div>
+       <div className={styles.actions}><ProductQuickView product={product} className={styles.quick} open={activeQuickView===`${turn.id}:${product.id}`} onOpenChange={open=>selectQuickView(open?`${turn.id}:${product.id}`:null)}/><Link href={`/products/${product.id}`} onClick={closeAssistant}>Full details <ArrowRight size={14} aria-hidden="true"/></Link></div>
       </article>;
      })}</div>}
      {turn.answer.matches.length>0&&<p className={styles.researchNotice}>Research products only. Not for use in people or animals. A study result is not a promise about a supplier’s product.</p>}
@@ -51,8 +51,8 @@ export function ResearchFinder(){
   </div>
   <div className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{last?`${last.answer.text} ${last.answer.matches.length?`${last.answer.matches.length} product matches available in the conversation.`:""}`:"Ready for your question."}</div>
   <form className={styles.composer} onSubmit={e=>{e.preventDefault();submit(question);}} aria-label="Ask a research question">
-   <label className={styles.srOnly} htmlFor={`${uid}-question`}>Your research question</label>
-   <div><textarea id={`${uid}-question`} ref={input} value={question} maxLength={800} rows={1} onChange={e=>setSession(old=>({...old,question:e.target.value}))} placeholder="Ask about research or a tool…" data-clarity-mask="true" autoComplete="off" aria-describedby={`${uid}-privacy`} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();submit(question);}}}/><button type="submit" disabled={!question.trim()} aria-label="Send research question"><ArrowUp size={21} aria-hidden="true"/></button></div>
+   <label className={styles.srOnly} htmlFor={`${uid}-research-question`}>Your research question</label>
+   <div><textarea id={`${uid}-research-question`} ref={input} value={question} maxLength={800} rows={1} onChange={e=>setSession(old=>({...old,question:e.target.value}))} placeholder="Ask about research or a tool…" data-clarity-mask="true" autoComplete="off" aria-describedby={`${uid}-privacy`} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();submit(question);}}}/><button type="submit" disabled={!question.trim()} aria-label="Send research question"><ArrowUp size={21} aria-hidden="true"/></button></div>
    <p id={`${uid}-privacy`}>Keep personal details out. Clears on reset or reload. <span>{question.length}/800</span></p>
   </form>
   <p className={styles.note}>Research only · Reviewed notes, not a live web search. <Link href="/disclaimer#finder" onClick={closeAssistant}>Limits & affiliate notice</Link></p>
