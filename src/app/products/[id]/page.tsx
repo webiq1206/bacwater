@@ -79,15 +79,15 @@ export default async function ProductPage({params}:{params:Promise<{id:string}>}
      <p className={styles.sectionIntro}>Open the papers for their exact methods and results. Background research and evidence gaps are labeled below.</p>
      <ol className={styles.sources}>{papers.map(source=><li key={source.url}><FileText size={19} aria-hidden="true"/><div><span className={styles.tag}>{/retraction/i.test(source.label)?"Retraction notice":source.type==="reference"?"Chemical reference":"Research paper"}</span><a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}<ArrowUpRight size={16} aria-hidden="true"/><span className={styles.srOnly}> (opens a new tab)</span></a><p>{source.note||"Research on the named compound or experimental system, not a test of this supplier’s product."}</p></div></li>)}</ol>
      {!papers.length&&<p className={styles.smallNote}>This page uses partner information for product identity. It does not claim that a study has tested this water with every compound.</p>}
-     <div className={styles.partnerSource}><h3>Product label and purchasing</h3><p>Amino Club provides the current label, size options, price and availability.</p><PurchaseDisclosure product={product}/><ProductBuyLink product={product}/></div>
+     <div className={styles.partnerSource}><h3>Product label and purchasing</h3><p>Our partner provides the current label, size options, price and availability.</p><PurchaseDisclosure product={product}/><ProductBuyLink product={product}/></div>
     </section>
     <section className={styles.calculator}><Calculator size={26} aria-hidden="true"/><div><h2>Have your label numbers?</h2><p>Check the math with the right calculator for this product. It does not choose a dose or tell you how to use it.</p><Link className={styles.textLink} href={productCalculatorPath(id)}>Open product calculator <ArrowRight size={17} aria-hidden="true"/></Link></div></section>
    </div>
    <aside className={styles.purchaseRail} aria-label={`Buy ${product.name} from our affiliate partner`}>
     <div className={styles.purchasePanel} data-product-purchase-panel>
      <figure className={styles.art}><ProductArtwork product={product}/><figcaption>Our illustration, not product packaging.</figcaption></figure>
-     <div className={styles.purchaseBody}><p className={styles.eyebrow}>Available through our partner</p><h2>{product.name}</h2><p className={styles.purchaseHelp}>See current prices, sizes and availability on Amino Club.</p><p className={styles.purchaseNotice}>Research products only. Not for use in people or animals.</p></div>
-     <div className={styles.purchaseActions}><PurchaseDisclosure product={product}/><ProductBuyLink product={product}/><Link href={productCalculatorPath(id)} className={styles.secondary}>Open product calculator <ArrowRight size={16} aria-hidden="true"/></Link><span>Opens Amino Club in a new tab. Checkout happens there.</span></div>
+     <div className={styles.purchaseBody}><p className={styles.eyebrow}>Available through our partner</p><h2>{product.name}</h2><p className={styles.purchaseHelp}>See current prices, sizes and availability on our partner’s website.</p><p className={styles.purchaseNotice}>Research products only. Not for use in people or animals.</p></div>
+     <div className={styles.purchaseActions}><PurchaseDisclosure product={product}/><ProductBuyLink product={product}/><Link href={productCalculatorPath(id)} className={styles.secondary}>Open product calculator <ArrowRight size={16} aria-hidden="true"/></Link><span>Opens our partner’s website in a new tab. Checkout happens there.</span></div>
     </div>
    </aside>
   </div>

@@ -49,7 +49,7 @@ export function CalculatorProductTools({selectedId,showProductPicker=true}:{sele
      <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>Our own artwork, not product packaging. {catalog.some(p=>p.paid)&&"We may earn a commission from supplier purchases."}</p>
     </DialogContent>
    </Dialog>}
-   <a className={styles.water} href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`Buy ${water.name} at Amino Club, opens a new tab`}><Droplets size={16} aria-hidden="true"/>Buy {water.name}<ArrowUpRight size={14} aria-hidden="true"/></a>
+   <a className={styles.water} href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`Buy ${water.name} from our partner, opens a new tab`}><Droplets size={16} aria-hidden="true"/>Buy {water.name}<ArrowUpRight size={14} aria-hidden="true"/></a>
   </div>
   {product&&<div className={styles.selected} data-selected-product={product.id}>
    <span className={styles.selectedArt}><ProductArtwork product={product} compact/></span>

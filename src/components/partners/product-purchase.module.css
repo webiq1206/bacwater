@@ -13,3 +13,5 @@
 }
 @media(max-width:359px){.dockInner{grid-template-columns:minmax(0,1fr);gap:5px}.dockIdentity{display:flex;justify-content:space-between;align-items:center;gap:10px}.dockIdentity strong{font-size:12px}.dockIdentity span{flex-shrink:0;font-size:9px;margin:0}.dock .disclosure{font-size:10px}}
 @media print{.dock,.cardPurchase,.buy{display:none!important}}
+
+.buy small{display:block;font-size:10px;font-weight:400;line-height:1.5;margin-top:2px}

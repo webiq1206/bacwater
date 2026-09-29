@@ -43,7 +43,7 @@ export function ResearchFinder(){
         <p className={styles.limit}><strong>Limit: </strong>{match.limit}</p>
        </details>
        <div className={styles.actions}><ProductQuickView product={product} className={styles.quick} open={activeQuickView===`${turn.id}:${product.id}`} onOpenChange={open=>selectQuickView(open?`${turn.id}:${product.id}`:null)}/><Link href={`/products/${product.id}`} onClick={closeAssistant}>Full details <ArrowRight size={14} aria-hidden="true"/></Link></div>
-       <div className={styles.purchase}><PurchaseDisclosure product={product}/><ProductBuyLink product={product}/></div>
+       <div className={styles.purchase}><PurchaseDisclosure product={product}/><ProductBuyLink product={product} showProductName/></div>
       </article>;
      })}</div>}
      {turn.answer.matches.length>0&&<p className={styles.researchNotice}>Research products only. Not for use in people or animals. A study result is not a promise about a supplier’s product.</p>}

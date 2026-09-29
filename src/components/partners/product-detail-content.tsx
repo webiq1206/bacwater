@@ -25,7 +25,7 @@ export default function ProductDetailContent({product}:{product:DisplaySupplierP
    <DialogTitle ref={title} tabIndex={-1} className={styles.title}>{product.name}</DialogTitle>
    <DialogDescription className={styles.notice}>{RESEARCH_ONLY_NOTICE}</DialogDescription>
   </header>
-  <div className={styles.scroll} data-product-detail-scroll>
+  <div className={styles.scroll} data-product-detail-scroll tabIndex={0} role="region" aria-label={`${product.name} research overview`}>
    <div className={styles.quickIntro}><ProductArtwork product={product} compact/><div><h3>What it is</h3><p>{detail.what}</p></div></div>
    <section className={styles.quickSection}><h3>What researchers study</h3><p>{guide.study}</p></section>
    <section className={styles.quickSection} data-product-mechanism><h3>How it works</h3><p data-product-plain>{guide.how}</p></section>
@@ -38,7 +38,7 @@ export default function ProductDetailContent({product}:{product:DisplaySupplierP
     <DialogClose asChild><Link className={styles.detailsAction} href={`/products/${product.id}`}>View Full Details <ArrowRight size={16} aria-hidden="true"/></Link></DialogClose>
     <ProductBuyLink product={product}/>
    </div>
-   <span className={styles.externalNote}>Purchase on Amino Club. Opens in a new tab.</span>
+   <span className={styles.externalNote}>Purchase on our partner’s website. Opens in a new tab.</span>
   </footer>
  </DialogContent>;
 }

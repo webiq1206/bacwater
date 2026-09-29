@@ -42,7 +42,7 @@ const sections=[
  ]},
  {id:"affiliate",title:"Our affiliate relationship",paragraphs:[
   AFFILIATE_DISCLAIMER,
-  "Amino Club is responsible for its own products, order process, labels and policies. We do not speak for Amino Club, the FDA or a research institution.",
+  "Our product supplier is responsible for its own products, order process, labels and policies. We do not speak for our supplier, the FDA or a research institution.",
   "We identify paid links near product information. The finder matches reviewed topics and catalog names; commission amounts are not used to order its results. A link is not an independent quality check or a promise of a result."
  ]},
  {id:"links",title:"External pages and changing information",paragraphs:[
@@ -67,8 +67,8 @@ export default function DisclaimerPage(){
   <section className="mt-10 border-t border-border pt-7"><h2 className="text-2xl font-serif">Read the source information</h2><ul className="mt-4 space-y-3 list-disc pl-5 leading-relaxed">
    <li><a className="underline" href="https://www.fda.gov/drugs/enforcement-activities-fda/unapproved-drugs" target="_blank" rel="noopener noreferrer">FDA: Unapproved drugs (opens a new tab)</a></li>
    <li><a className="underline" href="https://www.fda.gov/drugs/drug-alerts-and-statements/fdas-concerns-unapproved-glp-1-drugs-used-weight-loss" target="_blank" rel="noopener noreferrer">FDA: Concerns about unapproved products, including false research-only labels (opens a new tab)</a></li>
-   <li><a className="underline" href="https://www.aminoclub.com/us/disclaimer" target="_blank" rel="noopener noreferrer">Amino Club: Supplier disclaimer (opens a new tab)</a></li>
-   <li><a className="underline" href="https://www.aminoclub.com/us/affiliate-terms" target="_blank" rel="noopener noreferrer">Amino Club: Affiliate terms (opens a new tab)</a></li>
+   <li><a className="underline" href="https://www.aminoclub.com/us/disclaimer" target="_blank" rel="noopener noreferrer">Our partner’s disclaimer (opens a new tab)</a></li>
+   <li><a className="underline" href="https://www.aminoclub.com/us/affiliate-terms" target="_blank" rel="noopener noreferrer">Our partner’s affiliate terms (opens a new tab)</a></li>
   </ul></section>
   <p className="mt-8 leading-relaxed">See a mistake? <Link className="underline" href="/contact">Tell us what needs fixing</Link>. You can also read our <Link className="underline" href="/terms">Terms</Link>, <Link className="underline" href="/privacy">Privacy page</Link> and <Link className="underline" href="/editorial-policy">content review policy</Link>.</p>
  </article>;
