@@ -1,7 +1,7 @@
 import { ARTICLE_GUIDES } from "@/lib/learn/article-presentation";
 import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import { PEPTIDES } from "@/lib/calc/peptides";
-import { shortName } from "@/lib/peptides/page-data";
+import { shortName, referenceDisplayName } from "@/lib/peptides/page-data";
 import { COMPARISONS } from "@/lib/comparisons/content";
 import { learnLanding } from "@/lib/learn/landing";
 import { CONTENT_TYPES, TOPICS } from "@/lib/learn/taxonomy";
@@ -17,9 +17,9 @@ export const SEARCH_SNIPPETS: Record<string, Snippet> = {
   "/": { title: "BAC Water Calculator | Peptide Reconstitution | BACwater.ai", description: "Free BAC water and peptide reconstitution calculator. Check concentration, mL and U-100 units from your own numbers. Live results, no signup." },
   "/peptide-calculator": { title: "Peptide Reconstitution Calculator", description: "Calculate peptide concentration, mL and U-100 units from your label values. See the math, save a calculation or print a vial label. No dose advice." },
   "/tools": { title: "Free BAC Water and Peptide Calculators", description: "Choose a free calculator for concentration, mg to mcg, U-100 units, volume or vial counts. Check formulas and make printable labels from saved calculations." },
-  "/tools/bac-water": { title: "BAC Water Volume and Concentration Calculator", description: "Check how final liquid volume changes concentration. Enter your vial amount and volume to see the math. Product instructions determine the diluent." },
+  "/tools/bac-water": { title: "BAC Water Volume and Concentration Calculator", description: "See how BAC water volume changes concentration. Enter your vial amount and final volume to check the math in mg/mL and U-100 units. Instructions set the volume." },
   "/tools/mg-to-mcg": { title: "mg to mcg Converter: Milligrams to Micrograms", description: "Convert mg to mcg or mcg to mg instantly. See the 1,000-to-1 conversion, worked examples and a clear explanation of mass units. Free, no signup." },
-  "/tools/syringe-units": { title: "U-100 Syringe Units to mL Converter", description: "Convert U-100 syringe units to mL and back. See the formula and worked examples, including 100 units = 1 mL. Scale conversion, not dose advice." },
+  "/tools/syringe-units": { title: "U-100 Insulin Syringe Units to mL Converter", description: "Convert U-100 insulin syringe units to mL and back: 100 units = 1 mL, 50 units = 0.5 mL, 10 units = 0.1 mL. See the formula and examples. Not dose advice." },
   "/tools/dose": { title: "mg and mcg to mL Calculator", description: "Convert an entered amount in mg or mcg to mL using a known concentration, or calculate mass from volume. See each formula. No dose is selected." },
   "/tools/reverse-bac": { title: "Reverse BAC Water Calculator: Final Volume", description: "Calculate final liquid volume from stated mass, an entered amount and a U-100 scale reading. Check the formula; this does not choose a mixing recipe." },
   "/tools/supplies": { title: "Vial Count Calculator", description: "Calculate how many vials cover a known number of measurements using your stated vial amount and amount per measurement. No schedule is recommended." },
@@ -28,7 +28,7 @@ export const SEARCH_SNIPPETS: Record<string, Snippet> = {
   "/recommendations": { title: "Research Peptides and BAC Water Directory", description: "Search research compounds, blends and BAC water products by name or format. Review product details and supplier links. Research only; affiliate disclosure." },
   "/faq": { title: "BAC Water FAQ: Ingredients, Storage and Math", description: "Get clear answers about BAC water ingredients, storage, final volume and syringe units, with links to product labeling and free calculation tools." },
   "/learn/glossary": { title: "BAC Water Glossary: mg, mcg, mL and U-100", description: "Look up BAC water, reconstitution, concentration, benzyl alcohol and syringe-scale terms. Understand label language without confusing mass and volume." },
-  "/learn/bac-water-shelf-life": { title: "How Long Does BAC Water Last? Shelf Life & Storage", description: "Does BAC water need refrigeration? Check product-label storage, unopened expiry and opened-vial guidance. Learn why mixed products need separate instructions." },
+  "/learn/bac-water-shelf-life": { title: "How Long Does BAC Water Last? Opened and Unopened", description: "Unopened BAC water lasts until its printed expiry. Opened vials: CDC guidance is 28 days. See refrigeration, room temperature, freezing and expiry answers." },
   "/learn/bac-water-for-peptides": { title: "BAC Water for Peptides: Compatibility and Math", description: "Does a peptide need BAC water? Learn why formulation and product instructions come before concentration math, and which label details you need to check." },
   "/learn/where-to-buy-bacteriostatic-water": { title: "Where to Buy BAC Water: Product and Seller Checks", description: "Know what to check before buying bacteriostatic water: product identity, label, supplier license and traceability. BACwater.ai does not sell or verify products." },
   "/compare-calculators": { title: "Compare Peptide Calculators: Features and Limits", description: "Compare peptide calculators by inputs, formulas, saved plans and verification limits. Includes BACwater.ai's own tools, with ownership clearly disclosed." },
@@ -63,12 +63,13 @@ export function searchSnippet(path: string): Snippet | undefined {
   if (Object.hasOwn(FACET_SNIPPETS, path)) return FACET_SNIPPETS[path];
   const peptide = PEPTIDES.find(p => path === `/peptides/${p.slug}`);
   if (peptide) {
-    const name = productDisplayName(peptide.slug, shortName(peptide.name));
+    // Search copy keeps the compound name searchers use alongside the partner's label.
+    const name = referenceDisplayName(peptide.slug, shortName(peptide.name));
     return {
       title: peptide.slug === "custom" ? "Custom Peptide Reconstitution Calculator" : `${name} Reconstitution Calculator`,
       description: peptide.slug === "hcg"
         ? "Calculate hCG IU per mL and measurement volume from your label values. Product IU are not mg or U-100 syringe units. No dose or dilution is selected."
-        : `Calculate ${peptide.slug === "custom" ? "peptide" : name} concentration, mL and U-100 units from your own values. Review formulas and calculation limits. No dose or diluent is selected.`,
+        : `Calculate ${peptide.slug === "custom" ? "peptide" : name} concentration, mL and U-100 units from your values. Review formulas and calculation limits. No dose or diluent is selected.`,
     };
   }
   const comparison = COMPARISONS.find(c => path === `/learn/vs/${c.slug}`);

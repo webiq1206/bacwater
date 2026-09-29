@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ArticleJsonLd } from "@/components/common/article-json-ld";
+import { FaqJsonLd } from "@/components/common/faq-json-ld";
 import { PreferredSourceButton } from "@/components/common/preferred-source-button";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { getCatalog, relatedContent } from "@/lib/learn/catalog";
@@ -97,6 +98,21 @@ export default async function GuidePage({ params }: Props) {
         {renderBody(display.body)}
         {display.corrections.length > 0 && <aside className="mt-7 rounded-xl border p-4 text-sm not-prose"><h2 className="font-semibold">Correction note</h2>{display.corrections.map(note => <p className="mt-2" key={note}>{note}</p>)}</aside>}
       </article>
+
+      {presentation?.faqs && presentation.faqs.length > 0 && (
+        <section className="mt-12 max-w-3xl" aria-labelledby="article-faq-title">
+          <FaqJsonLd items={presentation.faqs} />
+          <h2 id="article-faq-title" className="text-2xl font-serif">Common questions</h2>
+          <dl className="mt-5 space-y-6">
+            {presentation.faqs.map((item) => (
+              <div key={item.q}>
+                <dt className="font-medium">{item.q}</dt>
+                <dd className="mt-2 leading-relaxed text-muted-foreground">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
 
       <References references={refs} />
 

@@ -5,7 +5,7 @@ import {notFound} from "next/navigation";
 import type {Metadata} from "next";
 import {PEPTIDES,evidenceOf} from "@/lib/calc/peptides";
 import {PEPTIDE_CONTENT} from "@/lib/peptides/content";
-import {dosageRows,directAnswer,reconstitutionSteps,buildFaqs,shortName} from "@/lib/peptides/page-data";
+import {dosageRows,directAnswer,reconstitutionSteps,buildFaqs,shortName,referenceDisplayName} from "@/lib/peptides/page-data";
 import {PeptideCalc} from "@/components/peptides/peptide-calc";
 import {VialIdentityWarning} from "@/components/peptides/vial-identity-warning";
 import {EvidenceBadge,WhatNobodyKnows} from "@/components/peptides/evidence";
@@ -33,14 +33,14 @@ const categories:Record<string,string>={metabolic:"Metabolic signaling research"
 export function generateStaticParams(){return PEPTIDES.map(p=>({slug:p.slug}));}
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
  const {slug}=await params,p=PEPTIDES.find(x=>x.slug===slug);if(!p)return withSocialMetadata({});
- const short=productDisplayName(p.slug, shortName(p.name)),title=p.slug==='custom'?'Reconstitution Calculator for a Stated Compound':`${short} Reconstitution Calculator and Reference`;
+ const short=referenceDisplayName(p.slug, shortName(p.name)),title=p.slug==='custom'?'Reconstitution Calculator for a Stated Compound':`${short} Reconstitution Calculator and Reference`;
  const description=p.slug==='hcg'?"Check hCG IU concentration and measurement volume from your stated inputs. Product activity units are not milligrams or syringe units; no dose or dilution is selected.":`Check ${short} concentration and U-100 volume relationships from your stated inputs, with formulation limits and linked references. No dose or storage period is selected.`;
  const dims=hasChart(p)?peptideChartDims(p):null;
  return withSocialMetadata({title,description,alternates:{canonical:`/peptides/${p.slug}`},openGraph:{title,description,url:`/peptides/${p.slug}`,type:'website',siteName:'BACwater.ai',...(dims?{images:[{url:`/peptides/${p.slug}/chart.svg`,width:dims.width,height:dims.height,alt:peptideChartAlt(p)}]}:{})}});
 }
 export default async function PeptidePage({params}:{params:Promise<{slug:string}>}){
  const {slug}=await params,p=PEPTIDES.find(x=>x.slug===slug);if(!p)notFound();
- const short=productDisplayName(p.slug, shortName(p.name)),content=PEPTIDE_CONTENT[p.slug],custom=p.slug==='custom',iu=p.slug==='hcg';
+ const short=referenceDisplayName(p.slug, shortName(p.name)),partnerLabel=productDisplayName(p.slug, shortName(p.name)),compoundName=shortName(p.name),content=PEPTIDE_CONTENT[p.slug],custom=p.slug==='custom',iu=p.slug==='hcg';
  const rows=custom||iu?[]:dosageRows(p),studies=custom?null:studiesFor(p.slug);
  const steps=iu?[
   {name:'Keep the product activity unit',text:'Use the stated total and entered amount in matching IU. Do not substitute mg or a syringe-scale reading for product activity.'},
@@ -62,7 +62,7 @@ export default async function PeptidePage({params}:{params:Promise<{slug:string}
  <FaqJsonLd items={faqs}/>{dims&&<ImageJsonLd url={`/peptides/${p.slug}/chart.svg`} caption={peptideChartAlt(p)} width={dims.width} height={dims.height}/>}
  <Breadcrumbs items={[{label:'Home',href:'/'},{label:'Compounds',href:'/peptides'},{label:short,href:`/peptides/${p.slug}`}]}/>
  <p className="eyebrow">{categories[p.category]}</p><h1 className="mt-2 text-3xl sm:text-5xl font-serif font-medium tracking-tight">{short} reconstitution calculator and reference</h1>
- {!custom&&<div className="mt-3"><EvidenceBadge evidence={evidenceOf(p)}/></div>}{content?.aka&&<p className="mt-3 text-sm text-muted-foreground">{content.aka}</p>}
+ {!custom&&<div className="mt-3"><EvidenceBadge evidence={evidenceOf(p)}/></div>}{short!==partnerLabel&&<p className="mt-3 text-sm text-muted-foreground">Compound name: {compoundName}. Partner catalog name: {partnerLabel}. Both refer to this reference; the calculator labels use the partner's name.</p>}{content?.aka&&<p className="mt-3 text-sm text-muted-foreground">{content.aka}</p>}
  {!custom&&<AtAGlance items={facts} columns={3} className="mt-5"/>}
  <p className="mt-5 text-lg leading-relaxed">{lead}</p>
  <ReviewedBy className="mt-2"/>

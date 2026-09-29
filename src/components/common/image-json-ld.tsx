@@ -26,6 +26,11 @@ export function ImageJsonLd({
     height,
     creditText: "BACwater.ai",
     creator: { "@type": "Organization", name: "BACwater.ai", url: siteUrl },
+    // Image-metadata fields Search Console flags as missing on the infographics.
+    // The terms page governs reuse; the contact page is where a licence request goes.
+    copyrightNotice: "BACwater.ai",
+    license: `${siteUrl}/terms`,
+    acquireLicensePage: `${siteUrl}/contact`,
   };
   return (
     <script

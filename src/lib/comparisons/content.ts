@@ -32,19 +32,19 @@ export const COMPARISONS: ComparisonTopic[] = [
     "slug": "sterile-water",
     "otherName": "Sterile water",
     "title": "BAC Water vs Sterile Water: Read the Product Label",
-    "metaTitle": "BAC Water vs Sterile Water: Read the Product Label",
-    "metaDescription": "Compare preservative and container labeling without assuming one water product can replace another. Drug-specific compatibility comes before concentration math.",
-    "verdict": "The names do not make these products interchangeable. Bacteriostatic water contains a preservative; a sterile-water product can have different ingredients, container instructions and intended uses.",
+    "metaTitle": "BAC Water vs Sterile Water: Is It the Same?",
+    "metaDescription": "Bacteriostatic water lists a benzyl alcohol preservative; sterile water for injection lists none. Compare labels, container reuse and what decides the vehicle.",
+    "verdict": "No, they are not the same product. Both are sterile, but bacteriostatic water contains benzyl alcohol as a preservative and is labeled for multiple-dose use, while Pfizer's Sterile Water for Injection lists no preservative and its single-dose containers are not to be reused. The drug's own instructions decide which vehicle applies.",
     "table": [
       {
         "dimension": "Preservative",
-        "bac": "Check benzyl alcohol label",
-        "other": "Check exact product"
+        "bac": "Benzyl alcohol on the label",
+        "other": "None listed on the label"
       },
       {
         "dimension": "Container",
         "bac": "Multi-dose labeling",
-        "other": "Read package designation"
+        "other": "Single-dose containers not reused"
       },
       {
         "dimension": "Substitution",
@@ -54,15 +54,35 @@ export const COMPARISONS: ComparisonTopic[] = [
     ],
     "body": [
       {
+        "h2": "What the two Pfizer labels say",
+        "p": "Both labels indicate the water only for diluting or dissolving drugs according to the instructions of the drug's manufacturer, and both say the volume depends on the manufacturer's recommendation. The Bacteriostatic Water for Injection label lists benzyl alcohol as its preservative and warns that preparations containing benzyl alcohol must not be used in neonates. The Sterile Water for Injection label lists no preservative, says not to reuse single-dose containers, and says not to store reconstituted drug solutions unless the drug's manufacturer directs otherwise."
+      },
+      {
         "h2": "Sterile describes a property, not a complete formula.",
         "p": "Do not use the word sterile alone as a list of ingredients. Read the full product name, preservative information and container designation. Single-dose instructions and multi-dose instructions are different, and preservative does not make contamination impossible."
       },
       {
         "h2": "Compatibility is the deciding question.",
-        "p": "The drug instructions determine which vehicle is appropriate. A plan to access a container repeatedly does not override those instructions. The earlier statement on this site that BAC water can always replace sterile water was incorrect."
+        "p": "The drug instructions determine which vehicle is appropriate. A plan to access a container repeatedly does not override those instructions, and some drugs are incompatible with a vehicle or with a vehicle containing benzyl alcohol. The earlier statement on this site that BAC water can always replace sterile water was incorrect."
+      },
+      {
+        "h2": "Which water do peptides need?",
+        "p": "Neither label answers that for a research vial, and this site does not choose for you. The product's instructions name the vehicle. What the labels do establish is a container difference: a single-dose sterile water container is not labeled for repeated entry over days, while an opened multi-dose bacteriostatic container is dated and discarded within the period its guidance sets. A concentration calculation is the same for either water, because it only divides the stated amount by the final volume."
       }
     ],
     "faqs": [
+      {
+        "q": "Is bacteriostatic water the same as sterile water?",
+        "a": "No. Both are sterile, but bacteriostatic water contains benzyl alcohol as a preservative and is supplied for multiple-dose use. Pfizer's Sterile Water for Injection lists no preservative, and its single-dose containers are not to be reused. Read the exact product label rather than treating the names as synonyms."
+      },
+      {
+        "q": "Can you use sterile water instead of bacteriostatic water for peptides?",
+        "a": "Only the instructions for the exact product can answer that. The labels differ in preservative and container reuse, not in the arithmetic. If the instructions name a vehicle, use that one; if they do not, the question belongs with the supplier or a pharmacist, not with a calculator."
+      },
+      {
+        "q": "Is distilled or deionized water the same as BAC water?",
+        "a": "No. Distilled and deionized describe purification processes, not a sterile pharmaceutical product with a stated preservative and intended use. Neither word identifies a finished injection vehicle."
+      },
       {
         "q": "Can a calculator choose between them?",
         "a": "No. A concentration calculation uses a stated amount and final volume. It cannot establish vehicle compatibility, a storage period or an aseptic preparation method."
@@ -70,6 +90,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     ],
     "sources": [
       "https://www.pfizermedical.com/bacteriostatic-water",
+      "https://www.pfizermedical.com/sterile-water",
       "https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html"
     ]
   },
@@ -77,7 +98,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     "slug": "saline",
     "otherName": "Saline",
     "title": "BAC Water vs Saline: Salt and Preservative Are Different",
-    "metaTitle": "BAC Water vs Saline: Salt and Preservative Are Different",
+    "metaTitle": "BAC Water vs Saline: Salt and Preservative Differ",
     "metaDescription": "Saline is not one universal product. Compare sodium chloride content, preservative labeling and intended use before considering a substitution.",
     "verdict": "Saline and BAC water are different descriptions. Saline identifies a salt solution, while bacteriostatic describes inhibition of bacterial growth. The words alone do not establish a complete formulation or a suitable substitute.",
     "table": [
@@ -123,7 +144,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     "otherName": "Preserved saline",
     "title": "BAC Water vs Bacteriostatic Sodium Chloride",
     "metaTitle": "BAC Water vs Bacteriostatic Sodium Chloride",
-    "metaDescription": "Both labels can include benzyl alcohol. The sodium chloride content is a separate difference; compare exact formulations rather than using saline as a synonym for water.",
+    "metaDescription": "Both labels can include benzyl alcohol. The sodium chloride content is a separate difference; compare exact formulations rather than treating saline as water.",
     "verdict": "These two labeled products can both contain benzyl alcohol. Bacteriostatic sodium chloride also contains salt. Preservative presence therefore does not make their formulations identical.",
     "table": [
       {
@@ -167,8 +188,8 @@ export const COMPARISONS: ComparisonTopic[] = [
     "slug": "distilled-water",
     "otherName": "Distilled water",
     "title": "BAC Water vs Distilled Water: Process Is Not Product Grade",
-    "metaTitle": "BAC Water vs Distilled Water: Process Is Not Product Grade",
-    "metaDescription": "Distilled describes a purification process. It does not by itself establish sterility, pharmaceutical grade, preservatives or suitability as an injection diluent.",
+    "metaTitle": "BAC Water vs Distilled Water: Not the Same Grade",
+    "metaDescription": "Distilled describes a purification process. It does not by itself establish sterility, pharmaceutical grade, preservatives or suitability as a diluent.",
     "verdict": "Distilled is not a complete product specification. A purification description alone does not establish a sterile pharmaceutical product, an intended administration route or compatibility with another substance.",
     "table": [
       {
@@ -211,7 +232,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     "slug": "benzyl-alcohol",
     "otherName": "Benzyl alcohol",
     "title": "BAC Water vs Benzyl Alcohol: Ingredient vs Finished Product",
-    "metaTitle": "BAC Water vs Benzyl Alcohol: Ingredient vs Finished Product",
+    "metaTitle": "BAC Water vs Benzyl Alcohol: Ingredient vs Product",
     "metaDescription": "Benzyl alcohol is an ingredient, not another name for bacteriostatic water. Product concentration, intended use and manufacturing controls still matter.",
     "verdict": "Benzyl alcohol and BAC water are not synonyms. One is a chemical ingredient; the other is a finished water product whose label states its preservative content and intended uses.",
     "table": [
@@ -256,7 +277,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     "slug": "acetic-acid",
     "otherName": "Acetic acid solution",
     "title": "BAC Water vs Acetic Acid Solution: Check the Formulation",
-    "metaTitle": "BAC Water vs Acetic Acid Solution: Check the Formulation",
+    "metaTitle": "BAC Water vs Acetic Acid Solution: Label Checks",
     "metaDescription": "An acetic acid concentration does not identify a complete reconstitution product. Confirm the specified solvent, grade, additives and intended use.",
     "verdict": "A solution labeled with acetic acid is not automatically equivalent to BAC water. Its acid concentration, other ingredients and intended use need to be identified before compatibility can be considered.",
     "table": [
@@ -300,7 +321,7 @@ export const COMPARISONS: ComparisonTopic[] = [
     "slug": "reconstitution-solution",
     "otherName": "Reconstitution solution",
     "title": "BAC Water vs Reconstitution Solution: What the Label Must Say",
-    "metaTitle": "BAC Water vs Reconstitution Solution: What the Label Must Say",
+    "metaTitle": "BAC Water vs Reconstitution Solution: Read the Label",
     "metaDescription": "Reconstitution solution is a purpose description, not a complete ingredient list. Check the named vehicle, concentration, additives and product instructions.",
     "verdict": "Reconstitution solution describes a purpose, not one universal formula. It may not identify the same contents as a product labeled Bacteriostatic Water for Injection.",
     "table": [

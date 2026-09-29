@@ -1,4 +1,5 @@
 "use client";
+import { BAC_WATER_FAQS } from "./faqs";
 import { CalculationOutcome } from "@/components/calculator/calculation-events";
 import { MassProductGate } from "@/components/calculator/mass-product-selection";
 import { useState, useRef } from "react";
@@ -79,6 +80,11 @@ export default function BacWaterCalculatorPage() {
         <p>The <Link href="/learn/bac-water-shelf-life" className="underline">BAC water storage reference</Link> separates unopened expiry, opened-vial guidance and reconstituted-product instructions. They are different questions.</p>
       </section>
       <UnitHelp/>
+      <section className="mt-9 max-w-3xl" aria-labelledby="bac-water-faq-title">
+        <h2 id="bac-water-faq-title" className="text-2xl font-serif">Common questions</h2>
+        <dl className="mt-4 space-y-5">{BAC_WATER_FAQS.map(item => <div key={item.q}><dt className="font-medium">{item.q}</dt><dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.a}</dd></div>)}</dl>
+        <p className="mt-4 text-sm"><Link href="/learn/too-much-bac-water" className="underline">More on dilution arithmetic</Link> · <Link href="/learn/bac-water-for-peptides" className="underline">Does a peptide need BAC water?</Link></p>
+      </section>
       <section className="mt-9"><h2 className="text-2xl font-serif">Related calculations</h2><div className="mt-4 grid gap-3 sm:grid-cols-3">{[{ href: "/tools/syringe-units", title: "U-100 units and mL", text: "Convert volume units without assuming syringe markings." }, { href: "/tools/mg-to-mcg", title: "mg and mcg", text: "Check milligram and microgram conversions." }, { href: "/tools/dose", title: "Amount-to-volume", text: "Check the amount in a stated liquid volume." }].map(tool => <Link key={tool.href} href={tool.href} className="rounded-xl border border-border p-4 transition-colors hover:bg-muted"><h3 className="font-medium">{tool.title}</h3><p className="mt-2 text-sm text-muted-foreground">{tool.text}</p></Link>)}</div></section>
 </>}>
       <MassProductGate><CalculationOutcome ready={concentrationValid}/><div ref={panels} data-active-screen={screen} className="bac-screen-panels grid items-start gap-6 lg:grid-cols-2">

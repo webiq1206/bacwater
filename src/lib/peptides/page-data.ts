@@ -19,6 +19,23 @@ export interface DosageRow {
   units: number;
 }
 
+/**
+ * Name for a compound reference page's title, heading and opening answer.
+ *
+ * Product components keep the partner's exact catalog label. A reference page
+ * is indexed for the compound name people search (Search Console shows the
+ * tirzepatide page receiving only "tirzepatide" queries), so when the partner
+ * label does not contain that name, both appear: "Tirzepatide (GLP-2 (TR))".
+ * Labels that already contain the compound name, or differ only by case, are
+ * returned unchanged.
+ */
+export function referenceDisplayName(slug: string, compoundName: string): string {
+  const partner = productDisplayName(slug, compoundName);
+  const a = partner.toLowerCase(), b = compoundName.toLowerCase();
+  if (a === b || a.includes(b) || b.includes(a)) return partner;
+  return `${compoundName} (${partner})`;
+}
+
 /** Short display name: strip the parenthetical, e.g. "TB-500 (Thymosin Beta-4)" -> "TB-500". */
 export function shortName(name: string): string {
   if (/\(no DAC\)/i.test(name)) return name.trim();
@@ -61,7 +78,7 @@ export function representativeStrength(p: PeptideRef): number {
 
 /** 40-60 word direct-answer paragraph that opens the page. */
 export function directAnswer(p: PeptideRef): string {
-  const name = productDisplayName(p.slug, shortName(p.name));
+  const name = referenceDisplayName(p.slug, shortName(p.name));
   return `Use this ${name} calculator to convert your stated vial amount and final liquid volume into concentration and U-100 syringe units. Enter an amount to measure from instructions you already have. Vial strength alone cannot determine a suitable diluent, mixing volume, dose or storage time.`;
 }
 

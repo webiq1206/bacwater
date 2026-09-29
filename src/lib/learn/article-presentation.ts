@@ -1,4 +1,6 @@
-export type ArticlePresentation = {title:string;description:string;cta:string;href:string;related:string[]};
+export type ArticleFaq = { q: string; a: string };
+/** Code-defined presentation for a database article: search copy, next step, related reading and, where search demand shows repeated questions, a FAQ block rendered with FAQPage schema. */
+export type ArticlePresentation = {title:string;description:string;cta:string;href:string;related:string[];faqs?:ArticleFaq[]};
 export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
   "what-is-bac-water": {
     "title": "What Is BAC Water? Ingredients & Purpose",
@@ -8,7 +10,14 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
     "related": [
       "/learn/vs/benzyl-alcohol",
       "/learn/bac-water-shelf-life",
-      "/learn/bac-water-for-peptides"
+      "/learn/bac-water-for-peptides",
+      "/learn/where-to-buy-bacteriostatic-water"
+    ],
+    "faqs": [
+      { "q": "What does BAC water stand for?", "a": "BAC water is short for bacteriostatic water. The FDA-listed product is sterile water for injection with benzyl alcohol added as a bacteriostatic preservative, supplied in a multiple-dose container. The abbreviation describes the preservative, not a brand." },
+      { "q": "What is BAC water used for?", "a": "Pfizer's label indicates Bacteriostatic Water for Injection only for diluting or dissolving drugs for intravenous, intramuscular or subcutaneous injection, according to the instructions of the drug's manufacturer. The label says it is not for fluid replacement and must not be used in neonates." },
+      { "q": "What is BAC water made of?", "a": "Water for injection plus benzyl alcohol as the preservative. Pfizer's labeling describes products with 0.9% or 1.1% benzyl alcohol, so the exact container states the concentration. It contains no sodium chloride and no other active ingredient." },
+      { "q": "Is BAC water the same as sterile water or saline?", "a": "No. Sterile water for injection lists no preservative, and saline is a sodium chloride solution. Similar names do not make the products interchangeable; the instructions for the drug being prepared name the vehicle." }
     ]
   },
   "how-peptide-reconstitution-works": {
@@ -23,7 +32,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
     ]
   },
   "how-to-read-a-peptide-vial": {
-    "title": "How to Read Vial Labels: Mass, Volume & Concentration",
+    "title": "How to Read a Vial Label: Mass vs Concentration",
     "description": "Learn the difference between total mass, concentration and final volume with a fictitious label example and a notation checklist.",
     "cta": "Check concentration",
     "href": "/tools/bac-water",
@@ -56,7 +65,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
     ]
   },
   "how-to-store-reconstituted-peptides": {
-    "title": "Peptide Storage: Read the Exact Product Instructions",
+    "title": "Storing Reconstituted Peptides: Follow the Label",
     "description": "Record product-specific storage temperature, light protection, opening limits and discard instructions. Math cannot set a shelf life.",
     "cta": "Make a record label",
     "href": "/tools/vial-labels",

@@ -103,19 +103,21 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
           <details className="mt-1 text-sm text-muted-foreground"><summary className="cursor-pointer py-1">Scope of use</summary><p className="mt-2 max-w-2xl leading-relaxed">{POSITIONING_STATEMENT} Continuing confirms you are 21 or older and understand this scope.</p></details>
         </div>
 
-        <div className="flex shrink-0 flex-col gap-2.5 sm:flex-row">
+        {/* Side by side on phones too: the banner precedes every page's answer
+            for a first-time visitor, so it should cost one row, not two. */}
+        <div className="grid shrink-0 grid-cols-2 gap-2.5 sm:flex sm:flex-row">
           <button
             type="button"
             ref={declinedButton}
             onClick={confirm}
-            className="h-12 rounded-xl bg-foreground px-6 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+            className="h-12 rounded-xl bg-foreground px-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity sm:px-6"
           >
             Yes, I am 21 or older
           </button>
           <button
             type="button"
             onClick={() => setDeclined(true)}
-            className="h-12 rounded-xl border border-border bg-white px-6 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+            className="h-12 rounded-xl border border-border bg-white px-3 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors sm:px-6"
           >
             No, I am under 21
           </button>
