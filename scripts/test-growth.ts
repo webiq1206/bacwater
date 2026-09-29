@@ -14,6 +14,14 @@ assert.equal(shared.includes('125'),false);
 assert.equal(shared.includes('secret'),false);
 assert.equal(growthArrivalEvent('?utm_source=embed&note=private'),'arrival_embed');
 assert.equal(growthArrivalEvent('?utm_source=private-patient-name'),null);
+assert.equal(growthArrivalEvent('', 'https://www.google.com/search?q=private-health-query'), 'arrival_google');
+assert.equal(growthArrivalEvent('', 'https://www.bing.com/search?q=private'), 'arrival_bing');
+assert.equal(growthArrivalEvent('', 'https://chatgpt.com/c/private-conversation'), 'arrival_ai_search');
+assert.equal(growthArrivalEvent('?utm_source=chatgpt.com'), 'arrival_ai_search');
+assert.equal(growthArrivalEvent('', 'https://chatgpt.com.attacker.example/'), null);
+assert.equal(growthArrivalEvent('', 'https://bacwater.ai/plan/private-id'), null);
+assert.equal(growthArrivalEvent('', 'not a URL'), null);
+assert.equal(growthArrivalEvent('?utm_source=embed', 'https://www.google.com/'), 'arrival_embed');
 
 // Exercise the generated distributed script, not just its source helper.
 const definitions = new Map<string, any>();

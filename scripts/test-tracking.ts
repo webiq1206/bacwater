@@ -1,5 +1,14 @@
 import assert from "node:assert/strict";
+import { analyticsLocation, isPublicAnalyticsPath } from "../src/lib/analytics";
 import { isClarityUrlAllowed, clarityAllowedNow, CLARITY_CONSENT_KEY } from "../src/lib/clarity";
+
+assert.equal(analyticsLocation('/products/bpc-157'), 'https://bacwater.ai/products/guide');
+assert.equal(analyticsLocation('/products/glp-1'), 'https://bacwater.ai/products/guide');
+assert.equal(analyticsLocation('/products/bpc-157?email=private'), null);
+assert.equal(analyticsLocation('/products/bpc-157#private-note'), null);
+assert.equal(analyticsLocation('/plan/private-id'), null);
+assert.equal(analyticsLocation('/research-finder'), 'https://bacwater.ai/research-finder');
+assert.equal(isPublicAnalyticsPath('/products/bpc-157/private'), false);
 
 for (const path of ["/", "/tools/mg-to-mcg", "/learn/glossary", "/peptide-calculator", "/calculate/product/bpc-157"]) {
   assert.equal(isClarityUrlAllowed(`https://bacwater.ai${path}`), true, path);

@@ -12,6 +12,7 @@ import { ProductBuyLink, PurchaseDisclosure } from "@/components/partners/produc
 import { ProductPurchaseDock } from "@/components/partners/product-purchase-dock";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { ReviewedBy } from "@/components/common/reviewed-by";
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import styles from "./product-page.module.css";
 
@@ -28,7 +29,7 @@ export default async function ProductPage({params}:{params:Promise<{id:string}>}
  const papers=detail.sources.filter(s=>s.type!=="product");
  const related=catalog.filter(p=>p.id!==id&&researchCategory(p.id).id===category.id).slice(0,3);
  return <article className={styles.page} data-full-product={id}>
-  <WebPageJsonLd name={`${product.name}: Research Explained Simply`} description={detail.what} url={`/products/${id}`}/>
+  <WebPageJsonLd name={`${product.name}: Research Explained Simply`} description={detail.what} url={`/products/${id}`} citationUrls={detail.sources.map(source=>source.url)}/>
   <Breadcrumbs items={[{label:"Home",href:"/"},{label:"Products",href:"/recommendations"},{label:product.name,href:`/products/${id}`}]}/>
   <div className={styles.layout}>
    <div className={styles.content}>
@@ -39,6 +40,7 @@ export default async function ProductPage({params}:{params:Promise<{id:string}>}
      <div className={styles.heroFacts}><span>{PRODUCT_FORMATS[product.kind]}</span><span><BookOpen size={14} aria-hidden="true"/>{guide.model}</span></div>
      <p className={styles.notice}>{RESEARCH_ONLY_NOTICE}</p>
     </header>
+    <ReviewedBy className="mb-5"/>
     <nav className={styles.jump} aria-label="On this product page">{[["overview","Overview"],["how-it-works","How it works"],["research","Research"],["details","Details"],["questions","Questions"],["sources","Sources"]].map(([anchor,label])=><a key={anchor} href={`#${anchor}`}>{label}</a>)}</nav>
     <section id="overview" className={styles.section}>
      <div className={styles.sectionHeading}><span className={styles.sectionNumber}>01</span><h2>At a glance</h2></div>

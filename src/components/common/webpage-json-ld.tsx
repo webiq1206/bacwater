@@ -16,6 +16,8 @@ interface WebPageJsonLdProps {
   breadcrumb?: BreadcrumbItem[];
   /** When set, emits `citation` for the page's primary sources. */
   citations?: Reference[];
+  /** Exact source links visible on the page, without inferring a publisher. */
+  citationUrls?: readonly string[];
   /**
    * When true, marks the page as editorially reviewed (adds `reviewedBy` +
    * `lastReviewed` + `dateModified`). Use on content pages, not funnel pages.
@@ -23,7 +25,7 @@ interface WebPageJsonLdProps {
   reviewed?: boolean;
 }
 
-export function WebPageJsonLd({ name, description, url, breadcrumb, citations, reviewed }: WebPageJsonLdProps) {
+export function WebPageJsonLd({ name, description, url, breadcrumb, citations, citationUrls, reviewed }: WebPageJsonLdProps) {
   const parsedUrl = new URL(url, SITE_URL);
   const image = shareImage(`${parsedUrl.pathname}${parsedUrl.search}`);
   const jsonLd: Record<string, unknown> = {
@@ -45,8 +47,8 @@ export function WebPageJsonLd({ name, description, url, breadcrumb, citations, r
   // A caller flag is not evidence of a completed clinical or editorial review.
   void reviewed;
 
-  const citation = citationLd(citations);
-  if (citation) jsonLd.citation = citation;
+  const citation = [...(citationLd(citations) || []), ...new Set(citationUrls || [])];
+  if (citation.length) jsonLd.citation = citation;
 
   // Breadcrumb schema is intentionally NOT emitted here. The visible
   // <Breadcrumbs> component renders the single BreadcrumbList for the page, so

@@ -17,7 +17,7 @@ const references = [
   { title: "Bacteriostatic Water for Injection, USP: product labeling", source: "Pfizer Medical", url: "https://www.pfizermedical.com/bacteriostatic-water", note: "Storage temperature for this specific product and product-specific dilution instructions." },
   { title: "Preventing Unsafe Injection Practices: multi-dose vials", source: "CDC", url: "https://www.cdc.gov/injection-safety/hcp/clinical-safety/index.html", note: "Opened-vial dating, manufacturer exceptions and contamination limitations." },
 ];
-const description = "Unopened BAC water lasts until its printed expiry. Opened vials: CDC guidance is 28 days. See refrigeration, room temperature, freezing and expiry answers.";
+const description = "BAC water expiry, storage and the 28-day opened-vial rule, including manufacturer exceptions. Understand why mixed products need their own instructions.";
 const PATH = "/learn/bac-water-shelf-life";
 
 // The visible question sections and the FAQPage schema share these entries.
@@ -27,7 +27,7 @@ const FAQS = [
   { q: "Does BAC water need to be refrigerated?", a: "Do not assume it does. Pfizer's label specifies 20 to 25°C (68 to 77°F), which is controlled room temperature, not a refrigerator. Follow the exact label for the product you have. Once a substance is added, that product's storage instructions govern the mixture." },
   { q: "Can BAC water be stored at room temperature?", a: "For the Pfizer product, controlled room temperature is the labeled storage condition: 20 to 25°C (68 to 77°F). Keep the container closed and protected as the label directs, and check the container itself, because other manufacturers can state different conditions." },
   { q: "Can you freeze BAC water?", a: "The label specifies 20 to 25°C and gives no instruction for frozen storage, so freezing is outside the labeled range. A container that has been frozen should be treated as a deviation from the label: ask the dispensing pharmacist or manufacturer rather than assuming it is usable." },
-  { q: "Does BAC water expire, and can you use it past 28 days?", a: "Yes, every vial carries a manufacturer expiry date, and CDC guidance is not to use an opened multi-dose vial beyond 28 days or beyond that printed date. This site cannot assess an expired or long-opened container; questionable sterility is a reason to discard a vial even before its dated limit." },
+  { q: "Does BAC water expire, and can you use it past 28 days?", a: "Yes. CDC guidance is to discard an opened multi-dose vial within 28 days unless the manufacturer states another opened-vial date, and never beyond the printed expiry. This site cannot assess an expired or long-opened container; questionable sterility is a reason to discard a vial even before its dated limit." },
   { q: "How long does a reconstituted peptide last?", a: "That depends on the exact product and formulation, not on the water. The water's expiry and the 28-day opened-vial guidance do not transfer to a mixture. Use the storage and discard instructions for the specific product, and record the mix date separately from any calculation." },
 ];
 

@@ -34,7 +34,7 @@ export function AnalyticsPreferences() {
     };
     window.addEventListener("bacwater:usage", usage);
     if (!arrivalRecorded.current) {
-      const arrival = growthArrivalEvent(window.location.search);
+      const arrival = growthArrivalEvent(window.location.search, document.referrer);
       if (arrival) { usage(new CustomEvent("bacwater:usage", { detail: arrival })); arrivalRecorded.current = true; }
     }
     const supplier = (event: MouseEvent) => { if (event.target instanceof Element && event.target.closest('a[rel~="sponsored"]')) usage(new CustomEvent("bacwater:usage", { detail: "supplier_clicked" })); };

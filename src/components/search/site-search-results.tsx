@@ -1,0 +1,96 @@
+"use client";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight, Search, X } from "lucide-react";
+import { BASE_SEARCH_ITEMS, SEARCH_KIND_LABEL, searchItems, type SearchItem, type SearchKind } from "@/lib/search/public-index";
+import { useSupplierCatalog } from "@/components/partners/supplier-context";
+import { ProductQuickView } from "@/components/partners/product-quick-view";
+import { ProductSearchField } from "./product-search-field";
+import { matchDirectory } from "@/lib/partners/product-directory";
+import { productCalculatorPath } from "@/lib/partners/supplier-catalog";
+import { SearchThumbnail } from "./search-thumbnail";
+import { ProductBuyLink, PurchaseDisclosure } from "@/components/partners/product-purchase";
+import styles from "./search.module.css";
+
+const categories: [SearchKind | "all", string][] = [["all", "All"], ["product", "Products"], ["calculator", "Calculators"], ["guide", "Guides"], ["reference", "References"]];
+function Highlight({ text, query }: { text: string; query: string }) {
+  const start = query.trim() ? text.toLowerCase().indexOf(query.trim().toLowerCase()) : -1;
+  return start < 0 ? <>{text}</> : <>{text.slice(0, start)}<mark>{text.slice(start, start + query.trim().length)}</mark>{text.slice(start + query.trim().length)}</>;
+}
+
+export function SiteSearchResults({ onNavigate, standalone = false, activeProductId, onActiveProductChange }: {
+  onNavigate?: () => void; standalone?: boolean;
+  activeProductId?: string | null; onActiveProductChange?: (id: string | null) => void;
+}) {
+  const [query, setQuery] = useState(""), [kind, setKind] = useState<SearchKind | "all">("all");
+  const [items, setItems] = useState<readonly SearchItem[]>(BASE_SEARCH_ITEMS), [loading, setLoading] = useState(true), [partial, setPartial] = useState(false), [limit, setLimit] = useState(14);
+  const [localProduct, setLocalProduct] = useState<string | null>(null);
+  const detailId = onActiveProductChange ? activeProductId : localProduct;
+  const selectProduct = onActiveProductChange || setLocalProduct;
+  const root = useRef<HTMLDivElement>(null), input = useRef<HTMLInputElement>(null), resultList = useRef<HTMLDivElement>(null);
+  const products = useSupplierCatalog();
+  useEffect(() => { if (!standalone) input.current?.focus({ preventScroll: true }); }, [standalone]);
+  useEffect(() => {
+    const controller = new AbortController();
+    // Refresh only the public index. The visitor's search text never leaves this component.
+    fetch("/api/search-index", { cache: "no-store", signal: controller.signal }).then(async response => {
+      if (!response.ok) throw Error("unavailable");
+      const data = await response.json();
+      if (!Array.isArray(data.items)) throw Error("invalid");
+      const safe = data.items.filter((i: SearchItem) => i && typeof i.title === "string" && typeof i.description === "string" && typeof i.keywords === "string" && typeof i.href === "string" && /^\/(?:tools(?:\/|$)|peptide-calculator$|peptides(?:\/|$)|calculate\/product\/|products\/|learn(?:\/|$)|faq$|methodology$|recommendations$|research-finder$|contact$|privacy$|disclaimer$)/.test(i.href) && !/[?#\\]/.test(i.href) && Object.hasOwn(SEARCH_KIND_LABEL, i.kind));
+      setItems(safe); setPartial(!!data.partial);
+    }).catch(error => { if (error.name !== "AbortError") setPartial(true); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, []);
+  const productMatch = useMemo(() => {
+    const match = matchDirectory(products, query);
+    return { ...match, products: [...match.products].sort((a, b) => a.name.localeCompare(b.name)) };
+  }, [products, query]);
+  const matched = useMemo(() => searchItems(items, query, kind).filter(item => item.kind !== "product" || productMatch.scope !== "restricted"), [items, query, kind, productMatch.scope]);
+  const visible = matched.slice(0, limit);
+  function search(value: string) { setQuery(value); setLimit(14); if (resultList.current) resultList.current.scrollTop = 0; }
+  function navigate() { selectProduct(null); onNavigate?.(); }
+  function firstResult() { return root.current?.querySelector<HTMLElement>(kind === "product" ? "[data-product-match] > button" : "[data-search-result]"); }
+  return <div className={styles.searchBody} ref={root} data-site-search-results data-standalone={standalone}>
+    <form role="search" aria-label="Search products, calculators and guides" onSubmit={event => {
+      event.preventDefault();
+      firstResult()?.click();
+    }} className={styles.searchBox}>
+      <label htmlFor={standalone ? "page-site-search" : "dialog-site-search"}>What are you looking for?</label>
+      <div><Search size={20} aria-hidden="true" />
+        <input ref={input} id={standalone ? "page-site-search" : "dialog-site-search"} type="search" maxLength={160} value={query} onChange={event => search(event.target.value)} placeholder="Search products, calculators or guides" autoComplete="off" spellCheck={false} data-clarity-mask="true" enterKeyHint="search"
+          onKeyDown={event => { if (event.key === "ArrowDown" && firstResult()) { event.preventDefault(); firstResult()?.focus(); } }} />
+        {query && <button type="button" onClick={() => { search(""); input.current?.focus(); }} aria-label="Clear search"><X size={18} aria-hidden="true" /></button>}
+      </div>
+    </form>
+    <Link href="/research-finder" onClick={navigate} className="mx-4 my-2 flex min-h-12 items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-medium">Have a research question? Explore it with the research assistant <ArrowRight size={18} className="shrink-0" aria-hidden="true"/></Link>
+    <div className={styles.filters} role="group" aria-label="Search categories">{categories.map(([key, label]) => <button key={key} type="button" aria-pressed={key === kind} onClick={() => { setKind(key); setLimit(14); if (resultList.current) resultList.current.scrollTop = 0; }}>{label}</button>)}</div>
+    {kind === "product" ? <div className={styles.productPane}>
+      <ProductSearchField query={query} onChange={search} match={productMatch} inputRef={input} showInitial previewCount={6} hideField activeProductId={detailId} onActiveProductChange={selectProduct} />
+    </div> : <>
+      <p className={styles.status} role="status">{query ? `${matched.length} ${matched.length === 1 ? "match" : "matches"}` : kind === "all" ? "Search the site, or choose a category." : `${matched.length} ${kind === "reference" ? "references" : kind + "s"}`}{loading ? " Loading guides…" : partial ? " Guide search is temporarily unavailable." : ""}</p>
+      <div ref={resultList} className={styles.results} aria-label="Search results" tabIndex={0} onKeyDown={event=>{
+        if(!["ArrowDown","ArrowUp"].includes(event.key)||!(event.target instanceof HTMLElement)||!event.target.matches("[data-search-result]"))return;
+        const links=Array.from(resultList.current?.querySelectorAll<HTMLElement>("[data-search-result]")||[]),index=links.indexOf(event.target);
+        event.preventDefault();
+        if(event.key==="ArrowUp"&&index===0)input.current?.focus();
+        else links[Math.max(0,Math.min(links.length-1,index+(event.key==="ArrowDown"?1:-1)))]?.focus();
+      }}>
+        {visible.length ? <ul>{visible.map(item => {
+          const product = item.kind === "product" ? products.find(p => p.id === item.productId) : undefined;
+          return <li key={item.id}>
+            {product ? <ProductQuickView product={product} className={styles.result} open={detailId === product.id} onOpenChange={open => selectProduct(open ? product.id : null)} resultId={item.id}><SearchThumbnail item={item}/><span className={styles.resultText}><small>Product</small><strong><Highlight text={item.title} query={query}/></strong><span>{item.description}</span><b className={styles.openLabel}>Read research details</b></span><ArrowRight size={18} aria-hidden="true"/></ProductQuickView> : <><Link href={item.href} className={styles.result} data-search-result={item.id} onClick={navigate}><SearchThumbnail item={item} /><span className={styles.resultText}><small>{SEARCH_KIND_LABEL[item.kind]}</small><strong><Highlight text={item.title} query={query} /></strong><span>{item.description}</span><b className={styles.openLabel}>{item.kind === "calculator" ? "Open calculator" : item.kind === "reference" ? "Read reference" : "Open page"}</b></span><ArrowRight size={18} aria-hidden="true" /></Link></>}
+            {product && <div className={styles.productActions}>
+              <Link href={productCalculatorPath(product.id)} className={styles.quickDetails} onClick={navigate}>Use in calculator</Link>
+              <PurchaseDisclosure product={product}/>
+              <ProductBuyLink product={product}/>
+            </div>}
+          </li>;
+        })}</ul> : <div className={styles.empty}><Search size={30} aria-hidden="true" /><h3>No matches yet</h3><p>Try a shorter name, different spelling, or the All filter.</p><Link href="/contact" onClick={navigate}>Ask us for help</Link></div>}
+        {matched.length > limit && <button className={styles.more} type="button" onClick={() => setLimit(n => n + 20)}>Show more results</button>}
+      </div>
+    </>}
+    <div className={styles.searchFooter}><Link href="/recommendations" onClick={navigate}>Browse all products <ArrowRight size={16} aria-hidden="true" /></Link><p className={styles.footnote}>Results update as you type. Search stays in your browser and excludes private plans.</p></div>
+  </div>;
+}
+

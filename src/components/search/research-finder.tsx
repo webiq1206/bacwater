@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useId, useRef } from "react";
 import Link from "next/link";
+import { trackUsage } from "@/lib/analytics";
 import { ArrowRight, ArrowUp, BookOpen, Plus } from "lucide-react";
 import { researchReply, FINDER_SUGGESTIONS } from "@/lib/search/research-finder";
 import { useSupplierCatalog } from "@/components/partners/supplier-context";
@@ -19,6 +20,7 @@ export function ResearchFinder(){
  useEffect(()=>{const area=conversation.current,turn=lastTurn.current;if(area&&turn)area.scrollTo({top:area.scrollTop+turn.getBoundingClientRect().top-area.getBoundingClientRect().top-12,behavior:"instant"});},[last?.id]);
  function submit(text:string){
   if(!text.trim())return;
+  trackUsage("research_question_submitted");
   setSession(old=>{const answer=researchReply(text,old.context),id=old.sequence+1;return {question:"",context:answer.context,sequence:id,turns:[...old.turns,{id,question:text.trim(),answer}].slice(-12)};});
  }
  function reset(){selectQuickView(null);setSession(emptyResearchSession());input.current?.focus({preventScroll:true});}

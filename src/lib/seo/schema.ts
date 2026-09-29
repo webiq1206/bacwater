@@ -27,7 +27,7 @@ export const orgNode = {
     "BACwater.ai is the complete BAC water calculator and reconstitution guide: deterministic calculations, printable plans, and educational references.",
   contactPoint: {
     "@type": "ContactPoint",
-    email: "info@bacwater.ai",
+    url: `${SITE_URL}/contact`,
     contactType: "customer service",
     availableLanguage: "English",
   },

@@ -90,10 +90,11 @@ type SiteLink = { href: string; label: string };
  * (the same source the XML sitemap uses) is what stops the HTML and XML maps
  * from drifting apart.
  */
-function bucketOf(path: string): "tools" | "learn" | "company" {
+function bucketOf(path: string): "tools" | "products" | "learn" | "company" {
+  if (path.startsWith("/products/") || path === "/recommendations") return "products";
   if (
     path === "" ||
-    path === "/peptide-calculator" ||
+    path === "/peptide-calculator" || path === "/research-finder" ||
     path.startsWith("/plan") ||
     path.startsWith("/tools") ||
     path === "/peptides" ||
@@ -105,7 +106,7 @@ function bucketOf(path: string): "tools" | "learn" | "company" {
 }
 
 export default async function HtmlSitemapPage() {
-  const staticByBucket = { tools: [] as SiteLink[], learn: [] as SiteLink[], company: [] as SiteLink[] };
+  const staticByBucket = { tools: [] as SiteLink[], products: [] as SiteLink[], learn: [] as SiteLink[], company: [] as SiteLink[] };
   for (const p of STATIC_PAGES) {
     staticByBucket[bucketOf(p.path)].push({
       href: p.path === "" ? "/" : p.path,
@@ -148,6 +149,7 @@ export default async function HtmlSitemapPage() {
   // so an overlap between sources can never produce two links to one URL.
   const sections: { heading: string; links: SiteLink[] }[] = [
     { heading: "Calculators & tools", links: staticByBucket.tools },
+    { heading: "Research products", links: staticByBucket.products },
     { heading: "Peptide reference", links: peptideLinks },
     { heading: "Learning Center", links: [...staticByBucket.learn, ...guideLinks] },
     { heading: "Compare bacteriostatic water", links: comparisonLinks },
