@@ -1,6 +1,34 @@
 {
   "reviewedAt": "2026-09-28",
-  "opportunities": [],
+  "opportunities": [
+    {
+      "id": "uspeptidefinder-resource-submission",
+      "status": "qualified_research_only",
+      "channel": "research_resource_directory",
+      "canonicalUrl": "https://uspeptidefinder.com/submit",
+      "discoveredAt": "2026-09-28",
+      "specificNeed": "USPeptideFinder explicitly invites community submissions of active US-based peptide research tools. Its current directory has a dedicated Tools category with two listings, so a distinct, math-only calculator suite fits the stated resource gap.",
+      "evidence": [
+        "The directory describes its Tools category as calculators, databases and research tools for peptide science.",
+        "The public submission form accepts tools and says submissions receive manual review within 3–5 business days.",
+        "Guidelines require a US-based or US-serving, actively maintained, research-only resource that does not promote human consumption.",
+        "BACwater.ai's live calculator pages require product selection first, use visitor-provided label values, show the arithmetic, require no account, and explicitly do not recommend doses, diluents or treatment."
+      ],
+      "matchingTool": {
+        "name": "BACwater.ai peptide calculator",
+        "url": "https://bacwater.ai/peptide-calculator"
+      },
+      "helpfulDraft": "BACwater.ai is a free browser-based calculation toolkit for laboratory research. It converts label-provided mg, mcg, mL and U-100 values, shows each arithmetic step, and keeps product formats distinct without recommending doses, diluents or treatment. No account is required.",
+      "applicableRules": [
+        "Must be US-based or primarily serve the US research market.",
+        "Must be actively maintained.",
+        "Must not promote human consumption of research peptides.",
+        "Duplicate or near-duplicate resources are declined."
+      ],
+      "nextStep": "Research only in this task. The public form requires a contact email, so no submission was made and no email or direct message was sent. If handled later through an owner-authorized contact identity, submit once and record the returned listing URL only after approval.",
+      "spend": 0
+    }
+  ],
   "researchNotes": [
     {
       "url": "https://www.reddit.com/r/SideProject/comments/1wnhqlh/free_peptide_calculator_i_built_because_most/",
@@ -11,6 +39,18 @@
       "url": "https://www.aminoclub.com/shop/affiliate-terms",
       "status": "partner_terms_checked",
       "reason": "Official partner terms require accurate research-only promotion and material-connection disclosure. A free arithmetic widget may be proposed through an authorized partner conversation after deployment; no placement or outreach is claimed."
+    },
+    {
+      "url": "https://www.reddit.com/r/compoundtirzepatide/comments/1wn1jrf/need_help_w_dosing_units/",
+      "status": "not_qualified",
+      "reviewedAt": "2026-09-28",
+      "reason": "The September 22 thread is a personal dosing-confirmation question. Comments already answered it and linked another calculator. The subreddit rules endpoint returned no community-specific rules beyond Reddit's sitewide spam rule. Treating it as a BACwater promotion opportunity would duplicate an answer and cross the no-medical-protocol boundary."
+    },
+    {
+      "url": "https://www.reddit.com/r/moreplatesmoredates/comments/1wnksic/a_simple_breakdown_of_peptide_reconstitution_math/",
+      "status": "not_qualified",
+      "reviewedAt": "2026-09-28",
+      "reason": "The September 22 post is an educational explanation, not a request for another calculator; its only comment asks for individualized advice. The subreddit explicitly prohibits self-promotion and requires posts to relate directly to its YouTube channel. Do not post or link BACwater there."
     }
   ]
 }
