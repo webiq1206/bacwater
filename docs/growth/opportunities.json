@@ -3,7 +3,7 @@
   "opportunities": [
     {
       "id": "uspeptidefinder-resource-submission",
-      "status": "prepared_pending_required_confirmation",
+      "status": "submitted_pending_review",
       "channel": "research_resource_directory",
       "canonicalUrl": "https://uspeptidefinder.com/submit",
       "discoveredAt": "2026-09-28",
@@ -25,7 +25,7 @@
         "Must not promote human consumption of research peptides.",
         "Duplicate or near-duplicate resources are declined."
       ],
-      "nextStep": "Prepared the resource name, website, Tools category and description in the public form. An entry modal requires a business email, confirmation of age 18+, and agreement to its research-only disclaimer. Browser policy requires action-time approval of the agreement. No submission has been sent. After the owner confirms the specific gate, finish the email fields, submit once, capture the returned confirmation and mark submitted_pending_review. Review window stated by directory: 3-5 business days.",
+      "nextStep": "Check the public directory for approval after the stated 3-5 business day review window, starting October 2 and again October 6, 2026. Do not resubmit. Mark approved_or_live only after verifying the actual BACwater listing. No listing URL or submission ID was returned.",
       "spend": 0,
       "lastAttemptAt": "2026-09-29",
       "submission": {
@@ -34,7 +34,15 @@
         "category": "Tools",
         "description": "BACwater.ai is a free browser-based calculation toolkit for laboratory research. It converts user-entered mg, mcg, mL and U-100 values, shows the arithmetic, and offers saved calculations, PDFs and printable labels. No account is needed for the calculators. It does not choose compounds, recommend doses or diluents, or provide treatment advice. For laboratory research only, not for human or veterinary use. Submitted by WEB IQ on behalf of BACwater.ai. The site includes disclosed affiliate links to research suppliers.",
         "contactIdentity": "Existing WEB IQ business email, verified in private owner context; do not publish private contact evidence here."
-      }
+      },
+      "submittedAt": "2026-09-29T14:26:00Z",
+      "confirmation": {
+        "heading": "Submission Received",
+        "message": "Thanks for contributing to the directory. We'll review your submission within 3–5 business days and reach out if we need more information.",
+        "url": "https://uspeptidefinder.com/submit",
+        "verifiedVia": "Browser rendered success state after a single Submit for Review action."
+      },
+      "consent": "Owner explicitly approved this site's age confirmation and research-only disclaimer on September 29, 2026. The entry gate was no longer present when the form was resumed."
     }
   ],
   "researchNotes": [
