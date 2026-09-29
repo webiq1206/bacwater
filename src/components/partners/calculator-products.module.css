@@ -2,3 +2,5 @@
 @media(max-width:380px){.tools{font-size:12px}.choose,.water{padding-inline:10px}.selectedArt{width:64px}.dialog{padding:16px!important}.thumb{width:52px;flex-basis:52px}}
 @media(max-height:500px){.dialog{overflow:auto}.list{flex:none;max-height:220px}.count{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.dialog,.option{transition:none!important;animation:none!important}}
+
+.selectedText a[data-product-buy]{min-height:44px;text-decoration:none;color:#fffef9;font-size:12px;padding:8px 12px}

@@ -3,19 +3,23 @@ import { useRef } from "react";
 import Link from "next/link";
 import { ArrowRight, Info } from "lucide-react";
 import { DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
+import { RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
 import { PRODUCT_RESEARCH } from "@/lib/partners/product-content";
 import { PRODUCT_GUIDES } from "@/lib/partners/product-guides";
 import { PRODUCT_FORMATS } from "@/lib/partners/product-directory";
 import { researchCategory } from "@/lib/partners/research-categories";
 import { ProductArtwork } from "./product-artwork";
+import { ProductBuyLink, PurchaseDisclosure } from "./product-purchase";
+import { useSearchViewport } from "@/components/search/use-search-viewport";
 import styles from "./product-quick-view.module.css";
 
 /** Quick look only. Longer explanations and citations belong on the full page. */
 export default function ProductDetailContent({product}:{product:DisplaySupplierProduct}) {
+ const dialogRef=useRef<HTMLDivElement>(null);
+ useSearchViewport(true,dialogRef);
  const title=useRef<HTMLHeadingElement>(null),detail=PRODUCT_RESEARCH[product.id],guide=PRODUCT_GUIDES[product.id];
  if(!detail||!guide)return null;
- return <DialogContent className={styles.dialog} data-product-detail={product.id} onOpenAutoFocus={e=>{e.preventDefault();title.current?.focus();}}>
+ return <DialogContent ref={dialogRef} className={styles.dialog} data-product-detail={product.id} onOpenAutoFocus={e=>{e.preventDefault();title.current?.focus();}}>
   <header className={styles.header}>
    <div className={styles.eyebrow}>QUICK LOOK<span>{researchCategory(product.id).label}</span></div>
    <DialogTitle ref={title} tabIndex={-1} className={styles.title}>{product.name}</DialogTitle>
@@ -29,9 +33,12 @@ export default function ProductDetailContent({product}:{product:DisplaySupplierP
    <div className={styles.limit}><Info size={18} aria-hidden="true"/><div><h3>What is not established</h3><p>{guide.caution}</p></div></div>
   </div>
   <footer className={styles.quickFooter}>
-   <p className={styles.disclosure}>{product.paid?AFFILIATE_DISCLOSURE:"Supplier information. No paid referral is active."}</p>
-   <DialogClose asChild><Link className={styles.action} href={`/products/${product.id}`}>View Full Details <ArrowRight size={18} aria-hidden="true"/></Link></DialogClose>
-   <span className={styles.externalNote}>Plain explanations, research, sources and common questions.</span>
+   <PurchaseDisclosure product={product}/>
+   <div className={styles.footerActions}>
+    <DialogClose asChild><Link className={styles.detailsAction} href={`/products/${product.id}`}>View Full Details <ArrowRight size={16} aria-hidden="true"/></Link></DialogClose>
+    <ProductBuyLink product={product}/>
+   </div>
+   <span className={styles.externalNote}>Purchase on Amino Club. Opens in a new tab.</span>
   </footer>
  </DialogContent>;
 }

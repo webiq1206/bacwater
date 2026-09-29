@@ -10,6 +10,7 @@ import { productChoices } from "@/lib/search/public-index";
 import { searchScore } from "@/lib/search/matching";
 import { ResearchCategoryFilter } from "@/components/partners/research-category-filter";
 import { matchesResearchCategory, researchCategory, type ResearchCategory } from "@/lib/partners/research-categories";
+import { ProductBuyLink } from "@/components/partners/product-purchase";
 import styles from "./product-picker.module.css";
 export function ProductPicker({value,onChange,label="Product",referencesOnly=false,excludeValue,compact=false}:{value:string;onChange:(value:string)=>void;label?:string;referencesOnly?:boolean;excludeValue?:string;compact?:boolean}){
  const [open,setOpen]=useState(false),[query,setQuery]=useState(""),uid=useId(),input=useRef<HTMLInputElement>(null),list=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
@@ -28,5 +29,5 @@ export function ProductPicker({value,onChange,label="Product",referencesOnly=fal
    <span className={styles.thumb} aria-hidden="true">{p.product?<ProductArtwork product={p.product} compact/>:<Search size={23}/>}</span><span className={styles.optionText}><strong>{p.name}</strong><span>{p.product?`${researchCategory(p.product.id).label} · `:""}{p.description}</span></span>{p.value===value?<Check size={20} aria-hidden="true"/>:<ChevronDown className={styles.chevron} size={18} aria-hidden="true"/>}
   </button>)}{!filtered.length&&<p className={styles.noResults}>No match. Try a shorter name, or select All categories and clear the search to choose Other / Custom.</p>}</div>
   <p className={styles.footer} style={{fontSize:13,lineHeight:1.6}}>Our illustrations are not product packaging. {catalog.some(p=>p.paid)&&"We may earn a commission from supplier purchases."}</p>
- </DialogContent></Dialog>{destination&&!compact&&<><p className={styles.footer} style={{fontSize:13,lineHeight:1.6}}>{destination.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p><a className={styles.productLink} href={destination.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" data-selected-product-link>View product details<span aria-hidden="true"> ↗</span></a></>}</>;
+ </DialogContent></Dialog>{destination&&!compact&&<><p className={styles.footer} style={{fontSize:13,lineHeight:1.6}}>{destination.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p><ProductBuyLink product={destination} selected/></>}</>;
 }

@@ -6,6 +6,7 @@ import type { DirectoryMatch } from "@/lib/partners/product-directory";
 import { RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
 import { ProductArtwork } from "@/components/partners/product-artwork";
 import { ProductQuickView } from "@/components/partners/product-quick-view";
+import { ProductBuyLink, PurchaseDisclosure } from "@/components/partners/product-purchase";
 import styles from "./product-search.module.css";
 
 type Props = {
@@ -71,6 +72,7 @@ export function ProductSearchField({ query, onChange, match, inputId, inputRef, 
           <span className={styles.matchText}><strong>{product.name}</strong><span>{product.label}</span><small>Research details</small></span>
           <ArrowRight size={18} aria-hidden="true" />
         </ProductQuickView>
+        <div className={styles.purchase}><PurchaseDisclosure product={product}/><ProductBuyLink product={product}/></div>
       </li>)}</ul> : <div className={styles.empty}><p>{match.message}</p>{query && <button type="button" onClick={clear}>Clear search</button>}</div>}
       {match.products.length > visible.length && <button type="button" className={styles.more} onClick={() => onBrowse ? onBrowse() : setLimit(value => value + 12)}>{onBrowse ? `See all ${match.products.length} matching products` : "Show more products"}<ArrowRight size={16} aria-hidden="true" /></button>}
     </div>}

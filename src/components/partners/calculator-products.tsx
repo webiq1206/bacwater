@@ -12,6 +12,7 @@ import { useSupplierCatalog } from "./supplier-context";
 import { ProductArtwork } from "./product-artwork";
 import { ResearchCategoryFilter } from "@/components/partners/research-category-filter";
 import { matchesResearchCategory, researchCategory, type ResearchCategory } from "@/lib/partners/research-categories";
+import { ProductBuyLink } from "./product-purchase";
 import styles from "./calculator-products.module.css";
 const ignoreSelection = (_id: string | null) => {};
 export const ProductSelectionContext = createContext<(id:string|null)=>void>(ignoreSelection);
@@ -48,11 +49,11 @@ export function CalculatorProductTools({selectedId,showProductPicker=true}:{sele
      <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>Our own artwork, not product packaging. {catalog.some(p=>p.paid)&&"We may earn a commission from supplier purchases."}</p>
     </DialogContent>
    </Dialog>}
-   <a className={styles.water} href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${water.name}, opens a new tab`}><Droplets size={16} aria-hidden="true"/>{water.name}<ArrowUpRight size={14} aria-hidden="true"/></a>
+   <a className={styles.water} href={water.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`Buy ${water.name} at Amino Club, opens a new tab`}><Droplets size={16} aria-hidden="true"/>Buy {water.name}<ArrowUpRight size={14} aria-hidden="true"/></a>
   </div>
   {product&&<div className={styles.selected} data-selected-product={product.id}>
    <span className={styles.selectedArt}><ProductArtwork product={product} compact/></span>
-   <div className={styles.selectedText}><strong>{product.name}</strong><span>{product.label}</span><a href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" data-selected-product-link aria-label={`View ${product.name}, opens a new tab`}>View product<ArrowUpRight size={14} aria-hidden="true"/></a></div>
+   <div className={styles.selectedText}><strong>{product.name}</strong><span>{product.label}</span><ProductBuyLink product={product} selected/></div>
   </div>}
   <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>{(product?.paid||water.paid)&&AFFILIATE_DISCLOSURE} {RESEARCH_ONLY_NOTICE}</p>
  </div>;

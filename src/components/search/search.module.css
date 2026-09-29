@@ -16,3 +16,5 @@
 .searchBody[data-standalone=true] .productPane [data-product-search-matches]{overflow:visible}
 @media(max-width:780px){.productActions{padding-left:76px}.trigger[data-compact=false]{font-size:12px;padding:9px 8px;gap:6px}.searchFooter .footnote{font-size:10px}}
 @media(max-height:520px){.productPane [data-live-product-search],.productPane [data-product-search-matches]{overflow:visible;flex:none}.productPane{flex:none}}
+
+.productActions>a[data-product-buy]{max-width:280px;font-size:12px;margin-top:7px}

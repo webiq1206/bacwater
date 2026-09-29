@@ -1,15 +1,16 @@
 "use client";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
-import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct, type ProductKind } from "@/lib/partners/supplier-catalog";
+import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct, type ProductKind } from "@/lib/partners/supplier-catalog";
 import { DIRECTORY_KINDS, matchDirectory } from "@/lib/partners/product-directory";
 import { ProductSearchField } from "@/components/search/product-search-field";
 import searchStyles from "@/components/search/product-search.module.css";
 import { ProductArtwork } from "./product-artwork";
 import { ProductQuickView } from "./product-quick-view";
 import { ResearchCategoryFilter } from "@/components/partners/research-category-filter";
-import { matchesResearchCategory, researchCategory, type ResearchCategory } from "@/lib/partners/research-categories";
+import { researchCategory, type ResearchCategory } from "@/lib/partners/research-categories";
+import { ProductCardPurchase } from "./product-purchase";
 import styles from "./product-directory.module.css";
 
 const PAGE_SIZE=12;
@@ -45,7 +46,7 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
         {/* Avoid native hidden: the CSS reset gives it layered !important priority over the no-script fallback. */}
         {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} data-page-hidden={index<start||index>=start+PAGE_SIZE?"true":undefined} style={index<start||index>=start+PAGE_SIZE?{display:"none"}:undefined}>
           <div className={styles.art}><ProductArtwork product={product}/></div>
-          <div className={styles.cardBody}><p className={styles.eyebrow}>{researchCategory(product.id).label} · {product.label}</p><h3><Link href={`/products/${product.id}`}>{product.name}</Link></h3><p className={styles.summary}>{product.summary}</p><p className={styles.researchNote}>{RESEARCH_ONLY_NOTICE}</p><ProductQuickView product={product}/><p className={styles.disclosure}>{product.paid?AFFILIATE_DISCLOSURE:"Supplier link. No paid referral is active."}</p><a className={styles.cardSupplier} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${product.name} from the supplier, opens a new tab`}>View product <ArrowUpRight size={17} aria-hidden="true"/></a></div>
+          <div className={styles.cardBody}><p className={styles.eyebrow}>{researchCategory(product.id).label} · {product.label}</p><h3><Link href={`/products/${product.id}`}>{product.name}</Link></h3><p className={styles.summary}>{product.summary}</p><p className={styles.researchNote}>{RESEARCH_ONLY_NOTICE}</p><ProductQuickView product={product}/><ProductCardPurchase product={product}/></div>
         </article>)}
       </div>
       {pages>1&&<nav className={styles.pagination} aria-label="Product pages"><button type="button" disabled={current===1} onClick={()=>turn(current-1)}><ArrowLeft size={18} aria-hidden="true"/>Previous</button><span>Page {current} of {pages}</span><button type="button" disabled={current===pages} onClick={()=>turn(current+1)}>Next<ArrowRight size={18} aria-hidden="true"/></button></nav>}

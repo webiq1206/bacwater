@@ -10,8 +10,9 @@ import { useSupplierCatalog } from "@/components/partners/supplier-context";
 import { ProductQuickView } from "@/components/partners/product-quick-view";
 import { ProductSearchField } from "./product-search-field";
 import { matchDirectory } from "@/lib/partners/product-directory";
-import { AFFILIATE_DISCLOSURE, RESEARCH_ONLY_NOTICE, productCalculatorPath } from "@/lib/partners/supplier-catalog";
+import { productCalculatorPath } from "@/lib/partners/supplier-catalog";
 import { SearchThumbnail } from "./search-thumbnail";
+import { ProductBuyLink, PurchaseDisclosure } from "@/components/partners/product-purchase";
 import styles from "./search.module.css";
 
 const SearchContext = createContext<((opener?: HTMLElement) => void) | null>(null);
@@ -84,8 +85,8 @@ export function SiteSearchResults({ onNavigate, standalone = false, activeProduc
             {product ? <ProductQuickView product={product} className={styles.result} open={detailId === product.id} onOpenChange={open => selectProduct(open ? product.id : null)} resultId={item.id}><SearchThumbnail item={item}/><span className={styles.resultText}><small>Product</small><strong><Highlight text={item.title} query={query}/></strong><span>{item.description}</span><b className={styles.openLabel}>Read research details</b></span><ArrowRight size={18} aria-hidden="true"/></ProductQuickView> : <><Link href={item.href} className={styles.result} data-search-result={item.id} onClick={navigate}><SearchThumbnail item={item} /><span className={styles.resultText}><small>{SEARCH_KIND_LABEL[item.kind]}</small><strong><Highlight text={item.title} query={query} /></strong><span>{item.description}</span><b className={styles.openLabel}>{item.kind === "calculator" ? "Open calculator" : item.kind === "reference" ? "Read reference" : "Open page"}</b></span><ArrowRight size={18} aria-hidden="true" /></Link></>}
             {product && <div className={styles.productActions}>
               <Link href={productCalculatorPath(product.id)} className={styles.quickDetails} onClick={navigate}>Use in calculator</Link>
-              <p>{product.paid ? AFFILIATE_DISCLOSURE : "Supplier link. No paid referral is active."} {RESEARCH_ONLY_NOTICE}</p>
-              <a className={styles.supplierAction} href={product.href} target="_blank" rel="sponsored nofollow noopener noreferrer" referrerPolicy="no-referrer" aria-label={`View ${item.title} product, opens a new tab`}>View product <span aria-hidden="true">↗</span></a>
+              <PurchaseDisclosure product={product}/>
+              <ProductBuyLink product={product}/>
             </div>}
           </li>;
         })}</ul> : <div className={styles.empty}><Search size={30} aria-hidden="true" /><h3>No matches yet</h3><p>Try a shorter name, different spelling, or the All filter.</p><Link href="/contact" onClick={navigate}>Ask us for help</Link></div>}

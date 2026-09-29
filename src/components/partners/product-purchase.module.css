@@ -1,0 +1,15 @@
+.buy{display:flex;align-items:center;justify-content:center;gap:10px;min-width:0;min-height:48px;padding:12px 16px;border:1px solid #183c30;border-radius:11px;background:#183c30;color:#fffef9;font-family:var(--font-montserrat),Arial,sans-serif;font-size:13px;font-weight:600;line-height:1.45;text-align:center;text-decoration:none;overflow-wrap:anywhere;transition:background .15s}
+.buy:hover{background:#2c5140}.buy svg{flex-shrink:0}.buy:focus-visible{outline:3px solid #587c40;outline-offset:3px}
+.disclosure{font-size:11px;line-height:1.6;color:#4b6251;margin:0}
+.cardPurchase{position:sticky;bottom:64px;z-index:2;padding:10px 0 0;margin-top:auto;background:#fffef9;border-top:1px solid #dce3d3;box-shadow:0 -8px 12px #fffef9}.cardPurchase .disclosure{margin-bottom:6px}.cardPurchase .buy{width:100%}
+.dock{display:none}
+@media(max-width:1023px){
+ .cardPurchase{bottom:calc(132px + env(safe-area-inset-bottom))}
+ .dock{display:block;position:fixed;z-index:44;bottom:0;inset-inline:0;padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:#fffef9;border-top:1px solid #c7d5bb;box-shadow:0 -5px 24px #183c3010;font-family:var(--font-montserrat),Arial,sans-serif}
+ .dockInner{max-width:740px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(176px,auto);gap:6px 14px;align-items:center}.dockIdentity{min-width:0}.dockIdentity strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:1.5;font-weight:600}.dockIdentity span{display:block;font-size:10px;color:#4b6251;margin-top:3px}.dock .disclosure{grid-column:1 / -1;text-align:center;font-size:10px}.dock .buy{min-height:46px;padding:10px 12px;font-size:12px}
+ :global(body):has(.dock){padding-bottom:calc(var(--product-purchase-height,108px) + 12px)}
+ :global(body):has(.dock) :global([data-research-launcher]){bottom:calc(var(--product-purchase-height,108px) + 12px)!important}
+ :global(body):has(.dock){scroll-padding-bottom:calc(var(--product-purchase-height,108px) + 20px)}
+}
+@media(max-width:359px){.dockInner{grid-template-columns:minmax(0,1fr);gap:5px}.dockIdentity{display:flex;justify-content:space-between;align-items:center;gap:10px}.dockIdentity strong{font-size:12px}.dockIdentity span{flex-shrink:0;font-size:9px;margin:0}.dock .disclosure{font-size:10px}}
+@media print{.dock,.cardPurchase,.buy{display:none!important}}
