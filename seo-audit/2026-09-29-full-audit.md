@@ -138,6 +138,7 @@ Findings:
 - robots.txt on the rebuilt server lists the wildcard group plus the nine named answer-engine agents with identical rules.
 - Lighthouse after the changes, mobile, local build: shelf-life page 91 (LCP 3.3 s, CLS 0), unchanged; homepage 61 (LCP 5.1 s, TBT 810 ms) against 67 before, which is container CPU noise on an unchanged bundle rather than an effect of these edits. The homepage's main-thread cost predates this work and is listed under remaining work.
 - Live verification of the deployed result (robots.txt, FAQ schema in production HTML, Search Console rich-result reads) needs the deploy first; this environment cannot reach bacwater.ai directly.
+- Restored hero acceptance workflow: this check had been red on main for its last six runs on the same assertion ("SEO metadata, visible primary heading and reflow are consistent"). Root cause, reproduced locally in Chromium: at 320px with 200% text the rotated decorative backdrop behind the hero calculator bled 10px past the viewport and made the page horizontally scrollable. Fixed by clipping the hero section's horizontal overflow only. That unmasked a second, previously hidden failure in the same check: axe's definition-list rule on the review step, where an Edit button sat directly inside a dl group; the button now lives inside the dd. The full chromium half of scripts/audit-hero-restoration.mjs passes locally on a build with the CI site URL. Neither fix changes copy, layout at normal text size, or behaviour.
 
 ## 8. Unresolved blockers and decisions for the owner
 

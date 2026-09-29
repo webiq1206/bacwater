@@ -105,19 +105,19 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
 
         {/* Side by side on phones too: the banner precedes every page's answer
             for a first-time visitor, so it should cost one row, not two. */}
-        <div className="grid shrink-0 grid-cols-2 gap-2.5 sm:flex sm:flex-row">
+        <div className="flex shrink-0 flex-wrap gap-2.5">
           <button
             type="button"
             ref={declinedButton}
             onClick={confirm}
-            className="h-12 rounded-xl bg-foreground px-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity sm:px-6"
+            className="min-h-12 min-w-[8.5rem] flex-1 rounded-xl bg-foreground px-3 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity sm:flex-none sm:px-6"
           >
             Yes, I am 21 or older
           </button>
           <button
             type="button"
             onClick={() => setDeclined(true)}
-            className="h-12 rounded-xl border border-border bg-white px-3 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors sm:px-6"
+            className="min-h-12 min-w-[8.5rem] flex-1 rounded-xl border border-border bg-white px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors sm:flex-none sm:px-6"
           >
             No, I am under 21
           </button>

@@ -16,6 +16,12 @@
   padding: 52px 40px 78px;
   color: var(--ink);
   font-family: var(--font-montserrat), Arial, sans-serif;
+  /* The rotated .scene::before backdrop and the orbit ring are decorative and
+     bleed a few pixels past the section at 320px with enlarged text, which
+     turned the whole page horizontally scrollable (the reflow assertion in
+     audit-hero-restoration.mjs). Clip only the horizontal axis so vertical
+     overflow, the fixed full-screen calculator and focus rings are unaffected. */
+  overflow-x: clip;
 }
 .hero * { box-sizing: border-box; }
 .copy, .scene { min-width: 0; overflow-wrap: anywhere; }

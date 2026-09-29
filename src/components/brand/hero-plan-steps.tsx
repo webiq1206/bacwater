@@ -98,7 +98,8 @@ export function HeroPlanSteps(p: Props) {
     {ready && p.result.warnings.length > 0 && <ul className={styles.stepWarnings}>{p.result.warnings.map(warning => <li key={warning}>{warning}</li>)}</ul>}
     {step === 5 && <>
       {p.secondary}
-      <dl className={styles.reviewRows}>{p.preview.entries.map((entry, i) => <div key={entry.field}><dt>{entry.label}</dt><dd>{entry.value}</dd><button type="button" onClick={() => move(i)} aria-label={`Edit ${entry.label.toLowerCase()}`}>Edit</button></div>)}<div><dt>Device / date</dt><dd>{SYRINGES.find(s => s.id === p.device)?.label}<br/>{p.date || "No date set"}</dd><button type="button" onClick={() => move(4)} aria-label="Edit device and date">Edit</button></div></dl>
+      {/* The Edit control lives inside the dd: a dl group may hold only dt and dd (axe definition-list), and the review still reads as label, value, action. */}
+      <dl className={styles.reviewRows}>{p.preview.entries.map((entry, i) => <div key={entry.field}><dt>{entry.label}</dt><dd><span>{entry.value}</span><button type="button" onClick={() => move(i)} aria-label={`Edit ${entry.label.toLowerCase()}`}>Edit</button></dd></div>)}<div><dt>Device / date</dt><dd><span>{SYRINGES.find(s => s.id === p.device)?.label}<br/>{p.date || "No date set"}</span><button type="button" onClick={() => move(4)} aria-label="Edit device and date">Edit</button></dd></div></dl>
       <label className={styles.stepLabel} htmlFor={`${id}-name`}>Plan name</label><input className={styles.stepSelect} id={`${id}-name`} value={p.name} onChange={e => p.onName(e.target.value)} maxLength={120}/>
       <p className={styles.stepHint}>Saving creates a shareable link, PDF and printable labels. No account is needed.</p>
     </>}
