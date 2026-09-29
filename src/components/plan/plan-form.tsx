@@ -423,7 +423,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   const scheduleResult=amountSchedule(scheduleInput);
   const injectionsPerWeek=scheduleResult.ready?scheduleResult.count:1;
   const dosePerInjectionMcg=scheduleResult.ready?scheduleResult.eachMcg:0;
-  const scheduleFields=<AmountScheduleFields value={scheduleInput} onChange={n=>{setAmountRaw(n.amount);setDoseUnit(n.amountUnit);setAmountBasis(n.basis);setScheduleCount(n.timesPerWeek);}}/>;
+  const scheduleFields=<AmountScheduleFields compact={presentation === "hero"} value={scheduleInput} onChange={n=>{setAmountRaw(n.amount);setDoseUnit(n.amountUnit);setAmountBasis(n.basis);setScheduleCount(n.timesPerWeek);}}/>;
 
   const [syringeType, setSyringeType] = usePlanDraft<SyringeType>("plan-syringe",init?.syringeType ?? "insulin-1ml",!!init);
 
@@ -661,7 +661,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   if (presentation === "hero") return <>
     {!init && <SessionValuesNotice/>}
     <HeroPlanSteps step={step} onStep={setStep} preview={preview} result={result}
-      product={<><ProductPicker value={peptideSlug} onChange={selectPeptide} label="Product"/>{peptideSlug === "custom" && <Input aria-label="Custom peptide name" placeholder="Type the name on your label" className="mt-3" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/>} {peptideSlug === "hcg" && <p className="mt-3 text-sm">hCG uses IU, not mg. <Link className="underline" href="/calculate/hcg">Open hCG IU calculator</Link></p>}</>}
+      product={<><ProductPicker compact value={peptideSlug} onChange={selectPeptide} label="Product"/>{peptideSlug === "custom" && <Input aria-label="Custom peptide name" placeholder="Type the name on your label" className="mt-3" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/>} {peptideSlug === "hcg" && <p className="mt-3 text-sm">hCG uses IU, not mg. <Link className="underline" href="/calculate/hcg">Open hCG IU calculator</Link></p>}</>}
       secondary={showBlend ? <p className="mt-3 text-sm">This draft includes {secondaryName}: {secondaryVialMg} mg. <Link className="underline" href="/plan/new">Edit blend details in the workspace</Link>, or <button type="button" className="underline min-h-11" onClick={() => setShowBlend(false)}>remove the second product</button>.</p> : undefined}
       vial={vialRaw} unit={vialUnit} onVial={setVialRaw} onUnit={unit => { const c = convertMassText(vialRaw, vialUnit); if (vialRaw.trim() && (c.kind !== "value" || c[unit].length > 64)) return; setVialRaw(c.kind === "value" ? c[unit] : ""); setVialUnit(unit); }}
       schedule={scheduleFields} volume={volumeRaw} onVolume={setVolumeRaw} date={dateMixed} onDate={setDateMixed}

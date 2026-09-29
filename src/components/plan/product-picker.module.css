@@ -4,3 +4,5 @@
 @media(prefers-reduced-motion:reduce){.dialog,.trigger,.option{animation:none!important;transition:none!important}}
 
 .productLink{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:13px;color:#365b3d;text-decoration:underline;text-underline-offset:4px}
+
+.trigger.compact{min-height:60px;padding:8px 12px;gap:10px;border-radius:12px}.compact .thumb{flex-basis:40px;width:40px;min-height:40px;max-height:40px}.compact .selection strong{font-size:16px;line-height:1.4}

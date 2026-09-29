@@ -1,3 +1,4 @@
+import { ResearchAssistantProvider } from "@/components/search/research-assistant-provider";
 import { SiteSearchProvider } from "@/components/search/site-search";
 import { SiteChrome } from "@/components/calculator/site-chrome";
 import { safeJson } from "@/lib/seo/safe-json";
@@ -90,6 +91,7 @@ export default async function RootLayout({
       <body data-clarity-mask="true" className="min-h-full flex flex-col bg-background text-foreground">
         <SupplierProvider water={catalog[0]} products={catalog}>
         <SiteSearchProvider>
+        <ResearchAssistantProvider>
         <OrgJsonLd />
         <script
           type="application/ld+json"
@@ -116,6 +118,7 @@ export default async function RootLayout({
         <SiteChrome><MobileBottomNav /></SiteChrome>
         <Toaster />
         <SiteChrome><AnalyticsPreferences /></SiteChrome>
+        </ResearchAssistantProvider>
         </SiteSearchProvider>
         </SupplierProvider>
       </body>

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { CircleHelp } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import styles from "./unit-help.module.css";
-export function UnitHelp(){const title=useRef<HTMLHeadingElement>(null);return <Dialog><DialogTrigger asChild><button type="button" className={styles.trigger}><CircleHelp size={16} aria-hidden="true"/>What do these units mean?</button></DialogTrigger><DialogContent className={styles.dialog} onOpenAutoFocus={event=>{event.preventDefault();title.current?.focus({preventScroll:true});}}>
+export function UnitHelp({compact=false}:{compact?:boolean}={}){const title=useRef<HTMLHeadingElement>(null);return <Dialog><DialogTrigger asChild><button type="button" className={`${styles.trigger} ${compact?styles.compact:""}`} aria-label="What do these units mean?"><CircleHelp size={16} aria-hidden="true"/>{compact?"Units":"What do these units mean?"}</button></DialogTrigger><DialogContent className={styles.dialog} onOpenAutoFocus={event=>{event.preventDefault();title.current?.focus({preventScroll:true});}}>
  <div className={styles.heading}><DialogTitle ref={title} tabIndex={-1}>Units, explained simply</DialogTitle><DialogDescription>mg and mcg measure mass. mL measures liquid volume. U-100 identifies a specific syringe scale.</DialogDescription></div>
  <div className={styles.body} tabIndex={0} role="region" aria-label="Unit definitions and examples"><dl>
   <div><dt>mg: milligrams</dt><dd>The mass of a substance. <strong>1 mg = 1,000 mcg.</strong> For example, 0.5 mg and 500 mcg are the same amount.</dd></div>

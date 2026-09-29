@@ -68,6 +68,7 @@ jobs:
           result=0
           node scripts/audit-small-labels.mjs || result=1
           node scripts/audit-hero-restoration.mjs || result=1
+          node scripts/audit-research-assistant.mjs || result=1
           node scripts/audit-search-clarity.mjs || result=1
           exit "$result"
       - uses: actions/upload-artifact@v4

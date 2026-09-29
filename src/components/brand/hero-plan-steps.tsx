@@ -50,7 +50,7 @@ export function HeroPlanSteps(p: Props) {
     focusNext.current = false;
     const heading = root.current?.querySelector<HTMLElement>("[data-guided-heading]");
     heading?.focus({ preventScroll: true });
-    const scroller = root.current?.closest<HTMLElement>("[data-hero-scroll]");
+    const scroller = root.current?.querySelector<HTMLElement>("[data-step-scroll]");
     if (scroller) scroller.scrollTo({ top: 0, behavior: "instant" });
     else if (root.current && root.current.getBoundingClientRect().top < 100) root.current.scrollIntoView({ block: "start", behavior: "auto" });
   }, [step]);
@@ -70,7 +70,7 @@ export function HeroPlanSteps(p: Props) {
       <p><span>Step {step + 1} of {GUIDED_STEPS.length}</span><span>{current.label}</span></p>
     </div>
     <h2 data-guided-heading tabIndex={-1} className={styles.stepTitle}>{current.title}</h2>
-    <p className={styles.stepHint}>{current.hint}</p>
+    <div className={styles.stepScroll} data-step-scroll tabIndex={0} role="region" aria-label={`${current.label} step fields`}>
     {step === 0 && <div className={styles.stepFields}>{p.product}{p.secondary}</div>}
     {step === 1 && <div className={styles.stepFields}>
       <label className={styles.stepLabel} htmlFor={`${id}-vial`}>Amount in vial</label>
@@ -86,29 +86,30 @@ export function HeroPlanSteps(p: Props) {
     </div>}
     {step === 4 && <div className={styles.stepFields}>
       <label className={styles.stepLabel} htmlFor={`${id}-device`}>Syringe size and scale</label><select id={`${id}-device`} className={styles.stepSelect} value={p.device} onChange={e => p.onDevice(e.target.value as SyringeType)}>{SYRINGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}</select>
-      <label className={styles.stepLabel} htmlFor={`${id}-date`}>Mixing date (optional)</label><input className={styles.stepSelect} id={`${id}-date`} type="date" value={p.date} onChange={e => p.onDate(e.target.value)}/>
-      <p className={styles.stepHint}>Leave the date blank to skip it. This records a date, not an expiry or a storage recommendation.</p>
+      <details className={styles.optional}><summary>{p.date ? `Mixing date: ${p.date}` : "Add a mixing date (optional)"}</summary><label className={styles.stepLabel} htmlFor={`${id}-date`}>Mixing date (optional)</label><input className={styles.stepSelect} id={`${id}-date`} type="date" value={p.date} onChange={e => p.onDate(e.target.value)}/>
+      <p className={styles.stepHint}>Leave the date blank to skip it. This records a date, not an expiry or a storage recommendation.</p></details>
     </div>}
-    <div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true">
-      <div className={styles.resultTop}><span>{ready ? "Liquid for each time" : "Your calculation"}</span>{ready && <Check size={18} aria-hidden="true"/>}</div>
-      <p className={styles.value}>{ready ? <><strong className={volume.length > 11 ? styles.longValue : undefined}>{volume.replace(/ mL$/, "")}</strong><span>mL</span></> : <span className={styles.empty}>Your numbers.<br/>A clear result.</span>}</p>
-      {ready ? <><p className={styles.formula}>{formula}</p><div className={styles.measurement}><p><strong>{readout}</strong> on the selected {p.result.syringeReadout.kind === "u100" ? "U-100" : "mL"} scale</p><p className={styles.formula}>{formatDose(p.result.schedule?.dosePerInjectionMcg ?? p.result.input.doseMcg)} for one time = {volume}</p><p className={styles.scaleNote}>Scale readings may be rounded. Confirm the markings on your actual device.</p></div></> : <p className={styles.formula}>{!p.preview.entries[0].complete ? "Choose your product first to use the correct fields and units." : "Follow the steps above. Your result appears when the required values are complete."}</p>}
-    </div>
+    {ready && step >= 3 && <div className={`${styles.result} ${step < 5 ? styles.resultPreview : ""}`} data-live-result role="status" aria-live="polite" aria-atomic="true">
+      <div className={styles.resultTop}><span>Liquid for each time</span>{step === 5 ? <button type="button" onClick={copy} aria-label="Copy result" title="Copy result"><Copy size={16} aria-hidden="true"/></button> : <Check size={16} aria-hidden="true"/>}</div>
+      <p className={styles.value}><strong className={volume.length > 11 ? styles.longValue : undefined}>{volume.replace(/ mL$/, "")}</strong><span>mL</span><span className={styles.readout}>{readout} on {p.result.syringeReadout.kind === "u100" ? "U-100" : "mL"} scale</span></p>
+      {step === 5 && <><p className={styles.formula}>{formula}</p><p className={styles.formula}>{formatDose(p.result.schedule?.dosePerInjectionMcg ?? p.result.input.doseMcg)} for one time = {volume}</p><p className={styles.scaleNote}>Readings may be rounded. Check your device's markings.</p></>}
+    </div>}
     {p.preview.issues.length > 0 && step >= 4 && <ul className={styles.stepErrors} role="alert">{p.preview.issues.map(issue => <li key={issue}>{issue}</li>)}</ul>}
     {ready && p.result.warnings.length > 0 && <ul className={styles.stepWarnings}>{p.result.warnings.map(warning => <li key={warning}>{warning}</li>)}</ul>}
     {step === 5 && <>
       {p.secondary}
       {/* The Edit control lives inside the dd: a dl group may hold only dt and dd (axe definition-list), and the review still reads as label, value, action. */}
-      <dl className={styles.reviewRows}>{p.preview.entries.map((entry, i) => <div key={entry.field}><dt>{entry.label}</dt><dd><span>{entry.value}</span><button type="button" onClick={() => move(i)} aria-label={`Edit ${entry.label.toLowerCase()}`}>Edit</button></dd></div>)}<div><dt>Device / date</dt><dd><span>{SYRINGES.find(s => s.id === p.device)?.label}<br/>{p.date || "No date set"}</span><button type="button" onClick={() => move(4)} aria-label="Edit device and date">Edit</button></dd></div></dl>
-      <label className={styles.stepLabel} htmlFor={`${id}-name`}>Plan name</label><input className={styles.stepSelect} id={`${id}-name`} value={p.name} onChange={e => p.onName(e.target.value)} maxLength={120}/>
+      <details className={styles.optional}><summary>Review entries and plan name</summary><dl className={styles.reviewRows}>{p.preview.entries.map((entry, i) => <div key={entry.field}><dt>{entry.label}</dt><dd><span>{entry.value}</span><button type="button" onClick={() => move(i)} aria-label={`Edit ${entry.label.toLowerCase()}`}>Edit</button></dd></div>)}<div><dt>Device / date</dt><dd><span>{SYRINGES.find(s => s.id === p.device)?.label}<br/>{p.date || "No date set"}</span><button type="button" onClick={() => move(4)} aria-label="Edit device and date">Edit</button></dd></div></dl>
+      <label className={styles.stepLabel} htmlFor={`${id}-name`}>Plan name</label><input className={styles.stepSelect} id={`${id}-name`} value={p.name} onChange={e => p.onName(e.target.value)} maxLength={120}/></details>
       <p className={styles.stepHint}>Saving creates a shareable link, PDF and printable labels. No account is needed.</p>
     </>}
+    </div>
     <div className={styles.stepNavigation}>
       {step > 0 ? <button type="button" onClick={() => move(step - 1)}><ArrowLeft size={17} aria-hidden="true"/>Back</button> : <span/>}
+      {p.preview.entries[0].complete && <button type="button" className={styles.clearStep} aria-label="Clear" title="Clear entries" onClick={() => { clearCalculation(); move(0); }}><RotateCcw size={16} aria-hidden="true"/></button>}
       {step === 5 ? <button type="button" className={styles.stepPrimary} disabled={!ready || p.saving} onClick={p.onSave}>{p.saving ? <Loader2 size={17} className="animate-spin" aria-hidden="true"/> : <Save size={17} aria-hidden="true"/>}{p.saving ? "Saving..." : "Save my plan"}</button> : <button type="button" className={styles.stepPrimary} disabled={!nextReady} onClick={() => move(step + 1)}>{step === 4 ? "Review result" : "Continue"}<ArrowRight size={17} aria-hidden="true"/></button>}
     </div>
-    <div className={styles.stepActions}>{step === 5 && <button type="button" onClick={copy} disabled={!ready}><Copy size={15} aria-hidden="true"/>Copy result</button>}<button type="button" onClick={() => { clearCalculation(); move(0); }}><RotateCcw size={15} aria-hidden="true"/>Clear</button><Link href="/peptide-calculator">Open guided workspace</Link></div>
     <p className={styles.stepNotice} role="status">{notice}</p>
-    <p className={styles.stepSafety}>Research arithmetic only. Not for human use. We do not choose a dose, liquid or mixing instructions.</p>
+    <p className={styles.stepSafety}>Research math only. <Link href="/disclaimer">Not for human use.</Link></p>
   </div>;
 }

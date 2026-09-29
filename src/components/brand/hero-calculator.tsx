@@ -7,8 +7,7 @@ import { ArrowUpRight, Calculator, Check, Copy, Expand, RotateCcw, X } from "luc
 import { type QuickMode } from "@/lib/brand/quick-calculation";
 import { trackUsage } from "@/lib/analytics";
 import { SiteSearchButton } from "@/components/search/site-search";
-import { CalculatorProductTools } from "@/components/partners/calculator-products";
-import { useCalculationSession, useSessionDraft } from "@/lib/session/calculation-session";
+import { useSessionDraft } from "@/lib/session/calculation-session";
 import { convertMassText } from "@/lib/calc/mass-text";
 import { scaleConversion as convertScale, switchMassDirection, switchScaleDirection } from "@/lib/calc/conversion-direction";
 import { ConversionDirection, MASS_DIRECTIONS, SCALE_DIRECTIONS } from "@/components/calculator/conversion-direction";
@@ -22,10 +21,9 @@ const GuidedPlan = dynamic(() => import("@/components/plan/plan-form").then(m =>
 const modes: { id: QuickMode; label: string }[] = [
   { id: "concentration", label: "BAC water" }, { id: "mass", label: "mg to mcg" }, { id: "units", label: "U-100 to mL" },
 ];
-const smallScreen = () => window.matchMedia("(max-width: 780px)").matches;
 
 export function HeroCalculator() {
-  const uid = useId(), shared = useCalculationSession();
+  const uid = useId();
   const [mode, setMode] = useSessionDraft<QuickMode>("hero-mode", "concentration");
   const [massConversion, setMassConversion] = useSessionDraft<{unit:"mg"|"mcg";text:string}>("mass-conversion", {unit:"mg",text:""});
   const [scaleConversion, setScaleConversion] = useSessionDraft<{direction:"units"|"ml";text:string}>("scale-conversion", {direction:"units",text:""});
@@ -94,14 +92,13 @@ export function HeroCalculator() {
     const exampleValue = mode === "mass" ? massConversion.unit === "mg" ? "0.125" : "125" : scaleConversion.direction === "units" ? "25" : "0.25";
     return <>
       <div role="tablist" aria-label="Quick calculation type" className={styles.tabs}>{modes.map((tab, index) => <button type="button" role="tab" key={tab.id} id={id + "-tab-" + tab.id} aria-controls={id + "-panel"} aria-selected={mode === tab.id} tabIndex={mode === tab.id ? 0 : -1} onClick={() => select(tab.id)} onKeyDown={e => tabKey(e, index, scope)}>{tab.id === "mass" ? "mg ↔ mcg" : tab.id === "units" ? "U-100 ↔ mL" : tab.label}</button>)}</div>
-      <div className={styles.panel} id={id + "-panel"} role="tabpanel" aria-labelledby={id + "-tab-" + mode}>
-        <UnitHelp/>
+      <div className={`${styles.panel} ${mode !== "concentration" ? styles.converterPanel : ""}`} id={id + "-panel"} role="tabpanel" aria-labelledby={id + "-tab-" + mode}>
         {mode === "concentration" ? <GuidedPlan mode="beginner" presentation="hero" saveState={{saving,setSaving,savedPlan,setSavedPlan}}/> : <>
           {mode === "mass" ? <ConversionDirection value={massConversion.unit} onChange={changeMass} options={MASS_DIRECTIONS} label="Mass conversion direction"/> : <ConversionDirection value={scaleConversion.direction} onChange={changeScale} options={SCALE_DIRECTIONS} label="U-100 conversion direction"/>}
-          <div className={styles.fields}><div className={styles.field}><label htmlFor={id + "-" + key}>{inputLabel}</label><div className={styles.inputWrap}><input id={id + "-" + key} data-hero-field={key} type="text" inputMode="decimal" value={inputText} placeholder={`e.g. ${exampleValue}`} maxLength={64} autoComplete="off" spellCheck={false} onChange={e => update(key, e.target.value)} onFocus={() => { if (scope === "inline" && smallScreen()) focusScreen(key); }} aria-invalid={!!error} aria-describedby={id + "-help " + id + "-error"}/><span>{inputUnit}</span></div></div><p className={styles.unitNote}>{mode === "mass" ? <>1 mg equals<br/><strong>1,000 mcg</strong></> : <>100 U-100 units equal<br/><strong>1 mL</strong></>}</p></div>
-          <div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Your converted number</span>{result && <Check size={18} aria-hidden="true"/>}</div><p className={styles.value}>{result ? <><strong className={result.value.length > 9 ? styles.longValue : undefined}>{result.value}</strong><span>{result.unit}</span></> : <span className={styles.empty}>Your numbers.<br/>A clear result.</span>}</p><p className={styles.formula}>{result?.formula || "Enter your value above to see the math."}</p></div>
+          <div className={styles.fields}><div className={styles.field}><label htmlFor={id + "-" + key}>{inputLabel}</label><div className={styles.inputWrap}><input id={id + "-" + key} data-hero-field={key} type="text" inputMode="decimal" value={inputText} placeholder={`e.g. ${exampleValue}`} maxLength={64} autoComplete="off" spellCheck={false} onChange={e => update(key, e.target.value)} aria-invalid={!!error} aria-describedby={id + "-help " + id + "-error"}/><span>{inputUnit}</span></div></div><p className={styles.unitNote}>{mode === "mass" ? <>1 mg equals<br/><strong>1,000 mcg</strong></> : <>100 U-100 units equal<br/><strong>1 mL</strong></>}</p></div>
+          <div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Your converted number</span>{result && <Check size={18} aria-hidden="true"/>}</div><p className={styles.value}>{result ? <><strong className={result.value.length > 9 ? styles.longValue : undefined}>{result.value}</strong><span>{result.unit}</span></> : <span className={styles.empty}>Enter a number above.</span>}</p><p className={styles.formula}>{result?.formula || "Enter your value above to see the math."}</p></div>
           <p id={id + "-error"} className={styles.error} role={error ? "alert" : undefined}>{error}</p>
-          <div className={styles.actions}><button type="button" onClick={copy} disabled={!result}><Copy size={15} aria-hidden="true"/>Copy result</button><button type="button" onClick={() => { update(key, ""); setNotice(""); }}><RotateCcw size={15} aria-hidden="true"/>Clear</button><button type="button" onClick={() => { update(key, exampleValue); setExample(true); if (scope === "inline" && smallScreen()) focusScreen(); }}>Use example</button></div>
+          <div className={styles.actions}><button type="button" onClick={copy} disabled={!result}><Copy size={15} aria-hidden="true"/>Copy result</button><button type="button" onClick={() => { update(key, ""); setNotice(""); }}><RotateCcw size={15} aria-hidden="true"/>Clear</button><button type="button" onClick={() => { update(key, exampleValue); setExample(true); }}>Use example</button></div>
           <p id={id + "-help"} className={styles.help}>{example ? "Example numbers only. " : "Use your own label and instructions. "}{mode === "mass" ? "mg and mcg measure mass, not volume." : "Check that the actual device uses a U-100 scale."}</p><p className={styles.notice} role="status">{notice}</p>
         </>}
       </div>
@@ -109,17 +106,16 @@ export function HeroCalculator() {
   }
   return <Dialog.Root open={open} onOpenChange={setOpen}>
     <div className={styles.calculator} data-hero-calculator role="region" aria-label="Live BAC water calculator">
-      <div className={styles.top}><span><Calculator size={18} aria-hidden="true"/>LIVE CALCULATOR</span><button type="button" ref={expandRef} onClick={() => focusScreen()} aria-label="Open hero calculator full screen"><Expand size={15} aria-hidden="true"/><span>Full screen</span></button></div>
+      <div className={styles.top}><span><Calculator size={18} aria-hidden="true"/>CALCULATOR</span><div className={styles.topActions}><UnitHelp compact/><button type="button" ref={expandRef} onClick={() => focusScreen()} aria-label="Open hero calculator full screen"><Expand size={15} aria-hidden="true"/><span className={styles.expandLabel}>Expand</span></button></div></div>
       {/* Only one form is mounted. Session-backed steps and fields survive this move. */}
       {!open ? content("inline") : <p className={styles.stepHint}>Your calculator is open full screen.</p>}
-      {!open && <div className={styles.products}><CalculatorProductTools selectedId={shared.productId || null} showProductPicker={false}/></div>}
       <noscript><p className={styles.stepHint}>Enable JavaScript to use this calculator. <Link href="/methodology">Read the formulas</Link>.</p></noscript>
     </div>
     <Dialog.Portal><Dialog.Overlay className={styles.overlay}/><Dialog.Content ref={dialogRef} className={styles.focus} data-hero-focus
       onOpenAutoFocus={e => { e.preventDefault(); requestAnimationFrame(() => { const root = dialogRef.current, field = wantedField.current; const target = field ? root?.querySelector<HTMLElement>('[data-hero-field="' + field + '"]') : root?.querySelector<HTMLElement>("[data-hero-title]"); target?.focus({preventScroll:true}); }); }}
       onCloseAutoFocus={e => { e.preventDefault(); expandRef.current?.focus({preventScroll:true}); }}>
-      <div className={styles.focusBar}><div><Dialog.Title data-hero-title tabIndex={-1}>BAC water calculator</Dialog.Title><Dialog.Description>One step at a time. Your entries stay when you close this screen.</Dialog.Description></div><SiteSearchButton compact/><Dialog.Close aria-label="Return to homepage"><X size={22} aria-hidden="true"/></Dialog.Close></div>
-      <div className={styles.focusBody} data-hero-scroll>{content("focus")}<div className={styles.products}><CalculatorProductTools selectedId={shared.productId || null} showProductPicker={false}/></div></div>
+      <div className={styles.focusBar}><div><Dialog.Title data-hero-title tabIndex={-1}>BAC water calculator</Dialog.Title><Dialog.Description>One step at a time. Your entries stay when you close this screen.</Dialog.Description></div><UnitHelp compact/><SiteSearchButton compact/><Dialog.Close aria-label="Return to homepage"><X size={22} aria-hidden="true"/></Dialog.Close></div>
+      <div className={styles.focusBody} data-hero-scroll>{content("focus")}</div>
       <div className={styles.focusFooter}><Dialog.Close>Back to homepage</Dialog.Close><Link href="/peptide-calculator">Guided workspace<ArrowUpRight size={17} aria-hidden="true"/></Link></div>
     </Dialog.Content></Dialog.Portal>
   </Dialog.Root>;
