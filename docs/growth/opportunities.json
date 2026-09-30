@@ -198,7 +198,7 @@
       "channel": "calculator_directory",
       "canonicalUrl": "https://toolscourt.com/submit-tool",
       "discoveredAt": "2026-09-29",
-      "lastAttemptAt": "2026-09-30T00:11:00Z",
+      "lastAttemptAt": "2026-09-29",
       "specificNeed": "Directory explicitly accepts free calculator listings. Submitted the existing standalone mg-to-mcg converter as a mass arithmetic reference.",
       "matchingTool": {
         "name": "BACwater.ai | mg to mcg Converter",
@@ -319,7 +319,7 @@
     }
   ],
   "lastExecution": {
-    "checkedAt": "2026-09-30T00:14:00Z",
+    "checkedAt": "2026-09-30 00:10:27 UTC",
     "localDate": "2026-09-29",
     "newConfirmedSubmissions": 0,
     "newUnconfirmedAttempts": 1,
