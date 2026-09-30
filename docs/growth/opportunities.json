@@ -191,6 +191,47 @@
       },
       "nextStep": "Check directory and any authorized business-mail confirmation after the advertised 24-48 hour review period, initially October 1. Do not resubmit until the first attempt's outcome is resolved.",
       "spend": 0
+    },
+    {
+      "id": "toolscourt-mass-converter-submission",
+      "status": "submission_attempted_receipt_unconfirmed",
+      "channel": "calculator_directory",
+      "canonicalUrl": "https://toolscourt.com/submit-tool",
+      "discoveredAt": "2026-09-29",
+      "lastAttemptAt": "2026-09-30T00:11:00Z",
+      "specificNeed": "Directory explicitly accepts free calculator listings. Submitted the existing standalone mg-to-mcg converter as a mass arithmetic reference.",
+      "matchingTool": {
+        "name": "BACwater.ai | mg to mcg Converter",
+        "url": "https://bacwater.ai/tools/mg-to-mcg"
+      },
+      "helpfulDraft": "Convert milligrams and micrograms with clear, exact decimal arithmetic. Free, no account needed.",
+      "applicableRules": [
+        "Legitimate tool with permission to list it.",
+        "Spam and malicious tools rejected.",
+        "Free listing with stated review within 48 hours."
+      ],
+      "submission": {
+        "category": "Calculators",
+        "pricing": "Free",
+        "platform": "Web",
+        "loginRequired": false,
+        "contactIdentity": "Authorized WEB IQ business email from owner-approved context",
+        "affiliationDisclosed": true,
+        "affiliateLinksDisclosed": true,
+        "researchOnly": true,
+        "description": "BACwater.ai converts mg to mcg and back using your own numbers. The page explains the 1 mg = 1,000 mcg relationship with examples and keeps mass distinct from volume. This is an arithmetic reference for laboratory research, not dosing, preparation or treatment advice. Submitted by WEB IQ on behalf of BACwater.ai. The site includes disclosed affiliate links to research suppliers."
+      },
+      "duplicateCheck": {
+        "repository": "No prior entry in opportunities.json or backlinks/ledger.json.",
+        "publicSearch": "Targeted site search returned no BACwater matches.",
+        "limitation": "Directory search remained Loading before and after one reload; absence of a listing could not be established from its UI."
+      },
+      "confirmation": {
+        "certainty": "Unconfirmed",
+        "verifiedVia": "One Submit Tool click left the review form visible. No receipt, error message, submission ID or listing URL appeared. Email content was confirmed visually despite omission from accessibility text. No second submission was attempted."
+      },
+      "nextStep": "Check the public directory after its 48-hour window, starting October 2, 2026. Do not retry until the first attempt's outcome is resolved. Do not count as a confirmed submission or acquired backlink.",
+      "spend": 0
     }
   ],
   "researchNotes": [
@@ -257,6 +298,33 @@
       "status": "blocked_verification_redirect_error",
       "reason": "Browser displayed request verification then a 404 at its generated verification URL after one reload. No form reached and nothing submitted.",
       "reviewedAt": "2026-09-29"
+    },
+    {
+      "url": "https://ultimatefreetools.com/submit-a-tool/",
+      "reviewedAt": "2026-09-29",
+      "status": "requires_publisher_authentication",
+      "reason": "Free calculator listing route requires publisher sign-in or account creation before its form. No authentication initiated or submission made. Claimed audience and directory size not independently verified."
+    },
+    {
+      "url": "https://www.reddit.com/r/labrats/about/rules",
+      "reviewedAt": "2026-09-29",
+      "status": "excluded_by_current_rules",
+      "reason": "Connected Reddit rules explicitly prohibit promotion/commercial content without moderator permission and AI-generated content/tool feedback. Recent calculator search results did not establish a matching unanswered mass-conversion need. No post, comment or moderator message sent."
+    },
+    {
+      "url": "https://www.reddit.com/r/compoundedtirzepatide/comments/1wpcdxv/missed_a_week_thoughts/",
+      "reviewedAt": "2026-09-29",
+      "status": "not_qualified",
+      "reason": "Read current September 24 post through connected Reddit search. Request for a concentration calculator was embedded in individualized missed-dose and titration questions, outside this task's no-medical/dosing-advice scope. No contribution posted."
     }
-  ]
+  ],
+  "lastExecution": {
+    "checkedAt": "2026-09-30T00:14:00Z",
+    "localDate": "2026-09-29",
+    "newConfirmedSubmissions": 0,
+    "newUnconfirmedAttempts": 1,
+    "spend": 0,
+    "existingPending": "Earlier submissions remain within their recorded review windows; no duplicate submissions.",
+    "liveDestination": "Mass converter public page retrieved with calculator inputs, exact conversion explanation, no-account statement and affiliate/research disclosures. No deployment claim."
+  }
 }
