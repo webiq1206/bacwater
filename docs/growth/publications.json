@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-28",
+  "updatedAt": "2026-09-30",
   "spend": 0,
   "sharedAccountPolicy": "Preserve WEB IQ branding and other client content. Publish only BACwater-labeled content to BACwater categories.",
   "pinterest": {
@@ -16,7 +16,26 @@
     "id": "1wset55",
     "url": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wset55/bacwaterai_mg_to_mcg_a_quick_conversion_reference/",
     "status": "published_read_back_verified",
-    "verification": "Retrieved post body, author and title by article ID."
+    "verification": "Retrieved post body, author and title by article ID.",
+    "verifiedPosts": [
+      {
+        "id": "1wset55",
+        "url": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wset55/bacwaterai_mg_to_mcg_a_quick_conversion_reference/",
+        "status": "published_read_back_verified",
+        "topic": "mg-to-mcg mass conversion"
+      },
+      {
+        "id": "1wulj4n",
+        "url": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wulj4n/bacwaterai_u100_units_and_ml_a_scale_conversion/",
+        "status": "published_read_back_verified",
+        "topic": "U-100 units to mL scale conversion",
+        "publishedAt": "2026-10-01T00:35:14Z",
+        "verification": "Retrieved exact title, body, author, profile subreddit and permalink by article ID.",
+        "affiliationDisclosed": true,
+        "researchOnly": true,
+        "affiliateLinksDisclosed": true
+      }
+    ]
   },
   "youtube": {
     "videoId": "wIHXYAaqOEg",
