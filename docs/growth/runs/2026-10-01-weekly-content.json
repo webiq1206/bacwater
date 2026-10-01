@@ -1,0 +1,57 @@
+{
+  "kind": "weekly-content",
+  "startedAt": "2026-10-01T14:21:18Z",
+  "finishedAt": "2026-10-01T14:27:44Z",
+  "status": "completed",
+  "reviewedMain": "215076dcf7bdc9142835ecedbb45f518feb66cd8",
+  "topic": "Fixed dissolved mass, different final solution volumes",
+  "selectionEvidence": {
+    "searchConsole": "Final query data for September 1-28 read successfully. Concentration and volume-related demand observed; raw queries, totals and account identifiers retained privately.",
+    "audienceDiscussion": "https://www.reddit.com/r/chemhelp/comments/1w5my01/how_do_i_know_what_to_do/",
+    "discussionReview": "Full returned discussion and subreddit rules read. Existing answers already explain unit reasoning; no useful additional reply or promotion warranted.",
+    "liveDestination": "https://bacwater.ai/tools/bac-water",
+    "liveEvidence": "HTTP 200, correct canonical and final-volume explanation read October 1."
+  },
+  "actions": [
+    {
+      "channel": "Pinterest",
+      "status": "published_read_back_verified",
+      "id": "1120129738630648558",
+      "url": "https://www.pinterest.com/pin/1120129738630648558/",
+      "publishedAt": "2026-10-01T14:25:44Z",
+      "destination": "https://bacwater.ai/tools/bac-water?utm_source=pinterest&utm_medium=organic_social&utm_campaign=unit_reference&utm_content=final_volume",
+      "title": "BACwater.ai | Same mass, different final volume",
+      "description": "Double the final volume while keeping the same dissolved mass, and concentration halves: 12 mg in a final 4 mL = 3 mg/mL; the same 12 mg in a final 8 mL = 1.5 mg/mL. Use final solution volume, which is not always the water added. Check your own stated values with our free calculator. Laboratory research arithmetic only, not mixing instructions or dosing advice. Published by WEB IQ for BACwater.ai. The site includes disclosed affiliate links.",
+      "altText": "BACwater.ai concentration comparison: 12 mg divided by a final 4 mL equals 3 mg/mL. The same 12 mg divided by a final 8 mL equals 1.5 mg/mL. Doubling final volume halves concentration when mass stays fixed. Arithmetic only.",
+      "asset": "public/growth/same-mass-final-volume.png",
+      "verification": "GET_PIN returned matching board, title, description, alt text, destination and 1000x1500 image. Board read-back returned exactly four pins including the new guide, no pagination cursor.",
+      "verifiedAt": "2026-10-01T14:25:59Z"
+    },
+    {
+      "channel": "YouTube",
+      "status": "existing_public_video_verified",
+      "url": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
+      "verification": "Video details returned public and processed. Playlist lookup returned this video in the dedicated BACwater playlist. Comments endpoint returned zero threads. No upload or playlist mutation performed."
+    },
+    {
+      "channel": "Reddit",
+      "status": "engagement_checked_no_reply_needed",
+      "verification": "Both existing profile posts returned zero comments and complete empty comment trees. Reviewed external discussion and rules; no new profile post or community reply."
+    }
+  ],
+  "validation": {
+    "arithmetic": "Python Decimal: 12/4=3, 12/8=1.5, 1.5/3=0.5, 3*4=12 and 1.5*8=12.",
+    "visual": "1000x1500 PNG rendered and inspected. Uses existing wordmark and brand colors.",
+    "destination": "Tracked URL returned 200 and canonical https://bacwater.ai/tools/bac-water.",
+    "sourceImage": "Original SVG built with exact text and rendered with existing sharp dependency.",
+    "duplicateCheck": "Read all required growth records and full dedicated board inventory before posting."
+  },
+  "limits": [
+    "Pinterest pin metrics returned null; no reach or referral claim.",
+    "Completion measurement is being repaired separately. No completion, conversion, revenue, indexing or ranking-credit claim.",
+    "Application code, analytics settings, deployment and production database unchanged.",
+    "Directory submissions left intact; no repeat attempts."
+  ],
+  "spend": 0,
+  "nextCheck": "Review guide engagement and qualified referrals at the next weekly content run; assess completions only once reliable measurement exists."
+}

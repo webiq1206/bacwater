@@ -3,7 +3,7 @@
   "repository": "webiq1206/bacwater",
   "productionDeployment": "Growth routes and matching widget verified live on 2026-09-28; full main deployment not verified because version.json returned two commit IDs absent from this repository.",
   "trafficBaseline": "Updated 28-day Search Console and production-host-filtered GA4 comparison recorded in private October 1 owner report. Calculator-completion events remain unobserved through September 30.",
-  "externalPostsPublished": 6,
+  "externalPostsPublished": 7,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
   "spend": 0,
@@ -24,9 +24,12 @@
       "title": "BACwater weekly content",
       "cadence": "Tuesday morning, America/Boise",
       "enabled": true,
-      "lastRunVerified": null,
-      "executionStatus": "Immediate run requested once; execution and delivery not yet verified. Tuesday schedule preserved.",
-      "immediateRunRequestedAt": "2026-10-01T14:20:39Z"
+      "lastRunVerified": "2026-10-01T14:27:44Z",
+      "executionStatus": "Completed with one Pinterest publication and successful individual/board read-back.",
+      "immediateRunRequestedAt": "2026-10-01T14:20:39Z",
+      "executionEvidence": "docs/growth/runs/2026-10-01-weekly-content.json",
+      "startedAt": "2026-10-01T14:21:18Z",
+      "finishedAt": "2026-10-01T14:27:44Z"
     },
     {
       "title": "Backlink discovery, verification and reclamation",
@@ -254,5 +257,13 @@
     "status": "published_processed_read_back_verified",
     "playlistMembership": true,
     "replacedDeletedVideo": "wIHXYAaqOEg"
+  },
+  "weeklyContentExecution": {
+    "startedAt": "2026-10-01T14:21:18Z",
+    "finishedAt": "2026-10-01T14:27:44Z",
+    "status": "completed",
+    "evidence": "docs/growth/runs/2026-10-01-weekly-content.json",
+    "publishedUrl": "https://www.pinterest.com/pin/1120129738630648558/",
+    "spend": 0
   }
 }

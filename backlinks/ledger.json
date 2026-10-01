@@ -222,6 +222,17 @@
       "relevance": "mg-to-mcg mass conversion",
       "nextStep": "Verify public description link attributes and qualified referrals; do not duplicate upload.",
       "notes": "Video processed, public and playlist membership read-back verified October 1. Link attributes and indexation not established."
+    },
+    {
+      "id": "pinterest-same-mass-final-volume",
+      "domain": "pinterest.com",
+      "placementUrl": "https://www.pinterest.com/pin/1120129738630648558/",
+      "destinationPath": "/tools/bac-water",
+      "status": "submitted",
+      "method": "Original comparison graphic in dedicated BACwater board.",
+      "relevance": "Shows how final volume changes concentration at fixed dissolved mass.",
+      "nextStep": "Run link verifier and monitor qualified referrals after measurement is reliable.",
+      "notes": "Published and API read-back verified October 1. Link rel, indexing and ranking value unverified."
     }
   ]
 }

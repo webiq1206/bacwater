@@ -8,10 +8,19 @@
     "verifiedPins": [
       "1120129738630484217",
       "1120129738630484240",
-      "1120129738630484241"
+      "1120129738630484241",
+      "1120129738630648558"
     ],
-    "verification": "Listed all three in dedicated board after creation.",
-    "lastVerifiedAt": "2026-10-01"
+    "verification": "All four pins read back from the dedicated BACwater board on October 1; latest pin also verified individually.",
+    "lastVerifiedAt": "2026-10-01",
+    "latestPublication": {
+      "id": "1120129738630648558",
+      "url": "https://www.pinterest.com/pin/1120129738630648558/",
+      "publishedAt": "2026-10-01T14:25:44Z",
+      "verifiedAt": "2026-10-01T14:25:59Z",
+      "title": "BACwater.ai | Same mass, different final volume",
+      "destination": "https://bacwater.ai/tools/bac-water?utm_source=pinterest&utm_medium=organic_social&utm_campaign=unit_reference&utm_content=final_volume"
+    }
   },
   "reddit": {
     "id": "1wset55",

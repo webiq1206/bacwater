@@ -314,6 +314,22 @@
         "verifiedVia": "Rendered Tally receipt within LaunchPedia after one Submit action.",
         "url": "https://launchpedia.co/submit/"
       }
+    },
+    {
+      "id": "pinterest-same-mass-final-volume",
+      "status": "publicly_visible",
+      "channel": "pinterest",
+      "canonicalUrl": "https://www.pinterest.com/pin/1120129738630648558/",
+      "destination": "https://bacwater.ai/tools/bac-water?utm_source=pinterest&utm_medium=organic_social&utm_campaign=unit_reference&utm_content=final_volume",
+      "firstObservedLiveAt": "2026-10-01T14:25:59Z",
+      "publishedAt": "2026-10-01T14:25:44Z",
+      "sourceEvidence": "GET_PIN returned matching board, title, description, alt text, destination and 1000x1500 image. Board read-back returned exactly four pins including the new guide, no pagination cursor.",
+      "accountCategory": "Dedicated BACwater calculator board on shared WEB IQ account",
+      "linkRel": "not_verified",
+      "redirects": "Pinterest outbound redirect not independently inspected; destination HTTP 200 and canonical verified",
+      "indexedStatus": "not_verified",
+      "nextCheck": "2026-10-06",
+      "spend": 0
     }
   ],
   "researchNotes": [
@@ -410,6 +426,12 @@
       "reviewedAt": "2026-09-30",
       "status": "not_qualified_missing_required_license",
       "reason": "Tiny Tool Town requires a public open-source repository with a real LICENSE file. The BACwater repository has no LICENSE or LICENSE.md on main, so the mg-to-mcg tool was not submitted."
+    },
+    {
+      "url": "https://www.reddit.com/r/chemhelp/comments/1w5my01/how_do_i_know_what_to_do/",
+      "status": "not_qualified",
+      "reviewedAt": "2026-10-01",
+      "reason": "Full returned discussion and rules read. Multiple existing unit-reasoning answers; another calculator promotion would add no useful answer. Used only as audience context for original educational content."
     }
   ],
   "lastExecution": {

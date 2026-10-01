@@ -59,6 +59,21 @@
       "url": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
       "publishedAt": "2026-10-01T14:16:20Z",
       "previousVideoId": "wIHXYAaqOEg"
+    },
+    {
+      "id": "same-mass-final-volume",
+      "channel": "pinterest",
+      "status": "published_verified",
+      "title": "BACwater.ai | Same mass, different final volume",
+      "description": "Double the final volume while keeping the same dissolved mass, and concentration halves: 12 mg in a final 4 mL = 3 mg/mL; the same 12 mg in a final 8 mL = 1.5 mg/mL. Use final solution volume, which is not always the water added. Check your own stated values with our free calculator. Laboratory research arithmetic only, not mixing instructions or dosing advice. Published by WEB IQ for BACwater.ai. The site includes disclosed affiliate links.",
+      "asset": "public/growth/same-mass-final-volume.png",
+      "sourceAsset": "public/growth/same-mass-final-volume.svg",
+      "destination": "https://bacwater.ai/tools/bac-water?utm_source=pinterest&utm_medium=organic_social&utm_campaign=unit_reference&utm_content=final_volume",
+      "altText": "BACwater.ai concentration comparison: 12 mg divided by a final 4 mL equals 3 mg/mL. The same 12 mg divided by a final 8 mL equals 1.5 mg/mL. Doubling final volume halves concentration when mass stays fixed. Arithmetic only.",
+      "publishedAt": "2026-10-01T14:25:44Z",
+      "url": "https://www.pinterest.com/pin/1120129738630648558/",
+      "boardId": "1120129807261632904",
+      "verification": "GET_PIN returned matching board, title, description, alt text, destination and 1000x1500 image. Board read-back returned exactly four pins including the new guide, no pagination cursor."
     }
   ]
 }
