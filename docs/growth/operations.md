@@ -45,7 +45,7 @@ Use verified recurring questions to choose one arithmetic topic. Check all numbe
 
 The owner authorized publishing BACwater content through shared WEB IQ accounts on September 28, 2026. Preserve WEB IQ names, bios and all other client content. Use only Pinterest board 1120129807261632904 (BACwater.ai | Calculators & Unit Guides) and YouTube playlist PLKfaE4AyuK2A (BACwater.ai | Calculator Guides). Reddit profile posts use a [BACwater.ai] title prefix and explicit affiliation. No unrelated boards, playlists, profile rebranding, unsolicited messages or repeated community promotion.
 
-Read publications.json before any write and deduplicate. Three pins and one Reddit profile post have successful creation and read-back evidence. YouTube upload wIHXYAaqOEg returned success but could not be retrieved; playlist insertion returned videoNotFound. Do not re-upload or claim it is live. Check the existing video on the next content run and add it to the dedicated playlist only when retrievable. Publish at most one distinct new Pinterest guide per weekly content run. Make useful community contributions when verified current context and rules permit affiliated promotion, with natural disclosure and no repetitive posting.
+Read publications.json before any write and deduplicate. Three pins, two Reddit profile posts, and one YouTube video have successful creation and read-back evidence. On October 1, the owning channel uploads inventory identified old YouTube video wIHXYAaqOEg as Deleted video. A single replacement, https://www.youtube.com/watch?v=bnvpPzm6-EY, was processed successfully and verified public, then added to the dedicated playlist and read back. Do not upload this content again. Publish at most one distinct new Pinterest guide per weekly content run. Make useful community contributions when verified current context and rules permit affiliated promotion, with natural disclosure and no repetitive posting.
 
 All four connectors have verified read access. Search Console includes owner access to sc-domain:bacwater.ai. Connection identifiers stay in private automation configuration. No spend or new account registrations occurred.
 
@@ -74,3 +74,14 @@ Synchronize published links into backlinks/ledger.json for monitoring. Its legac
 BACwater is an online calculator publisher with no verified in-person service. Do not create local listings, invented addresses or supplier/contractor identities. Evaluate aggregators individually. Educational and institutional links require genuine resource fit; wiki contributions require independent sourcing and eligibility.
 
 Primary guidance: https://support.google.com/business/answer/7039811 and https://developers.google.com/search/docs/essentials/spam-policies. Prioritize useful editorial placements and qualified visitors. No low-quality directory campaigns, keyword-anchor demands or backlink guarantees.
+
+
+## October 1 completion-tracking repair
+
+The receiving stream now has the canonical domain and Enhanced Measurement disabled. The earlier audit mistook enabled subordinate options for an enabled master switch. API reads and the admin UI both confirm the master is off. The app already queues count-only calculation_completed events after visitor consent, but production deployment did not explicitly set the Next.js build-time readiness flag. The Replit build command now sets NEXT_PUBLIC_ANALYTICS_MANUAL_CONFIRMED=true. Visitor consent, sanitized URLs, private-route exclusion and disabled automatic page views remain intact. Local/default builds remain off unless explicitly enabled. Expanded consent acceptance checks exercise a real conversion, exact payload, duplicate blur, invalid input and revocation.
+
+This configuration change still needs a Replit source sync and publish, followed by a real consented calculator action and GA4 receiving read-back. Replit's security-verification loop blocked the October 1 browser session. A GitHub commit or local event queue is not proof of live GA4 receipt.
+
+The Tuesday task was requested to run once immediately on October 1, without changing its schedule. Its prompt now requires a dated run record with actual start, finish, actions and evidence. Keep request acceptance separate from completed execution.
+
+GA4 calculation_completed is now marked as a key event, counted once per event with no default monetary value. This was verified by an independent read after saving. No page-view-derived completion rule was created. The receiving definition alone does not establish live event receipt.

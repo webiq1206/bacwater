@@ -211,6 +211,17 @@
       "relevance": "U-100 units to mL scale conversion",
       "nextStep": "Check replies and public link availability; do not infer ranking value.",
       "notes": "Post read-back verified October 1; zero comments."
+    },
+    {
+      "id": "youtube-mass-conversion-2026-10-01",
+      "domain": "youtube.com",
+      "placementUrl": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
+      "destinationPath": "/tools/mg-to-mcg",
+      "status": "submitted",
+      "method": "Original BACwater arithmetic video on authorized WEB IQ channel and dedicated playlist.",
+      "relevance": "mg-to-mcg mass conversion",
+      "nextStep": "Verify public description link attributes and qualified referrals; do not duplicate upload.",
+      "notes": "Video processed, public and playlist membership read-back verified October 1. Link attributes and indexation not established."
     }
   ]
 }

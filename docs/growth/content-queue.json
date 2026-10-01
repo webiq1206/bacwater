@@ -47,15 +47,18 @@
     {
       "id": "mass-video",
       "channel": "youtube",
-      "status": "upload_accepted_verification_pending",
-      "title": "mg to mcg explained: milligrams and micrograms",
+      "status": "published_verified",
+      "title": "BACwater.ai | mg to mcg explained: milligrams and micrograms",
       "description": "One milligram equals 1,000 micrograms. This 32-second visual guide explains the relationship and works through 0.125 mg = 125 mcg.\n\nTry our free converter: https://bacwater.ai/tools/mg-to-mcg?utm_source=youtube&utm_medium=organic_video&utm_campaign=unit_reference\n\nProduced by BACwater.ai. Arithmetic examples only. No dose, product or treatment is selected. Video has visible captions and no audio.",
       "asset": "public/growth/mg-to-mcg-explained.mp4",
       "captions": "public/growth/mg-to-mcg-explained.vtt",
       "prerequisite": "Owner approved shared WEB IQ accounts; use only dedicated BACwater categories and verify publication.",
-      "videoId": "wIHXYAaqOEg",
+      "videoId": "bnvpPzm6-EY",
       "playlistId": "PLKfaE4AyuK2A",
-      "note": "Upload succeeded but video lookup empty and playlist add returned videoNotFound. Do not upload again."
+      "note": "Owning uploads playlist identified the former video as Deleted video. One replacement was uploaded October 1, processed successfully, confirmed public, and read back in the dedicated BACwater playlist. Do not duplicate.",
+      "url": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
+      "publishedAt": "2026-10-01T14:16:20Z",
+      "previousVideoId": "wIHXYAaqOEg"
     }
   ]
 }

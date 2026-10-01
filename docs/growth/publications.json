@@ -48,12 +48,17 @@
     }
   },
   "youtube": {
-    "videoId": "wIHXYAaqOEg",
+    "videoId": "bnvpPzm6-EY",
     "playlistId": "PLKfaE4AyuK2A",
-    "status": "upload_accepted_not_retrievable",
-    "playlistMembership": false,
+    "status": "published_processed_read_back_verified",
+    "playlistMembership": true,
     "doNotDuplicate": true,
-    "lastCheckedAt": "2026-10-01"
+    "lastCheckedAt": "2026-10-01",
+    "url": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
+    "publishedAt": "2026-10-01T14:16:20Z",
+    "previousVideoId": "wIHXYAaqOEg",
+    "previousUploadStatus": "Deleted video in authenticated channel uploads playlist",
+    "verification": "Video details returned processed, processing succeeded and public; playlist items read-back returned the replacement video."
   },
   "reach": "not_measured",
   "directories": [

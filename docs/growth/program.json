@@ -47,7 +47,7 @@
     {
       "area": "Social publishing",
       "decision": "Verified categories",
-      "action": "Dedicated BACwater Pinterest board and affiliated Reddit content; resolve old YouTube upload before another."
+      "action": "Dedicated BACwater Pinterest board and affiliated Reddit content; preserve verified video bnvpPzm6-EY and avoid duplicates."
     },
     {
       "area": "Reddit/forums/Q&A",
@@ -73,7 +73,7 @@
   "priorities": [
     {
       "task": "Consent-safe completion measurement",
-      "status": "unresolved_receipt_gap"
+      "status": "build_configuration_fixed_deployment_and_receipt_pending"
     },
     {
       "task": "Google page-sitemap reprocessing",
@@ -89,7 +89,7 @@
     },
     {
       "task": "Resolve old YouTube upload without duplicates",
-      "status": "unretrievable_video"
+      "status": "resolved_public_processed_playlist_verified"
     }
   ],
   "rules": [

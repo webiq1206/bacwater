@@ -3,7 +3,7 @@
   "repository": "webiq1206/bacwater",
   "productionDeployment": "Growth routes and matching widget verified live on 2026-09-28; full main deployment not verified because version.json returned two commit IDs absent from this repository.",
   "trafficBaseline": "Updated 28-day Search Console and production-host-filtered GA4 comparison recorded in private October 1 owner report. Calculator-completion events remain unobserved through September 30.",
-  "externalPostsPublished": 5,
+  "externalPostsPublished": 6,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
   "spend": 0,
@@ -25,7 +25,8 @@
       "cadence": "Tuesday morning, America/Boise",
       "enabled": true,
       "lastRunVerified": null,
-      "executionStatus": "Enabled configuration verified; no recorded scheduled run yet."
+      "executionStatus": "Immediate run requested once; execution and delivery not yet verified. Tuesday schedule preserved.",
+      "immediateRunRequestedAt": "2026-10-01T14:20:39Z"
     },
     {
       "title": "Backlink discovery, verification and reclamation",
@@ -36,8 +37,7 @@
     }
   ],
   "blockedChannels": [
-    "Replit production deployment access",
-    "YouTube uploaded video not retrievable"
+    "Replit production deployment access"
   ],
   "validation": {
     "growthTests": "passed",
@@ -60,7 +60,7 @@
     "opportunities": 8,
     "note": "Organic distribution is authorized. One directory listing is publicly visible; no dofollow or ranking-credit claim established. Known submissions and publications synchronized into register."
   },
-  "pendingYouTubeUpload": "wIHXYAaqOEg: accepted, not retrievable; playlist insertion failed videoNotFound",
+  "pendingYouTubeUpload": null,
   "socialCategorization": {
     "pinterestBoard": "1120129807261632904",
     "youtubePlaylist": "PLKfaE4AyuK2A",
@@ -244,8 +244,15 @@
       "reported": "b9188d6012e8299f1c63e9c1ecda204b28dfa671",
       "lookup": "No matching repository commit; full release identity remains unverified."
     },
-    "measurement": "GA4 stream domain verified as canonical site; completion receipt remains unverified.",
+    "measurement": "GA4 stream canonical domain and disabled Enhanced Measurement master flag verified. Replit build configuration now enables the existing consent-gated count-only events on next deployment. Live receipt still requires deployed verification. calculation_completed is configured as a once-per-event key event with no monetary default; read-back verified.",
     "ci": "General CI and focused consent/content/search/purchase/hero checks passed. Broader browser regression failed, including stale wording/selector expectations. Full suite is not green.",
     "changedApplicationCode": false
+  },
+  "youtubeResolution": {
+    "videoId": "bnvpPzm6-EY",
+    "url": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
+    "status": "published_processed_read_back_verified",
+    "playlistMembership": true,
+    "replacedDeletedVideo": "wIHXYAaqOEg"
   }
 }

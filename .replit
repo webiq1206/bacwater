@@ -8,7 +8,9 @@ channel = "stable-24_05"
 [deployment]
 # Production deploys are read-only with respect to schema/content.
 # Replit's production database migration UI must never be approved for destructive drops.
-build = ["sh", "-c", "npm ci --include=dev && npx prisma generate && npx tsx scripts/verify-deploy-schema.ts && npm run build"]
+# BACwater's GA4 stream was verified with Enhanced Measurement disabled on 2026-10-01.
+# This is a Next.js build-time flag; visitor consent is still required at runtime.
+build = ["sh", "-c", "npm ci --include=dev && npx prisma generate && npx tsx scripts/verify-deploy-schema.ts && NEXT_PUBLIC_ANALYTICS_MANUAL_CONFIRMED=true npm run build"]
 run = ["sh", "-c", "npm start"]
 deploymentTarget = "autoscale"
 
