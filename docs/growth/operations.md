@@ -1,6 +1,6 @@
 # BACwater organic growth operations
 
-Updated September 29, 2026. Repository: webiq1206/bacwater. Public site: https://bacwater.ai.
+Updated October 1, 2026. Repository: webiq1206/bacwater. Public site: https://bacwater.ai.
 
 ## Goal and budget
 
@@ -51,7 +51,7 @@ All four connectors have verified read access. Search Console includes owner acc
 
 ## Measurement
 
-No current traffic baseline is established in this release. The older repo Search Console audit is historical, not current performance. Once account access is authorized, compare the latest complete 28-day period with the previous 28 days for clicks, impressions, CTR and landing pages. Verify receiving-side GA4 settings before enabling optional measurement. Count calculator completions and repeat use only from validated data. Consent-based samples are incomplete; do not describe them as total users.
+A current Search Console and GA4 comparison was read October 1 and retained in the private owner report. Compare final, equal 28-day periods for clicks, impressions, CTR, production-host traffic and landing pages. Verify receiving-side GA4 settings before enabling optional measurement. Count calculator completions and repeat use only from validated data. Consent-based samples are incomplete; do not describe them as total users.
 
 ## Quality and release checks
 
@@ -60,3 +60,17 @@ Run npm run build:widget, npm run test:growth and npm run build. The growth test
 Regenerate cards with node scripts/generate-growth-assets.mjs. This uses sharp already present through the Next.js dependency tree. Optional video regeneration uses the documented ffmpeg command in content-queue.json. Do not add media-generation tools or paid services to production startup.
 
 Maintain current status in status.json. Keep private account data, credentials, connection links and raw visitor information out of this public repository.
+
+## October 1 comprehensive program (current instructions)
+
+The owner's expanded autonomous growth instruction applies to BACwater.ai. Use program.json for the coverage matrix. Execute qualified free opportunities with verified facts; do not stop at preparation when a normal submission is available. Daily execution checks public engagement and due listings. Monday improvements include the weekly results report. Tuesday publishing focuses on a distinct useful topic without a volume quota. All three schedules were read back as enabled. Daily and Monday have historical run evidence; Tuesday has no recorded scheduled run yet. Do not describe it as proven unattended publishing.
+
+Measure completed calculations, returning use, useful referrals and qualified inquiries. Traffic is an intermediate measure; affiliate clicks are not purchases. Completion events remain unobserved. Keep consent/readiness gates until receiving settings and count-only payloads are verified. No user-entered values or saved-plan addresses in analytics.
+
+NoUploadTools publicly lists BACwater under Data. LaunchPedia confirmed a submission October 1. Evidence and distinct statuses are in opportunities.json and publications.json. Six directory submissions are confirmed, one publicly visible. NoSignupTools and ToolsCourt remain uncertain, so do not resubmit.
+
+Synchronize published links into backlinks/ledger.json for monitoring. Its legacy submitted status can include a publicly verified post whose HTML attributes have not passed the verifier. Public visibility is separately authoritative in publications.json. A redirect link without a nofollow token does not prove indexing or ranking value. NoUploadTools uses an internal redirect, which a direct-anchor verifier may miss. Preserve rendered evidence and do not infer removal from that limitation.
+
+BACwater is an online calculator publisher with no verified in-person service. Do not create local listings, invented addresses or supplier/contractor identities. Evaluate aggregators individually. Educational and institutional links require genuine resource fit; wiki contributions require independent sourcing and eligibility.
+
+Primary guidance: https://support.google.com/business/answer/7039811 and https://developers.google.com/search/docs/essentials/spam-policies. Prioritize useful editorial placements and qualified visitors. No low-quality directory campaigns, keyword-anchor demands or backlink guarantees.

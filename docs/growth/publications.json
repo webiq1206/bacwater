@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30",
+  "updatedAt": "2026-10-01",
   "spend": 0,
   "sharedAccountPolicy": "Preserve WEB IQ branding and other client content. Publish only BACwater-labeled content to BACwater categories.",
   "pinterest": {
@@ -10,7 +10,8 @@
       "1120129738630484240",
       "1120129738630484241"
     ],
-    "verification": "Listed all three in dedicated board after creation."
+    "verification": "Listed all three in dedicated board after creation.",
+    "lastVerifiedAt": "2026-10-01"
   },
   "reddit": {
     "id": "1wset55",
@@ -35,14 +36,40 @@
         "researchOnly": true,
         "affiliateLinksDisclosed": true
       }
-    ]
+    ],
+    "engagementCheck": {
+      "checkedAt": "2026-10-01",
+      "posts": [
+        "1wset55",
+        "1wulj4n"
+      ],
+      "comments": 0,
+      "coverage": "Full returned comment trees, no additional placeholders."
+    }
   },
   "youtube": {
     "videoId": "wIHXYAaqOEg",
     "playlistId": "PLKfaE4AyuK2A",
     "status": "upload_accepted_not_retrievable",
     "playlistMembership": false,
-    "doNotDuplicate": true
+    "doNotDuplicate": true,
+    "lastCheckedAt": "2026-10-01"
   },
-  "reach": "not_measured"
+  "reach": "not_measured",
+  "directories": [
+    {
+      "platform": "NoUploadTools",
+      "url": "https://nouploadtools.com/directory?cat=calculators-data",
+      "status": "publicly_visible",
+      "firstObservedLiveAt": "2026-10-01",
+      "publicationDate": null,
+      "destination": "https://bacwater.ai/",
+      "linkAttributes": [
+        "noopener",
+        "noreferrer"
+      ],
+      "redirect": "https://nouploadtools.com/go/bacwaterai-research-calculators?source=directory",
+      "indexing": "not_verified"
+    }
+  ]
 }

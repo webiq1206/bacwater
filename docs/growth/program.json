@@ -1,0 +1,102 @@
+{
+  "updatedAt": "2026-10-01",
+  "site": "https://bacwater.ai",
+  "incrementalSpendLimit": 0,
+  "objective": "Relevant discovery leading to completed calculations, repeat use, qualified referrals and inquiries.",
+  "cadence": {
+    "daily": "Engagement, due listing checks and opportunity execution",
+    "monday": "Website improvements and weekly report",
+    "tuesday": "Distinct branded content and verified publishing"
+  },
+  "coverage": [
+    {
+      "area": "Business data aggregators",
+      "decision": "Conditional",
+      "action": "Only eligible online-publisher routes with verified facts; no invented local record."
+    },
+    {
+      "area": "Maps and directories",
+      "decision": "Tool directories prioritized",
+      "action": "Maintain submissions and verify approvals. No local map listing without verified in-person eligibility."
+    },
+    {
+      "area": "Relevant backlinks",
+      "decision": "Execute",
+      "action": "Useful editorial resources, legitimate profiles and referrals; inspect actual rel and redirects."
+    },
+    {
+      "area": "Educational/institutional resources",
+      "decision": "Selective",
+      "action": "Offer existing exact-math tools to relevant collections; no domain-extension-only targeting."
+    },
+    {
+      "area": "Wikipedia/Wikidata",
+      "decision": "Eligibility not established",
+      "action": "Require independent sources and notability or structural need; disclosed edit requests where appropriate."
+    },
+    {
+      "area": "Link reclamation",
+      "decision": "Execute",
+      "action": "Check removals, inaccurate descriptions and broken destinations; use verified correction processes."
+    },
+    {
+      "area": "Reference assets",
+      "decision": "Maintain",
+      "action": "Calculator sharing, clean tool links, reference cards, video and embed; add distinct useful assets only."
+    },
+    {
+      "area": "Social publishing",
+      "decision": "Verified categories",
+      "action": "Dedicated BACwater Pinterest board and affiliated Reddit content; resolve old YouTube upload before another."
+    },
+    {
+      "area": "Reddit/forums/Q&A",
+      "decision": "Context-dependent",
+      "action": "Read full thread and rules, answer actual arithmetic need, disclose affiliation; no personalized dosing advice."
+    },
+    {
+      "area": "Publicity/partnerships",
+      "decision": "Qualified submissions",
+      "action": "Tool roundups, newsletter resources, real partner embeds; no fabricated expertise or outcomes."
+    },
+    {
+      "area": "Reputation/referrals",
+      "decision": "Product focus",
+      "action": "Improve sharing and respond to authentic feedback. Local branch not applicable on current evidence."
+    },
+    {
+      "area": "SEO/AEO/GEO/CRO",
+      "decision": "Evidence-based",
+      "action": "Completion measurement, sitemap processing, release and acceptance verification; preserve recent metadata pending data."
+    }
+  ],
+  "priorities": [
+    {
+      "task": "Consent-safe completion measurement",
+      "status": "unresolved_receipt_gap"
+    },
+    {
+      "task": "Google page-sitemap reprocessing",
+      "status": "pending_external_processing"
+    },
+    {
+      "task": "Maintain verified listing and check pending directories",
+      "status": "ongoing"
+    },
+    {
+      "task": "Triage old browser assertions against current approved UX",
+      "status": "investigate"
+    },
+    {
+      "task": "Resolve old YouTube upload without duplicates",
+      "status": "unretrievable_video"
+    }
+  ],
+  "rules": [
+    "Verify current facts, free cost and eligibility.",
+    "Deduplicate and read back writes.",
+    "Preserve client separation.",
+    "Private performance reports stay private.",
+    "Do not infer indexation, ranking credit or conversions."
+  ]
+}

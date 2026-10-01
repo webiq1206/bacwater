@@ -1,27 +1,31 @@
 {
-  "updatedAt": "2026-09-30",
+  "updatedAt": "2026-10-01",
   "repository": "webiq1206/bacwater",
   "productionDeployment": "Growth routes and matching widget verified live on 2026-09-28; full main deployment not verified because version.json returned two commit IDs absent from this repository.",
-  "trafficBaseline": "Search Console web-search baseline established for 2026-08-29 through 2026-09-25 versus 2026-08-01 through 2026-08-28. Search clicks are not users; calculator completions and returning users remain unmeasured.",
+  "trafficBaseline": "Updated 28-day Search Console and production-host-filtered GA4 comparison recorded in private October 1 owner report. Calculator-completion events remain unobserved through September 30.",
   "externalPostsPublished": 5,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
   "spend": 0,
   "automations": [
     {
-      "title": "BACwater growth research",
+      "title": "BACwater growth execution",
       "cadence": "Daily evening, America/Boise",
-      "enabled": true
+      "enabled": true,
+      "lastRunVerified": "2026-10-01T00:41:03.955456+00:00"
     },
     {
       "title": "BACwater weekly improvements",
       "cadence": "Monday morning, America/Boise",
-      "enabled": true
+      "enabled": true,
+      "lastRunVerified": "2026-09-28T14:18:57.343630+00:00"
     },
     {
       "title": "BACwater weekly content",
       "cadence": "Tuesday morning, America/Boise",
-      "enabled": true
+      "enabled": true,
+      "lastRunVerified": null,
+      "executionStatus": "Enabled configuration verified; no recorded scheduled run yet."
     },
     {
       "title": "Backlink discovery, verification and reclamation",
@@ -54,7 +58,7 @@
     "liveNofollow": 0,
     "discovered": 0,
     "opportunities": 8,
-    "note": "No backlink has been acquired. Acquisition is passive: the /embed and /share-tools widgets place an attribution anchor in the host page's own markup when a third party installs one. Directory and community lanes remain blocked on owner-authenticated accounts and are not automated."
+    "note": "Organic distribution is authorized. One directory listing is publicly visible; no dofollow or ranking-credit claim established. Known submissions and publications synchronized into register."
   },
   "pendingYouTubeUpload": "wIHXYAaqOEg: accepted, not retrievable; playlist insertion failed videoNotFound",
   "socialCategorization": {
@@ -211,5 +215,37 @@
       }
     ],
     "spend": 0
+  },
+  "directorySummary": {
+    "confirmedSubmissions": 6,
+    "publiclyVisible": 1,
+    "pendingReview": 5,
+    "unconfirmedAttempts": 2
+  },
+  "programReview": {
+    "date": "2026-10-01",
+    "sitemap": {
+      "url": "https://bacwater.ai/sitemap-pages.xml",
+      "liveStatus": 200,
+      "xmlValid": true,
+      "uniqueCanonicalUrls": 84,
+      "resubmittedAt": "2026-10-01T13:48:29.175Z",
+      "registrationVerified": true,
+      "processing": "Pending; existing Google error not yet cleared"
+    },
+    "priorityPage": {
+      "url": "https://bacwater.ai/tools/syringe-units",
+      "indexed": true,
+      "googleCanonicalMatches": true,
+      "liveUpdatedTitleVerified": true,
+      "decision": "Preserve recently improved metadata until recrawl and sufficient data."
+    },
+    "productionCommit": {
+      "reported": "b9188d6012e8299f1c63e9c1ecda204b28dfa671",
+      "lookup": "No matching repository commit; full release identity remains unverified."
+    },
+    "measurement": "GA4 stream domain verified as canonical site; completion receipt remains unverified.",
+    "ci": "General CI and focused consent/content/search/purchase/hero checks passed. Broader browser regression failed, including stale wording/selector expectations. Full suite is not green.",
+    "changedApplicationCode": false
   }
 }

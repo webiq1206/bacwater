@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-09-30",
+  "reviewedAt": "2026-10-01",
   "opportunities": [
     {
       "id": "uspeptidefinder-resource-submission",
@@ -129,7 +129,7 @@
     },
     {
       "id": "nouploadtools-calculator-submission",
-      "status": "submitted_pending_review",
+      "status": "approved_publicly_visible",
       "channel": "calculator_directory",
       "canonicalUrl": "https://nouploadtools.com/submit",
       "discoveredAt": "2026-09-29",
@@ -156,8 +156,22 @@
         "verifiedVia": "Browser rendered success state",
         "receipt": "bacwater-nouploadtools-confirmed.jpg"
       },
-      "nextStep": "Check for public listing October 2, then October 6 if backlog persists. Do not resubmit.",
-      "spend": 0
+      "nextStep": "Check published listing weekly for presence, accurate description and functioning redirect. Monitor actual referrals when measurement supports them. No resubmission.",
+      "spend": 0,
+      "verifiedAt": "2026-10-01",
+      "publicationDate": null,
+      "firstObservedLiveAt": "2026-10-01",
+      "listingUrl": "https://nouploadtools.com/directory?cat=calculators-data",
+      "link": {
+        "href": "https://nouploadtools.com/go/bacwaterai-research-calculators?source=directory",
+        "rel": [
+          "noopener",
+          "noreferrer"
+        ],
+        "verifiedDestination": "https://bacwater.ai/",
+        "verification": "Public directory entry read through search and rendered browser. Link followed to canonical homepage via public retrieval. rel read from rendered anchor. Internal redirect link; no ranking-credit claim.",
+        "indexedStatus": "not_verified"
+      }
     },
     {
       "id": "nosignuptools-calculator-submission",
@@ -263,7 +277,7 @@
     },
     {
       "id": "launchpedia-product-submission",
-      "status": "qualified_prepared_action_blocked",
+      "status": "submitted_pending_review",
       "channel": "product_directory",
       "canonicalUrl": "https://launchpedia.co/submit/",
       "discoveredAt": "2026-09-30",
@@ -283,9 +297,23 @@
         "publicSearch": "Targeted public search returned no BACwater listing on LaunchPedia.",
         "liveForm": "Form endpoint and required fields were verified from the rendered submission page."
       },
-      "blocker": "The external form requires transmitting the verified WEB IQ business email and submitting representational content. The available browser requires action-time confirmation for those steps, which cannot be requested during this non-interactive run.",
-      "nextStep": "Complete one submission in an interactive run after the browser confirmation is available, then verify the returned receipt before changing status. Do not submit twice.",
-      "spend": 0
+      "blocker": null,
+      "nextStep": "Check for public listing on October 8. No promised review period or listing URL was returned. Do not resubmit.",
+      "spend": 0,
+      "submittedAt": "2026-10-01",
+      "submission": {
+        "name": "BACwater.ai | Free Research Calculators",
+        "website": "https://bacwater.ai",
+        "contactIdentity": "Authorized WEB IQ business contact",
+        "affiliationDisclosed": true,
+        "affiliateField": "left blank"
+      },
+      "confirmation": {
+        "heading": "Thanks for completing this form!",
+        "message": "Form submitted",
+        "verifiedVia": "Rendered Tally receipt within LaunchPedia after one Submit action.",
+        "url": "https://launchpedia.co/submit/"
+      }
     }
   ],
   "researchNotes": [
@@ -385,13 +413,18 @@
     }
   ],
   "lastExecution": {
-    "checkedAt": "2026-10-01 00:34:07 UTC",
-    "localDate": "2026-09-30",
-    "newConfirmedSubmissions": 0,
-    "newQualifiedOpportunities": 1,
+    "checkedAt": "2026-10-01",
+    "newConfirmedSubmissions": 1,
+    "confirmedDirectorySubmissionsTotal": 6,
+    "newPubliclyVisibleDirectories": 1,
     "spend": 0,
-    "pendingReview": "FindersList reached its initial review date, but public web search returned no BACwater listing and the directory's own search remained stuck on Loading index. Status remains submitted_pending_review; do not resubmit.",
-    "reddit": "Connected Reddit search covered four current query variants. No thread met the non-medical, rule-compliant, non-promotional contribution standard.",
-    "actionBlocker": "LaunchPedia is prepared and deduplicated, but its browser form requires action-time confirmation before contact-data transmission and final submission."
+    "reddit": "Both existing BACwater profile threads read successfully; zero comments and no more placeholders. No duplicate posts.",
+    "pinterest": "Three existing guides read back from dedicated BACwater board.",
+    "youtube": "Existing upload still returned no video; do not duplicate.",
+    "nextActions": [
+      "Check sitemap reprocessing without repeated resubmission.",
+      "Verify safe calculator completion measurement.",
+      "Continue due directory reviews and useful distribution."
+    ]
   }
 }

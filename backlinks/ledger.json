@@ -90,6 +90,127 @@
       "relevance": "The highest topical relevance available and the most likely to send people who need the tool.",
       "nextStep": "Not started, and not something to automate. It needs a real, identified participant who can stand behind answers on a health-adjacent subject. Posting under a manufactured persona would be misrepresentation, and drive-by links are removed by moderators anyway.",
       "notes": "Expected nofollow or ugc almost everywhere, which is the correct outcome for a community link. Recorded because the traffic and the credibility are the point, not the attribute."
+    },
+    {
+      "id": "directory-uspeptidefinder-resource",
+      "domain": "uspeptidefinder.com",
+      "placementUrl": null,
+      "destinationPath": "/",
+      "status": "submitted",
+      "method": "Free directory submission recorded in docs/growth/opportunities.json.",
+      "relevance": "USPeptideFinder explicitly invites community submissions of active US-based peptide research tools. Its current directory has a dedicated Tools category with two listings, so a distinct, math-only calculator suite fits the stated resource gap.",
+      "nextStep": "Check the public directory for approval after the stated 3-5 business day review window, starting October 2 and again October 6, 2026. Do not resubmit. Mark approved_or_live only after verifying the actual BACwater listing. No listing URL or submission ID was returned.",
+      "notes": "Submission received; publication unverified."
+    },
+    {
+      "id": "directory-finderslist-tool",
+      "domain": "www.finderslist.com",
+      "placementUrl": null,
+      "destinationPath": "/",
+      "status": "submitted",
+      "method": "Free directory submission recorded in docs/growth/opportunities.json.",
+      "relevance": "General tool directory accepts free browser software; listed BACwater under Productivity Tools with explicit laboratory-arithmetic positioning.",
+      "nextStep": "Check for a public listing starting September 30. No listing ID or public BACwater listing URL was returned. Do not resubmit.",
+      "notes": "Submission received; publication unverified."
+    },
+    {
+      "id": "directory-thefreetoolsdirectory-calculator",
+      "domain": "thefreetoolsdirectory.com",
+      "placementUrl": null,
+      "destinationPath": "/",
+      "status": "submitted",
+      "method": "Free directory submission recorded in docs/growth/opportunities.json.",
+      "relevance": "Free calculator directory has a Concentration category. Its own search showed no matches for BACwater before submission.",
+      "nextStep": "Check public listing status in a future growth run, initially October 6; no specific review deadline or submission ID was provided. Do not resubmit.",
+      "notes": "Submission received; publication unverified."
+    },
+    {
+      "id": "directory-publictools-calculator",
+      "domain": "public.tools",
+      "placementUrl": null,
+      "destinationPath": "/",
+      "status": "submitted",
+      "method": "Free directory submission recorded in docs/growth/opportunities.json.",
+      "relevance": "Curated free no-account tool catalog includes a Utilities category for calculators and converters. Official footer linked to this Tally submission form.",
+      "nextStep": "Check public catalog around October 6. No review deadline, submission ID or listing URL was returned. Do not resubmit.",
+      "notes": "Submission received; publication unverified."
+    },
+    {
+      "id": "directory-nouploadtools-calculator",
+      "domain": "nouploadtools.com",
+      "placementUrl": "https://nouploadtools.com/directory?cat=calculators-data",
+      "destinationPath": "/",
+      "status": "submitted",
+      "method": "Free directory submission recorded in docs/growth/opportunities.json.",
+      "relevance": "Free directory includes Data & Calculators and accepts tools whose core functions work without login. Current repository confirms the mass converter calculates in a client component.",
+      "nextStep": "Check published listing weekly for presence, accurate description and functioning redirect. Monitor actual referrals when measurement supports them. No resubmission.",
+      "notes": "Public listing verified October 1. Internal redirect anchor, rel noopener noreferrer, reaches https://bacwater.ai/. No ranking/indexation claim."
+    },
+    {
+      "id": "directory-launchpedia-product",
+      "domain": "launchpedia.co",
+      "placementUrl": null,
+      "destinationPath": "/",
+      "status": "submitted",
+      "method": "Free directory submission recorded in docs/growth/opportunities.json.",
+      "relevance": "LaunchPedia accepts product submissions through a public form with name, email, product name and website fields. The live form showed no account or payment step; optional paid promotion is separate.",
+      "nextStep": "Check for public listing on October 8. No promised review period or listing URL was returned. Do not resubmit.",
+      "notes": "Submission received; publication unverified."
+    },
+    {
+      "id": "pinterest-mg-to-mcg",
+      "domain": "pinterest.com",
+      "placementUrl": "https://www.pinterest.com/pin/1120129738630484217/",
+      "destinationPath": "/tools/mg-to-mcg",
+      "status": "submitted",
+      "method": "Original arithmetic reference in dedicated BACwater board.",
+      "relevance": "Explains the exact conversion offered by the linked calculator.",
+      "nextStep": "Verify public HTML link attributes and referral value; API read-back is not a dofollow check.",
+      "notes": "Published September 28; board read-back verified October 1."
+    },
+    {
+      "id": "pinterest-u100-to-ml",
+      "domain": "pinterest.com",
+      "placementUrl": "https://www.pinterest.com/pin/1120129738630484240/",
+      "destinationPath": "/tools/syringe-units",
+      "status": "submitted",
+      "method": "Original arithmetic reference in dedicated BACwater board.",
+      "relevance": "Explains the exact conversion offered by the linked calculator.",
+      "nextStep": "Verify public HTML link attributes and referral value; API read-back is not a dofollow check.",
+      "notes": "Published September 28; board read-back verified October 1."
+    },
+    {
+      "id": "pinterest-concentration",
+      "domain": "pinterest.com",
+      "placementUrl": "https://www.pinterest.com/pin/1120129738630484241/",
+      "destinationPath": "/tools/bac-water",
+      "status": "submitted",
+      "method": "Original arithmetic reference in dedicated BACwater board.",
+      "relevance": "Explains the exact conversion offered by the linked calculator.",
+      "nextStep": "Verify public HTML link attributes and referral value; API read-back is not a dofollow check.",
+      "notes": "Published September 28; board read-back verified October 1."
+    },
+    {
+      "id": "reddit-1wset55",
+      "domain": "reddit.com",
+      "placementUrl": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wset55/bacwaterai_mg_to_mcg_a_quick_conversion_reference/",
+      "destinationPath": "/tools/mg-to-mcg",
+      "status": "submitted",
+      "method": "Affiliation-disclosed arithmetic reference on authorized profile.",
+      "relevance": "mg-to-mcg mass conversion",
+      "nextStep": "Check replies and public link availability; do not infer ranking value.",
+      "notes": "Post read-back verified October 1; zero comments."
+    },
+    {
+      "id": "reddit-1wulj4n",
+      "domain": "reddit.com",
+      "placementUrl": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wulj4n/bacwaterai_u100_units_and_ml_a_scale_conversion/",
+      "destinationPath": "/tools/syringe-units",
+      "status": "submitted",
+      "method": "Affiliation-disclosed arithmetic reference on authorized profile.",
+      "relevance": "U-100 units to mL scale conversion",
+      "nextStep": "Check replies and public link availability; do not infer ranking value.",
+      "notes": "Post read-back verified October 1; zero comments."
     }
   ]
 }
