@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-09-29",
+  "reviewedAt": "2026-09-30",
   "opportunities": [
     {
       "id": "uspeptidefinder-resource-submission",
@@ -232,6 +232,34 @@
       },
       "nextStep": "Check the public directory after its 48-hour window, starting October 2, 2026. Do not retry until the first attempt's outcome is resolved. Do not count as a confirmed submission or acquired backlink.",
       "spend": 0
+    },
+    {
+      "id": "reddit-profile-u100-scale-reference",
+      "status": "published_verified",
+      "channel": "reddit_profile",
+      "canonicalUrl": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wulj4n/bacwaterai_u100_units_and_ml_a_scale_conversion/",
+      "discoveredAt": "2026-09-30",
+      "publishedAt": "2026-10-01T00:35:14Z",
+      "specificNeed": "Recent Reddit searches continued to surface confusion between U-100 syringe markings, mL, mg, mcg, and product IU, but the current community threads were individualized dosing discussions and were excluded. A general, non-medical scale reference was published on the authorized BACwater profile instead.",
+      "matchingTool": {
+        "name": "BACwater.ai U-100 units to mL converter",
+        "url": "https://bacwater.ai/tools/syringe-units?utm_source=reddit&utm_medium=organic_social&utm_campaign=unit_reference"
+      },
+      "publication": {
+        "title": "[BACwater.ai] U-100 units and mL: a scale conversion reference",
+        "author": "u/Zealousideal_Tax8675",
+        "affiliationDisclosed": true,
+        "researchOnly": true,
+        "affiliateLinksDisclosed": true,
+        "medicalOrDosingAdvice": false
+      },
+      "confirmation": {
+        "postId": "1wulj4n",
+        "redditName": "t3_1wulj4n",
+        "verifiedVia": "Connected Reddit read-back returned the exact title, body, author, subreddit, and permalink.",
+        "status": "published_read_back_verified"
+      },
+      "spend": 0
     }
   ],
   "researchNotes": [
@@ -316,15 +344,29 @@
       "reviewedAt": "2026-09-29",
       "status": "not_qualified",
       "reason": "Read current September 24 post through connected Reddit search. Request for a concentration calculator was embedded in individualized missed-dose and titration questions, outside this task's no-medical/dosing-advice scope. No contribution posted."
+    },
+    {
+      "url": "https://startupstash.com/add-listing/",
+      "reviewedAt": "2026-09-30",
+      "status": "qualified_free_submission_blocked_contact_disclosure",
+      "reason": "The current StartupStash Typeform accepts a free Productivity listing with no payment or mandatory advertising. The form requires a business email. The action environment rejected the final write because third-party disclosure of the exact contact address was not accepted as verified authorization. No form data was submitted and no retry was attempted."
+    },
+    {
+      "url": "https://www.tinytooltown.com/submit/",
+      "reviewedAt": "2026-09-30",
+      "status": "not_qualified_missing_required_license",
+      "reason": "Tiny Tool Town requires a public open-source repository with a real LICENSE file. The BACwater repository has no LICENSE or LICENSE.md on main, so the mg-to-mcg tool was not submitted."
     }
   ],
   "lastExecution": {
-    "checkedAt": "2026-09-30 00:10:27 UTC",
-    "localDate": "2026-09-29",
+    "checkedAt": "2026-10-01T00:35:14Z",
+    "localDate": "2026-09-30",
     "newConfirmedSubmissions": 0,
-    "newUnconfirmedAttempts": 1,
+    "newVerifiedPublications": 1,
     "spend": 0,
-    "existingPending": "Earlier submissions remain within their recorded review windows; no duplicate submissions.",
-    "liveDestination": "Mass converter public page retrieved with calculator inputs, exact conversion explanation, no-account statement and affiliate/research disclosures. No deployment claim."
+    "existingPending": "Earlier directory submissions remain within their recorded review windows; no duplicate submissions.",
+    "liveDestination": "The authorized Reddit profile post was retrieved by ID with exact title, body, author, and permalink.",
+    "excludedCurrentRedditThreads": "Fresh candidates involved individualized dosing, injection, titration, or protocol advice and were not used for community promotion.",
+    "blockedQualifiedSubmission": "StartupStash free listing was prepared but not sent because the action environment rejected disclosure of the required business email."
   }
 }
