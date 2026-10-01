@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-09-28",
+  "updatedAt": "2026-09-30",
   "repository": "webiq1206/bacwater",
   "productionDeployment": "Growth routes and matching widget verified live on 2026-09-28; full main deployment not verified because version.json returned two commit IDs absent from this repository.",
   "trafficBaseline": "Search Console web-search baseline established for 2026-08-29 through 2026-09-25 versus 2026-08-01 through 2026-08-28. Search clicks are not users; calculator completions and returning users remain unmeasured.",
-  "externalPostsPublished": 4,
+  "externalPostsPublished": 5,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
   "spend": 0,
@@ -189,6 +189,26 @@
       "No social writes, messages, paid services, production schema changes or seed operations.",
       "No new website feature or metadata change while release reconciliation remains unresolved.",
       "Recurring monitoring remains useful and is not disabled."
+    ],
+    "spend": 0
+  },
+  "lastGrowthExecution": {
+    "checkedAt": "2026-10-01T00:35:14Z",
+    "localDate": "2026-09-30",
+    "completed": [
+      {
+        "channel": "Reddit profile",
+        "destination": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wulj4n/bacwaterai_u100_units_and_ml_a_scale_conversion/",
+        "status": "published_read_back_verified",
+        "topic": "U-100 units to mL scale conversion"
+      }
+    ],
+    "blocked": [
+      {
+        "destination": "StartupStash",
+        "status": "not_submitted",
+        "reason": "The action environment rejected third-party disclosure of the required business email."
+      }
     ],
     "spend": 0
   }
