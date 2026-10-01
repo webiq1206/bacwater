@@ -260,6 +260,32 @@
         "status": "published_read_back_verified"
       },
       "spend": 0
+    },
+    {
+      "id": "launchpedia-product-submission",
+      "status": "qualified_prepared_action_blocked",
+      "channel": "product_directory",
+      "canonicalUrl": "https://launchpedia.co/submit/",
+      "discoveredAt": "2026-09-30",
+      "specificNeed": "LaunchPedia accepts product submissions through a public form with name, email, product name and website fields. The live form showed no account or payment step; optional paid promotion is separate.",
+      "matchingTool": {
+        "name": "BACwater.ai Research Calculators",
+        "url": "https://bacwater.ai"
+      },
+      "helpfulDraft": "BACwater.ai is a free browser-based toolkit for laboratory research arithmetic. It converts user-entered mg, mcg, mL and U-100 values, shows the math, and keeps mass, volume and concentration distinct. Core calculators need no account. It does not recommend doses, products, diluents or treatment. Submitted by WEB IQ on behalf of BACwater.ai; supplier links are disclosed affiliate links.",
+      "applicableRules": [
+        "Use the authorized WEB IQ business contact identity.",
+        "Identify BACwater.ai as a free research-calculator product.",
+        "Leave the optional affiliate-link field empty because the submitted destination is the canonical site."
+      ],
+      "duplicateCheck": {
+        "repository": "No prior LaunchPedia entry in opportunities.json.",
+        "publicSearch": "Targeted public search returned no BACwater listing on LaunchPedia.",
+        "liveForm": "Form endpoint and required fields were verified from the rendered submission page."
+      },
+      "blocker": "The external form requires transmitting the verified WEB IQ business email and submitting representational content. The available browser requires action-time confirmation for those steps, which cannot be requested during this non-interactive run.",
+      "nextStep": "Complete one submission in an interactive run after the browser confirmation is available, then verify the returned receipt before changing status. Do not submit twice.",
+      "spend": 0
     }
   ],
   "researchNotes": [
@@ -359,14 +385,13 @@
     }
   ],
   "lastExecution": {
-    "checkedAt": "2026-10-01T00:35:14Z",
+    "checkedAt": "2026-10-01 00:34:07 UTC",
     "localDate": "2026-09-30",
     "newConfirmedSubmissions": 0,
-    "newVerifiedPublications": 1,
+    "newQualifiedOpportunities": 1,
     "spend": 0,
-    "existingPending": "Earlier directory submissions remain within their recorded review windows; no duplicate submissions.",
-    "liveDestination": "The authorized Reddit profile post was retrieved by ID with exact title, body, author, and permalink.",
-    "excludedCurrentRedditThreads": "Fresh candidates involved individualized dosing, injection, titration, or protocol advice and were not used for community promotion.",
-    "blockedQualifiedSubmission": "StartupStash free listing was prepared but not sent because the action environment rejected disclosure of the required business email."
+    "pendingReview": "FindersList reached its initial review date, but public web search returned no BACwater listing and the directory's own search remained stuck on Loading index. Status remains submitted_pending_review; do not resubmit.",
+    "reddit": "Connected Reddit search covered four current query variants. No thread met the non-medical, rule-compliant, non-promotional contribution standard.",
+    "actionBlocker": "LaunchPedia is prepared and deduplicated, but its browser form requires action-time confirmation before contact-data transmission and final submission."
   }
 }
