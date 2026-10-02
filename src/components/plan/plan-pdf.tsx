@@ -34,7 +34,7 @@ import { formatDate } from "@/lib/utils";
 // `teal` keys are kept for naming compatibility but now carry the sage accent.
 // Bump when the guide's layout/contents change, so a printed copy can be
 // matched to the template that produced it.
-const GUIDE_VERSION = "1.1";
+const GUIDE_VERSION = "1.2";
 
 // Provenance of each printed number, mirroring the results page's chips: what
 // the user typed, what the calculator derived, and what comes from research.
@@ -75,8 +75,10 @@ const s = StyleSheet.create({
     color: C.teal,
     fontFamily: "Helvetica-Bold",
   },
-  h1: { fontSize: 21, fontFamily: "Helvetica-Bold", marginTop: 5 },
-  subtitle: { fontSize: 11, color: C.muted, marginTop: 2 },
+  // Explicit line heights prevent the page's smaller inherited line box from
+  // crowding the title and subtitle, including titles that wrap onto two lines.
+  h1: { fontSize: 21, lineHeight: 1.3, fontFamily: "Helvetica-Bold", marginTop: 5 },
+  subtitle: { fontSize: 11, lineHeight: 1.4, color: C.muted, marginTop: 4 },
   metaLine: { fontSize: 8.5, color: C.faint, marginTop: 4 },
 
   sectionTitle: {
