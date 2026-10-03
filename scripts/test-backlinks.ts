@@ -189,6 +189,9 @@ async function main() {
   const pages: Record<string, { status: number; body: string; headers?: Record<string, string> }> = {
     "/good": { status: 200, body: '<html><head><title>g</title></head><body><p>Handy: <a href="https://bacwater.ai/tools/bac-water">BAC water calculator by BACwater.ai</a></p></body></html>' },
     "/ugc": { status: 200, body: '<html><body><a href="https://bacwater.ai/tools/bac-water" rel="ugc noopener">calc</a></body></html>' },
+    "/blocked": { status: 403, body: "forbidden" },
+    "/limited": { status: 429, body: "try later" },
+    "/error": { status: 503, body: "unavailable" },
     "/gone": { status: 404, body: "not found" },
     "/nolink": { status: 200, body: "<html><body><p>An article that mentions nothing.</p></body></html>" },
   };
@@ -211,8 +214,10 @@ async function main() {
         { id: "gone", domain: "127.0.0.1", placementUrl: `${origin}/gone`, destinationPath: "/tools/bac-water", status: "submitted", method: "m", relevance: "r", nextStep: "wait" },
         { id: "unreachable", domain: "127.0.0.1", placementUrl: "http://127.0.0.1:1/x", destinationPath: "/tools/bac-water", status: "submitted", method: "m", relevance: "r", nextStep: "wait" },
         { id: "future", domain: "example.com", placementUrl: null, destinationPath: "/peptide-calculator", status: "opportunity", method: "m", relevance: "r", nextStep: "decide" },
-        // A lead a source handed us that turns out not to link here at all.
+        // A missing direct anchor needs rendered verification before rejection.
         { id: "falselead", domain: "127.0.0.1", placementUrl: `${origin}/nolink`, destinationPath: "/tools/bac-water", status: "discovered", method: "found automatically", relevance: "unassessed", nextStep: "verify", discoveredBy: "wikimedia", discoveredAt: "2026-09-28" },
+        { id: "pending", domain: "example.com", placementUrl: null, destinationPath: "/tools/bac-water", status: "submitted", method: "receipt confirmed", relevance: "r", nextStep: "review" },
+        ...["blocked", "limited", "error", "nolink"].map(id => ({ id: `known-${id}`, domain: "127.0.0.1", placementUrl: `${origin}/${id}`, destinationPath: "/tools/bac-water", status: "live" as const, method: "m", relevance: "r", nextStep: "", attributes: { checkedAt: "2026-10-01T00:00:00Z", httpStatus: 200, rel: [], dofollow: true, anchorText: "calc", destination: "https://bacwater.ai/tools/bac-water", pageNofollow: false, pageNoindex: false, note: "Prior verified anchor" } })),
       ],
     };
     fs.writeFileSync(path.join(dir, "ledger.json"), JSON.stringify(fixture, null, 2));
@@ -231,6 +236,7 @@ async function main() {
     assert.equal(JSON.parse(fs.readFileSync(path.join(dir, "ledger.json"), "utf8")).placements[0].status, "submitted",
       "a run without --promote must not modify the ledger");
     const dryReport = fs.readFileSync(path.join(dir, "verification-report.md"), "utf8");
+    assert.doesNotMatch(dryReport.split("## Opportunities, nothing submitted")[1].split("## Status changes")[0], /receipt confirmed/);
     assert.match(dryReport, /Re-run with `--promote`/);
 
     // --promote writes only what was read, and writes the evidence with it.
@@ -252,9 +258,13 @@ async function main() {
     assert.equal(byId.unreachable.status, "submitted");
     assert.equal(byId.unreachable.attributes, undefined);
     assert.equal(byId.future.status, "opportunity");
-    // A false lead is closed rather than left pending forever. Something WE
-    // submitted would stay pending, because a publisher may not have put it up.
-    assert.equal(byId.falselead.status, "rejected");
+    // Raw HTML absence and blocked fetches cannot erase prior evidence.
+    assert.equal(byId.falselead.status, "discovered");
+    assert.equal(byId.pending.status, "submitted");
+    for (const id of ["blocked", "limited", "error", "nolink"]) {
+      assert.equal(byId[`known-${id}`].status, "live");
+      assert.equal(byId[`known-${id}`].attributes?.checkedAt, "2026-10-01T00:00:00Z");
+    }
     assert.equal(byId.falselead.attributes, undefined);
     assert.deepEqual(verifyLedger(promoted), [], "promoted ledger must still satisfy its own invariants");
 
@@ -266,7 +276,7 @@ async function main() {
     assert.match(report, /BAC water calculator by BACwater\.ai/);
     assert.match(report, /rel="ugc noopener"/);
     const results = JSON.parse(fs.readFileSync(path.join(dir, "verification.json"), "utf8"));
-    assert.deepEqual(results.results.map((r: { outcome: string }) => r.outcome), ["dofollow", "nofollow", "page-error", "unreachable", "not-submitted", "link-missing"]);
+    assert.deepEqual(results.results.map((r: { outcome: string }) => r.outcome), ["dofollow", "nofollow", "page-missing", "unreachable", "not-submitted", "render-unverified", "placement-url-unknown", "fetch-blocked", "fetch-blocked", "page-error", "render-unverified"]);
 
     // A hand-written claim the live page contradicts must fail the run.
     const lying = { ...promoted, placements: promoted.placements.map(p => p.id === "ugc" ? { ...p, status: "live" as const, attributes: { ...p.attributes!, dofollow: true } } : p) };

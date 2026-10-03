@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-02",
+  "brand": "BACwater.ai",
+  "repository": "webiq1206/bacwater",
+  "sourceRevision": "e7692397f69c080fd72e43fc84f51a8246814b67",
+  "specification": {
+    "version": "2",
+    "sourceModifiedAt": "2026-10-02T15:09:02.149614Z",
+    "bytes": 53126,
+    "readCoverage": "All 372 lines, all 17 sections, release protocol version 1 and owned Meta comment clarification.",
+    "missingSourceSections": []
+  },
+  "scope": "Daily engagement, directory receipt reconciliation, receiving-side measurement and discovery checks, plus reporting-script defect repair. No website publication or schema changes.",
+  "evidence": {
+    "publications": "../publications.json",
+    "opportunities": "../opportunities.json",
+    "weeklyContentReceipt": "2026-10-01-weekly-content.json",
+    "legacyLedger": "../../../backlinks/ledger.json",
+    "historicalPageInventory": "../../../seo-audit/page-by-page-audit.md",
+    "historicalTaskList": "../../../audit/full-audit-task-list.md"
+  },
+  "results": {
+    "commentReads": "Complete returned Reddit trees, YouTube thread list and Facebook setup-post comments empty; no public replies needed. Instagram media empty. Pinterest comments not supported.",
+    "weeklyContent": "Dated October 1 execution and fourth Pinterest pin verified; no duplicate request.",
+    "directory": "NoUploadTools public listing reverified. Five other confirmed submissions retain pending status; two uncertain attempts remain uncertain. No resubmissions.",
+    "searchDiscovery": "Correct Google property owner and Bing site identities verified privately. Google four sitemap records show no errors/warnings and not pending; Bing canonical feeds show Success. No new submission, indexing conclusion or llms.txt change.",
+    "measurement": "Production-host completion receipt observed; test-window events excluded from business outcome claims. Private aggregate report retained outside repository.",
+    "calculator": "Rendered mg-to-mcg safe fixture 0.125 mg produced 125 mcg. This does not establish every calculator journey or device.",
+    "productionRevision": "Fresh version.json read blocked by client environment; no deployment and no fresh full-production revision claim.",
+    "spend": 0
+  },
+  "repair": {
+    "problem": "Missing placement URLs were labeled not-submitted despite confirmed receipt; HTTP blocks and raw HTML absence were treated as evidence of removal.",
+    "affectedFiles": [
+      "scripts/verify-backlinks.ts",
+      "scripts/test-backlinks.ts"
+    ],
+    "behavior": "Preserve submission history, distinguish placement-url-unknown, fetch-blocked, render-unverified and observed 404/410. Do not demote blocked/render-unverified records. Observed rel contradictions still fail.",
+    "test": "PASS full existing backlink suite with new fixture cases for submitted/no URL, 403, 429, 503 and missing raw anchor on previously live records. Executed Node 24 type-stripped temporary mirror with mechanical import/runner adaptation because tsx was unavailable. Local fixture server only.",
+    "notRun": [
+      "Whole application build and typecheck, no app code changed.",
+      "External full verifier run, generated reports await existing scheduled workflow."
+    ],
+    "recovery": "Revert this isolated reporting change if regression appears; never restore false status conclusions or erase original receipts."
+  },
+  "coverageGaps": [
+    "Historical page audit covers templates and is not an exhaustive current canonical inventory. Current full route/CMS/PDF/redirect/state/integration inventory is not completed this daily batch.",
+    "No full mobile/device, WCAG, performance, security or complete receiving/CRM journey pass. Unvisited pages remain not run.",
+    "No new competitor/keyword experiment or duplicated creator research. Weekly Edward Sturm owner remains authoritative for creator claims; no new creator claim used.",
+    "No new qualified customer/revenue or repeat-use result established.",
+    "PublicTools and FreeToolsDirectory review status not independently resolved this batch."
+  ],
+  "tasks": [
+    {
+      "priority": "P1",
+      "owner": "Daily Growth",
+      "affectedUrls": [
+        "https://nouploadtools.com/directory?cat=calculators-data",
+        "https://www.pinterest.com/pin/1120129738630648558/",
+        "https://www.youtube.com/watch?v=bnvpPzm6-EY"
+      ],
+      "dependency": "Next existing verifier execution",
+      "acceptance": "No receipt-confirmed submission labeled not-submitted; 403 and raw HTML absence remain unverified.",
+      "result": "Local regression passed; external report pending next run.",
+      "nextCheck": "2026-10-03"
+    },
+    {
+      "priority": "P1",
+      "owner": "Engineering / weekly website review",
+      "affectedUrls": [
+        "https://bacwater.ai/version.json",
+        "https://bacwater.ai/sitemap.xml",
+        "https://bacwater.ai/llms.txt"
+      ],
+      "dependency": "Working authorized production revision read and complete public/private source inventory",
+      "acceptance": "Reconcile production revision, all canonical pages/dynamic types/PDFs and discovery files; record every intended search URL with evidence and individual result.",
+      "result": "Not run to completion; do not claim whole inventory passed.",
+      "nextCheck": "2026-10-05"
+    },
+    {
+      "priority": "P2",
+      "owner": "Daily Growth",
+      "affectedUrls": [
+        "https://launchpedia.co/submit/"
+      ],
+      "dependency": "Publisher review",
+      "acceptance": "Receipt preserved; verify public URL before promotion and indexing independently.",
+      "result": "Submitted pending review, unchanged.",
+      "nextCheck": "2026-10-08"
+    },
+    {
+      "priority": "P2",
+      "owner": "Weekly Growth",
+      "affectedUrls": [
+        "https://bacwater.ai/tools/mg-to-mcg",
+        "https://bacwater.ai/tools/bac-water"
+      ],
+      "dependency": "Clean consented production data with synthetic exclusion and sufficient sample",
+      "acceptance": "Compare complete equal windows, qualified calculator use and returning use separately from search clicks and supplier clicks.",
+      "result": "Baseline remains private; no growth claim.",
+      "reviewDates": {
+        "sevenDay": "2026-10-09",
+        "thirtyDay": "2026-11-01",
+        "sixtyDay": "2026-12-01"
+      },
+      "reviewRationale": "Seven-day integrity check; 28-day comparable data at monthly review and 6 to 8 week persistence check, subject to sample adequacy."
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-10-01",
+  "updatedAt": "2026-10-02",
   "repository": "webiq1206/bacwater",
-  "productionDeployment": "Growth routes and matching widget verified live on 2026-09-28; full main deployment not verified because version.json returned two commit IDs absent from this repository.",
-  "trafficBaseline": "Updated 28-day Search Console and production-host-filtered GA4 comparison recorded in private October 1 owner report. Calculator-completion events remain unobserved through September 30.",
+  "productionDeployment": "This run did not deploy. Repository main identity verified; fresh production revision read was blocked by the browser environment. Historical release observations are not a fresh whole-site verification.",
+  "trafficBaseline": "Equal-window baseline remains in the private October 1 report. Receiving-side completion events are now observed for the production host; treat the acceptance-test window as synthetic and exclude it from growth/customer claims.",
   "externalPostsPublished": 7,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
@@ -40,7 +40,7 @@
     }
   ],
   "blockedChannels": [
-    "Replit production deployment access"
+    "Fresh production revision read blocked in this browser session; no deployment attempted."
   ],
   "validation": {
     "growthTests": "passed",
@@ -200,22 +200,16 @@
     "spend": 0
   },
   "lastGrowthExecution": {
-    "checkedAt": "2026-10-01T00:35:14Z",
-    "localDate": "2026-09-30",
+    "checkedAt": "2026-10-02",
+    "localDate": "2026-10-02",
+    "record": "docs/growth/runs/2026-10-02-daily-growth.json",
     "completed": [
-      {
-        "channel": "Reddit profile",
-        "destination": "https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wulj4n/bacwaterai_u100_units_and_ml_a_scale_conversion/",
-        "status": "published_read_back_verified",
-        "topic": "U-100 units to mL scale conversion"
-      }
-    ],
-    "blocked": [
-      {
-        "destination": "StartupStash",
-        "status": "not_submitted",
-        "reason": "The action environment rejected third-party disclosure of the required business email."
-      }
+      "Full current specification read; current ledgers reconciled.",
+      "Reddit, YouTube and Facebook comments checked; no responses required.",
+      "Facebook and Instagram actor/object reads newly verified.",
+      "NoUploadTools listing reverified; original directory submission receipts preserved.",
+      "Backlink verifier false-negative classifications repaired and local regression suite passed.",
+      "Google and Bing sitemap processing read-back reconciled; no repeated submission."
     ],
     "spend": 0
   },
@@ -234,7 +228,7 @@
       "uniqueCanonicalUrls": 84,
       "resubmittedAt": "2026-10-01T13:48:29.175Z",
       "registrationVerified": true,
-      "processing": "Pending; existing Google error not yet cleared"
+      "processing": "Google sitemap read-back now reports zero errors, zero warnings and not pending. This establishes processing state, not indexing."
     },
     "priorityPage": {
       "url": "https://bacwater.ai/tools/syringe-units",
@@ -247,7 +241,7 @@
       "reported": "b9188d6012e8299f1c63e9c1ecda204b28dfa671",
       "lookup": "No matching repository commit; full release identity remains unverified."
     },
-    "measurement": "GA4 stream canonical domain and disabled Enhanced Measurement master flag verified. Replit build configuration now enables the existing consent-gated count-only events on next deployment. Live receipt still requires deployed verification. calculation_completed is configured as a once-per-event key event with no monetary default; read-back verified.",
+    "measurement": "Correct GA4 property, stream and production hostname reverified. Completion-event receipt is observed in the acceptance-test window; counts and account identifiers remain private. Customer conversions and repeat use are not established.",
     "ci": "General CI and focused consent/content/search/purchase/hero checks passed. Broader browser regression failed, including stale wording/selector expectations. Full suite is not green.",
     "changedApplicationCode": false
   },

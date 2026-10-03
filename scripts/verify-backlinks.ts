@@ -31,7 +31,7 @@ const RESULT_PATH = path.join(DIR, "verification.json");
 const PROMOTE = process.argv.includes("--promote");
 const TIMEOUT_MS = 20000;
 
-type Outcome = "dofollow" | "nofollow" | "link-missing" | "page-error" | "unreachable" | "not-submitted";
+type Outcome = "dofollow" | "nofollow" | "render-unverified" | "page-missing" | "fetch-blocked" | "page-error" | "unreachable" | "placement-url-unknown" | "not-submitted";
 
 interface Checked {
   placement: Placement;
@@ -85,7 +85,7 @@ function pickLink(links: FoundLink[], destinationPath: string): FoundLink | null
 async function check(placement: Placement, host: string): Promise<Checked> {
   const base = { placement, link: null, pageNofollow: false, pageNoindex: false, httpStatus: null as number | null };
   if (!placement.placementUrl) {
-    return { ...base, outcome: "not-submitted", detail: "No placement URL yet, so there is nothing to read.", suggestedStatus: null };
+    return { ...base, outcome: placement.status === "opportunity" ? "not-submitted" : "placement-url-unknown", detail: "No placement URL is recorded. Preserve the recorded status and original submission receipt; do not resubmit from this observation.", suggestedStatus: null };
   }
   const page = await readPage(placement.placementUrl);
   if ("error" in page) {
@@ -99,8 +99,8 @@ async function check(placement: Placement, host: string): Promise<Checked> {
   if (page.status >= 400) {
     return {
       ...base,
-      outcome: "page-error",
-      detail: `The page returned HTTP ${page.status}. A removed or gated page carries no link.`,
+      outcome: page.status === 404 || page.status === 410 ? "page-missing" : [401, 403, 429].includes(page.status) ? "fetch-blocked" : "page-error",
+      detail: `The page returned HTTP ${page.status}. ${page.status === 404 || page.status === 410 ? "The recorded URL is unavailable; this does not undo a confirmed submission." : "Fetch did not establish public visibility or removal. Preserve the record and retry verification later."}`,
       httpStatus: page.status,
       suggestedStatus: page.status === 404 || page.status === 410 ? "rejected" : null,
     };
@@ -111,12 +111,9 @@ async function check(placement: Placement, host: string): Promise<Checked> {
   if (!link) {
     return {
       ...shared,
-      outcome: "link-missing",
-      detail: `The page loaded (HTTP ${page.status}) but carries no anchor to ${host}. It may have been edited out, or rendered only by client-side script.`,
-      // A lead a source handed us, whose page turns out not to link here, is a
-      // false lead and is closed. Something WE submitted stays pending, because
-      // a publisher may not have put it up yet.
-      suggestedStatus: placement.status === "discovered" ? "rejected" : null,
+      outcome: "render-unverified",
+      detail: `Raw HTML (HTTP ${page.status}) contains no direct anchor to ${host}. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change.`,
+      suggestedStatus: null,
     };
   }
   return {
@@ -154,9 +151,9 @@ function report(ledger: Ledger, checks: Checked[], problems: string[]): string {
   lines.push("# Backlink verification\n");
   lines.push(`Generated ${new Date().toISOString()} from \`${LEDGER_PATH}\`. Destination site: ${ledger.site}.\n`);
   lines.push(
-    "Every row below is the result of reading the live page in this run. A placement is reported as dofollow " +
-    "only when an anchor to the destination host was found with no equity-blocking `rel` and no page-level " +
-    "nofollow. Rows under **Could not verify** are exactly that: no conclusion, in either direction.\n"
+    "Rows distinguish fetched anchors, pending placement URLs and verification gaps. The dofollow label " +
+    "describes observed anchor attributes only, not indexing or ranking credit. Submission receipts remain " +
+    "authoritative for submission history. Unverified observations must not trigger resubmission.\n"
   );
   lines.push(`Ledger statuses: ${Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(", ")}.\n`);
 
@@ -167,33 +164,33 @@ function report(ledger: Ledger, checks: Checked[], problems: string[]): string {
   ]), ["Domain", "Placement", "Destination", "Anchor text", "Attributes", "HTTP"]));
 
   lines.push("\n## Published but nofollow, ugc or sponsored\n");
-  lines.push("These are live links that pass no ranking signal. They are kept in the register so the distinction stays visible.\n\n");
+  lines.push("These fetched links carry qualifying attributes. Referral value, indexing and ranking credit are separate and are not established by this check.\n\n");
   lines.push(table(of("nofollow").map(c => [
     c.placement.domain, `[link](${c.placement.placementUrl})`, c.placement.destinationPath,
     c.link?.rel.length ? `rel="${c.link.rel.join(" ")}"` : "page-level nofollow", c.detail,
   ]), ["Domain", "Placement", "Destination", "Attributes", "Why"]));
 
   lines.push("\n## Found or submitted, not yet confirmed live\n");
-  lines.push(table(of("link-missing", "page-error").map(c => [
-    c.placement.domain, c.placement.placementUrl ? `[link](${c.placement.placementUrl})` : "—",
+  lines.push(table(of("placement-url-unknown", "page-missing").map(c => [
+    c.placement.domain, c.placement.placementUrl ? `[link](${c.placement.placementUrl})` : "Not available",
     c.placement.status, c.detail,
   ]), ["Domain", "Placement", "Ledger status", "What was found"]));
 
   lines.push("\n## Could not verify\n");
-  lines.push("The page could not be read in this run, so nothing is claimed about it. Re-run once the blocker is gone.\n\n");
-  lines.push(table(of("unreachable").map(c => [
-    c.placement.domain, c.placement.placementUrl ? `[link](${c.placement.placementUrl})` : "—", c.detail,
+  lines.push("The fetch or raw HTML is insufficient to establish visibility or removal. Reconcile rendered evidence before changing status.\n\n");
+  lines.push(table(of("unreachable", "fetch-blocked", "page-error", "render-unverified").map(c => [
+    c.placement.domain, c.placement.placementUrl ? `[link](${c.placement.placementUrl})` : "Not available", c.detail,
   ]), ["Domain", "Placement", "Reason"]));
 
   lines.push("\n## Opportunities, nothing submitted\n");
-  lines.push("No link exists for any row here. Each one names the method and what has to happen next.\n\n");
+  lines.push("These rows are recorded as opportunities without a placement URL. This is not evidence that no external link exists.\n\n");
   lines.push(table(of("not-submitted").map(c => [
     c.placement.domain, c.placement.status, c.placement.method, c.placement.destinationPath, c.placement.nextStep,
   ]), ["Domain", "Ledger status", "Method", "Intended destination", "Next step"]));
 
   const wouldChange = checks.filter(c => c.suggestedStatus && c.suggestedStatus !== c.placement.status);
   lines.push("\n## Status changes\n");
-  if (!wouldChange.length) lines.push("_The ledger already matches what was read._\n");
+  if (!wouldChange.length) lines.push("_No supported status changes. Unverified rows remain unresolved._\n");
   else {
     lines.push(PROMOTE ? "Applied to the ledger by this run.\n\n" : "Not applied. Re-run with `--promote` to write them.\n\n");
     lines.push(table(wouldChange.map(c => [c.placement.id, c.placement.status, c.suggestedStatus!, c.detail]),
@@ -221,8 +218,7 @@ async function main() {
     if (!LIVE_STATUSES.includes(claimed)) continue;
     if (checked.outcome === "dofollow" && claimed !== "live") contradictions.push(`${checked.placement.id}: recorded "${claimed}" but the live anchor is dofollow.`);
     if (checked.outcome === "nofollow" && claimed !== "live-nofollow") contradictions.push(`${checked.placement.id}: recorded "${claimed}" but the live anchor is ${checked.link?.rel.join(" ") || "page-level nofollow"}.`);
-    if (checked.outcome === "link-missing") contradictions.push(`${checked.placement.id}: recorded "${claimed}" but the page carries no link to ${ledger.host}.`);
-    if (checked.outcome === "page-error") contradictions.push(`${checked.placement.id}: recorded "${claimed}" but the page returned HTTP ${checked.httpStatus}.`);
+    if (checked.outcome === "page-missing") contradictions.push(`${checked.placement.id}: recorded "${claimed}" but the page returned HTTP ${checked.httpStatus}.`);
   }
 
   if (PROMOTE) {
@@ -256,7 +252,7 @@ async function main() {
 
   const tally = (o: Outcome) => checks.filter(c => c.outcome === o).length;
   console.log(`Backlink verification: ${tally("dofollow")} verified dofollow, ${tally("nofollow")} live but nofollow, ` +
-    `${tally("link-missing") + tally("page-error")} submitted and not live, ${tally("unreachable")} unreadable, ${tally("not-submitted")} not submitted.`);
+    `${tally("placement-url-unknown")} placement URLs unknown, ${tally("page-missing")} URLs missing, ${tally("render-unverified") + tally("fetch-blocked") + tally("page-error") + tally("unreachable")} unverified, ${tally("not-submitted")} not submitted.`);
   console.log(`Report: ${REPORT_PATH}`);
   if (problems.length) {
     console.error(`\n${problems.length} problem(s) the ledger must not keep:`);

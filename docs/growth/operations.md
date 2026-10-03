@@ -1,6 +1,6 @@
 # BACwater organic growth operations
 
-Updated October 1, 2026. Repository: webiq1206/bacwater. Public site: https://bacwater.ai.
+Updated October 2, 2026. Repository: webiq1206/bacwater. Public site: https://bacwater.ai.
 
 ## Goal and budget
 
@@ -65,7 +65,7 @@ Maintain current status in status.json. Keep private account data, credentials, 
 
 The owner's expanded autonomous growth instruction applies to BACwater.ai. Use program.json for the coverage matrix. Execute qualified free opportunities with verified facts; do not stop at preparation when a normal submission is available. Daily execution checks public engagement and due listings. Monday improvements include the weekly results report. Tuesday publishing focuses on a distinct useful topic without a volume quota. All three schedules were read back as enabled. Daily and Monday have historical run evidence. The October 1 weekly-content execution published one distinct Pinterest guide and read it back successfully. Actual start, finish, actions and verification evidence are in docs/growth/runs/2026-10-01-weekly-content.json. This verifies that execution, not future schedule reliability.
 
-Measure completed calculations, returning use, useful referrals and qualified inquiries. Traffic is an intermediate measure; affiliate clicks are not purchases. Completion events remain unobserved. Keep consent/readiness gates until receiving settings and count-only payloads are verified. No user-entered values or saved-plan addresses in analytics.
+Measure completed calculations, returning use, useful referrals and qualified inquiries. Traffic is an intermediate measure; affiliate clicks are not purchases. Completion receipt is now observed in the acceptance-test window, which must be excluded from business outcome claims. Keep consent/readiness gates until receiving settings and count-only payloads are verified. No user-entered values or saved-plan addresses in analytics.
 
 NoUploadTools publicly lists BACwater under Data. LaunchPedia confirmed a submission October 1. Evidence and distinct statuses are in opportunities.json and publications.json. Six directory submissions are confirmed, one publicly visible. NoSignupTools and ToolsCourt remain uncertain, so do not resubmit.
 
@@ -80,8 +80,19 @@ Primary guidance: https://support.google.com/business/answer/7039811 and https:/
 
 The receiving stream now has the canonical domain and Enhanced Measurement disabled. The earlier audit mistook enabled subordinate options for an enabled master switch. API reads and the admin UI both confirm the master is off. The app already queues count-only calculation_completed events after visitor consent, but production deployment did not explicitly set the Next.js build-time readiness flag. The Replit build command now sets NEXT_PUBLIC_ANALYTICS_MANUAL_CONFIRMED=true. Visitor consent, sanitized URLs, private-route exclusion and disabled automatic page views remain intact. Local/default builds remain off unless explicitly enabled. Expanded consent acceptance checks exercise a real conversion, exact payload, duplicate blur, invalid input and revocation.
 
-This configuration change still needs a Replit source sync and publish, followed by a real consented calculator action and GA4 receiving read-back. Replit's security-verification loop blocked the October 1 browser session. A GitHub commit or local event queue is not proof of live GA4 receipt.
+The October 1 check was blocked before publication. October 2 receiving-side read-back now observes completion events for the correct production host and stream in the acceptance-test window. Keep those events synthetic; no customer-conversion claim follows. This run did not deploy, and fresh version.json retrieval was blocked in its browser environment. A receiving event does not prove the full production revision or every journey.
 
 The Tuesday task was requested to run once immediately on October 1, without changing its schedule. That execution completed and is documented in docs/growth/runs/2026-10-01-weekly-content.json with actual start, finish, actions and publication read-back evidence. Future runs must retain the same evidence standard.
 
 GA4 calculation_completed is now marked as a key event, counted once per event with no default monetary value. This was verified by an independent read after saving. No page-view-derived completion rule was created. The receiving definition alone does not establish live event receipt.
+
+
+## October 2 verification and release requirements
+
+Read the complete current Portfolio website specification each run. This run read Library version 2, all 372 lines and all 17 sections, including release protocol version 1. Source-read coverage is complete; whole-site implementation and testing are not. Resumable coverage and gaps: [daily run](runs/2026-10-02-daily-growth.json). Existing audit inventories: [page audit](../../seo-audit/page-by-page-audit.md) and [task list](../../audit/full-audit-task-list.md). These historical inventories are not current full-page acceptance evidence.
+
+Engineering owns verified GitHub main to the correct Replit project import, publish, recovery and live journey checks. Reconcile dirty/concurrent work, verify branch/commit/project/production, retain rollback and batch releases. No Replit AI edits or routine user publication handoff. This reporting-script repair does not change website assets or require republishing production.
+
+Preserve confirmed submission receipts when placement URLs are missing. Fetch-blocked, render-unverified, pending-review, publicly-visible and independently indexed are different states. The October 2 generated report at commit 2791b32750b36dc5e930977f0dcb0a917e6d32ec has false negatives and must not trigger resubmission or removal claims. The verifier owns legacy attributes; do not hand-edit live statuses. Its next scheduled run must regenerate the report using the corrected classifications. Preserve the October 8 LaunchPedia check.
+
+Facebook and Instagram exact BACwater identities and relevant object reads first succeeded October 2. This establishes read coverage only, not write capability. Daily Growth owns engagement and records; Weekly Content owns planned posts. No Pinterest comment coverage without a supported read. Keep all private analytics counts and connection identifiers out of public updates.

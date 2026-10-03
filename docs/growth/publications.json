@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-01",
+  "updatedAt": "2026-10-02",
   "spend": 0,
   "sharedAccountPolicy": "Preserve WEB IQ branding and other client content. Publish only BACwater-labeled content to BACwater categories.",
   "pinterest": {
@@ -11,8 +11,8 @@
       "1120129738630484241",
       "1120129738630648558"
     ],
-    "verification": "All four pins read back from the dedicated BACwater board on October 1; latest pin also verified individually.",
-    "lastVerifiedAt": "2026-10-01",
+    "verification": "All four pins read back from the dedicated BACwater board, with no pagination cursor. Comment read support is unavailable; no comment-monitoring claim.",
+    "lastVerifiedAt": "2026-10-02",
     "latestPublication": {
       "id": "1120129738630648558",
       "url": "https://www.pinterest.com/pin/1120129738630648558/",
@@ -47,13 +47,13 @@
       }
     ],
     "engagementCheck": {
-      "checkedAt": "2026-10-01",
+      "checkedAt": "2026-10-02",
       "posts": [
         "1wset55",
         "1wulj4n"
       ],
       "comments": 0,
-      "coverage": "Full returned comment trees, no additional placeholders."
+      "coverage": "Both complete returned reply trees were empty, no more placeholders; no replies required."
     }
   },
   "youtube": {
@@ -67,7 +67,12 @@
     "publishedAt": "2026-10-01T14:16:20Z",
     "previousVideoId": "wIHXYAaqOEg",
     "previousUploadStatus": "Deleted video in authenticated channel uploads playlist",
-    "verification": "Video details returned processed, processing succeeded and public; playlist items read-back returned the replacement video."
+    "verification": "Video details returned processed, processing succeeded and public; playlist items read-back returned the replacement video.",
+    "engagementCheck": {
+      "checkedAt": "2026-10-02",
+      "comments": 0,
+      "coverage": "Authenticated comment-thread read for the replacement video returned no items and no next-page token. No duplicate upload."
+    }
   },
   "reach": "not_measured",
   "directories": [
@@ -83,7 +88,28 @@
         "noreferrer"
       ],
       "redirect": "https://nouploadtools.com/go/bacwaterai-research-calculators?source=directory",
-      "indexing": "not_verified"
+      "indexing": "not_verified",
+      "lastVerifiedAt": "2026-10-02",
+      "latestEvidence": "Rendered Data-category listing shows BACwater with the same internal redirect and rel noopener noreferrer. Redirect destination was verified October 1, not followed again this run. Indexing remains unknown."
     }
-  ]
+  ],
+  "facebook": {
+    "profileUrl": "https://www.facebook.com/profile.php?id=61595224551140",
+    "status": "actor_and_object_read_verified",
+    "firstRelevantReadVerifiedAt": "2026-10-02",
+    "scope": "Exact BACwater Page identity, website, feed and comments verified. Public profile and API asset identities reconciled privately; write capability not tested.",
+    "engagementCheck": {
+      "checkedAt": "2026-10-02",
+      "coverage": "One existing setup post returned by feed. Full comments read was empty with no pagination.",
+      "repliesPublished": 0
+    },
+    "plannedContentOwner": "Weekly Content"
+  },
+  "instagram": {
+    "profileUrl": "https://www.instagram.com/bacwater.ai/",
+    "status": "actor_and_media_read_verified",
+    "firstRelevantReadVerifiedAt": "2026-10-02",
+    "scope": "Exact BACwater.ai business account verified; media inventory empty. Write capability not tested. Website field remains pending mobile verification.",
+    "plannedContentOwner": "Weekly Content"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-10-01",
+  "reviewedAt": "2026-10-02",
   "opportunities": [
     {
       "id": "uspeptidefinder-resource-submission",
@@ -42,7 +42,12 @@
         "url": "https://uspeptidefinder.com/submit",
         "verifiedVia": "Browser rendered success state after a single Submit for Review action."
       },
-      "consent": "Owner explicitly approved this site's age confirmation and research-only disclaimer on September 29, 2026. The entry gate was no longer present when the form was resumed."
+      "consent": "Owner explicitly approved this site's age confirmation and research-only disclaimer on September 29, 2026. The entry gate was no longer present when the form was resumed.",
+      "latestReview": {
+        "date": "2026-10-02",
+        "evidence": "Public-source Tools section showed no BACwater listing; rendered listing coverage incomplete. Preserve confirmed receipt and pending review; next check October 6.",
+        "statusChanged": false
+      }
     },
     {
       "id": "finderslist-tool-submission",
@@ -70,7 +75,12 @@
         "verifiedVia": "Browser success state after a single form submission"
       },
       "nextStep": "Check for a public listing starting September 30. No listing ID or public BACwater listing URL was returned. Do not resubmit.",
-      "spend": 0
+      "spend": 0,
+      "latestReview": {
+        "date": "2026-10-02",
+        "evidence": "Rendered directory search for BACwater returned no results. Original confirmed receipt remains authoritative; keep pending and do not resubmit.",
+        "statusChanged": false
+      }
     },
     {
       "id": "thefreetoolsdirectory-calculator-submission",
@@ -171,6 +181,11 @@
         "verifiedDestination": "https://bacwater.ai/",
         "verification": "Public directory entry read through search and rendered browser. Link followed to canonical homepage via public retrieval. rel read from rendered anchor. Internal redirect link; no ranking-credit claim.",
         "indexedStatus": "not_verified"
+      },
+      "latestReview": {
+        "date": "2026-10-02",
+        "evidence": "Rendered Data listing still visible; same outbound redirect and noopener noreferrer. Preserve publicly_visible, no ranking or indexing claim.",
+        "statusChanged": false
       }
     },
     {
@@ -204,7 +219,12 @@
         "certainty": "Unconfirmed; do not count as confirmed submission or live listing."
       },
       "nextStep": "Check directory and any authorized business-mail confirmation after the advertised 24-48 hour review period, initially October 1. Do not resubmit until the first attempt's outcome is resolved.",
-      "spend": 0
+      "spend": 0,
+      "latestReview": {
+        "date": "2026-10-02",
+        "evidence": "Rendered directory search returned no tools. Original attempt remains unconfirmed, not disproved. Do not resubmit.",
+        "statusChanged": false
+      }
     },
     {
       "id": "toolscourt-mass-converter-submission",
@@ -245,7 +265,12 @@
         "verifiedVia": "One Submit Tool click left the review form visible. No receipt, error message, submission ID or listing URL appeared. Email content was confirmed visually despite omission from accessibility text. No second submission was attempted."
       },
       "nextStep": "Check the public directory after its 48-hour window, starting October 2, 2026. Do not retry until the first attempt's outcome is resolved. Do not count as a confirmed submission or acquired backlink.",
-      "spend": 0
+      "spend": 0,
+      "latestReview": {
+        "date": "2026-10-02",
+        "evidence": "Directory search remained Loading; visibility unverified. Original attempt remains unconfirmed. Do not resubmit.",
+        "statusChanged": false
+      }
     },
     {
       "id": "reddit-profile-u100-scale-reference",
@@ -393,9 +418,9 @@
     },
     {
       "url": "https://www.launchingnext.com/submit/",
-      "status": "blocked_verification_redirect_error",
-      "reason": "Browser displayed request verification then a 404 at its generated verification URL after one reload. No form reached and nothing submitted.",
-      "reviewedAt": "2026-09-29"
+      "status": "blocked_action_time_human_verification",
+      "reason": "Free submission form is now reachable, with optional paid promotion separate. Mandatory arithmetic human check requires action-time confirmation under browser policy. No fields submitted; no fee, account or duplicate submission. Noninteractive run continued with independent work.",
+      "reviewedAt": "2026-10-02"
     },
     {
       "url": "https://ultimatefreetools.com/submit-a-tool/",
@@ -435,18 +460,16 @@
     }
   ],
   "lastExecution": {
-    "checkedAt": "2026-10-01",
-    "newConfirmedSubmissions": 1,
+    "checkedAt": "2026-10-02",
+    "newConfirmedSubmissions": 0,
     "confirmedDirectorySubmissionsTotal": 6,
-    "newPubliclyVisibleDirectories": 1,
+    "newPubliclyVisibleDirectories": 0,
     "spend": 0,
-    "reddit": "Both existing BACwater profile threads read successfully; zero comments and no more placeholders. No duplicate posts.",
-    "pinterest": "Three existing guides read back from dedicated BACwater board.",
-    "youtube": "Existing upload still returned no video; do not duplicate.",
+    "record": "docs/growth/runs/2026-10-02-daily-growth.json",
     "nextActions": [
-      "Check sitemap reprocessing without repeated resubmission.",
-      "Verify safe calculator completion measurement.",
-      "Continue due directory reviews and useful distribution."
+      "Preserve October 8 LaunchPedia follow-up.",
+      "Check next scheduled verifier report with corrected classifications.",
+      "Continue due directory reviews without resubmitting uncertain attempts."
     ]
   }
 }
