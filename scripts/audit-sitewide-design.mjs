@@ -34,8 +34,16 @@ try{
      assert.ok(layout.scrollWidth<=layout.viewport+1,`${route} at ${width}px, 200% text: ${JSON.stringify(layout)}`);
      if(route==='/peptide-calculator'){await expect(p.locator('[data-supplier-shelf]')).toHaveCount(0);await p.getByLabel('Open calculator help',{exact:true}).click();}else if(route==='/recommendations')await expect(p.getByRole('navigation',{name:'Product pages'})).toBeVisible();else await expect(p.getByRole('button',{name:'Next supplier products'})).toBeVisible();
      const privacy=p.getByRole('region',{name:'Analytics preferences'});
+     await expect(privacy).toBeVisible();
+     const header=p.locator('[data-calculator-workspace] > header');
+     if(await header.count()){
+       for(const control of await header.locator(':scope > a, :scope > div > a, :scope > div > button, :scope > div > details > summary').all()){
+         const bounds=await control.boundingBox();
+         assert.ok(bounds&&bounds.x>=0&&bounds.x+bounds.width<=width+1,`${route}: header control must remain inside the enlarged viewport`);
+       }
+     }
      const paragraph=await privacy.locator('p').boundingBox();
-     assert.ok(paragraph&&paragraph.x>=0&&paragraph.x+paragraph.width<=width+1,'Privacy explanation must wrap within the viewport.');
+     assert.ok(paragraph&&paragraph.x>=0&&paragraph.x+paragraph.width<=width+1,`${route} at ${width}px: privacy explanation must wrap within the viewport: ${JSON.stringify(paragraph)}`);
      await privacy.getByRole('button',{name:'Keep analytics off',exact:true}).click();
      await expect(privacy.getByRole('button',{name:'Keep analytics off',exact:true})).toHaveAttribute('aria-pressed','true');
      const name=route==='/'?'home':route.slice(1);

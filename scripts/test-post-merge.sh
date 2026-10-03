@@ -2,7 +2,7 @@
 set -euo pipefail
 # Exercise the hook with fake tools: neither dependencies nor a database are touched.
 fixture=$(mktemp -d)
-trap 'rm -rf -- "$fixture"' EXIT
+trap 'rm -f -- "$fixture/npm" "$fixture/npx" "$fixture/calls"; rmdir -- "$fixture"' EXIT
 cat > "$fixture/npm" <<'STUB'
 #!/bin/bash
 set -euo pipefail

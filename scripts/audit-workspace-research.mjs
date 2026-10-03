@@ -13,7 +13,7 @@ for(const [engineName,engine] of [['chromium',chromium],['webkit',webkit]]){
  const page=await context.newPage(),errors=[];
  page.on('pageerror',e=>errors.push(String(e)));
  try{
-  for(const [width,height,enlarged] of [[320,568,false],[390,844,false],[430,932,false],[844,390,false],[1440,900,false],[320,568,true]]){
+  for(const [width,height,enlarged] of [[320,568,false],[375,812,false],[390,844,false],[430,932,false],[768,1024,false],[844,390,false],[1024,768,false],[1440,900,false],[320,568,true]]){
    await page.setViewportSize({width,height});
    for(const route of ['/calculate/product/ahk-cu','/calculate/bpc-157']){
     await page.goto(origin+route);
