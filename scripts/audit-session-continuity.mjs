@@ -19,7 +19,8 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await p.getByRole('button',{name:'Open hero calculator full screen'}).click();
    const hero=p.locator('[data-hero-focus]');
    await completeAuditHero(p,hero,{vial:'40',amount:'2',volume:'2',review:false});
-   await expect(hero.locator('[data-live-result]')).toContainText('20 mg/mL');
+   await expect(hero.locator('[data-live-result]')).toContainText('0.1 mL');
+   await expect(hero.locator('[data-live-result]')).toContainText('10 units on U-100 scale');
    await p.goto(origin+'/calculate/product/glp-3',{waitUntil:'networkidle'});
    await expect(p).toHaveURL(origin+'/calculate/product/glp-3');
    await expect(p.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('40');
@@ -85,6 +86,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await p.goto(origin+'/calculate/hcg',{waitUntil:'networkidle'});
    await expect(p.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('');
    await p.goto(origin,{waitUntil:'networkidle'});
+   await expect(p.locator('[data-hero-calculator] [data-hero-guided]')).toHaveAttribute('data-guided-step','2');
    await p.locator('[data-hero-calculator]').getByRole('button',{name:'Back',exact:true}).click();
    await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
   });

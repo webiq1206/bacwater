@@ -47,6 +47,10 @@ export default function ContactPage() {
         </p>
       </div>
       <p className="mt-6 text-sm leading-relaxed text-muted-foreground">Use this form for website support or a correction. Include the public page and steps to reproduce a calculator issue. We cannot promise a response time. For orders, shipping or product questions, contact the supplier directly.</p>
+      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        Prefer email?{" "}
+        <a href="mailto:hello@bacwater.ai" className="font-medium text-foreground underline">hello@bacwater.ai</a>.
+      </p>
       <div className="mt-6 rounded-xl border border-border p-4 sm:p-6">
         <ContactForm />
       </div>

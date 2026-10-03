@@ -2,15 +2,9 @@
 set -euo pipefail
 
 # This hook runs in the Replit development workspace after a Git pull/merge.
-# Keep the development database aligned with the committed Prisma schema so
-# Replit does not infer destructive production migrations from stale dev state.
-# Production deployments never run this schema sync.
+# Importing source must never mutate a database. Schema changes require a
+# separate reviewed operation with a verified backup and explicit target.
 npm ci
 npx prisma generate
 
-if [ -z "${REPLIT_DEPLOYMENT:-}" ]; then
-  echo "Synchronizing the Replit development database with the committed Prisma schema..."
-  npx prisma db push --skip-generate
-else
-  echo "Deployment context detected. Skipping all schema writes."
-fi
+echo "Source dependencies and Prisma client refreshed. No database writes performed."
