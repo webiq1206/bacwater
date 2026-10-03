@@ -9,6 +9,7 @@ import { ArrowLeft, Calculator, HelpCircle, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { AnalyticsPreferences } from "@/components/common/analytics-preferences";
 import { SiteSearchButton } from "@/components/search/site-search";
+import { WorkspaceResearchButton } from "@/components/search/research-assistant-provider";
 import { SupplierWaterLink } from "@/components/partners/supplier-context";
 import { CalculatorProductTools, ProductSelectionContext } from "@/components/partners/calculator-products";
 import { productForCalculatorPath } from "@/lib/partners/supplier-catalog";
@@ -92,6 +93,7 @@ export function CalculatorWorkspace({ title, description, children, help, refere
           <div className={styles.heading}><h1>{title}</h1><p>{description}</p><UnitHelp/></div>
           {!hasOwnProductPicker && <CalculatorProductTools selectedId={routeProduct?.id||(session.kind==="single"?session.productId:null)}/>}
           <CalculationEvents/>{children}
+          <WorkspaceResearchButton/>
           {reference && <div className="mt-10 border-t border-border pb-8 text-base leading-relaxed" data-calculator-reference>{reference}</div>}
         </div>
       </div>

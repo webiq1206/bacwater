@@ -60,6 +60,7 @@ jobs:
       - name: Typecheck, unit tests and database transactions
         run: |
           set -o pipefail
+          bash scripts/test-post-merge.sh
           npx tsc --noEmit 2>&1 | tee audit-evidence/typecheck.log
           npm test 2>&1 | tee audit-evidence/tests.log
           npm run test:design 2>&1 | tee audit-evidence/design-unit-tests.log
@@ -92,6 +93,9 @@ jobs:
       - name: Verify converters
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/audit-converters.mjs
+      - name: Verify calculator controls and research assistant do not overlap
+        if: ${{ !cancelled() && steps.server.outcome == 'success' }}
+        run: node scripts/audit-workspace-research.mjs
       - name: Verify arithmetic, explanations and keyboard journeys
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/audit-remaining-browser.mjs

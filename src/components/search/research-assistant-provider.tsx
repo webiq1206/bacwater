@@ -9,6 +9,11 @@ import { isCalculatorWorkspace } from "@/lib/calculator-routes";
 import { useSearchViewport } from "./use-search-viewport";
 import styles from "./research-finder.module.css";
 
+/** In-flow entry point for calculator workspaces; never covers their controls. */
+export function WorkspaceResearchButton(){
+ const {openAssistant}=useResearchAssistant();
+ return <button type="button" className={styles.workspaceLauncher} data-research-launcher aria-label="Open research assistant" aria-haspopup="dialog" onClick={e=>openAssistant(e.currentTarget)}><MessageCircle size={20} aria-hidden="true"/><span>Ask a research question</span></button>;
+}
 export type ResearchTurn={id:number;question:string;answer:FinderReply};
 export type ResearchSession={turns:ResearchTurn[];context:FinderContext;question:string;sequence:number};
 export const emptyResearchSession=():ResearchSession=>({turns:[],context:{},question:"",sequence:0});
@@ -31,7 +36,7 @@ export function ResearchAssistantProvider({children}:{children:ReactNode}){
  function openAssistant(from?:HTMLElement){trigger.current=from||null;setOpen(true);}
  return <Context.Provider value={{openAssistant,closeAssistant:()=>{selectQuickView(null);setOpen(false);},activeQuickView,selectQuickView,session,setSession}}>
   {children}
-  {!hidden&&!page&&<button type="button" ref={launcher} className={styles.launcher} data-research-launcher data-raised={path!=="/"} data-workspace={isCalculatorWorkspace(path)} aria-label="Open research assistant" aria-haspopup="dialog" aria-expanded={open} onClick={e=>openAssistant(e.currentTarget)}><MessageCircle size={20} aria-hidden="true"/><span>Ask a question</span></button>}
+  {!hidden&&!page&&!isCalculatorWorkspace(path)&&<button type="button" ref={launcher} className={styles.launcher} data-research-launcher data-raised={path!=="/"} aria-label="Open research assistant" aria-haspopup="dialog" aria-expanded={open} onClick={e=>openAssistant(e.currentTarget)}><MessageCircle size={20} aria-hidden="true"/><span>Ask a question</span></button>}
   <Dialog.Root open={open&&!hidden} onOpenChange={next=>{if(!next)selectQuickView(null);setOpen(next);}}>
    <Dialog.Portal><Dialog.Overlay className={styles.overlay}/><Dialog.Content ref={panel} className={styles.chatPanel} data-research-panel onEscapeKeyDown={e=>{if(quickView.current!==null){e.preventDefault();selectQuickView(null);}}} onInteractOutside={e=>{if(quickView.current!==null)e.preventDefault();}} onOpenAutoFocus={e=>{e.preventDefault();title.current?.focus({preventScroll:true});}} onCloseAutoFocus={e=>{e.preventDefault();const target=trigger.current?.isConnected?trigger.current:launcher.current;requestAnimationFrame(()=>target?.focus({preventScroll:true}));}}>
     <header className={styles.panelHeader}><div><Dialog.Title ref={title} tabIndex={-1}>Research assistant</Dialog.Title><Dialog.Description>Products, studies and calculators</Dialog.Description></div><Dialog.Close aria-label="Close research assistant"><X size={21} aria-hidden="true"/></Dialog.Close></header>

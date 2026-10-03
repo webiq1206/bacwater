@@ -27,7 +27,7 @@ try{
  await check('Opening scene fills the screen and makes the primary calculator visible',async()=>{
   for(const [width,height]of [[320,568],[390,844],[430,932],[768,1024],[1024,768],[1440,900]]){
    await page.setViewportSize({width,height});await page.goto(origin,{waitUntil:'networkidle'});
-   const hero=page.locator('[data-home-hero]'),primary=hero.getByRole('link',{name:'Open calculator',exact:true});
+   const hero=page.locator('[data-home-hero]'),primary=hero.getByRole('button',{name:'Open hero calculator full screen',exact:true});
    const h=await hero.boundingBox(),cta=await primary.boundingBox();assert.ok(h&&h.y+h.height>=height-1,JSON.stringify({width,height,h}));
    assert.ok(cta&&cta.y>=0&&cta.y+cta.height<=height,JSON.stringify({width,height,cta}));
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);

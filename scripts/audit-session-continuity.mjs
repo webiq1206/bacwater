@@ -18,7 +18,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await p.goto(origin,{waitUntil:'networkidle'});
    await p.getByRole('button',{name:'Open hero calculator full screen'}).click();
    const hero=p.locator('[data-hero-focus]');
-   await completeAuditHero(p,hero,{vial:'40',amount:'2',volume:'2',review:false});
+   await completeAuditHero(p,hero,{vial:'40',amount:'2',volume:'2',review:true});
    await expect(hero.locator('[data-live-result]')).toContainText('20 mg/mL');
    await p.goto(origin+'/calculate/product/glp-3',{waitUntil:'networkidle'});
    await expect(p).toHaveURL(origin+'/calculate/product/glp-3');
