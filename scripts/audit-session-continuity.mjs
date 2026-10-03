@@ -86,6 +86,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await p.goto(origin+'/calculate/hcg',{waitUntil:'networkidle'});
    await expect(p.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('');
    await p.goto(origin,{waitUntil:'networkidle'});
+   await expect(p.locator('[data-hero-calculator] [data-hero-guided]')).toHaveAttribute('data-guided-step','2');
    await p.locator('[data-hero-calculator]').getByRole('button',{name:'Back',exact:true}).click();
    await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
   });
