@@ -56,13 +56,32 @@ try {
   await step('Known label values produce the expected concentration and measurement', async () => {
     await page.getByLabel('Total amount in the vial', { exact: true }).fill('10');
     await openAuditOptional(page,'Optional: amount-to-volume calculation');
-    await page.getByLabel('Amount for one time', { exact: true }).fill('0.4');
+    const amount=page.getByLabel('Amount for one time', { exact: true });
+    await amount.fill('');
+    // A whole-string fill misses a controlled field discarding "0." while typing.
+    await amount.pressSequentially('0.4');
+    await expect(amount).toHaveValue('0.4');
     await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('2');
     await page.getByRole('button',{name:'See my result',exact:true}).click();
     await expect(page.locator('#bac-result')).toBeVisible();
     await expect(page.locator('#bac-result')).toContainText('5 mg/mL');
     await expect(page.locator('#bac-result')).toContainText('0.08 mL');
     await expect(page.locator('#bac-result')).toContainText('8 U-100 units');
+  });
+  await step('Incomplete and invalid optional amounts stay editable and block results', async () => {
+    await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
+    const amount=page.getByLabel('Amount for one time', { exact: true });
+    for(const text of ['0.','1e','-1','1,000']) {
+      await amount.fill(text);
+      await expect(amount).toHaveValue(text);
+      await expect(amount).toHaveAttribute('aria-invalid','true');
+      await expect(page.getByRole('button',{name:'See my result',exact:true})).toBeDisabled();
+    }
+    await amount.fill('');
+    await amount.pressSequentially('.4');
+    await expect(amount).toHaveValue('.4');
+    await page.getByRole('button',{name:'See my result',exact:true}).click();
+    await expect(page.locator('#bac-result')).toContainText('0.08 mL');
   });
   await step('Changed volume recalculates and persisted inputs survive refresh', async () => {
     await page.getByRole('button',{name:'Edit numbers',exact:true}).click();

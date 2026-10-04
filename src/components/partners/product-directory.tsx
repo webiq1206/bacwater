@@ -46,7 +46,7 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
         {/* Avoid native hidden: the CSS reset gives it layered !important priority over the no-script fallback. */}
         {filtered.map((product,index)=><article className={styles.card} key={product.id} data-product={product.id} data-page-hidden={index<start||index>=start+PAGE_SIZE?"true":undefined} style={index<start||index>=start+PAGE_SIZE?{display:"none"}:undefined}>
           <div className={styles.art}><ProductArtwork product={product}/></div>
-          <div className={styles.cardBody}><p className={styles.eyebrow}>{researchCategory(product.id).label} · {product.label}</p><h3><Link href={`/products/${product.id}`}>{product.name}</Link></h3><p className={styles.summary}>{product.summary}</p><p className={styles.researchNote}>{RESEARCH_ONLY_NOTICE}</p><ProductQuickView product={product}/><ProductCardPurchase product={product}/></div>
+          <div className={styles.cardBody}><p className={styles.eyebrow}>{researchCategory(product.id).label} · {product.label}</p><h3><Link prefetch={false} href={`/products/${product.id}`}>{product.name}</Link></h3><p className={styles.summary}>{product.summary}</p><p className={styles.researchNote}>{RESEARCH_ONLY_NOTICE}</p><ProductQuickView product={product}/><ProductCardPurchase product={product}/></div>
         </article>)}
       </div>
       {pages>1&&<nav className={styles.pagination} aria-label="Product pages"><button type="button" disabled={current===1} onClick={()=>turn(current-1)}><ArrowLeft size={18} aria-hidden="true"/>Previous</button><span>Page {current} of {pages}</span><button type="button" disabled={current===pages} onClick={()=>turn(current+1)}>Next<ArrowRight size={18} aria-hidden="true"/></button></nav>}

@@ -140,12 +140,24 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await expect(help.getByRole('heading',{name:'Units, explained simply'})).toBeFocused();
    const box=await help.boundingBox();assert.ok(box&&box.x>=0&&box.y>=0&&box.x+box.width<=390&&box.y+box.height<=844);
    await p.screenshot({path:`${out}/${engine}-unit-help-mobile.png`,fullPage:false});
-   await p.keyboard.press('Escape');await expect(focus).toBeVisible();
+   await expect(help).toContainText('5 mg/mL means each 1 mL holds 5 mg.');
+   await help.getByRole('button',{name:'Got it, go back',exact:true}).click();
+   await expect(help).toHaveCount(0);await expect(focus).toBeVisible();
    await expect(focus.getByRole('button',{name:'What do these units mean?',exact:true})).toBeFocused();
+   for(let reopen=0;reopen<3;reopen++) {
+    await focus.getByRole('button',{name:'What do these units mean?',exact:true}).click();
+    // Click completion does not guarantee the nested dialog has mounted and taken focus.
+    await expect(help).toBeVisible();
+    await expect(help.getByRole('heading',{name:'Units, explained simply'})).toBeFocused();
+    await p.keyboard.press('Escape');await expect(help).toHaveCount(0);await expect(focus).toBeVisible();
+    await expect(focus.getByRole('button',{name:'What do these units mean?',exact:true})).toBeFocused();
+   }
    await focus.getByRole('tab',{name:'U-100 ↔ mL',exact:true}).click();
    await focus.getByRole('button',{name:'mL → U-100',exact:true}).click();
    await focus.getByLabel('Volume in milliliters',{exact:true}).fill('0.25');
    await expect(focus.locator('[data-live-result]')).toContainText('25 U-100 units');
+   await p.keyboard.press('Escape');await expect(focus).toHaveCount(0);
+   await expect(p.getByRole('button',{name:'Open hero calculator full screen'})).toBeFocused();
   }));
   await check(`${engine}: priority calculators expose reference content without opening Help`,async()=>{
    for(const width of [320,390,768,1440])for(const [path,heading] of [['/tools/syringe-units','U-100 conversion examples'],['/tools/mg-to-mcg','Check the relationship'],['/tools/bac-water','How the volume changes concentration']])await journey(width,900,async p=>{

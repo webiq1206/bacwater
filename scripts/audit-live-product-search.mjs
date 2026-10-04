@@ -28,10 +28,11 @@ for (const config of configurations) {
   const browser = await config.engine.launch();
   const context = await browser.newContext({ viewport: { width: config.width, height: config.height }, reducedMotion: 'reduce' });
   await context.addCookies([{ name: 'bacwater_age_ok', value: '1', url: origin }]);
-  const page = await context.newPage(), errors = [], requests = [];
+  const page = await context.newPage(), errors = [], requests = [], failedRequests = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('request', request => requests.push(`${request.url()} ${request.postData() || ''}`));
-  const report = { browser: config.name, checks: [], errors };
+  page.on('requestfailed', request => failedRequests.push({ url: request.url(), error: request.failure()?.errorText, page: page.url() }));
+  const report = { browser: config.name, checks: [], errors, failedRequests };
   reports.push(report);
   try {
     await page.goto(`${origin}/recommendations`);
@@ -150,6 +151,11 @@ for (const config of configurations) {
       await expect(trigger).toBeFocused();
       report.checks.push(`Menu product search and nested detail close/return: ${route}`);
     }
+    await page.goto(`${origin}/recommendations`);
+    await page.locator('[data-product="5-amino-1mq"] h3 a').click();
+    await expect(page).toHaveURL(`${origin}/products/5-amino-1mq`);
+    await expect(page.getByRole('heading', { level: 1, name: names['5-amino-1mq'], exact: true })).toBeVisible();
+    report.checks.push('Directory detail link opens the matching product page');
     assert.deepEqual(errors, [], 'No browser runtime errors');
     report.ok = true;
   } catch (error) {

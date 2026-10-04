@@ -25,3 +25,8 @@ export function eachAmountText(s: AmountSchedule, unit: MassUnit = "mcg") {
   const result = amountSchedule(s);
   return result.ready ? scheduleNumber(result.eachMcg / (unit === "mg" ? 1000 : 1)) : "";
 }
+
+/** Keep a controlled text input editable; only derived schedule totals are formatted. */
+export function editableEachAmountText(s: AmountSchedule) {
+  return s.basis === "each" ? s.amount : eachAmountText(s, s.amountUnit);
+}

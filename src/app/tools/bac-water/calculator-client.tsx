@@ -58,6 +58,7 @@ export default function BacWaterCalculatorPage() {
   const invalidVolume = mode === "known" && volumeText.trim() !== "" && (!Number.isFinite(volume) || volume <= 0);
   const outsideRange = vialMg > 0 && volume > 0 && (!concentrationValid || (measurementMg > 0 && !valid));
   const error = decimalError(vial.vialText, "Total vial amount") || decimalError(vial.amountText, "Amount to measure") || (mode === "known" ? decimalError(volumeText, "Final liquid volume") : "") || (invalidAmount ? "Enter positive, finite amounts and confirm their units." : invalidVolume ? "The final liquid volume must be greater than zero." : outsideRange ? "These values exceed the supported numeric range. Check the entered amounts and units." : "");
+  const canShowResult = concentrationValid && !error;
 
   function clear() {
     vial.clear();
@@ -86,7 +87,7 @@ export default function BacWaterCalculatorPage() {
       </section>
       <section className="mt-9"><h2 className="text-2xl font-serif">Related calculations</h2><div className="mt-4 grid gap-3 sm:grid-cols-3">{[{ href: "/tools/syringe-units", title: "U-100 units and mL", text: "Convert volume units without assuming syringe markings." }, { href: "/tools/mg-to-mcg", title: "mg and mcg", text: "Check milligram and microgram conversions." }, { href: "/tools/dose", title: "Amount-to-volume", text: "Check the amount in a stated liquid volume." }].map(tool => <Link key={tool.href} href={tool.href} className="rounded-xl border border-border p-4 transition-colors hover:bg-muted"><h3 className="font-medium">{tool.title}</h3><p className="mt-2 text-sm text-muted-foreground">{tool.text}</p></Link>)}</div></section>
 </>}>
-      <MassProductGate><CalculationOutcome ready={concentrationValid}/><div ref={panels} data-active-screen={screen} className="bac-screen-panels grid items-start gap-6 lg:grid-cols-2">
+      <MassProductGate><CalculationOutcome ready={canShowResult}/><div ref={panels} data-active-screen={screen} className="bac-screen-panels grid items-start gap-6 lg:grid-cols-2">
         <section data-screen="inputs" className="min-w-0 space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-labelledby="volume-inputs-heading">
           <h2 id="volume-inputs-heading" className="text-xl font-semibold">Your label values</h2>
           <CarriedOverNotice visible={vial.carriedOver} onClear={clear} />
@@ -104,14 +105,14 @@ export default function BacWaterCalculatorPage() {
               <Input id="bac-measured-amount" type="text" inputMode="decimal" maxLength={64} value={vial.amountText} onChange={e => vial.setAmountText(e.target.value)} placeholder="Amount from your instructions" className="min-w-0 flex-1" aria-describedby="bac-measurement-help bac-input-error" aria-invalid={Boolean(decimalError(vial.amountText, "Amount to measure"))} />
               <UnitChoice value={vial.doseUnit} onChange={vial.setDoseUnit} label="Measurement amount unit" />
             </div>
-            <p id="bac-measurement-help" className="mt-2 text-xs text-muted-foreground">This is an input you supply, not an amount recommended by the website.</p>
+            <p id="bac-measurement-help" className="mt-2 text-xs text-muted-foreground">Copy the amount for one time from your lab instructions. Leave this blank to check only the amount in each mL. We do not choose an amount for you.</p>
           </details>
           <div className="border-t border-border pt-5">
             <div className="flex flex-wrap gap-2" role="group" aria-label="Volume calculation mode">
               <Button type="button" variant={mode === "known" ? "brand" : "outline"} aria-pressed={mode === "known"} onClick={() => setMode("known")}>Use a known volume</Button>
               <Button type="button" variant={mode === "example" ? "brand" : "outline"} aria-pressed={mode === "example"} onClick={() => setMode("example")}>Show a math example</Button>
             </div>
-            {mode === "known" ? <div className="mt-4"><label htmlFor="bac-final-volume" className="block text-sm font-medium">Final liquid volume in mL</label><Input id="bac-final-volume" type="text" inputMode="decimal" maxLength={64} value={volumeText} onChange={e => setVolume(e.target.value)} placeholder="Volume from your instructions" className="mt-2" aria-describedby="bac-volume-help bac-input-error" aria-invalid={invalidVolume} /><p id="bac-volume-help" className="mt-2 text-xs text-muted-foreground">Use the final solution volume. The tool cannot verify dissolution, contents or vial capacity.</p></div> : <p className="mt-4 rounded-lg bg-muted p-3 text-sm leading-relaxed">This optional example picks a volume from 1 to 3 mL in 0.5 mL steps, aiming near 10 U-100 units for the amount you entered. Rounding and those limits can change the resulting units. It is not an instruction to use that volume.</p>}
+            {mode === "known" ? <div className="mt-4"><label htmlFor="bac-final-volume" className="block text-sm font-medium">Final liquid volume in mL</label><Input id="bac-final-volume" type="text" inputMode="decimal" maxLength={64} value={volumeText} onChange={e => setVolume(e.target.value)} placeholder="Volume from your instructions" className="mt-2" aria-describedby="bac-volume-help bac-input-error" aria-invalid={invalidVolume} /><p id="bac-volume-help" className="mt-2 text-xs text-muted-foreground">This means all the liquid after preparation, not just water added. Copy it from your lab instructions. The tool cannot check the contents or whether they fit in the vial.</p></div> : <p className="mt-4 rounded-lg bg-muted p-3 text-sm leading-relaxed">This optional example picks a volume from 1 to 3 mL in 0.5 mL steps, aiming near 10 U-100 units for the amount you entered. Rounding and those limits can change the resulting units. It is not an instruction to use that volume.</p>}
           </div>
           <p id="bac-input-error" role={error ? "alert" : undefined} className="text-sm text-destructive">{error}</p>
           <Button type="button" variant="outline" onClick={clear}>Clear entered values</Button>
@@ -121,14 +122,14 @@ export default function BacWaterCalculatorPage() {
           <h2 id="volume-result-heading" className="text-xl font-semibold">{mode === "example" ? "Illustrative result" : "Calculated result"}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{mode === "example" ? "Example inputs are not product instructions." : "Based only on the values you entered."}</p>
           <div className="mt-5" role="status" aria-live="polite" aria-atomic="true" id="bac-result">
-            {concentrationValid ? <dl className="space-y-5">
+            {canShowResult ? <dl className="space-y-5">
               <div><dt className="text-sm text-muted-foreground">Final liquid volume</dt><dd className="mt-1 break-words text-2xl font-semibold">{display(volume)} mL</dd></div>
-              <div><dt className="text-sm text-muted-foreground">Concentration</dt><dd className="mt-1 break-words text-3xl font-semibold">{display(concentration)} mg/mL</dd></div>
-              {valid && <div><dt className="text-sm text-muted-foreground">Entered measurement</dt><dd className="mt-1 break-words text-2xl font-semibold">{display(measurementMl)} mL</dd><dd className="mt-1 break-words text-sm">{display(units)} U-100 units</dd></div>}
-            </dl> : <p className="rounded-lg border border-border p-4 text-sm">Enter the total vial amount and final liquid volume to see concentration. The optional math example also needs an amount to measure.</p>}
+              <div><dt className="text-sm text-muted-foreground">Amount in each 1 mL (concentration)</dt><dd className="mt-1 break-words text-3xl font-semibold">{display(concentration)} mg/mL</dd></div>
+              {valid && <div><dt className="text-sm text-muted-foreground">Liquid for your entered amount</dt><dd className="mt-1 break-words text-2xl font-semibold">{display(measurementMl)} mL</dd><dd className="mt-1 break-words text-sm">{display(units)} U-100 units</dd></div>}
+            </dl> : <p className="rounded-lg border border-border p-4 text-sm">{error || "Enter the total vial amount and final liquid volume to find the amount in each mL. The math example also needs an amount for one time."}</p>}
           </div>
-          {concentrationValid && <CopyButton className="mt-3" value={`${display(vialMg)} mg ÷ ${display(volume)} mL = ${display(concentration)} mg/mL`} label="Copy concentration" />}
-          {valid && <>
+          {canShowResult && <CopyButton className="mt-3" value={`${display(vialMg)} mg ÷ ${display(volume)} mL = ${display(concentration)} mg/mL`} label="Copy concentration" />}
+          {canShowResult && valid && <>
             <CopyButton className="mt-3" value={`${display(vialMg)} mg in ${display(volume)} mL = ${display(concentration)} mg/mL. Entered ${display(measurementMg)} mg = ${display(measurementMl)} mL = ${display(units)} U-100 units. Calculation only, not preparation or dosing instructions.`} label="Copy calculation" />
             {measurementMg > vialMg && <p className="mt-3 rounded-lg border border-border p-3 text-sm">The entered measurement exceeds the total amount in the vial. Check the amounts and units before using this result.</p>}
             {measurementMl > 1 && <p className="mt-3 rounded-lg border border-border p-3 text-sm">This volume exceeds a 1 mL syringe's capacity. A conversion is not an instruction to use a different device or preparation.</p>}
@@ -140,8 +141,8 @@ export default function BacWaterCalculatorPage() {
 
       <WorkspaceActions>
         <div className="bac-mobile-calculation-controls">
-          {screen === "result" ? <Button variant="outline" size="lg" onClick={()=>switchScreen("inputs")}>Edit numbers</Button> : <Button variant="brand" size="lg" disabled={!concentrationValid} onClick={()=>switchScreen("result")}>See my result</Button>}
-          <p>{screen === "result" ? "Your numbers stay here. You can change them." : concentrationValid ? "Ready. See what your numbers mean." : "Enter the total vial amount and final volume to continue."}</p>
+          {screen === "result" ? <Button variant="outline" size="lg" onClick={()=>switchScreen("inputs")}>Edit numbers</Button> : <Button variant="brand" size="lg" disabled={!canShowResult} onClick={()=>switchScreen("result")}>See my result</Button>}
+          <p>{screen === "result" ? "Your numbers stay here. You can change them." : error ? "Check the field marked above, then try again." : canShowResult ? "Ready. See what your numbers mean." : "Enter the total vial amount and final volume to continue."}</p>
         </div>
       </WorkspaceActions>
     </MassProductGate></CalculatorWorkspace>
