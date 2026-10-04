@@ -140,6 +140,10 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await expect(help.getByRole('heading',{name:'Units, explained simply'})).toBeFocused();
    const box=await help.boundingBox();assert.ok(box&&box.x>=0&&box.y>=0&&box.x+box.width<=390&&box.y+box.height<=844);
    await p.screenshot({path:`${out}/${engine}-unit-help-mobile.png`,fullPage:false});
+   await expect(help).toContainText('5 mg/mL means each 1 mL holds 5 mg.');
+   await help.getByRole('button',{name:'Got it, go back',exact:true}).click();
+   await expect(focus.getByRole('button',{name:'What do these units mean?',exact:true})).toBeFocused();
+   await focus.getByRole('button',{name:'What do these units mean?',exact:true}).click();
    await p.keyboard.press('Escape');await expect(focus).toBeVisible();
    await expect(focus.getByRole('button',{name:'What do these units mean?',exact:true})).toBeFocused();
    await focus.getByRole('tab',{name:'U-100 ↔ mL',exact:true}).click();

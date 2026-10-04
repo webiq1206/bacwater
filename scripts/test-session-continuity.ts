@@ -3,7 +3,7 @@ import fs from "node:fs";
 import vm from "node:vm";
 import { createRequire } from "node:module";
 import { buildSync } from "esbuild";
-import { amountSchedule, eachAmountText } from "@/lib/calc/amount-schedule";
+import { amountSchedule, eachAmountText, editableEachAmountText } from "@/lib/calc/amount-schedule";
 import { calculate } from "@/lib/calc";
 import { productCalculation, emptyProductValues } from "@/lib/partners/product-calculation";
 import { SUPPLIER_PRODUCTS } from "@/lib/partners/supplier-catalog";
@@ -19,6 +19,18 @@ function fresh(backing = new Map<string,string>(), blocked=false): typeof Store 
   return module.exports as typeof Store;
 }
 const base={amount:"2",amountUnit:"mg" as const,basis:"each" as const,timesPerWeek:"2"};
+check("Editable per-time amounts preserve decimal prefixes and invalid text",()=>{
+  for(const amount of ["", "0", "0.", ".", ".4", "1.", "1e", "1e-", "-1", "1,000", "0.400"]) {
+    assert.equal(editableEachAmountText({...base,amount}),amount);
+  }
+  let amount="";
+  for(const key of "0.4") amount=editableEachAmountText({...base,amount:amount+key});
+  assert.equal(amount,"0.4");
+  assert.equal(amountSchedule({...base,amount}).eachMcg,400);
+  assert.equal(amountSchedule({...base,amount:"1e"}).ready,false);
+  assert.equal(editableEachAmountText({...base,basis:"week"}),"1");
+  assert.equal(editableEachAmountText({...base,basis:"day",timesPerWeek:"14"}),"1");
+});
 check("A per-time amount is not divided when frequency changes",()=>{
   for(const count of [1,2,3,7,14,21,28]) { const r=amountSchedule({...base,timesPerWeek:String(count)});assert.equal(r.ready,true);assert.equal(r.eachMcg,2000);assert.equal(r.weeklyMcg,2000*count); }
 });
