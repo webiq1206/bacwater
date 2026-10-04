@@ -156,6 +156,8 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await focus.getByRole('button',{name:'mL → U-100',exact:true}).click();
    await focus.getByLabel('Volume in milliliters',{exact:true}).fill('0.25');
    await expect(focus.locator('[data-live-result]')).toContainText('25 U-100 units');
+   await p.keyboard.press('Escape');await expect(focus).toHaveCount(0);
+   await expect(p.getByRole('button',{name:'Open hero calculator full screen'})).toBeFocused();
   }));
   await check(`${engine}: priority calculators expose reference content without opening Help`,async()=>{
    for(const width of [320,390,768,1440])for(const [path,heading] of [['/tools/syringe-units','U-100 conversion examples'],['/tools/mg-to-mcg','Check the relationship'],['/tools/bac-water','How the volume changes concentration']])await journey(width,900,async p=>{

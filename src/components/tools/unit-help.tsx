@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { CircleHelp } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import styles from "./unit-help.module.css";
-export function UnitHelp({compact=false}:{compact?:boolean}={}){const title=useRef<HTMLHeadingElement>(null);return <Dialog><DialogTrigger asChild><button type="button" className={`${styles.trigger} ${compact?styles.compact:""}`} aria-label="What do these units mean?"><CircleHelp size={16} aria-hidden="true"/>{compact?"Units":"What do these units mean?"}</button></DialogTrigger><DialogContent className={styles.dialog} onOpenAutoFocus={event=>{event.preventDefault();title.current?.focus({preventScroll:true});}}>
+export function UnitHelp({compact=false}:{compact?:boolean}={}){const title=useRef<HTMLHeadingElement>(null);const [open,setOpen]=useState(false);return <Dialog open={open} onOpenChange={setOpen}><DialogTrigger asChild><button type="button" className={`${styles.trigger} ${compact?styles.compact:""}`} aria-label="What do these units mean?"><CircleHelp size={16} aria-hidden="true"/>{compact?"Units":"What do these units mean?"}</button></DialogTrigger><DialogContent data-unit-help className={styles.dialog} onEscapeKeyDown={event=>{event.preventDefault();setOpen(false);}} onOpenAutoFocus={event=>{event.preventDefault();title.current?.focus({preventScroll:true});}}>
  <div className={styles.heading}><DialogTitle ref={title} tabIndex={-1}>Units, explained simply</DialogTitle><DialogDescription>Copy the number and the unit from your label. The unit tells us what the number means.</DialogDescription></div>
  <div className={styles.body} tabIndex={0} role="region" aria-label="Unit definitions and examples"><dl>
   <div><dt>mg: milligrams</dt><dd>A unit of mass: how much material there is. <strong>1 mg = 1,000 mcg.</strong> For example, 0.5 mg and 500 mcg are the same amount.</dd></div>
