@@ -17,8 +17,12 @@ export function formatNumeric(value: number, decimals=2): string {
 
 /** Drop a trailing decimal point and trailing zeros: "12.40" -> "12.4", "2.00" -> "2". */
 export function trimZeros(s: string): string {
-  if (!s.includes(".")) return s;
-  return s.replace(/\.?0+$/, "");
+  // toFixed returns scientific notation for magnitudes >= 1e21. Only trim
+  // the fractional mantissa: trimming "1.25e+30" would change it to 1.25e+3.
+  const exponentAt = s.search(/[eE]/);
+  const mantissa = exponentAt < 0 ? s : s.slice(0, exponentAt);
+  const exponent = exponentAt < 0 ? "" : s.slice(exponentAt);
+  return (mantissa.includes(".") ? mantissa.replace(/\.?0+$/, "") : mantissa) + exponent;
 }
 
 /** Syringe units on the U-100 insulin scale. One decimal, trailing zeros trimmed. */
