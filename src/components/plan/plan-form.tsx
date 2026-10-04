@@ -336,7 +336,11 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
     };
   }, [initial]);
 
-  useEffect(()=>{if(!init)resumeMassCalculation();},[init]);
+  const [contextRestored,setContextRestored]=useState(!!init);
+  useEffect(()=>{
+    if(!init)resumeMassCalculation();
+    setContextRestored(true);
+  },[init]);
 
   const [mode, setMode] = usePlanDraft<Mode>("plan-mode", initialMode, !!init);
   const [hasMounted, setHasMounted] = useState(false);
@@ -658,6 +662,9 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
 
   // ---------- ADVANCED: all-at-once side-by-side ----------
   const preview = planPreviewState({ input, result, hasProduct: hasPeptide, vialText: vialRaw, vialUnit, volumeText: volumeRaw, amount: scheduleInput, secondaryReady: hasValidBlend, hydrated });
+  // The guided view persists its clamped step. Do not let a temporary IU/water
+  // context reset that step before the remembered mass calculation is restored.
+  if(presentation === "hero" && !contextRestored) return <p role="status">Restoring your calculation...</p>;
   if (presentation === "hero") return <>
     {!init && <SessionValuesNotice/>}
     <HeroPlanSteps step={step} onStep={setStep} preview={preview} result={result}

@@ -32,7 +32,7 @@ try {
   await step('Reject negative values without displaying a valid conversion', async () => {
     await page.getByLabel('U-100 syringe units', { exact: true }).fill('-1');
     await expect(page.locator('#u100-error')).toHaveAttribute('role', 'alert');
-    await expect(page.locator('#u100-error')).toContainText('non-negative');
+    await expect(page.locator('#u100-error')).toHaveText('Enter zero or a positive value.');
     await expect(page.getByLabel('Milliliters (mL)', { exact: true })).toHaveValue('');
   });
   await step('Handle zero, small decimals and explicit clearing', async () => {

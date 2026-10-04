@@ -72,7 +72,10 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await expect(p).toHaveURL(origin+`/products/${id}`);
     await expect(p.locator('[data-full-product] h1')).toHaveText(names[id]);
     await expect(p.locator('[data-mechanism-paragraph]')).toHaveCount(2);
-    await expect(p.getByRole('link',{name:'Partner product information',exact:true})).toHaveAttribute('href',link(id));
+    const purchase=p.locator(`[data-product-sources] [data-product-buy="${id}"]`);
+    await expect(purchase).toHaveAttribute('href',link(id));
+    await expect(purchase).toHaveAttribute('rel',/sponsored/);
+    await expect(purchase).toHaveAttribute('referrerpolicy','no-referrer');
     await p.locator('#research').scrollIntoViewIfNeeded();await a11y(p);
     assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     await p.screenshot({path:`${out}/${engine}-full-page-${id}-${width}.png`,fullPage:false});

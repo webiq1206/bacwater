@@ -4,3 +4,7 @@
 @media(prefers-reduced-motion:reduce){.dialog,.option{transition:none!important;animation:none!important}}
 
 .selectedText a[data-product-buy]{min-height:44px;text-decoration:none;color:#fffef9;font-size:12px;padding:8px 12px}
+
+/* Keep both product actions on one row on ordinary phones without shrinking
+   touch targets or pushing the first calculation field below the screen. */
+@media(min-width:381px) and (max-width:767px){.toolbar{gap:6px}.choose,.water{padding-inline:8px}}
