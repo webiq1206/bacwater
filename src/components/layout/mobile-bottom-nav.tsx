@@ -64,7 +64,7 @@ export function MobileBottomNav() {
           {ITEMS.map(item => {
             const active = item.match(pathname);
             return (
-              <Link key={item.href} href={item.href} className={cn("flex min-h-14 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors", active ? "text-foreground" : "text-muted-foreground")} aria-current={active ? "page" : undefined}>
+              <Link key={item.href} href={item.href} prefetch={item.href === "/plans" ? false : undefined} className={cn("flex min-h-14 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors", active ? "text-foreground" : "text-muted-foreground")} aria-current={active ? "page" : undefined}>
                 <item.icon className="h-5 w-5" />
                 {item.label}
               </Link>

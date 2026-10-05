@@ -182,6 +182,12 @@ for (const config of configurations) {
     await expect(page).toHaveURL(`${origin}/products/5-amino-1mq`);
     await expect(page.getByRole('heading', { level: 1, name: names['5-amino-1mq'], exact: true })).toBeVisible();
     report.checks.push('Directory detail link opens the matching product page');
+    await page.goto(`${origin}/recommendations`);
+    await page.getByRole('banner').getByRole('button',{name:'Account',exact:true}).click();
+    await page.locator('#account-options').getByRole('link',{name:'My Plans',exact:true}).click();
+    await expect(page).toHaveURL(`${origin}/plans`);
+    await expect(page.getByRole('heading',{level:1,name:'My Plans',exact:true})).toBeVisible();
+    report.checks.push('Account menu opens guest saved plans through actual navigation');
     assert.deepEqual(errors, [], 'No browser runtime errors');
     report.ok = true;
   } catch (error) {
