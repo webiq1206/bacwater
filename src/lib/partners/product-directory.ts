@@ -15,6 +15,10 @@ function normalize(value: string): string {
 const outOfScope = /\b(?:human|people|person|animal|pet|dog|cat|veterinary|consume|consumption|take|taking|inject\w*|dos\w*|administr\w*|cycl\w*|weight|fat|sleep\w*|anxiety|pain\w*|heal\w*|recover\w*|skin|cosmetic\w*|muscle\w*|strength|libido|aging|ageing|benefit\w*|insomnia|athlet\w*|best|recommend\w*|safest|safe|effective|cancer|diabet\w*|treat\w*|cure\w*|symptom\w*|lose|loss|hormone\w*|fitness|performance|energy|focus|hair|joint\w*|wound\w*)\b/i;
 const filler = new Set("i im i'm am looking look searching search find show me a an the some all any please want need would like can could you for by named called containing with and or product products research laboratory lab compound compounds peptide peptides entry entries catalog only of".split(" "));
 const formatKind = (word:string):ProductKind => /^(spray|solution)/.test(word) ? "spray" : /^blend/.test(word) ? "blend" : /^(single|individual)/.test(word) ? "single" : "water";
+const formatPhrase = "sprays?|solutions?|blends?|water|h2o|bacteriostatic|single(?: compounds?)?|individual(?: compounds?)?";
+// Normalization turns commas into spaces. Keep the whole format list negative,
+// including "no sprays, blends or water", rather than treating later items as requests.
+const exclusionList = new RegExp(`\\b(?:no|not|without|exclude|excluding|except)\\s+(?:any\\s+)?((?:${formatPhrase})(?:\\s+(?:(?:and|or)\\s+)?(?:${formatPhrase}))*)\\b`,"g");
 // Named compound identities only; do not infer copper content or suitability for blends.
 const copperIdentities = new Set(["ahk-cu", "ghk-cu"]);
 export type DirectoryMatch<T> = { products:T[]; scope:"catalog"|"restricted"|"unmatched"; message:string };
@@ -25,7 +29,10 @@ export function matchDirectory<T extends SupplierProduct>(products:readonly T[],
   const scoped=products.filter(p=>(kind==="all"||p.kind===kind)&&matchesResearchCategory(p.id,category));
   if(input.length>160||outOfScope.test(text)) return {products:[],scope:"restricted",message:"This finder matches product names and formats only. It cannot recommend products for human or animal use, health goals, dosing or administration. Try a product name or a format such as lab water."};
   const excluded=new Set<ProductKind>();
-  const positive=text.replace(/\b(?:no|not|without|exclude|excluding|except)\s+(?:any\s+)?(sprays?|solutions?|blends?|water|h2o|bacteriostatic|single(?: compounds?)?|individual(?: compounds?)?)\b/g,(_,word:string)=>{excluded.add(formatKind(word));return " ";}).replace(/\s+/g," ").trim();
+  const positive=text.replace(exclusionList,(_,list:string)=>{
+    for(const word of list.match(new RegExp(`\\b(?:${formatPhrase})\\b`,"g"))||[]) excluded.add(formatKind(word));
+    return " ";
+  }).replace(/\s+/g," ").trim();
   let desired:ProductKind|undefined;
   if(/\b(?:water|h2o|bacteriostatic)\b/.test(positive)) desired="water";
   else if(/\b(?:sprays?|solutions?)\b/.test(positive)) desired="spray";

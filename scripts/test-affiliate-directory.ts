@@ -41,6 +41,21 @@ test("copper identities and explicit format exclusions are literal catalog filte
  assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"copper without unknownformat").products.length,0);
  assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"copper no single compounds").products.length,0);
 });
+test("every format in an exclusion list stays excluded",()=>{
+ for(const [query,excluded] of [
+  ["no sprays or blends",["spray","blend"]],
+  ["no sprays or water",["spray","water"]],
+  ["without solutions and blends",["spray","blend"]],
+  ["exclude sprays, blends or water",["spray","blend","water"]],
+  ["no sprays, blends, water, or single compounds",["spray","blend","water","single"]],
+  ["not single compounds or water",["single","water"]],
+ ] as const) {
+  assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,query).products.map(p=>p.id),SUPPLIER_PRODUCTS.filter(p=>!new Set<string>(excluded).has(p.kind)).map(p=>p.id),query);
+ }
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"no sprays or mysteryformat").products.length,0);
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"no sprays or blends for healing").scope,"restricted");
+ assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"copper no sprays or blends").products.map(p=>p.id).sort(),["ahk-cu","ghk-cu"]);
+});
 test("natural wording respects solution format",()=>{const found=matchDirectory(SUPPLIER_PRODUCTS,"Find NAD+ solutions").products;assert.deepEqual(found.map(p=>p.id),["nad-plus-spray"]);});
 test("solution request lists only solutions",()=>{const found=matchDirectory(SUPPLIER_PRODUCTS,"Show me sprays").products;assert.equal(found.length,SUPPLIER_PRODUCTS.filter(p=>p.kind==="spray").length);assert.ok(found.every(p=>p.kind==="spray"));});
 test("blend request does not invent an ingredient ratio",()=>assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"BPC-157 blend").products.map(p=>p.id),["wolverine-stack"]));
