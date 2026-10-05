@@ -4,7 +4,7 @@ import { productDisplayName } from "@/lib/partners/supplier-catalog";
 import Link from "next/link";
 import { useCalculationSession, useSessionDraft, readCalculation, chooseCalculationProduct, resumeMassCalculation, type SharedCalculation } from "@/lib/session/calculation-session";
 import { amountSchedule } from "@/lib/calc/amount-schedule";
-import { AmountScheduleFields, SessionValuesNotice } from "@/components/calculator/amount-schedule";
+import { AmountScheduleFields, SessionValuesNotice, isCustomSchedule } from "@/components/calculator/amount-schedule";
 function usePlanField<K extends keyof SharedCalculation>(key:K, initial:SharedCalculation[K], isolated:boolean) {
   const session=useCalculationSession();const [local,setLocal]=useState(initial);
   const value=isolated?local:session[key];
@@ -348,6 +348,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
     setHasMounted(true);
   }, []);
 
+  const [questionStep, setQuestionStep] = usePlanDraft<string>("plan-question-v2", "product", !!init);
   const [storedStep, setStep] = usePlanDraft<number>("plan-step", 0, !!init);
   const step=Number.isInteger(storedStep)&&storedStep>=0&&storedStep<STEPS.length?storedStep:0;
   const stepContainerRef = useRef<HTMLDivElement>(null);
@@ -395,7 +396,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   // elsewhere on the site. It does NOT pre-fill vial/dose: the user enters
   // those (or picks a suggestion chip) so nothing is silently pre-populated.
   const selectPeptide = useCallback((slug: string) => {
-    if (presentation === "hero" && slug === "hcg") { chooseCalculationProduct("hcg", "iu", "hcg"); router.push("/calculate/hcg"); return; }
+    if (!init && slug === "hcg") { chooseCalculationProduct("hcg", "iu", "hcg"); router.push("/calculate/hcg"); return; }
     if(slug.startsWith("product:")){
       const id=slug.slice(8);
       const p=SUPPLIER_PRODUCTS.find(p=>p.id===id);if(p){if(init)return;chooseCalculationProduct(p.id,p.kind,p.reference||"");router.push(productCalculatorPath(id));}
@@ -424,6 +425,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   const [amountBasis,setAmountBasis]=usePlanField("basis",init&&init.injectionsPerWeek>1?"week":"each",!!init);
   const [scheduleCount,setScheduleCount]=usePlanField("timesPerWeek",init&&init.injectionsPerWeek>1?String(init.injectionsPerWeek):"",!!init);
   const scheduleInput={amount:amountRaw,amountUnit:doseUnit,basis:amountBasis,timesPerWeek:scheduleCount};
+  const [customSchedule,setCustomSchedule]=usePlanDraft<boolean>("plan-custom-schedule",isCustomSchedule(scheduleCount),!!init);
   const scheduleResult=amountSchedule(scheduleInput);
   const injectionsPerWeek=scheduleResult.ready?scheduleResult.count:1;
   const dosePerInjectionMcg=scheduleResult.ready?scheduleResult.eachMcg:0;
@@ -664,17 +666,26 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   const preview = planPreviewState({ input, result, hasProduct: hasPeptide, vialText: vialRaw, vialUnit, volumeText: volumeRaw, amount: scheduleInput, secondaryReady: hasValidBlend, hydrated });
   // The guided view persists its clamped step. Do not let a temporary IU/water
   // context reset that step before the remembered mass calculation is restored.
-  if(presentation === "hero" && !contextRestored) return <p role="status">Restoring your calculation...</p>;
-  if (presentation === "hero") return <>
+  if((presentation === "hero" || mode === "beginner") && !contextRestored) return <p role="status">Restoring your calculation...</p>;
+  if (presentation === "hero" || mode === "beginner") return <div data-plan-builder="beginner" className={presentation === "hero" ? "flex min-h-0 flex-1 flex-col" : "bac-calc-card mx-auto max-w-3xl p-5 sm:p-7"}>
+    {presentation !== "hero" && <div className="mb-6"><ModeToggle mode={mode} onChange={setMode}/></div>}
     {!init && <SessionValuesNotice/>}
-    <HeroPlanSteps step={step} onStep={setStep} preview={preview} result={result}
-      product={<><ProductPicker compact value={peptideSlug} onChange={selectPeptide} label="Product"/>{peptideSlug === "custom" && <Input aria-label="Custom peptide name" placeholder="Type the name on your label" className="mt-3" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/>} {peptideSlug === "hcg" && <p className="mt-3 text-sm">hCG uses IU, not mg. <Link className="underline" href="/calculate/hcg">Open hCG IU calculator</Link></p>}</>}
+    <HeroPlanSteps step={questionStep} onStep={setQuestionStep} preview={preview} result={result} productChosen={PEPTIDES.some(p => p.slug === peptideSlug)}
+      customName={peptideSlug === "custom" ? <Input aria-label="Custom peptide name" placeholder="Type the name on your label" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/> : undefined}
+      product={<ProductPicker compact value={peptideSlug} onChange={selectPeptide} label="Product"/>}
       secondary={showBlend ? <p className="mt-3 text-sm">This draft includes {secondaryName}: {secondaryVialMg} mg. <Link className="underline" href="/plan/new">Edit blend details in the workspace</Link>, or <button type="button" className="underline min-h-11" onClick={() => setShowBlend(false)}>remove the second product</button>.</p> : undefined}
+      secondaryQuestions={showBlend ? [
+        {id:"second-product", label:"Second product", title:"What else is in this vial?", complete:secondarySlug === "custom" || PEPTIDES.some(p => p.slug === secondarySlug && p.slug !== peptideSlug && p.slug !== "hcg"), content:<ProductPicker compact referencesOnly excludeValue={peptideSlug} value={secondarySlug} onChange={value=>{setSecondarySlug(value);setSecondaryVialInput(0);}} label="Second product"/>},
+        ...(secondarySlug === "custom" ? [{id:"second-name", label:"Second name", title:"What is the second product called?", complete:!!customSecondaryName.trim(), content:<Input aria-label="Name of the second peptide" value={customSecondaryName} onChange={e=>setCustomSecondaryName(e.target.value)} maxLength={100}/>}]:[]),
+        {id:"second-unit", label:"Second unit", title:"Which unit is beside its amount?", complete:true, content:<UnitToggle value={secondaryVialUnit} options={["mg","mcg"]} onChange={unit=>{if(unit!==secondaryVialUnit)setSecondaryVialInput(v=>unit==="mg"?v/1000:v*1000);setSecondaryVialUnit(unit);}}/>},
+        {id:"second-amount", label:"Second amount", title:`How much of it is in the vial, in ${secondaryVialUnit}?`, complete:hasValidBlend, content:<Input aria-label="Second compound amount" type="number" inputMode="decimal" value={secondaryVialInput||""} onChange={e=>setSecondaryVialInput(Number(e.target.value))}/>},
+      ] : []}
       vial={vialRaw} unit={vialUnit} onVial={setVialRaw} onUnit={unit => { const c = convertMassText(vialRaw, vialUnit); if (vialRaw.trim() && (c.kind !== "value" || c[unit].length > 64)) return; setVialRaw(c.kind === "value" ? c[unit] : ""); setVialUnit(unit); }}
-      schedule={scheduleFields} volume={volumeRaw} onVolume={setVolumeRaw} date={dateMixed} onDate={setDateMixed}
-      device={syringeType} onDevice={setSyringeType} name={nameValue} onName={setHeroName} onSave={handleSave} saving={saving}/>
+      amount={scheduleInput} onAmount={n=>{setAmountRaw(n.amount);setDoseUnit(n.amountUnit);setAmountBasis(n.basis);setScheduleCount(n.timesPerWeek);}} volume={volumeRaw} onVolume={setVolumeRaw} date={dateMixed} onDate={setDateMixed}
+      device={syringeType} onDevice={setSyringeType} name={nameValue} onName={presentation === "hero" ? setHeroName : setPlanName} onSave={handleSave} saving={saving} saveLabel={saveLabel} customSchedule={customSchedule} onCustom={setCustomSchedule}
+      onClear={()=>{if(!init){session.clear();return;}setVialRaw("");setVialUnit("mg");setAmountRaw("");setDoseUnit("mg");setAmountBasis("each");setScheduleCount("");setVolumeRaw("");setDateMixed("");setShowBlend(false);setPlanName(null);}}/>
     {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={open => { if (!open) setSavedPlan(null); }}/>}
-  </>;
+  </div>;
   function editPreviewField(field: PreviewField) {
     const section = { product: 1, vial: 2, amount: 3, volume: 5, blend: 1 }[field];
     const panel = advancedRef.current?.querySelector<HTMLElement>(`[data-plan-section="${section}"]`);

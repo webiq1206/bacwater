@@ -43,9 +43,10 @@ export default async function ProductPage({params}:{params:Promise<{id:string}>}
     <ReviewedBy className="mb-5"/>
     <nav className={styles.jump} aria-label="On this product page">{[["overview","Overview"],["how-it-works","How it works"],["research","Research"],["details","Details"],["questions","Questions"],["sources","Sources"]].map(([anchor,label])=><a key={anchor} href={`#${anchor}`}>{label}</a>)}</nav>
     <section id="overview" className={styles.section}>
-     <div className={styles.sectionHeading}><span className={styles.sectionNumber}>01</span><h2>At a glance</h2></div>
+     <div className={styles.sectionHeading}><span className={styles.sectionNumber}>01</span><h2>The research, at a glance</h2></div>
      <div className={styles.overview}>
       <div><FlaskConical size={22} aria-hidden="true"/><h3>What researchers study</h3><p>{guide.study}</p></div>
+      <div data-overview-finding><BookOpen size={22} aria-hidden="true"/><h3>What the study found</h3><p>{guide.finding}</p><p className={styles.smallNote}>{guide.model}.</p>{guide.paper?<a className={styles.textLink} href={guide.paper} target="_blank" rel="noopener noreferrer">{id==="dihexa"?"Read the retraction notice":"Read the source"}<ArrowUpRight size={16} aria-hidden="true"/><span className={styles.srOnly}> (opens a new tab)</span></a>:<p className={styles.smallNote}>Source: partner product information.</p>}</div>
       <div><Info size={22} aria-hidden="true"/><h3>What is still unknown</h3><p>{guide.caution}</p></div>
      </div>
     </section>

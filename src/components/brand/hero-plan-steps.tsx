@@ -1,61 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, Check, Copy, Loader2, RotateCcw, Save } from "lucide-react";
+import { useId, useState, type ReactNode } from "react";
+import { Copy, Loader2, Save } from "lucide-react";
 import { SYRINGES, type CalcResult, type SyringeType } from "@/lib/calc";
-import { decimalError } from "@/lib/calc/number-text";
+import { decimalError, positiveDecimal } from "@/lib/calc/number-text";
 import { formatDose, formatDoseVolumeMl, formatNumeric, formatSyringeReading } from "@/lib/calc/format";
-import { GUIDED_STEPS, canContinueGuided, guidedStep } from "@/lib/calc/guided-steps";
+import { amountSchedule, type AmountSchedule } from "@/lib/calc/amount-schedule";
 import type { PlanPreviewState } from "@/lib/calc/plan-preview";
-import { clearCalculation } from "@/lib/session/calculation-session";
 import { trackUsage } from "@/lib/analytics";
 import { BeginnerHelp } from "@/components/plan/beginner-help";
+import { AmountScheduleFields, isCustomSchedule, type ScheduleSection } from "@/components/calculator/amount-schedule";
+import { BrandSelect } from "@/components/calculator/brand-select";
+import { QuestionSteps, type Question } from "@/components/calculator/question-steps";
 import styles from "./hero-calculator.module.css";
 
 interface Props {
-  step: number; onStep: (step: number) => void;
-  product: ReactNode; schedule: ReactNode; secondary?: ReactNode;
+  step: string; onStep: (step: string) => void;
+  product: ReactNode; productChosen: boolean; customName?: ReactNode; secondary?: ReactNode;
+  secondaryQuestions?: Question[];
   vial: string; unit: "mg" | "mcg"; onVial: (value: string) => void; onUnit: (unit: "mg" | "mcg") => void;
+  amount: AmountSchedule; onAmount: (value: AmountSchedule) => void;
   volume: string; onVolume: (value: string) => void;
   date: string; onDate: (value: string) => void;
   device: SyringeType; onDevice: (value: SyringeType) => void;
   preview: PlanPreviewState; result: CalcResult;
   name: string; onName: (value: string) => void; onSave: () => void; saving: boolean;
+  onClear: () => void; saveLabel: string; customSchedule: boolean; onCustom: (value: boolean) => void;
 }
 
-/** Presentation only. PlanForm owns validation, session values, arithmetic and saving. */
+/** Presentation only. PlanForm still owns validation, arithmetic and saving. */
 export function HeroPlanSteps(p: Props) {
-  const id = useId(), root = useRef<HTMLDivElement>(null);
-  const step = guidedStep(p.step, p.preview), current = GUIDED_STEPS[step];
-  const [notice, setNotice] = useState("");
-  const started = useRef(false), hadError = useRef(false), focusNext = useRef(false);
-  const ready = p.preview.ready, nextReady = canContinueGuided(step, p.preview);
+  const id = useId(), [notice, setNotice] = useState("");
+  const customSchedule = p.customSchedule || isCustomSchedule(p.amount.timesPerWeek);
+  const ready = p.preview.ready;
   const vialError = decimalError(p.vial, "Amount in vial") || p.preview.entries[1].issue;
   const volumeError = decimalError(p.volume, "Final liquid volume") || p.preview.entries[3].issue;
-  const readout = formatSyringeReading(p.result.syringeReadout);
-  const volume = formatDoseVolumeMl(p.result.doseVolumeMl);
+  const readout = formatSyringeReading(p.result.syringeReadout), volume = formatDoseVolumeMl(p.result.doseVolumeMl);
   const formula = `${formatNumeric(p.result.input.vialStrengthMg, 4)} mg ÷ ${p.volume} mL = ${p.preview.concentrationText}`;
-
-  useEffect(() => {
-    // Persist a clamped restored step so correcting its field does not jump ahead.
-    if (step !== p.step) p.onStep(step);
-  }, [step, p.step, p.onStep]);
-  useEffect(() => {
-    if (p.preview.issues.length) hadError.current = true;
-    if (ready) { trackUsage("calculation_completed"); if (hadError.current) { trackUsage("input_corrected"); hadError.current = false; } }
-  }, [ready, p.preview.issues.length]);
-  useEffect(() => {
-    if (!focusNext.current) return;
-    focusNext.current = false;
-    const heading = root.current?.querySelector<HTMLElement>("[data-guided-heading]");
-    heading?.focus({ preventScroll: true });
-    const scroller = root.current?.querySelector<HTMLElement>("[data-step-scroll]");
-    if (scroller) scroller.scrollTo({ top: 0, behavior: "instant" });
-    else if (root.current && root.current.getBoundingClientRect().top < 100) root.current.scrollIntoView({ block: "start", behavior: "auto" });
-  }, [step]);
-  function move(next: number) { focusNext.current = true; setNotice(""); p.onStep(next); }
-  function start() { if (!started.current) { trackUsage("tool_started"); started.current = true; } }
+  const amountOnly = amountSchedule({...p.amount, basis:"each", timesPerWeek:""});
+  const amountReady = amountOnly.ready && amountOnly.eachMcg >= 1e-12 && amountOnly.eachMcg <= 1e12;
+  const fields = (section:ScheduleSection) => <AmountScheduleFields compact section={section} value={p.amount} onChange={p.onAmount} custom={customSchedule} onCustom={p.onCustom}/>;
   async function copy() {
     if (!ready) return;
     const schedule = p.preview.schedule;
@@ -63,65 +48,30 @@ export function HeroPlanSteps(p: Props) {
     try { await navigator.clipboard.writeText(text); setNotice("Calculation copied."); trackUsage("result_copied"); }
     catch { setNotice("Copy is unavailable. Select and copy the numbers shown here."); }
   }
-
-  return <div ref={root} className={styles.guided} data-hero-guided data-guided-step={step} onChangeCapture={start} onClickCapture={start}>
-    <div className={styles.progress} role="group" aria-label={`Step ${step + 1} of ${GUIDED_STEPS.length}: ${current.label}`}>
-      <div aria-hidden="true">{GUIDED_STEPS.map((s, i) => <span key={s.label} data-complete={i <= step}/>)}</div>
-      <p><span>Step {step + 1} of {GUIDED_STEPS.length}</span><span>{current.label}</span></p>
-    </div>
-    <h2 data-guided-heading tabIndex={-1} className={styles.stepTitle}>{current.title}</h2>
-    <div className={styles.stepScroll} data-step-scroll tabIndex={0} role="region" aria-label={`${current.label} step fields`}>
-    {step === 0 && <div className={`${styles.stepFields} ${styles.startFields}`}>
-      {p.product}{p.secondary}
-      <p className={styles.startHint}>Match the name on your label. We’ll show the right fields.</p>
-      <div className={styles.startGuide} data-hero-start-guide>
-        <p>Your numbers. <em>A clear result.</em></p>
-        <div className={styles.startOutputs} role="group" aria-label="What the calculator can show">
-          <div><strong>mg/mL</strong><span>Amount per mL</span></div>
-          <div><strong>mL</strong><span>Liquid volume</span></div>
-          <div><strong>U-100</strong><span>Scale reading</span></div>
-        </div>
-        <small>Enter your label numbers to see the math. No amount is chosen for you.</small>
-      </div>
-    </div>}
-    {step === 1 && <div className={styles.stepFields}>
-      <label className={styles.stepLabel} htmlFor={`${id}-vial`}>Amount in vial</label>
-      <div className={styles.guidedInputRow}><div className={styles.inputWrap}><input id={`${id}-vial`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" value={p.vial} placeholder="e.g. 12" onChange={e => p.onVial(e.target.value)} aria-invalid={!!vialError} aria-describedby={`${id}-vial-error`}/></div>
-        <label className={styles.stepUnit}>Unit<select aria-label="Vial amount unit" value={p.unit} onChange={e => p.onUnit(e.target.value as "mg" | "mcg")}><option value="mg">mg</option><option value="mcg">mcg</option></select></label>
-      </div><p id={`${id}-vial-error`} className={styles.error} role={vialError ? "alert" : undefined}>{vialError}</p>
-      <BeginnerHelp kind="vial"/>
-    </div>}
-    {step === 2 && <div className={styles.stepFields}>{p.schedule}{p.preview.schedule.ready && p.preview.entries[2].issue && <p className={styles.error} role="alert">{p.preview.entries[2].issue}</p>}</div>}
-    {step === 3 && <div className={styles.stepFields}>
-      <label className={styles.stepLabel} htmlFor={`${id}-volume`}>Final liquid volume</label><div className={styles.inputWrap}><input id={`${id}-volume`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" value={p.volume} placeholder="e.g. 4" onChange={e => p.onVolume(e.target.value)} aria-invalid={!!volumeError} aria-describedby={`${id}-volume-error`}/><span>mL</span></div>
-      <p id={`${id}-volume-error`} className={styles.error} role={volumeError ? "alert" : undefined}>{volumeError}</p><BeginnerHelp kind="volume"/>
-    </div>}
-    {step === 4 && <div className={styles.stepFields}>
-      <label className={styles.stepLabel} htmlFor={`${id}-device`}>Syringe size and scale</label><select id={`${id}-device`} className={styles.stepSelect} value={p.device} onChange={e => p.onDevice(e.target.value as SyringeType)}>{SYRINGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}</select>
-      <details className={styles.optional}><summary>{p.date ? `Mixing date: ${p.date}` : "Add a mixing date (optional)"}</summary><label className={styles.stepLabel} htmlFor={`${id}-date`}>Mixing date (optional)</label><input className={styles.stepSelect} id={`${id}-date`} type="date" value={p.date} onChange={e => p.onDate(e.target.value)}/>
-      <p className={styles.stepHint}>Leave the date blank to skip it. This records a date, not an expiry or a storage recommendation.</p></details>
-    </div>}
-    {ready && step >= 3 && <div className={`${styles.result} ${step < 5 ? styles.resultPreview : ""}`} data-live-result role="status" aria-live="polite" aria-atomic="true">
-      <div className={styles.resultTop}><span>Liquid for each time</span>{step === 5 ? <button type="button" onClick={copy} aria-label="Copy result" title="Copy result"><Copy size={16} aria-hidden="true"/></button> : <Check size={16} aria-hidden="true"/>}</div>
-      <p className={styles.value}><strong className={volume.length > 11 ? styles.longValue : undefined}>{volume.replace(/ mL$/, "")}</strong>{" "}<span>mL</span><span className={styles.readout}>{readout} on {p.result.syringeReadout.kind === "u100" ? "U-100" : "mL"} scale</span></p>
-      {step === 5 && <><p className={styles.formula}>{formula}</p><p className={styles.formula}>{formatDose(p.result.schedule?.dosePerInjectionMcg ?? p.result.input.doseMcg)} for one time = {volume}</p><p className={styles.scaleNote}>Readings may be rounded. Check your device's markings.</p></>}
-    </div>}
-    {p.preview.issues.length > 0 && step >= 4 && <ul className={styles.stepErrors} role="alert">{p.preview.issues.map(issue => <li key={issue}>{issue}</li>)}</ul>}
-    {ready && p.result.warnings.length > 0 && <ul className={styles.stepWarnings}>{p.result.warnings.map(warning => <li key={warning}>{warning}</li>)}</ul>}
-    {step === 5 && <>
+  const questions: Question[] = [
+    {id:"product",label:"Product",title:"What is the name on your label?",complete:p.productChosen,content:<div className={styles.startFields}>{p.product}<p className={styles.startHint}>Choose the exact name. We’ll ask for its numbers next.</p><div className={styles.startGuide} data-hero-start-guide><p>Your numbers. <em>A clear result.</em></p><small>One question at a time. No amount is chosen for you.</small></div></div>},
+    ...(p.customName?[{id:"name",label:"Name",title:"What is your product called?",complete:p.preview.entries[0].complete,content:p.customName}]:[]),
+    {id:"vial-unit",label:"Vial unit",title:"Which unit is on the vial?",complete:true,hint:"Copy the letters beside the amount on the label.",content:<BrandSelect label="Vial amount unit" value={p.unit} onChange={value=>p.onUnit(value as "mg"|"mcg")} options={[{value:"mg",label:"mg — milligrams"},{value:"mcg",label:"mcg — micrograms"}]}/>},
+    {id:"vial",label:"Vial amount",title:`How much is in the vial, in ${p.unit}?`,complete:p.preview.entries[1].complete,content:<><label className={styles.stepLabel} htmlFor={`${id}-vial`}>Amount in vial</label><div className={styles.inputWrap}><input id={`${id}-vial`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" value={p.vial} onChange={e=>p.onVial(e.target.value)} aria-invalid={!!vialError} aria-describedby={`${id}-vial-error`}/><span>{p.unit}</span></div><p id={`${id}-vial-error`} className={styles.error} role={vialError?"alert":undefined}>{vialError}</p><BeginnerHelp kind="vial"/></>},
+    ...(p.secondaryQuestions||[]),
+    {id:"basis",label:"Amount meaning",title:"What does your amount mean?",complete:true,hint:"Look at the instructions you already have.",content:fields("basis")},
+    {id:"amount-unit",label:"Amount unit",title:"Which unit do your instructions use?",complete:true,content:fields("unit")},
+    {id:"amount",label:"Amount",title:p.amount.basis==="each"?"What is the amount for one time?":p.amount.basis==="day"?"What is the total for one day?":"What is the total for one week?",complete:amountReady,content:<>{fields("amount")}{p.amount.amount.trim()&&positiveDecimal(p.amount.amount)!==null&&!amountReady&&<p className={styles.error} role="alert">Check the amount and unit. This number is outside the supported range.</p>}</>},
+    {id:"schedule",label:"Schedule",title:"How often do your instructions say?",complete:customSchedule||p.preview.entries[2].complete,content:<>{fields("schedule")}{p.preview.schedule.ready&&p.preview.entries[2].issue&&<p className={styles.error} role="alert">{p.preview.entries[2].issue}</p>}</>},
+    ...(customSchedule?[{id:"custom-schedule",label:"Weekly count",title:"How many times in a full week?",complete:p.preview.entries[2].complete,content:<>{fields("custom")}{p.preview.schedule.ready&&p.preview.entries[2].issue&&<p className={styles.error} role="alert">{p.preview.entries[2].issue}</p>}</>}]:[]),
+    {id:"volume",label:"Liquid volume",title:"What is the final liquid volume?",complete:p.preview.entries[3].complete,content:<><label className={styles.stepLabel} htmlFor={`${id}-volume`}>Final liquid volume</label><div className={styles.inputWrap}><input id={`${id}-volume`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" value={p.volume} onChange={e=>p.onVolume(e.target.value)} aria-invalid={!!volumeError} aria-describedby={`${id}-volume-error`}/><span>mL</span></div><p id={`${id}-volume-error`} className={styles.error} role={volumeError?"alert":undefined}>{volumeError}</p><BeginnerHelp kind="volume"/></>},
+    {id:"device",label:"Scale",title:"Which scale is on your device?",complete:ready,content:<><BrandSelect label="Syringe size and scale" value={p.device} onChange={value=>p.onDevice(value as SyringeType)} options={SYRINGES.map(s=>({value:s.id,label:s.label}))}/><p className={styles.stepHint}>Match the actual size and markings. The scale does not choose an amount.</p>{p.preview.issues.length>0&&<ul className={styles.stepErrors} role="alert">{p.preview.issues.map(issue=><li key={issue}>{issue}</li>)}</ul>}</>},
+    {id:"review",label:"Result",title:"Here are your numbers",complete:ready,content:<>
+      {ready&&<div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Liquid for one time</span><button type="button" onClick={copy} aria-label="Copy result"><Copy size={16} aria-hidden="true"/></button></div><p className={styles.value}><strong className={volume.length>11?styles.longValue:undefined}>{volume.replace(/ mL$/,"")}</strong><span>mL</span><span className={styles.readout}>{readout} on {p.result.syringeReadout.kind==="u100"?"U-100":"mL"} scale</span></p><p className={styles.formula}>{formula}</p><p className={styles.formula}>{formatDose(p.result.schedule?.dosePerInjectionMcg??p.result.input.doseMcg)} for one time = {volume}</p><p className={styles.scaleNote}>Readings may be rounded. Check the device’s markings.</p></div>}
+      {ready&&p.result.warnings.length>0&&<ul className={styles.stepWarnings}>{p.result.warnings.map(warning=><li key={warning}>{warning}</li>)}</ul>}
       {p.secondary}
-      {/* The Edit control lives inside the dd: a dl group may hold only dt and dd (axe definition-list), and the review still reads as label, value, action. */}
-      <details className={styles.optional}><summary>Review entries and plan name</summary><dl className={styles.reviewRows}>{p.preview.entries.map((entry, i) => <div key={entry.field}><dt>{entry.label}</dt><dd><span>{entry.value}</span><button type="button" onClick={() => move(i)} aria-label={`Edit ${entry.label.toLowerCase()}`}>Edit</button></dd></div>)}<div><dt>Device / date</dt><dd><span>{SYRINGES.find(s => s.id === p.device)?.label}<br/>{p.date || "No date set"}</span><button type="button" onClick={() => move(4)} aria-label="Edit device and date">Edit</button></dd></div></dl>
-      <label className={styles.stepLabel} htmlFor={`${id}-name`}>Plan name</label><input className={styles.stepSelect} id={`${id}-name`} value={p.name} onChange={e => p.onName(e.target.value)} maxLength={120}/></details>
-      <p className={styles.stepHint}>Saving creates a shareable link, PDF and printable labels. No account is needed.</p>
-    </>}
-    </div>
-    <div className={styles.stepNavigation}>
-      {step > 0 ? <button type="button" onClick={() => move(step - 1)}><ArrowLeft size={17} aria-hidden="true"/>Back</button> : <span/>}
-      {p.preview.entries[0].complete && <button type="button" className={styles.clearStep} aria-label="Clear" title="Clear entries" onClick={() => { clearCalculation(); move(0); }}><RotateCcw size={16} aria-hidden="true"/></button>}
-      {step === 5 ? <button type="button" className={styles.stepPrimary} disabled={!ready || p.saving} onClick={p.onSave}>{p.saving ? <Loader2 size={17} className="animate-spin" aria-hidden="true"/> : <Save size={17} aria-hidden="true"/>}{p.saving ? "Saving..." : "Save my plan"}</button> : <button type="button" className={styles.stepPrimary} disabled={!nextReady} onClick={() => move(step + 1)}>{step === 4 ? "Review result" : "Continue"}<ArrowRight size={17} aria-hidden="true"/></button>}
-    </div>
-    <p className={styles.stepNotice} role="status">{notice}</p>
-    <p className={styles.stepSafety}>Research math only. <Link href="/disclaimer">Not for human use.</Link></p>
-  </div>;
+      <details className={styles.optional}><summary>Review or change answers</summary><dl className={styles.reviewRows}>{p.preview.entries.map(entry=><div key={entry.field}><dt>{entry.label}</dt><dd><span>{entry.value}</span><button type="button" onClick={()=>p.onStep(entry.field==="amount"?"basis":entry.field)} aria-label={`Edit ${entry.label.toLowerCase()}`}>Edit</button></dd></div>)}<div><dt>Schedule</dt><dd><span>{p.amount.timesPerWeek?`${p.amount.timesPerWeek} times per week`:"No schedule"}</span><button type="button" onClick={()=>p.onStep("schedule")}>Edit schedule</button></dd></div><div><dt>Device</dt><dd><span>{SYRINGES.find(s=>s.id===p.device)?.label}</span><button type="button" onClick={()=>p.onStep("device")}>Edit device</button></dd></div></dl></details>
+      <details name={`${id}-optional`} className={styles.optional}><summary>Optional: plan name</summary><label className={styles.stepLabel} htmlFor={`${id}-name`}>Plan name</label><input className={styles.stepSelect} id={`${id}-name`} value={p.name} onChange={e=>p.onName(e.target.value)} maxLength={120}/></details>
+      <details name={`${id}-optional`} className={styles.optional}><summary>Optional: mixing date</summary><label className={styles.stepLabel} htmlFor={`${id}-date`}>Mixing date (optional)</label><input className={styles.stepSelect} id={`${id}-date`} type="date" value={p.date} onChange={e=>p.onDate(e.target.value)}/><p className={styles.stepHint}>A record only. This is not an expiry date.</p></details>
+      <p className={styles.stepHint}>Saving creates a shareable link, PDF and printable labels.</p>
+    </>},
+  ];
+  return <QuestionSteps questions={questions} current={p.step} onStep={p.onStep} onClear={()=>{p.onClear();p.onCustom(false);setNotice("");}} finalAction={<button type="button" className={styles.stepPrimary} disabled={!ready||p.saving} onClick={p.onSave}>{p.saving?<Loader2 size={17} className="animate-spin" aria-hidden="true"/>:<Save size={17} aria-hidden="true"/>}{p.saving?"Saving...":p.saveLabel}</button>}>
+    <p className={styles.stepNotice} role="status">{notice}</p><p className={styles.stepSafety}>Research math only. <Link href="/disclaimer">Not for human use.</Link></p>
+  </QuestionSteps>;
 }

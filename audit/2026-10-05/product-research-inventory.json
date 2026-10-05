@@ -1,0 +1,356 @@
+{
+  "checked": "2026-10-05",
+  "scope": "50 guide mappings; selected primary abstracts and bounded outcomes, not a comprehensive literature review or supplier-product validation",
+  "products": [
+    {
+      "id": "amino-h2o",
+      "model": "Partner product information",
+      "source": "Partner product information",
+      "finding": "The partner lists water with 0.9% benzyl alcohol. That is about nine parts benzyl alcohol in every thousand parts of liquid. It is a label description, not a test with every sample.",
+      "limit": "A preservative does not remove all germs or make every sample suitable for research."
+    },
+    {
+      "id": "glp-1",
+      "model": "Molecule, cell and animal experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/26308095/",
+      "finding": "The selected semaglutide molecule attached more strongly to albumin, a carrier protein, but less strongly to the GLP-1 receptor than liraglutide. It also remained in the blood for longer in mini-pig experiments. These design results do not test this supplier’s vial.",
+      "limit": "A study of semaglutide does not test this supplier’s vial or show that it is suitable for personal use."
+    },
+    {
+      "id": "glp-2",
+      "model": "Receptor, animal and early human research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/30473097/",
+      "finding": "The study drug activated both GIP and GLP-1 cell signals. Mice released more insulin when sugar was present. An early controlled human study also found lower blood sugar and body weight at some tested levels; stomach and gut side effects were common. This was not a test of the supplier’s vial.",
+      "limit": "A study drug and a supplier’s research product are not the same tested item."
+    },
+    {
+      "id": "glp-3",
+      "model": "Receptor, animal and early human research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/35985340/",
+      "finding": "Scientists found that the molecule started messages at all three targets. They then studied how those messages acted together in cells, animals and early human research.",
+      "limit": "These are findings about the studied molecule, not three proven benefits of the product."
+    },
+    {
+      "id": "bpc-157",
+      "model": "Rat tendon cells grown in a lab",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21030672/",
+      "finding": "Rat tendon cells grown in a lab moved more after exposure. Two proteins involved in cell grip, called FAK and paxillin, also changed. The test did not show injury repair in people.",
+      "limit": "Cell movement is not proof of injury repair. The experiment did not test this supplier’s vial."
+    },
+    {
+      "id": "ghk-cu",
+      "model": "Experimental tissue model in rats",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/8227353/",
+      "finding": "In an experiment in rats, scientists measured more collagen and other material that supports cells. This was a tissue test, not a test of the partner’s product or a skin or hair benefit.",
+      "limit": "A tissue experiment does not establish a skin or hair benefit from this product."
+    },
+    {
+      "id": "tb-500",
+      "model": "Cell and animal research on a related molecule",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/10469335/",
+      "finding": "Full thymosin beta-4 increased skin-cell movement in a lab test. In rats, wounds formed more surface tissue and collagen than the saline comparison. This does not establish the same response for a different peptide sold as TB-500 or this supplier’s product.",
+      "limit": "Confirm the exact peptide chain. A related molecule is not automatically the same product."
+    },
+    {
+      "id": "tesamorlin",
+      "model": "Human hormone-signal research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21531600/",
+      "finding": "In a short study of 13 men, tesamorelin increased growth-hormone release and IGF-1, another hormone signal. Adiponectin, a signal linked to fat tissue, did not change significantly. A hormone change does not prove a benefit from this supplier’s product.",
+      "limit": "A measured hormone response does not establish a benefit or safe use for this vial."
+    },
+    {
+      "id": "mots-c",
+      "model": "Cell and animal experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/25738459/",
+      "finding": "In cell tests, MOTS-c slowed a chemical process, causing AICAR to build up and AMPK, a fuel-sensing protein, to become active. In mice, the studied peptide reduced diet-related changes in body weight and insulin response. This does not show a fitness or energy benefit from this product.",
+      "limit": "Changes in a cell’s fuel signals do not prove energy or fitness benefits from the product."
+    },
+    {
+      "id": "nad-plus",
+      "model": "Enzyme experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/10693811/",
+      "finding": "The cited test showed that an enzyme, a protein that speeds up a reaction, needed NAD to remove small chemical pieces from other proteins.",
+      "limit": "The molecule’s known jobs inside cells do not prove that this product reaches those cells."
+    },
+    {
+      "id": "cjc-ipa-no-dac",
+      "model": "Separate-ingredient research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/9849822/",
+      "finding": "Ipamorelin increased growth-hormone release in rat cells and animal tests. The linked CJC study found a longer-lasting hormone signal from a form with a carrier-binding part. That form differs from No DAC. Neither study tests this finished blend.",
+      "limit": "No study linked here establishes the finished blend’s combined action or duration."
+    },
+    {
+      "id": "kpv",
+      "model": "Cell and mouse experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/18061177/",
+      "finding": "Cell tests linked KPV entry to the PepT1 protein and found lower levels of some alarm messages. The paper also included experiments in mice.",
+      "limit": "The cell type and test setup matter. These results do not validate the supplier’s product."
+    },
+    {
+      "id": "klow",
+      "model": "Separate-ingredient research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/18061177/",
+      "finding": "The papers report findings for separate ingredients, including changes in cell movement, support material and alarm messages. None tests this finished four-part blend.",
+      "limit": "Ingredient studies cannot prove a combined KLOW result. The exact TB-500 form also matters."
+    },
+    {
+      "id": "semax",
+      "model": "Rat nerve-tissue research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/16996037/",
+      "finding": "In rat nerve tissue, Semax increased BDNF, a cell message, and activity of TrkB, the protein that responds to it. The study also found a change in a learned avoidance task. These rat results do not establish memory or focus benefits from this supplier’s product.",
+      "limit": "Changes in rat-cell signals do not prove better memory or focus from this product."
+    },
+    {
+      "id": "glutathione",
+      "model": "Enzyme chemistry research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/13491573/",
+      "finding": "The cited enzyme experiment described a reaction that used glutathione to change peroxide. Other research studied how cells turn the used glutathione back into a form they can reuse.",
+      "limit": "A known cell reaction is not proof of a detox effect or that this product enters cells."
+    },
+    {
+      "id": "melanotan-ii",
+      "model": "Receptor experiments in cells",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/26418335/",
+      "finding": "In lab-grown nerve-cell models, Melanotan II kept the cAMP cell message active after it was removed. The natural comparison message, alpha-MSH, stopped much sooner. This did not test the supplier’s product.",
+      "limit": "Receptor findings do not establish tanning or other personal-use benefits from this product."
+    },
+    {
+      "id": "glow",
+      "model": "Separate-ingredient research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21030672/",
+      "finding": "The cited studies tested separate ingredients in cells and animals. They did not test the finished three-ingredient GLOW blend or show that its ingredients work better together.",
+      "limit": "The sources do not prove the blend has a stronger or combined effect."
+    },
+    {
+      "id": "selank",
+      "model": "Human-derived cells grown in a lab",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/28293190/",
+      "finding": "In human-derived cells grown in a lab, Selank alone did not change the gene activity being measured. The response to GABA changed when Selank was present too.",
+      "limit": "A cell response does not prove a calming effect or validate this product."
+    },
+    {
+      "id": "melanotan-i",
+      "model": "Randomized human study, 77 participants",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/16293341/",
+      "finding": "In a randomized study of 77 people, the studied Melanotan formulation increased skin pigment compared with placebo. The increase was larger in people with certain MC1R gene variants. This does not establish a tanning or sun-protection result from this supplier’s product.",
+      "limit": "These findings do not establish tanning or other cosmetic benefits from this product."
+    },
+    {
+      "id": "igf-1-lr3",
+      "model": "Binding and cell-growth experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/1378742/",
+      "finding": "Long [Arg3]-IGF-I produced a stronger response than IGF-I in cell lines that released IGF-binding proteins. In cells without those binding proteins, it was less potent. The result depended on the test cells; it was not a test of this supplier’s vial.",
+      "limit": "The findings do not establish muscle growth or a benefit from the merchant’s vial."
+    },
+    {
+      "id": "5-amino-1mq",
+      "model": "Enzyme, cell and animal experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/29155147/",
+      "finding": "The tested NNMT blockers reduced 1-MNA, a reaction product, and raised NAD+ and SAM in lab-grown fat cells. Cells made less fat. A selected blocker also reduced body weight and fat tissue in mice. Animal results do not establish a human result or test this supplier’s product.",
+      "limit": "These experiments do not prove weight-related or other personal-use benefits from the product."
+    },
+    {
+      "id": "wolverine-stack",
+      "model": "Separate-ingredient research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21030672/",
+      "finding": "The papers cover BPC-157 cell movement and experiments with full thymosin beta-4. They do not establish how the two ingredients act together in this blend.",
+      "limit": "A shared research topic does not prove a better result from combining the ingredients."
+    },
+    {
+      "id": "pt-141",
+      "model": "Rat, primate and early human research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/12851303/",
+      "finding": "Rat tests found more activity in a brain region involved in nerve signals. The paper also reported increased erectile activity in animal tests and early studies in men. These are findings about studied formulations, not a test of the partner’s research product.",
+      "limit": "This research does not establish a personal-use benefit or the quality of this product."
+    },
+    {
+      "id": "cagrilintide",
+      "model": "Molecular-structure and receptor research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/40204768/",
+      "finding": "The structure tests found that cagrilintide attached in an amylin-like way, but changed how the tested receptor shapes moved compared with other peptides. This helps explain a cell signal. It does not test this supplier’s vial or predict a personal result.",
+      "limit": "Receptor findings do not establish weight or medical benefits from the supplier’s vial."
+    },
+    {
+      "id": "aod-9604",
+      "model": "Obese mice and receptor-knockout mice",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/11713213/",
+      "finding": "In obese mice, AOD9604 reduced body weight and fat tissue. Some longer-term effects were absent in mice missing the beta-3 receptor; short-term fuel-use changes remained. This does not show direct attachment to that receptor or establish human weight loss.",
+      "limit": "A change in fat-cell chemistry is not proof of weight loss from this product."
+    },
+    {
+      "id": "dsip",
+      "model": "Rat brain-tissue experiment",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/2706459/",
+      "finding": "Slices of rat brain tissue released more Met-enkephalin, a nerve message, in a test that depended on calcium. DSIP did not directly attach to the opioid proteins tested.",
+      "limit": "The target is still uncertain. This finding does not establish better sleep from the product."
+    },
+    {
+      "id": "epithalon",
+      "model": "Cells grown in a lab",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/12937682/",
+      "finding": "A small study in lab-grown cells reported more activity by the protein that adds to DNA ends, called telomerase. It also reported longer end sections. It did not show age reversal.",
+      "limit": "Cell markers do not prove age reversal or longer life. More telomerase activity is not always helpful."
+    },
+    {
+      "id": "ipamorelin",
+      "model": "Pituitary-cell and animal experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/9849822/",
+      "finding": "Ipamorelin increased growth-hormone release from rat pituitary cells and in rat and pig experiments. In pigs, ACTH and cortisol did not rise beyond the response to the natural comparison signal. This measured selectivity does not establish safety or test this supplier’s vial.",
+      "limit": "A gland-cell response is not proof of muscle, recovery or other personal-use benefits."
+    },
+    {
+      "id": "snap-8",
+      "model": "Background protein-structure research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/9759724/",
+      "finding": "The structure study found four folded protein sections joined in the normal SNARE complex, which helps cells release messages. It did not test SNAP-8. Background knowledge about this complex cannot prove how this product acts.",
+      "limit": "The proposed action is not established by these papers and is not a cosmetic claim."
+    },
+    {
+      "id": "thymosin-alpha-1",
+      "model": "Immune-cell and animal research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/14982877/",
+      "finding": "In fungus-exposed immune cells, thymosin alpha-1 increased cell maturation and the IL-12 message. In mice with blood-forming-cell transplants, the studied peptide improved resistance to fungal infection. These tests do not establish infection protection from this supplier’s product.",
+      "limit": "A measured immune-cell response does not prove an immune benefit from the product."
+    },
+    {
+      "id": "ll-37",
+      "model": "Laboratory membrane models",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21463582/",
+      "finding": "In lab-made models of cell barriers, scientists observed openings and changes after LL-37 exposure. These were simpler tests than a whole living system.",
+      "limit": "A membrane experiment does not show that the product safely targets only harmful cells."
+    },
+    {
+      "id": "cartalax",
+      "model": "Stem cells grown in a lab",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/32399807/",
+      "finding": "In lab-grown stem cells, the AED peptide increased activity of IGF1 and NFκB genes, two sets of built-in instructions. The test studied aging cell cultures. It did not show cartilage repair from this product.",
+      "limit": "The first target remains uncertain. These findings do not prove cartilage repair."
+    },
+    {
+      "id": "sermorelin",
+      "model": "Related-peptide design research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/15817669/",
+      "finding": "The linked design study examined related GHRH-like peptides and attachment to a carrier protein. It is background research, not a direct test of this supplier’s Sermorelin.",
+      "limit": "Related designs are not interchangeable, and the source does not validate this vial."
+    },
+    {
+      "id": "kisspeptin",
+      "model": "Mouse and sheep hormone-signal experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/15665093/",
+      "finding": "Kisspeptin increased hormone signals in normal mice, but not mice missing its matching receptor. In sheep, it increased GnRH release, the next message in the chain. These animal tests do not establish a result from this supplier’s product.",
+      "limit": "These findings do not establish reproductive or other personal-use benefits from this vial."
+    },
+    {
+      "id": "dihexa",
+      "model": "Retraction notice",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/40312093/",
+      "finding": "The linked record is a notice that the earlier HGF/c-Met paper was withdrawn in 2025. It warns about the evidence; it does not support the earlier claim.",
+      "limit": "A retracted paper cannot support a confident mechanism or memory-benefit claim."
+    },
+    {
+      "id": "vip",
+      "model": "Cell-receptor research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/10933794/",
+      "finding": "In lab-grown cells, reducing the amount of the VPAC1 receptor reduced VIP binding and its cAMP signal. That result helped link the number of receptors to the response. It did not test a supplier product or show a gut benefit.",
+      "limit": "A receptor response does not establish a useful result in every tissue or from this product."
+    },
+    {
+      "id": "ara-290",
+      "model": "Kidney-derived cell lines grown in a lab",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/36085231/",
+      "finding": "In lab-grown kidney-derived cell lines exposed to cisplatin, ARA290 pretreatment reduced DNA damage, chemical-stress markers, inflammatory messages and signs of cell death. This was not a human treatment study or a test of this supplier’s product.",
+      "limit": "The proposed route must be kept separate from claims of tissue protection or repair."
+    },
+    {
+      "id": "pinealon",
+      "model": "Cell experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21978084/",
+      "finding": "Cell tests found lower levels of free radicals, one type of reactive chemical. They also found changes in the timing of ERK, a system that passes messages inside cells.",
+      "limit": "These findings do not establish a brain or personal-use benefit from the product."
+    },
+    {
+      "id": "ahk-cu",
+      "model": "Isolated human follicles and cultured cells",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/17703734/",
+      "finding": "The study found changes in isolated follicles and growth of cells from their base. Some cell-death results did not reach statistical significance: the test could not clearly separate the measured difference from chance.",
+      "limit": "A lab-grown follicle is not a trial showing a cosmetic benefit from this product."
+    },
+    {
+      "id": "ghkcu-spray",
+      "model": "Experimental tissue model in rats",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/8227353/",
+      "finding": "In an experiment in rats, scientists measured more collagen and other material that supports cells. This was a tissue test, not a test of the partner’s product or a skin or hair benefit. This was not a test of GHK-Cu SPRAY.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "nad-plus-spray",
+      "model": "Enzyme experiments",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/10693811/",
+      "finding": "The cited test showed that an enzyme, a protein that speeds up a reaction, needed NAD to remove small chemical pieces from other proteins. This was not a test of NAD+ SPRAY.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "semax-spray",
+      "model": "Rat nerve-tissue research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/16996037/",
+      "finding": "In rat nerve tissue, Semax increased BDNF, a cell message, and activity of TrkB, the protein that responds to it. The study also found a change in a learned avoidance task. These rat results do not establish memory or focus benefits from this supplier’s product. This was not a test of SEMAX SPRAY.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "selank-spray",
+      "model": "Human-derived cells grown in a lab",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/28293190/",
+      "finding": "In human-derived cells grown in a lab, Selank alone did not change the gene activity being measured. The response to GABA changed when Selank was present too. This was not a test of SELANK SPRAY.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "pt-141-spray",
+      "model": "Rat, primate and early human research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/12851303/",
+      "finding": "Rat tests found more activity in a brain region involved in nerve signals. The paper also reported increased erectile activity in animal tests and early studies in men. These are findings about studied formulations, not a test of the partner’s research product. This was not a test of PT-141 SPRAY.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "melanotan-ii-spray",
+      "model": "Receptor experiments in cells",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/26418335/",
+      "finding": "In lab-grown nerve-cell models, Melanotan II kept the cAMP cell message active after it was removed. The natural comparison message, alpha-MSH, stopped much sooner. This did not test the supplier’s product. This was not a test of Melanotan II Spray.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "dsip-spray",
+      "model": "Rat brain-tissue experiment",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/2706459/",
+      "finding": "Slices of rat brain tissue released more Met-enkephalin, a nerve message, in a test that depended on calcium. DSIP did not directly attach to the opioid proteins tested. This was not a test of DSIP Spray.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "bpc-tb-spray",
+      "model": "Separate-ingredient research",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21030672/",
+      "finding": "The papers cover BPC-157 cell movement and experiments with full thymosin beta-4. They do not establish how the two ingredients act together in this blend. This was not a test of BPC-157/TB-500 Spray (Wolverine).",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "bpc-spray",
+      "model": "Rat tendon cells grown in a lab",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/21030672/",
+      "finding": "Rat tendon cells grown in a lab moved more after exposure. Two proteins involved in cell grip, called FAK and paxillin, also changed. The test did not show injury repair in people. This was not a test of BPC-157 Spray.",
+      "limit": "The papers do not establish how this finished liquid behaves. A spray name is a product format, not a direction for personal use."
+    },
+    {
+      "id": "adalank-spray",
+      "model": "Parent-peptide background only",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/28293190/",
+      "finding": "The linked paper concerns Selank and GABA-related signals. It does not test Adalank or this prepared spray.",
+      "limit": "A changed peptide needs its own evidence. Selank findings cannot be treated as Adalank results."
+    },
+    {
+      "id": "adamax-spray",
+      "model": "Parent-peptide background only",
+      "source": "https://pubmed.ncbi.nlm.nih.gov/16996037/",
+      "finding": "The linked study measured Semax-related nerve signals in rats. It did not test Adamax or this spray.",
+      "limit": "The actual mechanism remains unknown in the sources reviewed here."
+    }
+  ]
+}

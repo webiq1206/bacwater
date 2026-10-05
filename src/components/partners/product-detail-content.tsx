@@ -13,7 +13,7 @@ import { ProductBuyLink, PurchaseDisclosure } from "./product-purchase";
 import { useSearchViewport } from "@/components/search/use-search-viewport";
 import styles from "./product-quick-view.module.css";
 
-/** Quick look only. Longer explanations and citations belong on the full page. */
+/** The quick look shows the research question, finding, source and limit together. */
 export default function ProductDetailContent({product}:{product:DisplaySupplierProduct}) {
  const dialogRef=useRef<HTMLDivElement>(null);
  useSearchViewport(true,dialogRef);
@@ -29,6 +29,7 @@ export default function ProductDetailContent({product}:{product:DisplaySupplierP
    <div className={styles.quickIntro}><ProductArtwork product={product} compact/><div><h3>What it is</h3><p>{detail.what}</p></div></div>
    <section className={styles.quickSection}><h3>What researchers study</h3><p>{guide.study}</p></section>
    <section className={styles.quickSection} data-product-mechanism><h3>How it works</h3><p data-product-plain>{guide.how}</p></section>
+   <section className={styles.quickSection} data-study-summary><h3>What the study found</h3><p>{guide.finding}</p><p className="mt-2 text-xs text-muted-foreground">{guide.model}. {guide.paper?<a className="underline underline-offset-4" href={guide.paper} target="_blank" rel="noopener noreferrer">{product.id==="dihexa"?"Retraction notice":"Study source"} (opens a new tab)</a>:"Source: partner product information."}</p></section>
    <dl className={styles.quickFacts}><div><dt>Product type</dt><dd>{PRODUCT_FORMATS[product.kind]}</dd></div><div><dt>Research behind this page</dt><dd>{guide.model}</dd></div></dl>
    <div className={styles.limit}><Info size={18} aria-hidden="true"/><div><h3>What is not established</h3><p>{guide.caution}</p></div></div>
   </div>

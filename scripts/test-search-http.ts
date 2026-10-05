@@ -60,9 +60,13 @@ async function main() {
       }
       const product=SUPPLIER_PRODUCTS.find(p=>path===`/calculate/product/${p.id}`);
       if(product?.kind==="blend") {
-        assert.ok(html.includes("Total premixed blend"),path);
-        assert.ok(html.includes("Total blend in container (mg)"),path);
-        assert.ok(html.includes("Optional: calculate the amount in a sample"),path);
+        // The one-question form waits for the tab's product context before
+        // restoring a step. The one-question browser gate exercises every premixed blend's
+        // real unit, mass, ingredient and optional sample questions.
+        assert.ok(html.includes("data-calculator-workspace"),path);
+        assert.ok(html.includes("Restoring your calculation..."),path);
+        assert.ok(html.includes("Research math only"),path);
+        assert.ok(!html.includes("data-product-result"),`No result before the saved context is restored: ${path}`);
       }
       if(path.startsWith("/products/")) {
         const id=path.split("/").at(-1)!;

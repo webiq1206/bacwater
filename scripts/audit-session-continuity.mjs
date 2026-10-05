@@ -1,4 +1,4 @@
-import { completeAuditHero, openAuditOptional } from "./audit-flow-helpers.mjs";
+import { completeAuditHero, completeAuditProduct, editProductQuestion, goQuestion, nextQuestion, selectAuditOption } from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, webkit, expect } from '@playwright/test';
@@ -18,103 +18,64 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await p.goto(origin,{waitUntil:'networkidle'});
    await p.getByRole('button',{name:'Open hero calculator full screen'}).click();
    const hero=p.locator('[data-hero-focus]');
-   await completeAuditHero(p,hero,{vial:'40',amount:'2',volume:'2',review:false});
+   await completeAuditHero(p,hero,{vial:'40',amount:'2',volume:'2',review:true});
    await expect(hero.locator('[data-live-result]')).toContainText('0.1 mL');
    await expect(hero.locator('[data-live-result]')).toContainText('10 units on U-100 scale');
    await p.goto(origin+'/calculate/product/glp-3',{waitUntil:'networkidle'});
    await expect(p).toHaveURL(origin+'/calculate/product/glp-3');
-   await expect(p.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('40');
-   await expect(p.getByLabel('Final volume (mL)',{exact:true})).toHaveValue('2');
+   await completeAuditProduct(p,{single:true});
    await expect(p.locator('[data-product-result]')).toContainText('20 mg/mL');
    await expect(p.locator('[data-selected-product="glp-3"] [data-product-artwork]')).toBeVisible();
    await expect(p.getByRole('contentinfo')).toHaveCount(0);
   });
-  await check('Frequency never silently divides a per-time amount',async()=>{
-   await openAuditOptional(p,'Optional: amount and schedule');
-   await p.getByLabel('Amount for one time',{exact:true}).fill('2');
-   await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('2');
+  await check('Frequency preserves per-time amount; changing meaning requires a fresh total',async()=>{
+   await editProductQuestion(p,'schedule');await selectAuditOption(p,p,'Schedule from your instructions','Twice a week');await nextQuestion(p);
    await expect(p.locator('[data-product-result]')).toContainText('0.1 mL = 10 U-100');
-   await expect(p.locator('[data-amount-schedule]')).toContainText('4 mg');
-   await p.getByRole('radio',{name:/For the whole week/}).check();
-   await expect(p.getByLabel('Total amount for one week',{exact:true})).toHaveValue('2');
-   await expect(p.locator('[data-product-result]')).toContainText('0.05 mL = 5 U-100');
-   await p.reload({waitUntil:'networkidle'});
-   await expect(p.getByRole('radio',{name:/For the whole week/})).toBeChecked();
-   await expect(p.getByLabel('How often do your instructions say?',{exact:true})).toHaveValue('2');
-   await expect(p.locator('[data-product-result]')).toContainText('0.05 mL = 5 U-100');
+   await editProductQuestion(p,'basis');await p.getByRole('radio',{name:/^Whole week/}).check();await nextQuestion(p);await nextQuestion(p);
+   await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('');await p.getByLabel(/^Total amount for one week/).fill('2');await nextQuestion(p);
+   await expect(p.getByRole('button',{name:'Next',exact:true})).toBeDisabled();await selectAuditOption(p,p,'Schedule from your instructions','Twice a week');await nextQuestion(p);
+   await expect(p.locator('[data-product-result]')).toContainText('0.05 mL = 5 U-100');await p.reload({waitUntil:'networkidle'});await expect(p.locator('[data-product-result]')).toContainText('0.05 mL = 5 U-100');
    await p.screenshot({path:`${out}/${name}-schedule-mobile.png`,fullPage:false});
   });
   await check('Guided and all-at-once views inherit the same values and meaning',async()=>{
-   await p.goto(origin+'/plan',{waitUntil:'networkidle'});
-   await expect(p.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');
-   await p.getByLabel('Go back',{exact:true}).click();
-   await p.getByLabel('Go back',{exact:true}).click();
-   await expect(p.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
-   await p.getByLabel('Go back',{exact:true}).click();
-   await expect(p.getByRole('combobox',{name:'Product',exact:true})).toContainText('GLP-3 (RT)');
-   await p.getByRole('button',{name:'Continue',exact:false}).click();
-   await p.getByRole('button',{name:'Continue',exact:false}).click();
-   await expect(p.getByRole('heading',{name:'How much, and how often?',exact:true})).toBeVisible();
-   await expect(p.getByLabel('Total amount for one week',{exact:true})).toHaveValue('2');
-   await p.getByRole('button',{name:'All at once',exact:true}).click();
-   await expect(p.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');
-   await expect(p.getByLabel('Total amount for one week',{exact:true})).toHaveValue('2');
-   await p.reload({waitUntil:'networkidle'});
-   await expect(p.getByRole('button',{name:'All at once',exact:true})).toHaveAttribute('aria-pressed','true');
+   await p.goto(origin+'/plan',{waitUntil:'networkidle'});await goQuestion(p,'vial');await expect(p.getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
+   await goQuestion(p,'amount');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await goQuestion(p,'volume');await expect(p.getByLabel('Final liquid volume',{exact:true})).toHaveValue('2');
+   await p.getByRole('button',{name:'All at once',exact:true}).click();await expect(p.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await p.reload({waitUntil:'networkidle'});await expect(p.getByRole('button',{name:'All at once',exact:true})).toHaveAttribute('aria-pressed','true');
   });
   await check('Unit conversion preserves mass and product switching preserves fields',async()=>{
-   await p.getByLabel('Amount unit',{exact:true}).selectOption('mcg');
-   await expect(p.getByLabel('Total amount for one week',{exact:true})).toHaveValue('2000');
+   await selectAuditOption(p,p,'Amount unit','mcg');
+   await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2000');
    await p.getByRole('combobox',{name:'Product',exact:true}).click();
    await p.getByRole('option',{name:'BPC-157',exact:true}).click();
    await expect(p.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
-   await expect(p.getByLabel('Total amount for one week',{exact:true})).toHaveValue('2000');
+   await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2000');
    await expect(p.getByText(/Your numbers came with you/)).toBeVisible();
   });
   await check('Daily totals and invalid schedules show the correct meaning',async()=>{
-   await p.getByRole('radio',{name:/For the whole day/}).check();
-   await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('14');
+   await p.getByRole('radio',{name:/^Whole day/}).check();await p.getByLabel('Total amount for one day',{exact:true}).fill('2000');
+   await selectAuditOption(p,p,'Schedule from your instructions','Twice a day');
    await expect(p.locator('[data-amount-schedule]')).toContainText('1000 mcg');
-   await p.getByLabel('How often do your instructions say?',{exact:true}).selectOption('2');
+   await selectAuditOption(p,p,'Schedule from your instructions','Other number of times each week');await p.getByLabel('Times in a full week',{exact:true}).fill('2');
    await expect(p.locator('[data-amount-schedule]').getByRole('alert')).toContainText('daily schedule');
    await expect(p.getByRole('button',{name:'Save my plan',exact:true})).toBeDisabled();
   });
   await check('Incompatible product types do not reinterpret amounts',async()=>{
-   await p.goto(origin+'/calculate/product/amino-h2o',{waitUntil:'networkidle'});
-   await expect(p.getByLabel('Volume per bottle (mL)',{exact:true})).toHaveValue('');
-   await expect(p.getByLabel('Liquid volume per container (mL)',{exact:true})).toHaveValue('');
-   await p.goto(origin+'/calculate/hcg',{waitUntil:'networkidle'});
-   await expect(p.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('');
-   await p.goto(origin,{waitUntil:'networkidle'});
-   await expect(p.locator('[data-hero-calculator] [data-hero-guided]')).toHaveAttribute('data-guided-step','2');
-   await p.locator('[data-hero-calculator]').getByRole('button',{name:'Back',exact:true}).click();
-   await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
+   await p.goto(origin+'/calculate/product/amino-h2o',{waitUntil:'networkidle'});await expect(p.getByLabel('Liquid volume per container (mL)',{exact:true})).toHaveValue('');
+   await p.goto(origin+'/calculate/hcg',{waitUntil:'networkidle'});await expect(p.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('');
+   await p.goto(origin,{waitUntil:'networkidle'});const hero=p.locator('[data-hero-calculator]');await goQuestion(hero,'vial');await expect(hero.getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
   });
   await check('Clear does not allow old values to return on refresh',async()=>{
-   await p.getByRole('button',{name:'Open hero calculator full screen',exact:true}).click();
-   await p.locator('[data-hero-focus]').getByRole('button',{name:'Clear',exact:true}).click();
-   await p.reload({waitUntil:'networkidle'});
-   await p.locator('[data-hero-calculator]').getByRole('button',{name:'Continue',exact:true}).click();
-   await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('');
-   assert.deepEqual(errors,[]);
+   await p.getByRole('button',{name:'Open hero calculator full screen',exact:true}).click();await p.locator('[data-hero-focus]').getByRole('button',{name:'Clear',exact:true}).click();await p.reload({waitUntil:'networkidle'});const hero=p.locator('[data-hero-calculator]');await nextQuestion(hero);await nextQuestion(hero);await expect(hero.getByLabel('Amount in vial',{exact:true})).toHaveValue('');assert.deepEqual(errors,[]);
   });
   await check('Independent browser tabs retain their own edits through reload',async()=>{
    const first=await context.newPage(),second=await context.newPage();
    for(const tab of [first,second])tab.on('pageerror',e=>errors.push(String(e)));
    try{
     await first.goto(origin+'/calculate/product/bpc-157',{waitUntil:'networkidle'});
-    await first.getByLabel('Total in container (mg)',{exact:true}).fill('40');
-    await first.getByLabel('Final volume (mL)',{exact:true}).fill('2');
-    await second.goto(origin+'/calculate/product/bpc-157',{waitUntil:'networkidle'});
-    await expect(second.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('');
-    await second.getByLabel('Total in container (mg)',{exact:true}).fill('12');
-    await second.getByLabel('Final volume (mL)',{exact:true}).fill('4');
-    await expect(first.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('40');
-    for(const [tab,amount,volume] of [[first,'40','2'],[second,'12','4']]){
-     await tab.reload({waitUntil:'networkidle'});
-     await expect(tab.getByLabel('Total in container (mg)',{exact:true})).toHaveValue(amount);
-     await expect(tab.getByLabel('Final volume (mL)',{exact:true})).toHaveValue(volume);
-    }
+    await completeAuditProduct(first,{total:'40',volume:'2'});
+    await second.goto(origin+'/calculate/product/bpc-157',{waitUntil:'networkidle'});await nextQuestion(second);await expect(second.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('');await second.getByRole('button',{name:'Back',exact:true}).click();await completeAuditProduct(second,{total:'12',volume:'4'});
+    for(const [tab,concentration] of [[first,'20 mg/mL'],[second,'3 mg/mL']]){await tab.reload({waitUntil:'networkidle'});await expect(tab.locator('[data-product-result]')).toContainText(concentration);}
+
    }finally{await first.close();await second.close();}
    assert.deepEqual(errors,[]);
   });
@@ -128,7 +89,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
     await tab.goto(origin,{waitUntil:'networkidle'});
     await tab.getByRole('button',{name:'Open hero calculator full screen'}).click();
     const hero=tab.locator('[data-hero-focus]');
-    await completeAuditHero(tab,hero,{vial:'40',amount:'2',volume:'2',review:false});
+    await completeAuditHero(tab,hero,{vial:'40',amount:'2',volume:'2',review:true});
     await expect(hero.locator('[data-live-result]')).toContainText('0.1 mL');
     await tab.evaluate(()=>{window.__sessionAuditDocument='same-document';});
     await hero.getByRole('link',{name:'Guided workspace',exact:true}).click();

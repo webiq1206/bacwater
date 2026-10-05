@@ -44,7 +44,7 @@ const SelectContent = React.forwardRef<
       position={position}
       {...props}
     >
-      <SelectPrimitive.Viewport
+      <SelectPrimitive.Viewport role="group" aria-label="Choices" tabIndex={0}
         className={cn(
           "p-1",
           position === "popper" &&

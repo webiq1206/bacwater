@@ -37,3 +37,9 @@
 @media(min-width:781px) and (max-height:800px){.startGuide{padding:16px;margin-block:14px 8px}.startGuide>p{font-size:1.125rem;margin-bottom:12px}.startGuide small{display:none}.startOutputs strong{font-size:1.125rem}}
 @media(max-width:780px){.calculator .startHint{display:none}.startGuide{margin-block:12px 8px;padding:14px 16px}.startGuide>p{font-size:1.125rem;margin-bottom:12px}.startGuide small{display:none}}
 @media(max-width:780px) and (max-height:620px){.calculator .progress p,.calculator .startHint{display:none}.calculator .tabs{margin-top:6px}.calculator .stepNavigation{padding-top:6px}.calculator .stepSafety{margin-block:4px 6px}}
+
+/* Full-screen questions scroll normally above the fixed return bar. */
+.focusBody .stepNavigation{position:static;bottom:auto}
+
+/* Enlarged words keep their shape; actions can move to a second row. */
+.stepNavigation{flex-wrap:wrap}.stepNavigation button{overflow-wrap:normal;word-break:normal;flex-shrink:0}
