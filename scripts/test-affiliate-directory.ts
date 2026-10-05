@@ -28,6 +28,19 @@ test("category, format and name filters intersect without suggesting substitutes
 });
 for(const p of SUPPLIER_PRODUCTS)test(`exact listing name remains findable: ${p.id}`,()=>assert.ok(matchDirectory(SUPPLIER_PRODUCTS,p.name).products.some(x=>x.id===p.id)));
 test("natural wording finds laboratory water",()=>assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"Please show me lab water").products.map(p=>p.id),["amino-h2o"]));
+test("copper identities and explicit format exclusions are literal catalog filters",()=>{
+ for(const query of ["I am looking for copper peptides, no sprays","copper without solutions","copper excluding blends","copper except water"])
+  assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,query).products.map(p=>p.id).sort(),["ahk-cu","ghk-cu"]);
+ for(const [query,kind] of [["no sprays","spray"],["without blends","blend"],["exclude water","water"],["not single compounds","single"]] as const){
+  const r=matchDirectory(SUPPLIER_PRODUCTS,query);assert.equal(r.products.length,SUPPLIER_PRODUCTS.filter(p=>p.kind!==kind).length);assert.ok(r.products.every(p=>p.kind!==kind));
+ }
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"sprays without solutions").products.length,0);
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"copper no sprays","spray").products.length,0);
+ assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"copper no sprays","all","dermal").products.map(p=>p.id),["ghk-cu"]);
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"copper no sprays for skin").scope,"restricted");
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"copper without unknownformat").products.length,0);
+ assert.equal(matchDirectory(SUPPLIER_PRODUCTS,"copper no single compounds").products.length,0);
+});
 test("natural wording respects solution format",()=>{const found=matchDirectory(SUPPLIER_PRODUCTS,"Find NAD+ solutions").products;assert.deepEqual(found.map(p=>p.id),["nad-plus-spray"]);});
 test("solution request lists only solutions",()=>{const found=matchDirectory(SUPPLIER_PRODUCTS,"Show me sprays").products;assert.equal(found.length,SUPPLIER_PRODUCTS.filter(p=>p.kind==="spray").length);assert.ok(found.every(p=>p.kind==="spray"));});
 test("blend request does not invent an ingredient ratio",()=>assert.deepEqual(matchDirectory(SUPPLIER_PRODUCTS,"BPC-157 blend").products.map(p=>p.id),["wolverine-stack"]));

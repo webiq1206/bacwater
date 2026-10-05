@@ -64,6 +64,7 @@ const nextConfig = (phase: string): NextConfig => ({
       // Legacy/compat paths: permanent (308) redirects so link equity
       // consolidates and crawlers see a clean redirect (not a render-time 307).
       { source: "/plan/advanced", destination: "/plan", permanent: true },
+      { source: "/products", destination: "/recommendations", permanent: true },
       {
         source: "/tools/ml-to-units",
         destination: "/tools/syringe-units",
