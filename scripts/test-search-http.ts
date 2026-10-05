@@ -61,7 +61,7 @@ async function main() {
       const product=SUPPLIER_PRODUCTS.find(p=>path===`/calculate/product/${p.id}`);
       if(product?.kind==="blend") {
         // The one-question form waits for the tab's product context before
-        // restoring a step. The catalog browser gate exercises every blend's
+        // restoring a step. The one-question browser gate exercises every premixed blend's
         // real unit, mass, ingredient and optional sample questions.
         assert.ok(html.includes("data-calculator-workspace"),path);
         assert.ok(html.includes("Restoring your calculation..."),path);
