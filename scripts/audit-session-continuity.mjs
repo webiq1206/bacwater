@@ -98,6 +98,54 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveValue('');
    assert.deepEqual(errors,[]);
   });
+  await check('Independent browser tabs retain their own edits through reload',async()=>{
+   const first=await context.newPage(),second=await context.newPage();
+   for(const tab of [first,second])tab.on('pageerror',e=>errors.push(String(e)));
+   try{
+    await first.goto(origin+'/calculate/product/bpc-157',{waitUntil:'networkidle'});
+    await first.getByLabel('Total in container (mg)',{exact:true}).fill('40');
+    await first.getByLabel('Final volume (mL)',{exact:true}).fill('2');
+    await second.goto(origin+'/calculate/product/bpc-157',{waitUntil:'networkidle'});
+    await expect(second.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('');
+    await second.getByLabel('Total in container (mg)',{exact:true}).fill('12');
+    await second.getByLabel('Final volume (mL)',{exact:true}).fill('4');
+    await expect(first.getByLabel('Total in container (mg)',{exact:true})).toHaveValue('40');
+    for(const [tab,amount,volume] of [[first,'40','2'],[second,'12','4']]){
+     await tab.reload({waitUntil:'networkidle'});
+     await expect(tab.getByLabel('Total in container (mg)',{exact:true})).toHaveValue(amount);
+     await expect(tab.getByLabel('Final volume (mL)',{exact:true})).toHaveValue(volume);
+    }
+   }finally{await first.close();await second.close();}
+   assert.deepEqual(errors,[]);
+  });
+  await check('Blocked storage retains client navigation but not a hard reload',async()=>{
+   const blocked=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
+   try{
+    await blocked.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
+    await blocked.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);
+    await blocked.addInitScript(()=>Object.defineProperty(window,'sessionStorage',{configurable:true,get(){throw new DOMException('Blocked by audit','SecurityError');}}));
+    const tab=await blocked.newPage();tab.on('pageerror',e=>errors.push(String(e)));
+    await tab.goto(origin,{waitUntil:'networkidle'});
+    await tab.getByRole('button',{name:'Open hero calculator full screen'}).click();
+    const hero=tab.locator('[data-hero-focus]');
+    await completeAuditHero(tab,hero,{vial:'40',amount:'2',volume:'2',review:false});
+    await expect(hero.locator('[data-live-result]')).toContainText('0.1 mL');
+    await tab.evaluate(()=>{window.__sessionAuditDocument='same-document';});
+    await hero.getByRole('link',{name:'Guided workspace',exact:true}).click();
+    await expect(tab).toHaveURL(origin+'/peptide-calculator');
+    assert.equal(await tab.evaluate(()=>window.__sessionAuditDocument),'same-document','Use actual client navigation, not a replacement document');
+    await tab.getByRole('button',{name:'All at once',exact:true}).click();
+    await expect(tab.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
+    await expect(tab.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');
+    await expect(tab.getByLabel('Amount for one time',{exact:true})).toHaveValue('2');
+    await tab.reload({waitUntil:'networkidle'});
+    assert.equal(await tab.evaluate(()=>window.__sessionAuditDocument),undefined);
+    await tab.getByRole('button',{name:'All at once',exact:true}).click();
+    await expect(tab.getByLabel('Vial strength',{exact:true})).toHaveValue('');
+    await expect(tab.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('');
+    assert.deepEqual(errors,[]);
+   }finally{await blocked.close();}
+  });
  }catch(e){process.exitCode=1;await p.screenshot({path:`${out}/${name}-failure.png`,fullPage:true}).catch(()=>{});console.error(e);}
  finally{await browser.close();}
 }

@@ -30,14 +30,14 @@ function AccountMenu({ isAuthenticated }: { isAuthenticated: boolean }) {
         <div className="fixed inset-0 z-40" aria-hidden onClick={() => setOpen(false)} />
         <div id="account-options" className="absolute right-0 top-full mt-1.5 z-50 w-52 rounded-xl border border-border bg-white shadow-lift py-1 overflow-hidden">
           {isAuthenticated ? <>
-        <Link href="/plans" onClick={() => setOpen(false)} className={ITEM}><LayoutGrid className="h-4 w-4 text-muted-foreground" /> My Plans</Link>
+        <Link prefetch={false} href="/plans" onClick={() => setOpen(false)} className={ITEM}><LayoutGrid className="h-4 w-4 text-muted-foreground" /> My Plans</Link>
             <button type="button" onClick={() => { setOpen(false); signOut({ callbackUrl: "/" }); }} className={cn(ITEM, "w-full text-left")}><LogOut className="h-4 w-4 text-muted-foreground" /> Sign out</button>
           </> : <>
             <div className="px-3.5 pt-2 pb-1 text-[11px] uppercase tracking-wide text-muted-foreground">Account</div>
             <Link href="/signin" onClick={() => setOpen(false)} className={ITEM}><LogIn className="h-4 w-4 text-muted-foreground" /> Sign in</Link>
             <Link href="/signup" onClick={() => setOpen(false)} className={ITEM}><UserPlus className="h-4 w-4 text-muted-foreground" /> Create account</Link>
             <div className="my-1 h-px bg-border" />
-        <Link href="/plans" onClick={() => setOpen(false)} className={ITEM}><LayoutGrid className="h-4 w-4 text-muted-foreground" /> My Plans</Link>
+        <Link prefetch={false} href="/plans" onClick={() => setOpen(false)} className={ITEM}><LayoutGrid className="h-4 w-4 text-muted-foreground" /> My Plans</Link>
           </>}
         </div>
       </> : null}
@@ -63,7 +63,7 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
         <button type="button" aria-haspopup="dialog" className={styles.assistantLink} onClick={e=>openAssistant(e.currentTarget)}>Research assistant</button>
       </nav>
       <div className="flex items-center gap-2">
-        <Link href="/plans" className={styles.plansLink}>My plans</Link>
+        <Link prefetch={false} href="/plans" className={styles.plansLink}>My plans</Link>
         <SiteSearchButton onActivate={() => setOpen(false)}/>
         <AccountMenu isAuthenticated={isAuthenticated} />
         <button type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="mobile-navigation" ref={trigger} onClick={() => setOpen((s) => !s)} className="lg:hidden inline-flex h-11 w-11 items-center justify-center border border-border hover:bg-muted">{open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}</button>
@@ -73,7 +73,7 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
       <nav aria-label="Expanded mobile navigation" className="mx-auto flex max-w-7xl flex-col p-3">
         {NAV.map((n) => <Link key={n.href} href={n.href} aria-current={pathname === n.href || pathname?.startsWith(`${n.href}/`) || (n.href === "/recommendations" && pathname?.startsWith("/products/")) ? "page" : undefined} onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">{n.label}</Link>)}
         <button type="button" aria-haspopup="dialog" onClick={e=>{setOpen(false);openAssistant(e.currentTarget);}} className="px-4 py-3 text-left text-base font-medium text-foreground hover:bg-muted border-b border-border">Research assistant</button>
-        <Link href="/plans" onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">My Plans</Link>
+        <Link prefetch={false} href="/plans" onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">My Plans</Link>
         {isAuthenticated ? <button type="button" onClick={() => { setOpen(false); signOut({ callbackUrl: "/" }); }} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted text-left">Sign out</button> : <>
           <Link href="/signin" onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">Sign in</Link>
           <Link href="/signup" onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted">Create account</Link>

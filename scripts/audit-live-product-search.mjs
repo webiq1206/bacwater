@@ -35,7 +35,17 @@ for (const config of configurations) {
   const report = { browser: config.name, checks: [], errors, failedRequests };
   reports.push(report);
   try {
-    await page.goto(`${origin}/recommendations`);
+    const legacy=await context.request.get(`${origin}/products`,{maxRedirects:0});
+    assert.equal(legacy.status(),308);
+    assert.equal(new URL(legacy.headers().location,origin).href,`${origin}/recommendations`);
+    const legacyQuery='?source=legacy&sort=az';
+    const queried=await context.request.get(`${origin}/products${legacyQuery}`,{maxRedirects:0});
+    assert.equal(queried.status(),308);
+    assert.equal(new URL(queried.headers().location,origin).href,`${origin}/recommendations${legacyQuery}`);
+    await page.goto(`${origin}/products${legacyQuery}`);
+    await expect(page).toHaveURL(`${origin}/recommendations${legacyQuery}`);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href',`${origin}/recommendations`);
+    report.checks.push('Legacy directory redirects permanently to the canonical directory');
     const directory = page.locator('[data-product-directory]');
     const input = directory.getByRole('searchbox', { name: 'Find a product', exact: true });
     await expect(input).toBeVisible();
@@ -61,6 +71,22 @@ for (const config of configurations) {
     await page.screenshot({ path: `${out}/${config.name}-live-matches.png`, fullPage: false });
     report.checks.push('Live matching on every keystroke, with images on every visible result');
 
+    await input.fill('I am looking for copper peptides, no sprays');
+    await expect(directory.locator('[data-product-match]')).toHaveCount(2);
+    assert.deepEqual((await directory.locator('[data-product-match]').evaluateAll(els=>els.map(el=>el.getAttribute('data-product-match')))).sort(),['ahk-cu','ghk-cu']);
+    await directory.getByLabel('Product type',{exact:true}).selectOption('spray');
+    await expect(directory.locator('[data-product-match]')).toHaveCount(0);
+    await directory.getByLabel('Product type',{exact:true}).selectOption('all');
+    await expect(directory.locator('[data-product-match]')).toHaveCount(2);
+    report.checks.push('Copper identities, explicit exclusions and format filters intersect');
+    await input.fill('no sprays or blends');
+    await expect(directory.locator('[data-product="glow"]')).toHaveCount(0);
+    await expect(directory.locator('[data-product="nad-plus-spray"]')).toHaveCount(0);
+    await expect(directory.locator('[data-product="amino-h2o"]')).toHaveCount(1);
+    await input.fill('no sprays or water');
+    await expect(directory.locator('[data-product="amino-h2o"]')).toHaveCount(0);
+    await expect(directory.locator('[data-product="nad-plus-spray"]')).toHaveCount(0);
+    await expect(directory.locator('[data-product="glow"]')).toHaveCount(1);
     await input.fill('RT');
     const rt = directory.getByRole('button', { name: 'Open product details for GLP-3 (RT)', exact: true });
     await expect(rt).toBeVisible();
@@ -156,6 +182,12 @@ for (const config of configurations) {
     await expect(page).toHaveURL(`${origin}/products/5-amino-1mq`);
     await expect(page.getByRole('heading', { level: 1, name: names['5-amino-1mq'], exact: true })).toBeVisible();
     report.checks.push('Directory detail link opens the matching product page');
+    await page.goto(`${origin}/recommendations`);
+    await page.getByRole('banner').getByRole('button',{name:'Account',exact:true}).click();
+    await page.locator('#account-options').getByRole('link',{name:'My Plans',exact:true}).click();
+    await expect(page).toHaveURL(`${origin}/plans`);
+    await expect(page.getByRole('heading',{level:1,name:'My Plans',exact:true})).toBeVisible();
+    report.checks.push('Account menu opens guest saved plans through actual navigation');
     assert.deepEqual(errors, [], 'No browser runtime errors');
     report.ok = true;
   } catch (error) {

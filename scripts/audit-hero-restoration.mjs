@@ -142,14 +142,16 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await p.screenshot({path:`${out}/${engine}-unit-help-mobile.png`,fullPage:false});
    await expect(help).toContainText('5 mg/mL means each 1 mL holds 5 mg.');
    await help.getByRole('button',{name:'Got it, go back',exact:true}).click();
-   await expect(help).toHaveCount(0);await expect(focus).toBeVisible();
+   await expect(help,'Help closes after its return button').toHaveCount(0);await expect(focus).toBeVisible();
    await expect(focus.getByRole('button',{name:'What do these units mean?',exact:true})).toBeFocused();
    for(let reopen=0;reopen<3;reopen++) {
     await focus.getByRole('button',{name:'What do these units mean?',exact:true}).click();
     // Click completion does not guarantee the nested dialog has mounted and taken focus.
     await expect(help).toBeVisible();
     await expect(help.getByRole('heading',{name:'Units, explained simply'})).toBeFocused();
-    await p.keyboard.press('Escape');await expect(help).toHaveCount(0);await expect(focus).toBeVisible();
+    if(reopen===1)await help.getByRole('button',{name:'Got it, go back',exact:true}).focus();
+    if(reopen===2)await help.getByRole('region',{name:'Unit definitions and examples',exact:true}).focus();
+    await p.keyboard.press('Escape');await expect(help,`Help closes after Escape in reopen cycle ${reopen+1}`).toHaveCount(0);await expect(focus).toBeVisible();
     await expect(focus.getByRole('button',{name:'What do these units mean?',exact:true})).toBeFocused();
    }
    await focus.getByRole('tab',{name:'U-100 ↔ mL',exact:true}).click();
