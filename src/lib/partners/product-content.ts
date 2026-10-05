@@ -284,13 +284,13 @@ export const PRODUCT_RESEARCH: Readonly<Record<string, ProductResearch>> = {
     "aliases": ["Melanotan 1", "MTI"],
     "summary": "How a copied message starts chemical steps in pigment cells.",
     "what": "Melanotan I is a small lab-made chemical chain. It copies parts of a natural message called alpha-MSH. It differs from ring-shaped Melanotan II.",
-    "study": "Researchers examine MC1-receptor activity and downstream cell signals involved in pigment biology. The research question concerns a receptor pathway, not a demonstrated cosmetic result from a supplier's formulation.",
+    "study": "A randomized human study measured skin pigment changes and differences linked to MC1-receptor gene variants. Its studied formulation was not this supplier's product.",
     "plain": "Melanotan I is a linear peptide related to the natural alpha-MSH signal. MC1-receptor experiments examine messages passed inside pigment-producing cells. It is structurally different from ring-shaped Melanotan II, and the two should not be treated as interchangeable.",
     "how": "Melanotan I is based on alpha-MSH, a natural message recognized by melanocortin receptors. The best-known research target is MC1 on pigment-making cells. Activation of MC1 raises an internal messenger called cAMP. That message helps switch on proteins and enzymes involved in making melanin.\n\nThe useful research question is how receptor activity changes the cell's pigment-making machinery, not whether a vial gives a cosmetic result. Different versions of the MC1 receptor can respond differently. The peptide does not contain melanin, and it is not a sunscreen or a substitute for the many processes that protect a cell.",
     "limit": "This explains pigment-cell biology. It is not a tanning, cosmetic or sun-protection claim for the research product.",
     "sources": [
       {"label": "Partner product information", "url": "https://www.aminoclub.com/us/products/melanotan-i", "type": "product"},
-      {"label": "Melanotan I and differences in the MC1 receptor", "url": "https://pubmed.ncbi.nlm.nih.gov/16293341/", "type": "paper"}
+      {"label": "Melanotan I: randomized human pigment study and MC1R variants", "url": "https://pubmed.ncbi.nlm.nih.gov/16293341/", "type": "paper"}
     ]
   },
   "igf-1-lr3": {

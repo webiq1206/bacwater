@@ -34,7 +34,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await field.fill(id);const card=p.locator(`[data-product="${id}"]`);
     await expect(card.locator('h3')).toHaveText(name);await expect(card.locator('[data-artwork-name]')).toHaveText(name);
     await card.getByRole('button',{name:`Read research details for ${name}`,exact:true}).click();
-    const d=p.locator(`[data-product-detail="${id}"]`);await expect(d.getByRole('heading',{level:2})).toHaveText(name);
+    const d=p.locator(`[data-product-detail="${id}"]`);await expect(d).toBeVisible();await expect(d.getByRole('heading',{level:2})).toHaveText(name);
     for(const h of ['What it is','What researchers study','How it works'])await expect(d.getByRole('heading',{name:h,exact:true})).toBeVisible();
     await expect(d.locator('[data-product-plain]')).toBeVisible();
     if(id==='dihexa')await expect(d.locator('[data-product-mechanism]')).toContainText('retracted');
@@ -62,7 +62,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   await check(`${engine}: desktop, phone, long names and short screens keep content and actions reachable`,async()=>{
    for(const [width,height,id] of [[1440,1000,'glp-3'],[390,844,'glp-3'],[320,568,'cjc-ipa-no-dac'],[430,932,'bpc-tb-spray'],[844,390,'glp-3']]){
     await p.setViewportSize({width,height});await visit('/recommendations');await p.getByRole('searchbox',{name:'Find a product',exact:true}).fill(id);
-    await p.locator(`[data-product="${id}"]`).getByRole('button',{name:/Read research details/}).click();const d=p.locator(`[data-product-detail="${id}"]`);
+    await p.locator(`[data-product="${id}"]`).getByRole('button',{name:/Read research details/}).click();const d=p.locator(`[data-product-detail="${id}"]`);await expect(d).toBeVisible();
     await fit(p,d);await expect(d.getByRole('heading',{name:'What it is',exact:true})).toBeInViewport();await a11y(p);await p.screenshot({path:`${out}/${engine}-details-${id}-${width}.png`,fullPage:false});
     const mechanism=d.locator('[data-product-mechanism]');
     await mechanism.getByRole('heading',{name:'How it works',exact:true}).scrollIntoViewIfNeeded();

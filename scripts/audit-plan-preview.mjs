@@ -1,3 +1,4 @@
+import {selectAuditOption} from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, webkit, expect } from '@playwright/test';
@@ -79,7 +80,7 @@ for (const [name, engine, width, height] of process.env.AUDIT_QUICK ? configurat
     await builder.locator('[data-plan-section="2"]').getByRole('button', { name: 'mcg', exact: true }).click();
     await expect(vial).toHaveValue('5000');
     await expect(preview.locator('[data-preview-answer] strong')).toHaveText('10 units');
-    await builder.getByLabel('Amount unit', { exact: true }).selectOption('mcg');
+    await selectAuditOption(page,builder,'Amount unit','mcg');
     await expect(amount).toHaveValue('250');
     await expect(preview.locator('[data-preview-answer] strong')).toHaveText('10 units');
     report.checks.push('Immediate updates, partial concentration, clearing, invalid values and equivalent unit changes');
@@ -116,11 +117,12 @@ for (const [name, engine, width, height] of process.env.AUDIT_QUICK ? configurat
     report.checks.push('Desktop sticky placement or mobile jump-to-preview, readable result, reachable save, no overflow or automated accessibility findings');
     await builder.locator('[data-plan-section="2"]').getByRole('button', { name: 'mg', exact: true }).click();
     await vial.fill('40');
-    await builder.getByLabel('Amount unit', { exact: true }).selectOption('mg');
+    await selectAuditOption(page,builder,'Amount unit','mg');
     await amount.fill('4');
-    await builder.getByRole('radio', { name: /For the whole week/ }).check();
+    await builder.getByRole('radio', { name: /Whole week/ }).check();
     await expect(preview).toHaveAttribute('data-preview-state', 'incomplete');
-    await builder.getByLabel('How often do your instructions say?', { exact: true }).selectOption('2');
+    await amount.fill('4');
+    await selectAuditOption(page,builder,'Schedule from your instructions','Twice a week');
     await expect(preview.locator('[data-preview-answer] strong')).toHaveText('10 units');
     await expect(preview).toContainText('2 times per week');
     await builder.getByRole('combobox', { name: 'Syringe size and scale', exact: true }).click();

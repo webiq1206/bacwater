@@ -26,4 +26,7 @@ assert.match(PRODUCT_GUIDES.klow.finding,/None tests this finished/);
 assert.match(PRODUCT_GUIDES.selank.finding,/alone did not change/);
 assert.match(PRODUCT_GUIDES["tb-500"].caution,/exact peptide chain/);
 assert.match(PRODUCT_GUIDES["ahk-cu"].finding,/not reach statistical significance/);
+assert.match(PRODUCT_GUIDES["melanotan-i"].model,/human/);
+assert.match(PRODUCT_GUIDES["pt-141"].model,/human/);
+assert.match(PRODUCT_GUIDES["ara-290"].model,/cell lines/);
 console.log("PASS: all 50 plain-language guides have bounded quick looks, expanded explanations, qualified research, source links, FAQs and sitemap entries.");

@@ -1,3 +1,4 @@
+import {nextQuestion} from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {createRequire} from 'node:module';
@@ -43,14 +44,14 @@ try{
    assert.ok(bounds&&bounds.y<700,`${route}: first control displaced`);
   }
  });
- await check('Guided calculation keeps one step and one Continue action in view',async()=>{
+ await check('Guided calculation keeps one step and one Next action in view',async()=>{
   await page.goto(origin+'/peptide-calculator');await page.evaluate(()=>sessionStorage.removeItem('bacwater.calculationSession.v1'));await page.reload();
   await page.getByRole('combobox',{name:'Product',exact:true}).click();await page.getByRole('option',{name:/Other.*Custom/}).click();
-  await page.getByLabel('Custom peptide name',{exact:true}).fill('Viewport test compound');
-  const next=page.getByRole('button',{name:'Continue',exact:false});await expect(next).toHaveCount(1);await expect(next).toBeEnabled();
+  await nextQuestion(page);await page.getByLabel('Custom peptide name',{exact:true}).fill('Viewport test compound');
+  const next=page.getByRole('button',{name:'Next',exact:true});await expect(next).toHaveCount(1);await expect(next).toBeEnabled();
   const bounds=await next.boundingBox();assert.ok(bounds&&bounds.y+bounds.height<=844);
-  await next.click();await expect(page.getByRole('heading',{name:'What amount is on the vial?',exact:true})).toBeVisible();
-  await page.getByLabel('Vial strength',{exact:true}).fill('12');
+  await next.click();await nextQuestion(page);await expect(page.getByRole('heading',{name:'How much is in the vial, in mg?',exact:true})).toBeVisible();
+  await page.getByLabel('Amount in vial',{exact:true}).fill('12');
   await page.screenshot({path:`${out}/guided-step-390.png`,fullPage:false});
  });
  await check('Help retains the attributed BAC water link and returns to the same entries',async()=>{
@@ -60,20 +61,20 @@ try{
   await expect(help).toBeVisible();await expect(help.locator('[data-bac-water-link] a').first()).toHaveAttribute('href','https://www.aminoclub.com/us/products/amino-h2o?utm_source=affiliate_marketing&code=WEBIQ');
   await accessibility(page);await page.screenshot({path:`${out}/help-390.png`,fullPage:false});
   await page.keyboard.press('Escape');await expect(page.getByLabel('Open calculator help',{exact:true})).toBeFocused();
-  await expect(page.getByLabel('Vial strength',{exact:true})).toHaveValue('12');await fit(page);
+  await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('12');await fit(page);
  });
  await check('Draft values and current guided step survive refresh, Back and return',async()=>{
-  await page.reload();await expect(page.getByRole('heading',{name:'What amount is on the vial?',exact:true})).toBeVisible();await expect(page.getByLabel('Vial strength',{exact:true})).toHaveValue('12');
+  await page.reload();await expect(page.getByRole('heading',{name:'How much is in the vial, in mg?',exact:true})).toBeVisible();await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('12');
   await page.getByRole('link',{name:'Back to website',exact:true}).click();await expect(page).toHaveURL(origin+'/');
-  await page.goBack();await expect(page.getByLabel('Vial strength',{exact:true})).toHaveValue('12');
+  await page.goBack();await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('12');
  });
  await check('Short screens, rotation and text enlargement preserve reachable controls',async()=>{
   for(const [width,height]of [[390,420],[844,390],[320,568]]){
    await page.setViewportSize({width,height});await expect.poll(()=>page.locator('[data-calculator-workspace]').evaluate(el=>Math.round(el.getBoundingClientRect().height))).toBe(height);
-   await fit(page);await page.getByLabel('Vial strength',{exact:true}).scrollIntoViewIfNeeded();await page.getByLabel('Vial strength',{exact:true}).focus();
-   const input=await page.getByLabel('Vial strength',{exact:true}).boundingBox(),dock=await page.locator('[data-calculator-actions]').boundingBox();
-   assert.ok(input&&dock&&input.y+input.height<=dock.y+1,JSON.stringify({input,dock}));
-   const next=await page.getByRole('button',{name:'Continue',exact:false}).boundingBox();assert.ok(next&&next.y+next.height<=height);
+   await fit(page);await page.getByLabel('Amount in vial',{exact:true}).scrollIntoViewIfNeeded();await page.getByLabel('Amount in vial',{exact:true}).focus();
+   const input=await page.getByLabel('Amount in vial',{exact:true}).boundingBox(),body=await page.locator('[data-calculator-scroll]').boundingBox();
+   assert.ok(input&&body&&input.y>=body.y-1&&input.y+input.height<=body.y+body.height+1,JSON.stringify({input,body}));
+   await page.getByRole('button',{name:'Next',exact:true}).scrollIntoViewIfNeeded();const next=await page.getByRole('button',{name:'Next',exact:true}).boundingBox();assert.ok(next&&next.y+next.height<=height);
   }
   await page.addStyleTag({content:'html{font-size:200%} p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});
   await fit(page);await page.screenshot({path:`${out}/guided-enlarged-320.png`,fullPage:false});
@@ -84,7 +85,7 @@ try{
   assert.ok(bar&&help&&help.y>=bar.y+bar.height-1,JSON.stringify({bar,help}));
   await page.getByRole('button',{name:'Return to calculation',exact:true}).click();
   await page.setViewportSize({width:1440,height:900});await page.goto(origin+'/peptide-calculator');
-  const question=await page.locator('.bac-step-panel').first().boundingBox();
+  const question=await page.locator('[data-plan-builder=beginner]').first().boundingBox();
   assert.ok(question&&Math.abs(question.x+question.width/2-720)<2,JSON.stringify(question));
   await page.screenshot({path:`${out}/guided-step-1440.png`,fullPage:false});
  });

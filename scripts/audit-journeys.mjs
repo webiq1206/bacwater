@@ -1,3 +1,4 @@
+import { goQuestion, nextQuestion } from './audit-flow-helpers.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, expect } from '@playwright/test';
@@ -47,6 +48,13 @@ try {
     assert.equal(saved.expirationDate,null);
     await page.getByRole('button',{name:'Continue without an account'}).click();
     await expect(page).toHaveURL(`${origin}/plan/${publicId}`);
+  });
+  await step('Clearing a saved editor clears only that editor and keeps the active calculation',async()=>{
+    await page.goto(`${origin}/plan`);await page.getByRole('button',{name:'All at once',exact:true}).click();await page.getByLabel('Vial strength',{exact:true}).fill('12');await page.getByLabel('Amount for one time',{exact:true}).fill('0.3');await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('4');
+    const before=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('bacwater.calculationSession.v1')).shared);
+    await page.goto(`${origin}/plan/${publicId}/edit`);await page.getByRole('button',{name:'Step by step',exact:true}).click();await goQuestion(page,'vial');await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('10');await page.getByRole('button',{name:'Clear',exact:true}).click();await goQuestion(page,'vial');await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('');
+    const after=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('bacwater.calculationSession.v1')).shared);assert.deepEqual(after,before);
+    await page.goto(`${origin}/plan/${publicId}`);const saved=await prisma.plan.findUniqueOrThrow({where:{publicId}});assert.equal(saved.vialStrengthMg,10);
   });
   await step('Owner can save private notes; capture the real server action request',async()=>{
     await expect(page.getByLabel('Private plan notes')).toBeVisible();

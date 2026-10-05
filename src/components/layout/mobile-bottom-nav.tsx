@@ -29,7 +29,7 @@ export function MobileBottomNav() {
   const hidden = /^\/products\/[^/]+$/.test(pathname) || pathname === "/research-finder" || pathname === "/" || pathname === "/plan" || pathname === "/plan/new" || pathname.startsWith("/plan/") || pathname.startsWith("/admin");
 
   useEffect(() => {
-    let mounted = true;
+    let mounted = true, pointerActive = false, frame = 0;
     const update = () => {
       if (!mounted) return;
       const active = document.activeElement;
@@ -39,16 +39,35 @@ export function MobileBottomNav() {
         // Restoring the bar between pointerdown and click can cover the target.
         (Boolean(active.closest("main")) && active.matches("button,[role='combobox']"))
       );
-      document.body.dataset.bacInputActive = String(editing);
+      document.body.dataset.bacInputActive = String(editing || pointerActive);
     };
     // focusout can temporarily expose document.body before the next control
     // receives focus. Evaluate after that transition instead of flashing the bar.
     const afterFocusChange = () => queueMicrotask(update);
+    // Safari does not focus a tapped button. Keep the layout stable from
+    // pointerdown through click even when the text field has lost focus.
+    const pointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest("main") && target.closest("button,a,input,textarea,select,[role='combobox']")) {
+        cancelAnimationFrame(frame); pointerActive = true; update();
+      }
+    };
+    const pointerDone = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => { pointerActive = false; update(); });
+    };
+    document.addEventListener("pointerdown", pointerDown, true);
+    document.addEventListener("pointerup", pointerDone, true);
+    document.addEventListener("pointercancel", pointerDone, true);
     document.addEventListener("focusin", update);
     document.addEventListener("focusout", afterFocusChange);
     update();
     return () => {
       mounted = false;
+      cancelAnimationFrame(frame);
+      document.removeEventListener("pointerdown", pointerDown, true);
+      document.removeEventListener("pointerup", pointerDone, true);
+      document.removeEventListener("pointercancel", pointerDone, true);
       document.removeEventListener("focusin", update);
       document.removeEventListener("focusout", afterFocusChange);
       delete document.body.dataset.bacInputActive;
