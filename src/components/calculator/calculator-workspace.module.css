@@ -26,6 +26,7 @@
 
 .headerActions{display:flex;align-items:center;gap:6px}.headerActions>a{padding:7px;min-width:44px}.headerActions .guide summary{padding-inline:5px}@media(max-width:380px){.bar{gap:4px}.back span,.guide summary span{font-size:12px}.headerActions{gap:2px}}
 /* The review answer should precede decorative confirmation copy on a phone. */
+.content :global(.bac-calc-card) :global([data-hero-guided])>div:has(>button[title="Clear entries"]){position:sticky;bottom:0;z-index:5;background:#fffef9;padding-bottom:max(10px,env(safe-area-inset-bottom));margin-top:12px}
 .workspace{grid-template-columns:minmax(0,1fr);}.bar{flex-wrap:wrap;}.headerActions{flex-wrap:wrap;min-width:0;max-width:100%;margin-left:auto;}
 @media(max-width:780px){
 .content :global(.text-center):has(> :global(.eyebrow) + h2 + p){text-align:left;margin-bottom:16px}

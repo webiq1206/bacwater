@@ -21,6 +21,7 @@
 .calculator{height:var(--hero-card-height,560px);min-height:300px;border-radius:22px;box-shadow:0 24px 64px #18382d17}
 .top{min-height:54px;padding-inline:22px}.top>span{font-size:.6875rem;gap:10px}.top button{font-size:.75rem}
 .tabs{margin:16px 22px 0;padding:4px;border-radius:12px}.tabs button{min-height:46px;font-size:.8125rem;border-radius:9px}
+.vialChoices{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.vialChoices button{min-height:44px;border:1px solid #adc298;border-radius:10px;background:#f1f6e7;padding:8px 18px;color:#18382d}.vialChoices button:focus-visible{outline:2px solid #18382d;outline-offset:3px}.inputWrap>[role=combobox]{width:100px;flex-shrink:0;border:0;border-left:1px solid #adc298;border-radius:0;background:transparent}
 .panel{padding:20px 26px 0}.progress{margin-bottom:16px;font-size:.6875rem}.progress>div{gap:6px}.progress span[data-complete]{height:4px}.progress p{margin-top:8px}
 .guided .stepTitle{font-size:1.3125rem;margin-bottom:14px}.stepNavigation{padding-top:12px}.stepNavigation button{min-height:48px;padding:10px 20px;font-size:.875rem}.stepSafety{margin:10px 0 14px}
 .startFields{display:flex;flex-direction:column;min-height:100%}.startHint{font-size:.75rem;line-height:1.6;color:#53664e;margin:10px 0 0}

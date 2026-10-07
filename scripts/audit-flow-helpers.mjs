@@ -22,7 +22,7 @@ export async function goQuestion(scope, target) {
   for (let i=0;i<24;i++) {
     const root=scope.locator('[data-guided-step]'), current=await root.getAttribute('data-guided-step');
     if(current===target)return;
-    const order=['product','name','vial-unit','vial','second-product','second-name','second-unit','second-amount','basis','amount-unit','amount','schedule','custom-schedule','volume','device','review'];
+    const order=['product','name','vial-unit','vial','second-product','second-name','second-unit','second-amount','volume','amount','device','review'];
     if(order.indexOf(current)>order.indexOf(target))await scope.getByRole('button',{name:'Back',exact:true}).click();
     else await nextQuestion(scope);
   }
@@ -30,12 +30,12 @@ export async function goQuestion(scope, target) {
 }
 export async function completeAuditHero(page, scope, {vial='12', amount='0.3', volume='4', review=true} = {}) {
   await chooseAuditMassProduct(page,scope);
-  await nextQuestion(scope);await nextQuestion(scope);
+  await nextQuestion(scope);
   await scope.getByLabel('Amount in vial',{exact:true}).fill(vial);await nextQuestion(scope);
-  await nextQuestion(scope);await nextQuestion(scope);
-  await scope.getByLabel(/^Amount for one time/).fill(amount);await nextQuestion(scope);await nextQuestion(scope);
-  await scope.getByLabel('Final liquid volume',{exact:true}).fill(volume);
+  await scope.getByLabel('Total liquid after mixing',{exact:true}).fill(volume);await nextQuestion(scope);
+  await scope.getByLabel('Amount per measurement',{exact:true}).fill(amount);
   if(review){await nextQuestion(scope);await nextQuestion(scope);}
+
 }
 /** Walk each product format, including every named blend component, through real UI. */
 export async function completeAuditProduct(page, values = {}) {

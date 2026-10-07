@@ -1,4 +1,4 @@
-import { completeAuditHero, completeAuditProduct, editProductQuestion, goQuestion, nextQuestion, selectAuditOption } from "./audit-flow-helpers.mjs";
+import {openAuditOptional, completeAuditHero, completeAuditProduct, editProductQuestion, goQuestion, nextQuestion, selectAuditOption } from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, webkit, expect } from '@playwright/test';
@@ -29,17 +29,17 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await expect(p.getByRole('contentinfo')).toHaveCount(0);
   });
   await check('Frequency preserves per-time amount; changing meaning requires a fresh total',async()=>{
-   await editProductQuestion(p,'schedule');await selectAuditOption(p,p,'Schedule from your instructions','Twice a week');await nextQuestion(p);
+   await editProductQuestion(p,'amount');await openAuditOptional(p,'Add a schedule');await selectAuditOption(p,p,'Schedule from your instructions','Twice a week');await nextQuestion(p);
    await expect(p.locator('[data-product-result]')).toContainText('0.1 mL = 10 U-100');
-   await editProductQuestion(p,'basis');await p.getByRole('radio',{name:/^Whole week/}).check();await nextQuestion(p);await nextQuestion(p);
-   await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('');await p.getByLabel(/^Total amount for one week/).fill('2');await nextQuestion(p);
+   await editProductQuestion(p,'amount');await p.getByRole('radio',{name:/^Whole week/}).check();
+   await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('');await p.getByLabel(/^Total amount for one week/).fill('2');
    await expect(p.getByRole('button',{name:'Next',exact:true})).toBeDisabled();await selectAuditOption(p,p,'Schedule from your instructions','Twice a week');await nextQuestion(p);
    await expect(p.locator('[data-product-result]')).toContainText('0.05 mL = 5 U-100');await p.reload({waitUntil:'networkidle'});await expect(p.locator('[data-product-result]')).toContainText('0.05 mL = 5 U-100');
    await p.screenshot({path:`${out}/${name}-schedule-mobile.png`,fullPage:false});
   });
   await check('Guided and all-at-once views inherit the same values and meaning',async()=>{
    await p.goto(origin+'/plan',{waitUntil:'networkidle'});await goQuestion(p,'vial');await expect(p.getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
-   await goQuestion(p,'amount');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await goQuestion(p,'volume');await expect(p.getByLabel('Final liquid volume',{exact:true})).toHaveValue('2');
+   await goQuestion(p,'amount');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await goQuestion(p,'volume');await expect(p.getByLabel('Total liquid after mixing',{exact:true})).toHaveValue('2');
    await p.getByRole('button',{name:'All at once',exact:true}).click();await expect(p.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await p.reload({waitUntil:'networkidle'});await expect(p.getByRole('button',{name:'All at once',exact:true})).toHaveAttribute('aria-pressed','true');
   });
   await check('Unit conversion preserves mass and product switching preserves fields',async()=>{
@@ -98,7 +98,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
     await tab.getByRole('button',{name:'All at once',exact:true}).click();
     await expect(tab.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
     await expect(tab.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');
-    await expect(tab.getByLabel('Amount for one time',{exact:true})).toHaveValue('2');
+    await expect(tab.getByLabel('Amount per measurement',{exact:true})).toHaveValue('2');
     await tab.reload({waitUntil:'networkidle'});
     assert.equal(await tab.evaluate(()=>window.__sessionAuditDocument),undefined);
     await tab.getByRole('button',{name:'All at once',exact:true}).click();

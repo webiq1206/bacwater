@@ -14,7 +14,7 @@ const week=planPreviewState({...weekly,result:calculate(weekly.input)});assert.e
 const iu=planPreviewState({...base,input:{...input,peptideSlug:"hcg"}});assert.equal(iu.ready,false);
 const hero=fs.readFileSync("src/components/brand/hero-calculator.tsx","utf8"),form=fs.readFileSync("src/components/plan/plan-form.tsx","utf8"),view=fs.readFileSync("src/components/brand/hero-plan-steps.tsx","utf8");
 assert.match(hero,/<GuidedPlan mode="beginner" presentation="hero"/);
-assert.match(hero,/!open \? content\("inline"\)/);
+assert.ok(hero.includes("!open ? content()"));
 assert.match(form,/onSave=\{handleSave\}/);
 assert.doesNotMatch(view,/fetch\(|sendBeacon|dataLayer|gtag\(/);
 assert.match(view,/p\.onClear\(\)/);

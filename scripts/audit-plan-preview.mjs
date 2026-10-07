@@ -1,4 +1,4 @@
-import {selectAuditOption} from "./audit-flow-helpers.mjs";
+import {selectAuditOption,openAuditOptional} from "./audit-flow-helpers.mjs";
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, webkit, expect } from '@playwright/test';
@@ -133,6 +133,7 @@ for (const [name, engine, width, height] of process.env.AUDIT_QUICK ? configurat
     await vial.fill('40');
     await selectAuditOption(page,builder,'Amount unit','mg');
     await amount.fill('4');
+    await openAuditOptional(builder,'Add a schedule');
     await builder.getByRole('radio', { name: /Whole week/ }).check();
     await expect(preview).toHaveAttribute('data-preview-state', 'incomplete');
     await amount.fill('4');

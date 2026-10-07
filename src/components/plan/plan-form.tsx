@@ -1,4 +1,5 @@
 "use client";
+import { formatDoseVolumeMl } from "@/lib/calc/format";
 import { productDisplayName } from "@/lib/partners/supplier-catalog";
 
 import Link from "next/link";
@@ -490,7 +491,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   const hydrated=init?true:session.ready;
 
   const dosePresets: { mcg: number; label: string; hint: string }[] = [];
-  const weeklyRangeHint = "Tell us whether your number is for one time, one day, or one week. Then copy the schedule from your instructions.";
+  const weeklyRangeHint = "Enter the amount for one measurement. A schedule is optional.";
 
   const primaryName =
     peptideSlug === "custom"
@@ -545,7 +546,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
     ? `${primaryName} + ${secondaryName}`
     : primaryName;
   const nameValue =
-    (presentation === "hero" ? heroName || null : planName) ??
+    (presentation === "hero" ? heroName.trim() || null : planName?.trim() || null) ??
     defaultPlanName({ peptideName: peptideNameForPlan, vialStrengthMg, dateMixed });
 
   // Editing and creating share this form, so the primary action has to say
@@ -680,14 +681,14 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
         {id:"second-unit", label:"Second unit", title:"Which unit is beside its amount?", complete:true, content:<UnitToggle value={secondaryVialUnit} options={["mg","mcg"]} onChange={unit=>{if(unit!==secondaryVialUnit)setSecondaryVialInput(v=>unit==="mg"?v/1000:v*1000);setSecondaryVialUnit(unit);}}/>},
         {id:"second-amount", label:"Second amount", title:`How much of it is in the vial, in ${secondaryVialUnit}?`, complete:hasValidBlend, content:<Input aria-label="Second compound amount" type="number" inputMode="decimal" value={secondaryVialInput||""} onChange={e=>setSecondaryVialInput(Number(e.target.value))}/>},
       ] : []}
-      vial={vialRaw} unit={vialUnit} onVial={setVialRaw} onUnit={unit => { const c = convertMassText(vialRaw, vialUnit); if (vialRaw.trim() && (c.kind !== "value" || c[unit].length > 64)) return; setVialRaw(c.kind === "value" ? c[unit] : ""); setVialUnit(unit); }}
+      vialOptions={hasPeptide ? peptide.commonVialStrengthsMg.slice(0,3) : []} vial={vialRaw} unit={vialUnit} onVial={setVialRaw} onUnit={unit => { const c = convertMassText(vialRaw, vialUnit); if (vialRaw.trim() && (c.kind !== "value" || c[unit].length > 64)) return; setVialRaw(c.kind === "value" ? c[unit] : ""); setVialUnit(unit); }}
       amount={scheduleInput} onAmount={n=>{setAmountRaw(n.amount);setDoseUnit(n.amountUnit);setAmountBasis(n.basis);setScheduleCount(n.timesPerWeek);}} volume={volumeRaw} onVolume={setVolumeRaw} date={dateMixed} onDate={setDateMixed}
       device={syringeType} onDevice={setSyringeType} name={nameValue} onName={presentation === "hero" ? setHeroName : setPlanName} onSave={handleSave} saving={saving} saveLabel={saveLabel} customSchedule={customSchedule} onCustom={setCustomSchedule}
       onClear={()=>{if(!init){session.clear();return;}setVialRaw("");setVialUnit("mg");setAmountRaw("");setDoseUnit("mg");setAmountBasis("each");setScheduleCount("");setVolumeRaw("");setDateMixed("");setShowBlend(false);setPlanName(null);}}/>
     {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={open => { if (!open) setSavedPlan(null); }}/>}
   </div>;
   function editPreviewField(field: PreviewField) {
-    const section = { product: 1, vial: 2, amount: 3, volume: 5, blend: 1 }[field];
+    const section = { product: 1, vial: 2, amount: 4, volume: 3, blend: 1 }[field];
     const panel = advancedRef.current?.querySelector<HTMLElement>(`[data-plan-section="${section}"]`);
     panel?.scrollIntoView({ block: "start", behavior: "auto" });
     const selector = field === "product" ? '[role="combobox"]' : field === "blend" ? (secondarySlug === "custom" && !customSecondaryName.trim() ? 'input[aria-label="Name of the second peptide"]' : 'input[aria-label="Second compound amount"]') : 'input';
@@ -816,7 +817,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
               hint={'Look at your label for a number like "5 mg."'}
             >
               <div className="flex flex-wrap gap-2">
-                {hasPeptide && peptide.commonVialStrengthsMg.map((mg) => (
+                {hasPeptide && peptide.commonVialStrengthsMg.slice(0,3).map((mg) => (
                   <ChipButton
                     key={mg}
                     active={!showCustomVial && vialStrengthMg === mg}
@@ -833,12 +834,12 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
                   active={showCustomVial}
                   onClick={() => { setShowCustomVial(true); setVialInput(0); }}
                 >
-                  Other size...
+                  Enter another amount
                 </ChipButton>
               </div>
                 <div className="mt-4">
                   <Label className="text-xs text-muted-foreground">
-                    Enter what&apos;s on your label
+                    Your amount (type here if it is not shown above)
                   </Label>
                   <div className="mt-1 flex items-center gap-2">
                     <Input
@@ -860,14 +861,30 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
                 </div>
             </StepBlock>
 
-            <StepBlock n={3} total={6} label="Amount and schedule" title="How much, and how often?" hint={weeklyRangeHint}>
+            {/* 5. BAC water */}
+            <StepBlock
+              n={3}
+              total={6}
+              label="BAC water"
+              title="How much BAC water will you mix?"
+              hint="Enter the total mL after mixing. Include any liquid already in the vial."
+            >
+              <Label htmlFor="advanced-final-volume">Final liquid volume</Label>
+              <div className="mt-2 flex items-center gap-2">
+                <Input id="advanced-final-volume" aria-label="Final liquid volume in mL" type="text" inputMode="decimal" maxLength={64} value={volumeRaw} onChange={e => setVolumeRaw(e.target.value)} className="flex-1" />
+                <span className="text-sm text-muted-foreground">mL</span>
+              </div>
+              <BeginnerHelp kind="volume" />
+            </StepBlock>
+
+            <StepBlock n={4} total={6} label="Amount" title="How much do you want to measure?" hint={weeklyRangeHint}>
               {scheduleFields}
               <BeginnerHelp kind="amount"/><BeginnerHelp kind="units"/>
             </StepBlock>
 
             {/* 4. Syringe */}
             <StepBlock
-              n={4}
+              n={5}
               total={6}
               label="Syringe"
               title="Which syringe are you using?"
@@ -894,22 +911,6 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
                 so 10 units = 0.1 mL. The result shows
                 units on that scale. Check the markings on the actual device.
               </div>
-            </StepBlock>
-
-            {/* 5. BAC water */}
-            <StepBlock
-              n={5}
-              total={6}
-              label="BAC water"
-              title="What final volume do your instructions give?"
-              hint="Use the liquid and final volume from the exact product instructions. The calculator does not choose them."
-            >
-              <Label htmlFor="advanced-final-volume">Final liquid volume</Label>
-              <div className="mt-2 flex items-center gap-2">
-                <Input id="advanced-final-volume" aria-label="Final liquid volume in mL" type="text" inputMode="decimal" maxLength={64} value={volumeRaw} onChange={e => setVolumeRaw(e.target.value)} className="flex-1" />
-                <span className="text-sm text-muted-foreground">mL</span>
-              </div>
-              <BeginnerHelp kind="volume" />
             </StepBlock>
 
             {/* 6. Date (optional) */}
@@ -975,7 +976,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
                 />
               </div>
               <WorkspaceActions>
-              <button type="button" className={previewStyles.viewButton} onClick={showLivePreview}>View calculation</button>
+              <button type="button" className={previewStyles.viewButton} onClick={showLivePreview} aria-label="View calculation">{preview.ready ? `${formatDoseVolumeMl(result.doseVolumeMl)} · View result` : "View calculation"}</button>
               <Button
                 onClick={handleSave}
                 disabled={saving || !hasValidInputs || result.errors.length > 0}
@@ -1076,7 +1077,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
           nextDisabled={!(vialStrengthMg > 0)}
         >
           <details className="mb-3"><summary className="cursor-pointer min-h-11 text-sm">Label shortcuts (optional)</summary><div className="flex flex-wrap gap-2">
-            {peptide.commonVialStrengthsMg.map((mg) => (
+            {peptide.commonVialStrengthsMg.slice(0,3).map((mg) => (
               <button
                 key={mg}
                 type="button"
@@ -1110,7 +1111,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
           {(
             <div className="mt-4">
               <Label className="text-xs text-muted-foreground">
-                Enter what&apos;s on your label
+                Your amount (type here if it is not shown above)
               </Label>
               <div className="mt-1 flex items-center gap-2">
                 <Input aria-label="Vial strength"
@@ -1136,7 +1137,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
       )}
 
       {step === 2 && (
-        <StepPanel title="How much, and how often?" hint={weeklyRangeHint}
+        <StepPanel title="How much do you want to measure?" hint={weeklyRangeHint}
           onNext={()=>goToStep(3)} onBack={()=>goToStep(1)} stepNum={3} nextDisabled={!scheduleResult.ready}>
           {scheduleFields}
           <BeginnerHelp kind="amount"/><BeginnerHelp kind="units"/>

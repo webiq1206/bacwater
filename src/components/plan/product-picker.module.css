@@ -6,3 +6,4 @@
 .productLink{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:13px;color:#365b3d;text-decoration:underline;text-underline-offset:4px}
 
 .trigger.compact{min-height:60px;padding:8px 12px;gap:10px;border-radius:12px}.compact .thumb{flex-basis:40px;width:40px;min-height:40px;max-height:40px}.compact .selection strong{font-size:16px;line-height:1.4}
+@media(max-width:780px){.dialog{gap:8px!important;padding:12px 16px!important}.dialog>h2{font-size:20px!important;min-height:32px}.dialog .description{font-size:12px;line-height:1.4}.dialog .pickerNotice{display:none}.dialog .search input{min-height:44px}.dialog .list{flex:1 1 0;min-height:0;max-height:none;overflow:auto}.dialog .option{min-height:64px;padding-block:8px}.dialog .option .thumb{width:40px;flex-basis:40px;min-height:40px}.dialog .optionText>span{font-size:11px}.dialog:focus-within{overflow:hidden}}

@@ -76,11 +76,7 @@ export function ProductCalculator({product}:{product:SupplierProduct}) {
       if(selected&&product.kind==="single") {
         const schedule=amountSchedule(shared),amountOnly=amountSchedule({...shared,basis:"each",timesPerWeek:""});
         const part=(section:ScheduleSection)=><AmountScheduleFields section={section} value={{amount:shared.amount,amountUnit:shared.amountUnit,basis:shared.basis,timesPerWeek:shared.timesPerWeek}} onChange={value=>{setSample(true);shared.patch(value);}} custom={customSchedule} onCustom={setCustom}/>;
-        questions.push({id:"basis",label:"Amount meaning",title:"What does your amount mean?",complete:true,content:part("basis")},
-          {id:"amount-unit",label:"Amount unit",title:"Which unit do your instructions use?",complete:true,content:part("unit")},
-          {id:"amount",label:"Amount",title:"What amount do your instructions give?",complete:amountOnly.ready,content:part("amount")},
-          {id:"schedule",label:"Schedule",title:"How often do your instructions say?",complete:customSchedule||schedule.ready,content:part("schedule")});
-        if(customSchedule)questions.push({id:"custom-schedule",label:"Weekly count",title:"How many times in a full week?",complete:schedule.ready,content:part("custom")});
+        questions.push({id:"amount",label:"Amount",title:"How much do you want to measure?",complete:schedule.ready,content:part("all")});
       }
     } else if(product.kind==="spray")numberQuestion("amount","Sample volume (mL)","How much liquid is in the sample?","Enter a known volume. This does not calculate spray counts.");
   }
