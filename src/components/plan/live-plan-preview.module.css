@@ -4,5 +4,7 @@
 @media print{.preview{position:static;max-height:none;overflow:visible}.mobileToggle,.viewButton,.next button{display:none}.previewBody[data-expanded=false]{display:block}}
 
 /* Let both mobile actions share a row when there is room. Enlarged text can still wrap. */
+/* Follow the form in DOM and visual order. Desktop keeps its side-by-side summary. */
+.preview{order:0;width:100%;scroll-margin-block:18px}
 button.saveAction.saveAction.saveAction{width:auto;flex:1 1 130px;min-width:min-content;padding:10px 12px}
 button.viewButton.viewButton.viewButton{padding:8px 10px;flex:0 1 auto}

@@ -35,7 +35,7 @@ export function LivePlanPreview({ preview, result, expanded, onExpand, onEdit, c
     <div className={styles.topline}><h2 id={`${uid}-title`}>Your calculation</h2><span className={styles.live}><span aria-hidden="true" />Live</span></div>
     <div className={styles.product}>
       <div className={styles.art}>{artwork ? <ProductArtwork product={artwork} compact /> : <FlaskConical size={23} aria-hidden="true" />}</div>
-      <div><strong data-preview-product>{product.value}</strong><p>{preview.ready ? "Based on your entries" : `${preview.completed} of 4 required fields entered`}</p></div>
+      <div><strong data-preview-product>{product.complete ? product.value : "Results appear here"}</strong><p>{preview.ready ? "Based on your entries" : `${preview.completed} of 4 required fields entered`}</p></div>
     </div>
     <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{preview.ready ? `Calculation updated. ${reading}. ${preview.concentrationText}.` : `${preview.completed} of 4 required fields entered. ${preview.remaining.map(entry => entry.label).join(", ")} still needed.`}</p>
     {!preview.ready && <progress className={styles.progress} aria-label="Required fields entered" value={preview.completed} max={4} />}

@@ -41,6 +41,20 @@ for (const [name, engine, width, height] of process.env.AUDIT_QUICK ? configurat
     await expect(preview).toContainText('0 of 4');
     await expect(preview.locator('[data-preview-answer]')).toHaveCount(0);
     await expect(save).toBeDisabled();
+    if (width < 1024) {
+      const fields = builder.locator('[data-plan-section="1"]');
+      const positions = await Promise.all([fields.boundingBox(), preview.boundingBox()]);
+      assert(positions[0] && positions[1] && positions[0].y < positions[1].y, 'Product question must precede the summary on mobile');
+      await expect(preview.locator('[data-preview-product]')).toHaveText('Results appear here');
+      await page.screenshot({ path: `${out}/${name}-product-first.png` });
+      await page.getByRole('button', { name: 'View calculation', exact: true }).click();
+      await expect(preview).toBeFocused();
+      await expect(preview.getByRole('button', { name: 'Hide calculation details', exact: true })).toBeVisible();
+      await preview.getByRole('button', { name: 'Choose a product', exact: true }).click();
+      await expect(builder.getByRole('combobox', { name: 'Product', exact: true })).toBeFocused();
+      await preview.getByRole('button', { name: 'Hide calculation details', exact: true }).click();
+      report.checks.push('Mobile starts with the product question; View calculation and return-to-product focus work');
+    }
     await builder.getByRole('combobox', { name: 'Product', exact: true }).click();
     const picker = page.getByRole('dialog', { name: 'Choose your product', exact: true });
     await picker.getByRole('searchbox', { name: 'Search products', exact: true }).fill('CJC-1295');
