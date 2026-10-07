@@ -20,7 +20,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   await scope.getByLabel('Plan name',{exact:true}).fill('My lab record');
   await goQuestion(scope,'amount');await expect(scope.getByRole('radio').first()).not.toBeVisible();
   await selectAuditOption(p,scope,'Amount unit','mcg');await expect(scope.getByLabel('Amount per measurement',{exact:true})).toHaveValue('300');
-  await openAuditOptional(scope,'Add a schedule');await scope.getByRole('radio',{name:'Whole week',exact:true}).check();
+  await openAuditOptional(scope,'Add a schedule');await scope.getByRole('radio',{name:/^Whole week/}).check();
   await expect(scope.getByLabel('Total amount for one week',{exact:true})).toHaveValue('');
   await scope.getByLabel('Total amount for one week',{exact:true}).fill('600');await expect(scope.getByRole('button',{name:'Next',exact:true})).toBeDisabled();
   await selectAuditOption(p,scope,'Schedule from your instructions','Twice a week');await nextQuestion(scope);await nextQuestion(scope);
