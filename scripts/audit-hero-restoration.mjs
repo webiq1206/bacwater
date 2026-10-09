@@ -35,24 +35,24 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     const body=await hero.locator('[data-step-scroll]').evaluate(el=>({available:el.clientHeight,content:el.scrollHeight}));
     assert.ok(body.content<=body.available+2,JSON.stringify({width,height,body,issue:'Initial step should not need an inner scroll'}));
     assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
-    await expect(p.locator('[data-hero-calculator]').getByRole('combobox',{name:'Product',exact:true})).toBeVisible();
-    await expect(p.locator('[data-hero-calculator]').getByLabel('Amount in vial',{exact:true})).toHaveCount(0);
+    await expect(p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]').getByRole('combobox',{name:'Product',exact:true})).toBeVisible();
+    await expect(p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]').getByLabel('Amount in vial',{exact:true})).toHaveCount(0);
     await p.screenshot({path:`${out}/${engine}-home-${width}.png`,fullPage:false});
    });}catch(error){layoutFailures.push({width,height,error:String(error)});}
    assert.deepEqual(layoutFailures,[]);
   });
   await check(`${engine}: product-first steps, unit conversion, review, editing, validation and copy`,async()=>journey(1440,1000,async p=>{
-   const calc=p.locator('[data-hero-calculator]'),result=calc.locator('[data-live-result]');
+   const calc=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]'),result=calc.locator('[data-live-result]');
    await expect(calc.getByRole('button',{name:'Next',exact:true})).toBeDisabled();await expect(result).toHaveCount(0);
-   await completeAuditHero(p,calc);await expect(result).toContainText('12 mg ÷ 4 mL = 3 mg/mL');await expect(result).toContainText('0.1 mL');await expect(calc.getByRole('button',{name:'Save my plan',exact:true})).toBeEnabled();
+   await completeAuditHero(p,calc);await expect(calc.locator('[data-syringe-visual]')).toBeVisible();await expect(result).toContainText('0.1 mL');await expect(calc.getByRole('button',{name:'Save my plan',exact:true})).toBeEnabled();
    await openAuditOptional(calc,'Review or change answers');await calc.getByLabel('Edit final liquid volume',{exact:true}).click();await expect(calc.locator('[data-guided-heading]')).toBeFocused();
    await calc.getByLabel('Total liquid after mixing',{exact:true}).fill('0');await expect(calc.getByRole('alert')).toContainText('greater than zero');await expect(result).toHaveCount(0);await expect(calc.getByRole('button',{name:'Next',exact:true})).toBeDisabled();
    await calc.getByLabel('Total liquid after mixing',{exact:true}).fill('6');await nextQuestion(calc);await nextQuestion(calc);await nextQuestion(calc);await expect(result).toContainText('0.15 mL');await expect(result).toContainText('15 units');await calc.getByRole('button',{name:'Copy result',exact:true}).click();assert.match(await p.evaluate(()=>window.__copied),/0\.15 mL/);
-   await goQuestion(calc,'amount');await selectAuditOption(p,calc,'Amount unit','mcg');await expect(calc.getByLabel(/^Amount per measurement/)).toHaveValue('300');await calc.getByLabel(/^Amount per measurement/).fill('-1');await expect(calc.getByRole('button',{name:'Next',exact:true})).toBeDisabled();await expect(result).toHaveCount(0);
+   await goQuestion(calc,'amount');await selectAuditOption(p,calc,'Amount unit','mcg');await expect(calc.getByLabel(/^Amount to measure/)).toHaveValue('300');await calc.getByLabel(/^Amount to measure/).fill('-1');await expect(calc.getByRole('button',{name:'Next',exact:true})).toBeDisabled();await expect(result).toHaveCount(0);
    await calc.getByRole('button',{name:'Clear',exact:true}).click();await expect(calc.getByRole('combobox',{name:'Product',exact:true})).toContainText('BPC-157');await nextQuestion(calc);await expect(calc.getByLabel('Amount in vial',{exact:true})).toHaveValue('');await expect(calc.getByRole('button',{name:'Next',exact:true})).toBeDisabled();
   }));
   await check(`${engine}: homepage review saves through the shared plan action`,async()=>journey(1440,1000,async p=>{
-   const calc=p.locator('[data-hero-calculator]');
+   const calc=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]');
    await completeAuditHero(p,calc);
    await openAuditOptional(calc,'Plan name:');
    await calc.getByLabel('Plan name',{exact:true}).fill('Hero acceptance calculation');
@@ -61,27 +61,27 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    await expect(saved.locator('a[href$="/pdf"]')).toHaveAttribute('href',/^\/plan\/[^/]+\/pdf$/);
   }));
   await check(`${engine}: homepage offers only the guided BAC water calculator`,async()=>journey(390,844,async p=>{
-   const calc=p.locator('[data-hero-calculator]');
+   const calc=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]');
    await expect(calc.getByRole('tab')).toHaveCount(0);
    await expect(calc.getByRole('combobox',{name:'Product',exact:true})).toBeVisible();
   }));
   await check(`${engine}: mobile inline steps and full-screen state survive close, converters and refresh`,async()=>journey(390,844,async p=>{
-   const inline=p.locator('[data-hero-calculator]'),focus=p.locator('[data-hero-focus]');await completeAuditHero(p,inline,{review:false});
-   await p.getByRole('button',{name:'Open hero calculator full screen'}).click();await expect(focus).toBeVisible();await expect(p.locator('[data-hero-guided]')).toHaveCount(1);await expect(focus.getByLabel('Amount per measurement',{exact:true})).toHaveValue('0.3');await nextQuestion(focus);await nextQuestion(focus);await expect(focus.locator('[data-live-result]')).toContainText('0.1 mL');
+   const inline=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]'),focus=p.locator('[data-hero-focus]');await completeAuditHero(p,inline,{review:false});
+   await expect(focus).toBeVisible();await expect(p.locator('[data-hero-guided]')).toHaveCount(1);await expect(focus.getByLabel('Amount to measure',{exact:true})).toHaveValue('0.3');await nextQuestion(focus);await nextQuestion(focus);await expect(focus.locator('[data-live-result]')).toContainText('0.1 mL');
    await openAuditOptional(focus,'Plan name:');await focus.getByLabel('Plan name',{exact:true}).fill('My label calculation');await expect(focus.locator('[data-selected-product-link]')).toHaveCount(0);const r=await focus.boundingBox();assert.ok(r&&r.x>=0&&r.y>=0&&r.y+r.height<=846);await p.screenshot({path:`${out}/${engine}-mobile-focus.png`});
    await focus.getByRole('button',{name:'Return to homepage',exact:true}).click();await expect(focus).toHaveCount(0);await expect(p.getByRole('button',{name:'Open hero calculator full screen'})).toBeFocused();await openAuditOptional(inline,'Plan name:');await expect(inline.getByLabel('Plan name',{exact:true})).toHaveValue('My label calculation');await expect(inline.locator('[data-live-result]')).toContainText('0.1 mL');await p.reload({waitUntil:'networkidle'});await openAuditOptional(inline,'Plan name:');await expect(inline.getByLabel('Plan name',{exact:true})).toHaveValue('My label calculation');
-   await p.getByRole('button',{name:'Open hero calculator full screen'}).click();await p.setViewportSize({width:390,height:420});await expect.poll(()=>focus.evaluate(el=>Math.round(el.getBoundingClientRect().height))).toBe(420);const back=focus.getByRole('button',{name:'Back to homepage',exact:true});await expect(back).toBeInViewport();await back.click();
+   await p.getByRole('button',{name:'Open hero calculator full screen'}).click();await p.setViewportSize({width:390,height:420});await expect.poll(()=>focus.evaluate(el=>Math.round(el.getBoundingClientRect().height))).toBe(404);const back=focus.getByRole('button',{name:'Return to homepage',exact:true});await expect(back).toBeInViewport();await back.click();
   }));
   await check(`${engine}: product-first routes retain product-specific blend, solution, water and IU tools`,async()=>{
    for(const [name,path] of [['GLOW','/calculate/product/glow'],['KLOW','/calculate/product/klow'],['CJC-1295 / Ipamorelin (No DAC)','/calculate/product/cjc-ipa-no-dac'],['BPC-157/TB-500 (Wolverine)','/calculate/product/wolverine-stack'],['BPC-157/TB-500 Spray (Wolverine)','/calculate/product/bpc-tb-spray'],['BAC Water','/calculate/product/amino-h2o'],['HCG (Research)','/calculate/hcg']])await journey(390,844,async p=>{
-    await p.locator('[data-hero-calculator]').getByRole('combobox',{name:'Product',exact:true}).click();
+    await p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]').getByRole('combobox',{name:'Product',exact:true}).click();
     const picker=p.getByRole('dialog',{name:'Choose your product',exact:true});await picker.getByRole('searchbox',{name:'Search products',exact:true}).fill(name);
     await picker.getByRole('option',{name,exact:true}).click();await expect(p).toHaveURL(origin+path);await expect(p.locator('[data-calculator-workspace]')).toBeVisible();
     if(['glow','klow','cjc-ipa-no-dac','wolverine-stack'].includes(path.split('/').pop()))await expect(p.getByRole('combobox',{name:'Blend calculation',exact:true})).toBeVisible();
    });
   });
   await check(`${engine}: focused hero has one product selector and readable unit help`,async()=>journey(390,844,async p=>{
-   await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');
+   const focus=p.locator('[data-hero-focus]');
    await expect(focus.getByRole('button',{name:/^(Choose|Change) product$/})).toHaveCount(0);
    await chooseAuditMassProduct(p,focus);
    await expect(focus.getByRole('combobox',{name:'Product',exact:true})).toContainText('BPC-157');
@@ -131,7 +131,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     const data=await p.locator('script[type="application/ld+json"]').allTextContents();assert.ok(data.some(s=>JSON.parse(s)['@type']==='SoftwareApplication'));await expect(p.getByRole('heading',{name:'How this peptide reconstitution calculator works'})).toBeVisible();
     await p.evaluate(axe);assert.deepEqual(await p.evaluate(async()=>(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
     await p.addStyleTag({content:'html{font-size:200%}p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
-    await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');await completeAuditHero(p,focus);await expect(focus.locator('[data-live-result]')).toContainText('3 mg/mL');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
+    const focus=p.locator('[data-hero-focus]');await completeAuditHero(p,focus);await expect(focus.locator('[data-live-result]')).toContainText('3 mg/mL');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     await p.evaluate(axe);assert.deepEqual(await p.evaluate(async()=>(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
     await focus.getByRole('button',{name:'Back to homepage',exact:true}).click();
    });

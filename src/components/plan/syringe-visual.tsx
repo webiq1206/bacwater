@@ -1,8 +1,11 @@
+import { useId } from "react";
 interface Props {
   fillPercent: number;
   readoutLabel: string;
   scale: "u100" | "ml";
   maxLabel: string;
+  maxValue?: number;
+  compact?: boolean;
 }
 
 export function SyringeVisual({
@@ -10,7 +13,10 @@ export function SyringeVisual({
   readoutLabel,
   scale,
   maxLabel,
+  maxValue = scale === "u100" ? 100 : 1,
+  compact = false,
 }: Props) {
+  const id=useId();
   const clamped = Math.max(0, Math.min(100, fillPercent));
 
   /* ── Graduation marks ─────────────────────────────────── */
@@ -20,7 +26,7 @@ export function SyringeVisual({
       : [0, 25, 50, 75, 100];
 
   const labelForMark = (m: number) =>
-    scale === "u100" ? `${m}` : `${(m / 100).toFixed(2)}`;
+    `${Number((m / 100 * maxValue).toFixed(3))}`;
 
   /* ── SVG geometry (viewBox coords) ────────────────────── */
   const viewW = 520;
@@ -60,16 +66,17 @@ export function SyringeVisual({
   return (
     <div
       className="callout-panel"
-      style={{ borderLeftWidth: 3 }}
+      data-syringe-visual
+      style={{ borderLeftWidth: 3, ...(compact?{padding:"10px 12px",margin:"10px 0"}:{}) }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 mb-4">
+      <div className="flex items-center justify-between gap-4" style={{marginBottom:compact?0:16}}>
         <div>
           <div
             className="text-xs uppercase tracking-wide font-semibold"
             style={{ color: "var(--color-accent-guide)" }}
           >
-            Measure to here
+            Calculated measurement
           </div>
           <div className="text-lg font-bold mt-0.5" style={{ color: "var(--color-foreground)" }}>
             {readoutLabel}
@@ -95,20 +102,20 @@ export function SyringeVisual({
         >
           <defs>
             {/* Barrel gradient for glass/plastic look */}
-            <linearGradient id="barrelGrad" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={`${id}-barrelGrad`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--color-foreground)" stopOpacity="0.03" />
               <stop offset="30%" stopColor="var(--color-foreground)" stopOpacity="0.06" />
               <stop offset="70%" stopColor="var(--color-foreground)" stopOpacity="0.04" />
               <stop offset="100%" stopColor="var(--color-foreground)" stopOpacity="0.08" />
             </linearGradient>
             {/* Liquid fill gradient */}
-            <linearGradient id="liquidGrad" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={`${id}-liquidGrad`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--color-accent-guide)" stopOpacity="0.12" />
               <stop offset="50%" stopColor="var(--color-accent-guide)" stopOpacity="0.2" />
               <stop offset="100%" stopColor="var(--color-accent-guide)" stopOpacity="0.15" />
             </linearGradient>
             {/* Barrel highlight for cylindrical look */}
-            <linearGradient id="barrelHighlight" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={`${id}-barrelHighlight`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="white" stopOpacity="0.5" />
               <stop offset="15%" stopColor="white" stopOpacity="0" />
               </linearGradient>
@@ -154,7 +161,7 @@ export function SyringeVisual({
             width={barrelEndX - barrelX}
             height={barrelH}
             rx={barrelR}
-            fill="url(#barrelGrad)"
+            fill={`url(#${id}-barrelGrad)`}
             stroke="var(--color-foreground)"
             strokeWidth={1.5}
             strokeOpacity={0.2}
@@ -166,7 +173,7 @@ export function SyringeVisual({
             width={barrelEndX - barrelX - 2}
             height={barrelH - 2}
             rx={barrelR - 1}
-            fill="url(#barrelHighlight)"
+            fill={`url(#${id}-barrelHighlight)`}
           />
           {/* Flange (finger grip) at barrel end */}
           <rect
@@ -190,7 +197,7 @@ export function SyringeVisual({
               width={Math.max(0, fillW)}
               height={barrelH - 8}
               rx={3}
-              fill="url(#liquidGrad)"
+              fill={`url(#${id}-liquidGrad)`}
               style={{ transition: "width 500ms ease" }}
             />
           )}

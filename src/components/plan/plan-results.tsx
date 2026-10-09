@@ -10,7 +10,7 @@ import {
   SlidersHorizontal,
   Snowflake,
 } from "lucide-react";
-import type { CalcResult } from "@/lib/calc";
+import { findSyringe, type CalcResult } from "@/lib/calc";
 import { SyringeVisual } from "@/components/plan/syringe-visual";
 import { ShelfLifeTimeline } from "@/components/plan/shelf-life-timeline";
 import { formatDate } from "@/lib/utils";
@@ -38,6 +38,7 @@ interface Props {
 
 export function PlanResults({ result }: Props) {
   const { syringeReadout, schedule } = result;
+  const device=findSyringe(result.input.syringeType);
   // Per-injection amount; older saved plans (no schedule) stored a
   // single-draw dose in input.doseMcg.
   const doseLabel = formatDose(schedule?.dosePerInjectionMcg ?? result.input.doseMcg);
@@ -120,7 +121,8 @@ export function PlanResults({ result }: Props) {
             fillPercent={syringeReadout.fillPercent}
             readoutLabel={syringeReadout.displayLabel}
             scale={syringeReadout.kind}
-            maxLabel={syringeReadout.kind === "u100" ? "100 units" : "1 mL"}
+            maxValue={device.maxVolumeMl*(device.scale==="u100"?100:1)}
+            maxLabel={device.label}
           />
         </div>
 

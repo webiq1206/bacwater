@@ -37,7 +37,7 @@ export function QuestionSteps({ questions, current, onStep, onClear, finalAction
     <div className={styles.stepNavigation}>
       {index > 0 ? <button type="button" onClick={() => move(questions[index - 1].id)}><ArrowLeft size={17} aria-hidden="true"/>Back</button> : <span/>}
       <button type="button" className={styles.clearStep} aria-label="Clear" title="Clear entries" onClick={() => { onClear(); move(questions[0].id); }}><RotateCcw size={16} aria-hidden="true"/></button>
-      {last ? finalAction : <button type="button" className={styles.stepPrimary} disabled={!question.complete} onClick={() => move(questions[index + 1].id)}>Next<ArrowRight size={17} aria-hidden="true"/></button>}
+      {last ? finalAction : <button type="button" data-guided-next className={styles.stepPrimary} disabled={!question.complete} onClick={() => move(questions[index + 1].id)}>Next<ArrowRight size={17} aria-hidden="true"/></button>}
     </div>
     {children}
   </div>;

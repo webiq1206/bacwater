@@ -14,16 +14,16 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
  const browser=await driver.launch();
  async function journey(width,height,run){const c=await browser.newContext({viewport:{width,height},reducedMotion:'reduce'});await c.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);await c.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());await c.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>window.__copied=text},configurable:true}));const p=await c.newPage();p.on('pageerror',e=>errors.push({engine,error:String(e)}));try{await p.goto(origin,{waitUntil:'networkidle'});await run(p,c);}catch(error){await p.screenshot({path:`${out}/${engine}-${width}-failure.png`,fullPage:true}).catch(()=>{});throw error;}finally{await c.close();}}
  await check(`${engine}: simple flow, generated name, optional totals and unit conversion`,async()=>journey(1440,1000,async(p)=>{
-  const scope=p.locator('[data-hero-calculator]');await expect(scope.getByRole('tab')).toHaveCount(0);
+  const scope=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]');await expect(scope.getByRole('tab')).toHaveCount(0);
   await completeAuditHero(p,scope);await expect(scope.locator('[data-live-result]')).toContainText('0.1 mL');
   await openAuditOptional(scope,'Plan name:');await expect(scope.getByLabel('Plan name',{exact:true})).toHaveValue('BPC-157 · 12 mg');
   await scope.getByLabel('Plan name',{exact:true}).fill('My lab record');
-  await goQuestion(scope,'amount');await expect(scope.getByRole('radio').first()).not.toBeVisible();
-  await selectAuditOption(p,scope,'Amount unit','mcg');await expect(scope.getByLabel('Amount per measurement',{exact:true})).toHaveValue('300');
-  await openAuditOptional(scope,'Add a schedule');await scope.getByRole('radio',{name:/^Whole week/}).check();
+  await goQuestion(scope,'amount');await expect(scope.getByRole('radio').first()).toBeVisible();
+  await selectAuditOption(p,scope,'Amount unit','mcg');await expect(scope.getByLabel('Amount to measure',{exact:true})).toHaveValue('300');
+  await scope.getByRole('radio',{name:'Weekly total',exact:true}).check();
   await expect(scope.getByLabel('Total amount for one week',{exact:true})).toHaveValue('');
   await scope.getByLabel('Total amount for one week',{exact:true}).fill('600');await expect(scope.getByRole('button',{name:'Next',exact:true})).toBeDisabled();
-  await selectAuditOption(p,scope,'Schedule from your instructions','Twice a week');await nextQuestion(scope);await nextQuestion(scope);
+  await selectAuditOption(p,scope,'How many times per week?','Twice a week');await nextQuestion(scope);await nextQuestion(scope);
   await expect(scope.locator('[data-live-result]')).toContainText('0.1 mL');await openAuditOptional(scope,'Plan name:');await expect(scope.getByLabel('Plan name',{exact:true})).toHaveValue('My lab record');
   await a11y(p);await p.screenshot({path:`${out}/${engine}-desktop-result.png`});
  }));
@@ -37,8 +37,8 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   await p.setViewportSize({width:390,height:844});await expect(picker).toHaveCount(0);
  }));
  await check(`${engine}: mobile result survives expanded mode and refresh`,async()=>journey(390,844,async(p)=>{
-  const inline=p.locator('[data-hero-calculator]');await completeAuditHero(p,inline);
-  await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');
+  const inline=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]');await completeAuditHero(p,inline);
+  const focus=p.locator('[data-hero-focus]');
   await expect(focus.locator('[data-live-result]')).toContainText('0.1 mL');
   await focus.getByRole('button',{name:'Return to homepage',exact:true}).click();await p.reload({waitUntil:'networkidle'});
   await expect(inline.locator('[data-live-result]')).toContainText('0.1 mL');await a11y(p);
@@ -57,8 +57,8 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
  }));
  await check(`${engine}: 320px, desktop and text enlargement keep steps/actions/menu reachable`,async()=>{
   for(const[width,height]of [[320,568],[375,667],[390,844],[768,1024],[1440,900]])await journey(width,height,async(p)=>{
-   const scope=p.locator('[data-hero-calculator]');const box=await scope.boundingBox();assert.ok(box&&box.y+box.height<=height+1,JSON.stringify({width,height,box}));await completeAuditHero(p,scope);await goQuestion(scope,'amount');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);await p.screenshot({path:`${out}/${engine}-${width}-schedule.png`});
-   if(width===320){await p.addStyleTag({content:'html{font-size:200%} p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});await scope.getByRole('button',{name:'Next',exact:true}).scrollIntoViewIfNeeded();assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');await focus.getByRole('combobox',{name:'Amount unit',exact:true}).click();const menu=await p.getByRole('listbox').boundingBox();assert.ok(menu&&menu.x>=0&&menu.x+menu.width<=320);await p.keyboard.press('Escape');await p.screenshot({path:`${out}/${engine}-320-enlarged.png`});}
+   const scope=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]');const box=await scope.boundingBox();assert.ok(box&&box.y+box.height<=height+1,JSON.stringify({width,height,box}));await completeAuditHero(p,scope);await goQuestion(scope,'amount');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);await p.screenshot({path:`${out}/${engine}-${width}-schedule.png`});
+   if(width===320){await p.addStyleTag({content:'html{font-size:200%} p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});await scope.getByRole('button',{name:'Next',exact:true}).scrollIntoViewIfNeeded();assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);const focus=p.locator('[data-hero-focus]');await focus.getByRole('combobox',{name:'Amount unit',exact:true}).click();const menu=await p.getByRole('listbox').boundingBox();assert.ok(menu&&menu.x>=0&&menu.x+menu.width<=320);await p.keyboard.press('Escape');await p.screenshot({path:`${out}/${engine}-320-enlarged.png`});}
   });
  });
  await browser.close();

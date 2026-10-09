@@ -670,7 +670,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   if((presentation === "hero" || mode === "beginner") && !contextRestored) return <p role="status">Restoring your calculation...</p>;
   if (presentation === "hero" || mode === "beginner") return <div data-plan-builder="beginner" className={presentation === "hero" ? "flex min-h-0 flex-1 flex-col" : "bac-calc-card mx-auto max-w-3xl p-5 sm:p-7"}>
     {presentation !== "hero" && <div className="mb-6"><ModeToggle mode={mode} onChange={setMode}/></div>}
-    {!init && <SessionValuesNotice/>}
+    {!init && <SessionValuesNotice compact={presentation === "hero"}/>}
     <HeroPlanSteps step={questionStep} onStep={setQuestionStep} preview={preview} result={result} productChosen={PEPTIDES.some(p => p.slug === peptideSlug)}
       customName={peptideSlug === "custom" ? <Input aria-label="Custom peptide name" placeholder="Type the name on your label" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/> : undefined}
       product={<ProductPicker compact value={peptideSlug} onChange={selectPeptide} label="Product"/>}

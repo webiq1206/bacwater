@@ -7,6 +7,8 @@ export async function chooseAuditMassProduct(page, scope = page) {
   await picker.getByRole('option', { name: 'BPC-157', exact: true }).click();
 }
 export async function openAuditOptional(page, label) {
+  const outer=page.locator('summary').filter({hasText:'Details and plan options'});
+  if(await outer.count()&&!await outer.evaluate(n=>n.parentElement.open))await outer.click();
   const summary = page.locator('summary').filter({ hasText: label }).first();
   if (!await summary.evaluate(node => node.parentElement.hasAttribute('open'))) await summary.click();
 }
@@ -31,9 +33,10 @@ export async function goQuestion(scope, target) {
 export async function completeAuditHero(page, scope, {vial='12', amount='0.3', volume='4', review=true} = {}) {
   await chooseAuditMassProduct(page,scope);
   await nextQuestion(scope);
+  if((page.viewportSize()?.width??1440)<=780)scope=page.locator('[data-hero-focus]');
   await scope.getByLabel('Amount in vial',{exact:true}).fill(vial);await nextQuestion(scope);
   await scope.getByLabel('Total liquid after mixing',{exact:true}).fill(volume);await nextQuestion(scope);
-  await scope.getByLabel('Amount per measurement',{exact:true}).fill(amount);
+  await scope.getByLabel('Amount to measure',{exact:true}).fill(amount);
   if(review){await nextQuestion(scope);await nextQuestion(scope);}
 
 }
