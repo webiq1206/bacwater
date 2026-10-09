@@ -36,7 +36,8 @@ export function CalculatorWorkspace({ title, description, children, help, refere
     else if(pathname==="/calculate/hcg")chooseCalculationProduct("hcg","iu","hcg");
     else if(/^\/tools\/(bac-water|reverse-bac|supplies|dose)$/.test(pathname||""))resumeMassCalculation();
   },[pathname,routeProduct]);
-  const hasOwnProductPicker = ["/peptide-calculator", "/plan", "/plan/new", "/tools/bac-water", "/tools/dose", "/tools/reverse-bac", "/tools/supplies"].includes(pathname || "") || /^\/plan\/[^/]+\/edit$/.test(pathname || "");
+  const usesGuidedMassForm = /^\/calculate\/[^/]+$/.test(pathname || "") && routeProduct?.kind === "single";
+  const hasOwnProductPicker = usesGuidedMassForm || ["/peptide-calculator", "/plan", "/plan/new", "/tools/bac-water", "/tools/dose", "/tools/reverse-bac", "/tools/supplies"].includes(pathname || "") || /^\/plan\/[^/]+\/edit$/.test(pathname || "");
   const [selectedProduct,setSelectedProduct]=useState<string|null>(()=>productForCalculatorPath(pathname||"")?.id||null);
   useEffect(()=>{const product=productForCalculatorPath(pathname||"");if(product)setSelectedProduct(product.id);},[pathname]);
   useEffect(() => { setHelpOpen(false); }, [pathname]);
@@ -80,7 +81,7 @@ export function CalculatorWorkspace({ title, description, children, help, refere
           <div className={styles.helpBody} role="region" aria-label="Calculator help and supplies" tabIndex={0}>
             <div className={styles.helpHeading}><h2>Help &amp; supplies</h2><button type="button" onClick={closeHelp} aria-label="Return to calculation"><X size={21} aria-hidden="true"/></button></div>
             <p>Use the numbers from your label and instructions. We check the math. We do not tell you what to take or what to mix.</p>
-            <div className={styles.water}><p><strong>Looking for BAC water?</strong></p><SupplierWaterLink/><p>Check the product instructions first. A link is not advice to use it.</p></div>
+            {usesGuidedMassForm ? <CalculatorProductTools selectedId={session.productId || routeProduct?.id || null} showProductPicker={false}/> : <div className={styles.water}><p><strong>Looking for BAC water?</strong></p><SupplierWaterLink/><p>Check the product instructions first. A link is not advice to use it.</p></div>}
             {help}
             <p className={styles.helpLinks}><Link href="/methodology">How the math works</Link><Link href="/contact">Report a problem</Link><Link href="/privacy">Privacy</Link></p>
             <AnalyticsPreferences />

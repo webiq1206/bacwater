@@ -40,8 +40,10 @@ try{
   await page.setViewportSize({width:390,height:844});
   for(const route of ['/peptide-calculator','/plan','/plan/new','/tools/bac-water','/tools/mg-to-mcg','/tools/syringe-units','/tools/dose','/tools/reverse-bac','/tools/supplies','/calculate/bpc-157','/calculate/hcg']){
    await page.goto(origin+route,{waitUntil:'networkidle'});await fit(page);await accessibility(page);
-   const first=page.locator('[data-calculator-scroll] input,[data-calculator-scroll] [role="combobox"]').first(),bounds=await first.boundingBox();
-   assert.ok(bounds&&bounds.y<700,`${route}: first control displaced`);
+   const first=page.locator('[data-calculator-scroll] input:visible,[data-calculator-scroll] [role="combobox"]:visible').first();
+   await expect(first).toBeVisible();
+   const bounds=await first.boundingBox();
+   assert.ok(bounds&&bounds.y<700,`${route}: first control displaced ${JSON.stringify(bounds)}`);
   }
  });
  await check('Guided calculation keeps one step and one Next action in view',async()=>{
