@@ -116,7 +116,7 @@ export function PlanResults({ result }: Props) {
           <Stat label="Equal measurements" value={`${result.dosesPerVial}`} source="calculated" />
         </div>
 
-        <div className="mt-6">
+        {!syringeReadout.exceedsSyringe&&<div className="mt-6">
           <SyringeVisual
             fillPercent={syringeReadout.fillPercent}
             readoutLabel={syringeReadout.displayLabel}
@@ -124,7 +124,7 @@ export function PlanResults({ result }: Props) {
             maxValue={device.maxVolumeMl*(device.scale==="u100"?100:1)}
             maxLabel={device.label}
           />
-        </div>
+        </div>}
 
         {result.warnings.length > 0 && (
           <div className="mt-6 space-y-2">

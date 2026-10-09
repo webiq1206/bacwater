@@ -17,8 +17,7 @@ export default function RecommendationsPage(){
       <h1>Research products.</h1>
       <p className={styles.lead}>Browse by research category, product type or name. Open a quick look, then explore the full guide.</p>
     </header>
-    {products.find(p=>p.id==="amino-h2o")&&<BacWaterFeature product={products.find(p=>p.id==="amino-h2o")!}/>}
-    <ProductDirectory products={products}/>
+    <ProductDirectory products={products} featured={products.find(p=>p.id==="amino-h2o")&&<BacWaterFeature product={products.find(p=>p.id==="amino-h2o")!}/>}/>
     <div className={searchStyles.directoryDisclosure}><strong>{RESEARCH_ONLY_NOTICE}</strong><p>{paid?"We are an independent affiliate and may earn a commission from purchases through supplier links.":"These are supplier links. No paid referral is active."} We do not represent the supplier, endorse suitability or provide medical advice.</p></div>
     <section className={styles.policies} aria-label="Directory and affiliate information">
       <details><summary>What the product details explain</summary><p>Each product explains what the compound is, what researchers study and how it works. Short sections define scientific terms and make the limits of the evidence clear. It does not claim health, recovery, weight, performance or cosmetic benefits. We have not independently tested these products.</p></details>

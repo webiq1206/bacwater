@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import { RESEARCH_ONLY_NOTICE, type DisplaySupplierProduct, type ProductKind } from "@/lib/partners/supplier-catalog";
 import { DIRECTORY_KINDS, matchDirectory } from "@/lib/partners/product-directory";
@@ -14,7 +14,7 @@ import { ProductCardPurchase } from "./product-purchase";
 import styles from "./product-directory.module.css";
 
 const PAGE_SIZE=12;
-export function ProductDirectory({products}:{products:readonly DisplaySupplierProduct[]}) {
+export function ProductDirectory({products,featured}:{products:readonly DisplaySupplierProduct[];featured?:ReactNode}) {
   const [query,setQuery]=useState(""),[kind,setKind]=useState<ProductKind|"all">("all"),[sort,setSort]=useState("az"),[page,setPage]=useState(1);
   const [category,setCategory]=useState<ResearchCategory|"all">("all");
   const [suggestions,setSuggestions]=useState(true);
@@ -36,6 +36,7 @@ export function ProductDirectory({products}:{products:readonly DisplaySupplierPr
       </div>
       <div className={styles.examples} aria-label="Example product searches"><span>Try:</span>{["Show me lab water","Find BPC-157","Show me sprays"].map(value=><button key={value} type="button" onClick={()=>{setKind("all");setCategory("all");search(value);}}>{value}</button>)}</div>
     </div>
+    {!query&&kind==="all"&&category==="all"&&featured}
     <Link href="/research-finder" className={searchStyles.assistantLink}>Have a research question? Ask the research assistant <ArrowRight size={16} aria-hidden="true"/></Link>
     <div className={styles.resultsHeader}>
       <div><h2 ref={results} tabIndex={-1} className={styles.resultsTitle}>Browse the directory</h2><p role="status" aria-live="polite" aria-atomic="true">{filtered.length?`${filtered.length} ${filtered.length===1?"product":"products"}. Showing ${start+1} to ${Math.min(start+PAGE_SIZE,filtered.length)}.`:match.message}</p></div>
