@@ -81,7 +81,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    });
   });
   await check(`${engine}: focused hero has one product selector and readable unit help`,async()=>journey(390,844,async p=>{
-   const focus=p.locator('[data-hero-focus]');
+   await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');
    await expect(focus.getByRole('button',{name:/^(Choose|Change) product$/})).toHaveCount(0);
    await chooseAuditMassProduct(p,focus);
    await expect(focus.getByRole('combobox',{name:'Product',exact:true})).toContainText('BPC-157');
@@ -131,9 +131,9 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     const data=await p.locator('script[type="application/ld+json"]').allTextContents();assert.ok(data.some(s=>JSON.parse(s)['@type']==='SoftwareApplication'));await expect(p.getByRole('heading',{name:'How this peptide reconstitution calculator works'})).toBeVisible();
     await p.evaluate(axe);assert.deepEqual(await p.evaluate(async()=>(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
     await p.addStyleTag({content:'html{font-size:200%}p,label,input,button,a,summary{letter-spacing:.12em!important;word-spacing:.16em!important;line-height:1.5!important}'});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
-    const focus=p.locator('[data-hero-focus]');await completeAuditHero(p,focus);await expect(focus.locator('[data-live-result]')).toContainText('3 mg/mL');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
+    await p.getByRole('button',{name:'Open hero calculator full screen'}).click();const focus=p.locator('[data-hero-focus]');await completeAuditHero(p,focus);await openAuditOptional(focus,'See the math');await expect(focus).toContainText('3 mg/mL');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     await p.evaluate(axe);assert.deepEqual(await p.evaluate(async()=>(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
-    await focus.getByRole('button',{name:'Back to homepage',exact:true}).click();
+    await focus.getByRole('button',{name:'Return to homepage',exact:true}).click();
    });
   });
  }finally{await browser.close();}
