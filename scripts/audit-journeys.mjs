@@ -33,9 +33,9 @@ try {
     await page.getByRole('combobox',{name:'Product',exact:true}).click();
     await page.getByRole('option',{name:/Other.*Custom/}).click();
     await page.getByLabel('Custom peptide name',{exact:true}).fill(`${prefix} compound`);
-    await page.getByRole('button',{name:'Other size...',exact:true}).click();
+    await page.getByRole('button',{name:'Enter another amount',exact:true}).click();
     await page.getByLabel('Vial strength',{exact:true}).fill('10');
-    await page.getByLabel('Amount for one time',{exact:true}).fill('0.4');
+    await page.getByLabel('Amount per measurement',{exact:true}).fill('0.4');
     await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('2');
     await page.getByRole('button',{name:'Save my plan',exact:true}).click();
     await expect(page.getByRole('dialog')).toContainText('Plan saved');
@@ -50,7 +50,7 @@ try {
     await expect(page).toHaveURL(`${origin}/plan/${publicId}`);
   });
   await step('Clearing a saved editor clears only that editor and keeps the active calculation',async()=>{
-    await page.goto(`${origin}/plan`);await page.getByRole('button',{name:'All at once',exact:true}).click();await page.getByLabel('Vial strength',{exact:true}).fill('12');await page.getByLabel('Amount for one time',{exact:true}).fill('0.3');await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('4');
+    await page.goto(`${origin}/plan`);await page.getByRole('button',{name:'All at once',exact:true}).click();await page.getByLabel('Vial strength',{exact:true}).fill('12');await page.getByLabel('Amount per measurement',{exact:true}).fill('0.3');await page.getByLabel('Final liquid volume in mL',{exact:true}).fill('4');
     const before=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('bacwater.calculationSession.v1')).shared);
     await page.goto(`${origin}/plan/${publicId}/edit`);await page.getByRole('button',{name:'Step by step',exact:true}).click();await goQuestion(page,'vial');await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('10');await page.getByRole('button',{name:'Clear',exact:true}).click();await goQuestion(page,'vial');await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('');
     const after=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('bacwater.calculationSession.v1')).shared);assert.deepEqual(after,before);

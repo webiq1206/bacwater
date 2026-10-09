@@ -50,7 +50,7 @@ try{
   await nextQuestion(page);await page.getByLabel('Custom peptide name',{exact:true}).fill('Viewport test compound');
   const next=page.getByRole('button',{name:'Next',exact:true});await expect(next).toHaveCount(1);await expect(next).toBeEnabled();
   const bounds=await next.boundingBox();assert.ok(bounds&&bounds.y+bounds.height<=844);
-  await next.click();await nextQuestion(page);await expect(page.getByRole('heading',{name:'How much is in the vial, in mg?',exact:true})).toBeVisible();
+  await next.click();await expect(page.getByRole('heading',{name:'What amount is on the vial?',exact:true})).toBeVisible();
   await page.getByLabel('Amount in vial',{exact:true}).fill('12');
   await page.screenshot({path:`${out}/guided-step-390.png`,fullPage:false});
  });
@@ -64,7 +64,7 @@ try{
   await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('12');await fit(page);
  });
  await check('Draft values and current guided step survive refresh, Back and return',async()=>{
-  await page.reload();await expect(page.getByRole('heading',{name:'How much is in the vial, in mg?',exact:true})).toBeVisible();await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('12');
+  await page.reload();await expect(page.getByRole('heading',{name:'What amount is on the vial?',exact:true})).toBeVisible();await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('12');
   await page.getByRole('link',{name:'Back to website',exact:true}).click();await expect(page).toHaveURL(origin+'/');
   await page.goBack();await expect(page.getByLabel('Amount in vial',{exact:true})).toHaveValue('12');
  });

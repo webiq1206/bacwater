@@ -62,10 +62,10 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
   await check('Incompatible product types do not reinterpret amounts',async()=>{
    await p.goto(origin+'/calculate/product/amino-h2o',{waitUntil:'networkidle'});await expect(p.getByLabel('Liquid volume per container (mL)',{exact:true})).toHaveValue('');
    await p.goto(origin+'/calculate/hcg',{waitUntil:'networkidle'});await expect(p.getByLabel('Total in container (IU)',{exact:true})).toHaveValue('');
-   await p.goto(origin,{waitUntil:'networkidle'});const hero=p.locator('[data-hero-calculator]');await goQuestion(hero,'vial');await expect(hero.getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
+   await p.goto(origin,{waitUntil:'networkidle'});const hero=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]');await goQuestion(hero,'vial');await expect(hero.getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
   });
   await check('Clear does not allow old values to return on refresh',async()=>{
-   await p.getByRole('button',{name:'Open hero calculator full screen',exact:true}).click();await p.locator('[data-hero-focus]').getByRole('button',{name:'Clear',exact:true}).click();await p.reload({waitUntil:'networkidle'});const hero=p.locator('[data-hero-calculator]');await nextQuestion(hero);await nextQuestion(hero);await expect(hero.getByLabel('Amount in vial',{exact:true})).toHaveValue('');assert.deepEqual(errors,[]);
+   await p.getByRole('button',{name:'Open hero calculator full screen',exact:true}).click();await p.locator('[data-hero-focus]').getByRole('button',{name:'Clear',exact:true}).click();await p.reload({waitUntil:'networkidle'});const hero=p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]');await goQuestion(hero,'vial');await expect(hero.getByLabel('Amount in vial',{exact:true})).toHaveValue('');assert.deepEqual(errors,[]);
   });
   await check('Independent browser tabs retain their own edits through reload',async()=>{
    const first=await context.newPage(),second=await context.newPage();
@@ -80,7 +80,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    assert.deepEqual(errors,[]);
   });
   await check('Blocked storage retains client navigation but not a hard reload',async()=>{
-   const blocked=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
+   const blocked=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});
    try{
     await blocked.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
     await blocked.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);

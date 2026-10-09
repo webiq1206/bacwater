@@ -181,6 +181,8 @@ for (const config of configurations) {
     await page.locator('[data-product="5-amino-1mq"] h3 a').click();
     await expect(page).toHaveURL(`${origin}/products/5-amino-1mq`);
     await expect(page.getByRole('heading', { level: 1, name: names['5-amino-1mq'], exact: true })).toBeVisible();
+    // Let product-page prefetches settle before a hard navigation replaces the document.
+    await page.waitForLoadState('networkidle');
     report.checks.push('Directory detail link opens the matching product page');
     await page.goto(`${origin}/recommendations`);
     await page.getByRole('banner').getByRole('button',{name:'Account',exact:true}).click();
