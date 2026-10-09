@@ -9,7 +9,7 @@ export const SUPPLIER_SOURCES = {
 
 /** Supplied and approved by the account owner on September 24, 2026. */
 export const APPROVED_AFFILIATE_URL = "https://aminoclub.com?utm_source=affiliate_marketing&code=WEBIQ";
-export const AFFILIATE_DISCLOSURE = "Affiliate link. We may earn a commission if you purchase through this link.";
+export const AFFILIATE_DISCLOSURE = "We may earn a commission. We don’t add a markup; you buy directly from our partner.";
 export const RESEARCH_ONLY_NOTICE = "For laboratory research only. Not for human consumption or veterinary use.";
 
 /** Only the owner's two public attribution fields are added. No visitor data or redirects. */

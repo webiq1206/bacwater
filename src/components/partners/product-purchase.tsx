@@ -1,5 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
-import type { DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
+import { AFFILIATE_DISCLOSURE, type DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
 import styles from "./product-purchase.module.css";
 
 type PurchaseProduct = Pick<DisplaySupplierProduct, "id" | "name" | "href" | "paid">;
@@ -15,7 +15,7 @@ export function ProductBuyLink({ product, className = "", selected = false, show
 
 export function PurchaseDisclosure({ product, className = "" }: { product: PurchaseProduct; className?: string }) {
   return <p className={`${styles.disclosure} ${className}`} data-purchase-disclosure>
-    {product.paid ? "Affiliate link. We may earn a commission." : "Supplier link. No paid referral is active."}
+    {product.paid ? AFFILIATE_DISCLOSURE : "Supplier link. No paid referral is active."}
   </p>;
 }
 

@@ -2,13 +2,15 @@ import Link from "next/link";
 import { ArrowUpRight, FileCheck2 } from "lucide-react";
 import { SUPPLIER_SOURCES, RESEARCH_ONLY_NOTICE, getSupplierCatalog, type DisplaySupplierProduct } from "@/lib/partners/supplier-catalog";
 import { ProductSlider } from "./product-slider";
-import { SupplierWaterLink } from "./supplier-context";
+import { BacWaterFeature } from "./bac-water-feature";
 import styles from "./recommendations.module.css";
 export function ResearchSupplierSection({products=getSupplierCatalog()}:{products?:readonly DisplaySupplierProduct[]}) {
+  const water=products.find(p=>p.id==="amino-h2o");
   return <section className={styles.section} data-supplier-shelf aria-label="Research supplier products">
-    <div className={styles.intro}><div><h2>Research <em>products.</em></h2></div><SupplierWaterLink compact showNotice={false}/></div>
+    {water&&<BacWaterFeature product={water}/>}
+    <div className={styles.intro}><div><h2>Research <em>products.</em></h2></div></div>
     <p className={styles.policy}>{RESEARCH_ONLY_NOTICE}{products.some(p=>p.paid)?" We may earn a commission from purchases through these links.":""} <Link href="/disclaimer">Read our disclaimer</Link>.</p>
-    <ProductSlider products={products}/>
+    <ProductSlider products={products.filter(p=>p.id!=="amino-h2o")}/>
     <div className={styles.bottom}><a href={SUPPLIER_SOURCES.coa} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer"><FileCheck2 size={17} aria-hidden="true"/>Check the supplier's lab reports</a><Link href="/recommendations">Browse all research products <ArrowUpRight size={17} aria-hidden="true"/></Link></div>
   </section>;
 }

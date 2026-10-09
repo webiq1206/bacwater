@@ -4,6 +4,17 @@ import { SUPPLIER_PRODUCTS, getSupplierCatalog, productForReference, productCalc
 import { emptyProductValues, readProductValues, productCalculation, numberLabel } from "../src/lib/partners/product-calculation";
 import { isCalculatorWorkspace } from "../src/lib/calculator-routes";
 const byId=(id:string)=>SUPPLIER_PRODUCTS.find(p=>p.id===id)!;
+const source=(path:string)=>fs.readFileSync(path,'utf8');
+assert.match(source('src/components/partners/supplier-recommendations.tsx'),/BacWaterFeature product=\{water\}/);
+assert.match(source('src/components/partners/supplier-recommendations.tsx'),/products\.filter\(p=>p\.id!=="amino-h2o"\)/);
+assert.match(source('src/app/recommendations/page.tsx'),/BacWaterFeature/);
+assert.match(source('src/components/partners/bac-water-feature.tsx'),/ProductBuyLink product=\{product\} showProductName/);
+assert.match(source('src/components/partners/bac-water-feature.tsx'),/PurchaseDisclosure product=\{product\}/);
+const researchLink=source('src/components/partners/explore-product-research.tsx');
+assert.match(researchLink,/\/products\/\$\{product.id\}#research/);
+assert.match(researchLink,/target="_blank" rel="noopener noreferrer"/);
+assert.doesNotMatch(researchLink,/\.patch\(|chooseCalculationProduct\(|onChange|Apply this schedule/);
+assert.doesNotMatch(source('src/components/partners/product-purchase.tsx'),/same price|best price|no extra cost/i);
 let checks=0;const test=(name:string,fn:()=>void)=>{fn();checks++;console.log('PASS '+name);};
 test("50 distinct reviewed individual listings",()=>{assert.equal(SUPPLIER_PRODUCTS.length,50);assert.equal(new Set(SUPPLIER_PRODUCTS.map(p=>p.id)).size,50);});
 test("all listings have exact product links and focused calculation routes",()=>{for(const p of SUPPLIER_PRODUCTS){assert.equal(p.sourceUrl,`https://www.aminoclub.com/us/products/${p.id}`);assert.ok(isCalculatorWorkspace(productCalculatorPath(p.id)));assert.equal(productForCalculatorPath(productCalculatorPath(p.id))?.id,p.id);assert.ok(p.mark&&p.name);}});

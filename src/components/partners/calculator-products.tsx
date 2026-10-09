@@ -13,6 +13,7 @@ import { ProductArtwork } from "./product-artwork";
 import { ResearchCategoryFilter } from "@/components/partners/research-category-filter";
 import { matchesResearchCategory, researchCategory, type ResearchCategory } from "@/lib/partners/research-categories";
 import { ProductBuyLink } from "./product-purchase";
+import { ExploreProductResearch } from "./explore-product-research";
 import styles from "./calculator-products.module.css";
 const ignoreSelection = (_id: string | null) => {};
 export const ProductSelectionContext = createContext<(id:string|null)=>void>(ignoreSelection);
@@ -55,6 +56,7 @@ export function CalculatorProductTools({selectedId,showProductPicker=true}:{sele
    <span className={styles.selectedArt}><ProductArtwork product={product} compact/></span>
    <div className={styles.selectedText}><strong>{product.name}</strong><span>{product.label}</span><ProductBuyLink product={product} selected/></div>
   </div>}
+  {product&&<ExploreProductResearch selectedId={product.id}/>}
   <p className={styles.count} style={{fontSize:13,lineHeight:1.6}}>{(product?.paid||water.paid)&&AFFILIATE_DISCLOSURE} {RESEARCH_ONLY_NOTICE}</p>
  </div>;
 }
