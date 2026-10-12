@@ -142,8 +142,8 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
     ]
   },
   "too-much-bac-water": {
-    "title": "More BAC Water: What Dilution Math Tells You",
-    "description": "See how more liquid changes the amount in each mL while total mg stays the same. The math cannot check a mixing mistake.",
+    "title": "Too Much BAC Water: What Dilution Math Shows",
+    "description": "More liquid lowers mg per mL for the same total mass. See worked dilution examples and what concentration math cannot prove about a mixture.",
     "cta": "Compare concentration values",
     "href": "/tools/bac-water",
     "related": [

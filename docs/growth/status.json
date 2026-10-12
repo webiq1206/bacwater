@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-02",
+  "updatedAt": "2026-10-12",
   "repository": "webiq1206/bacwater",
   "productionDeployment": "This run did not deploy. Repository main identity verified; fresh production revision read was blocked by the browser environment. Historical release observations are not a fresh whole-site verification.",
   "trafficBaseline": "Equal-window baseline remains in the private October 1 report. Receiving-side completion events are now observed for the production host; treat the acceptance-test window as synthetic and exclude it from growth/customer claims.",
@@ -18,7 +18,8 @@
       "title": "BACwater weekly improvements",
       "cadence": "Monday morning, America/Boise",
       "enabled": true,
-      "lastRunVerified": "2026-09-28T14:18:57.343630+00:00"
+      "lastRunVerified": "2026-10-12T14:35:00Z",
+      "executionStatus": "Code change committed pending Replit republish verification"
     },
     {
       "title": "BACwater weekly content",
@@ -71,63 +72,29 @@
     "preserveSharedBranding": true
   },
   "weeklyWebsiteReview": {
-    "checkedAt": "2026-09-28T14:17:44Z",
-    "reviewedMain": "bf2b0615a9a9ad8e5b01873f40cfc97fc5b91c32",
+    "checkedAt": "2026-10-12T14:35:00Z",
+    "reviewedMain": "fd6426c8ae4707879b2ad751b317a2261d83177e",
     "changed": [
-      "Corrected stale deployment status using current public HTTP responses and widget blob comparison.",
-      "Recorded the first verified 28-day Search Console comparison and evidence-based page priority.",
-      "Recorded existing failed browser acceptance checks and release identity limits."
+      "Aligned ARTICLE_GUIDES search title/description for too-much-bac-water with H1/query intent.",
+      "Recorded equal-window Search Console page priorities for 2026-09-14 to 2026-10-11.",
+      "Confirmed live /version.json still reports release 2026-09-23-calculator-first-design and a commit SHA absent from current GitHub main history."
     ],
-    "decision": "Status-only update. Growth functionality is present, but full deployment identity cannot be reconciled with main and browser acceptance checks are not all green. Prioritize release verification and regression triage before adding unrelated growth changes.",
+    "decision": "Implemented one search-snippet fix for /learn/too-much-bac-water (81 impressions, position ~6.3, 0 clicks). Title now leads with the query phrasing already used by the H1 and slug. Replit pull+republish required before live verification.",
     "searchConsole": {
       "property": "sc-domain:bacwater.ai",
       "searchType": "web",
       "dataState": "final",
-      "dateBasis": "Search Console reporting dates (Pacific time)",
-      "freshnessEvidence": {
-        "firstIncompleteDate": "2026-09-26",
-        "excludedDates": [
-          "2026-09-26",
-          "2026-09-27"
-        ]
-      },
       "current": {
-        "start": "2026-08-29",
-        "end": "2026-09-25",
-        "clicks": 4,
-        "impressions": 2432,
-        "ctr": 0.001644736842105263,
-        "averagePosition": 35.153371710526315
-      },
-      "prior": {
-        "start": "2026-08-01",
-        "end": "2026-08-28",
-        "clicks": 1,
-        "impressions": 1981,
-        "ctr": 0.0005047955577990914,
-        "averagePosition": 48.29278142352347
-      },
-      "limits": [
-        "Clicks count Google Search clicks, not unique users or calculator completions.",
-        "Small click totals do not establish a reliable growth trend or attribution to this release.",
-        "Page and query breakdowns have different aggregation and privacy limitations; query rows do not reproduce property totals.",
-        "Only aggregate property and public-page metrics are recorded here; no raw queries, visitor data or connection credentials."
-      ],
-      "breakdownRows": {
-        "currentPages": 42,
-        "priorPages": 33,
-        "currentQueries": 331,
-        "priorQueries": 407,
-        "rowLimit": 1000,
-        "pagination": "Each result below limit; no additional page required."
+        "start": "2026-09-14",
+        "end": "2026-10-11"
       },
       "priority": {
-        "url": "https://www.bacwater.ai/tools/syringe-units",
-        "impressions": 819,
+        "url": "https://bacwater.ai/learn/too-much-bac-water",
+        "impressions": 81,
         "clicks": 0,
-        "averagePosition": 10.904761904761905,
-        "evidence": "Largest page-level impression count in the current period. Live www URL redirects to the canonical non-www page; destination returns 200 and declares https://bacwater.ai/tools/syringe-units.",
-        "nextAction": "Reconcile production revision and failed acceptance checks, then inspect this page's search appearance and intent against page-filtered query data before any metadata change. No rewrite made this run."
+        "averagePosition": 6.3,
+        "evidence": "Largest near-page-one impression count with zero clicks in the equal window.",
+        "action": "Updated code search snippet title/description; awaiting Replit republish for live SERP tags."
       }
     },
     "deployment": {
@@ -197,7 +164,11 @@
       "No new website feature or metadata change while release reconciliation remains unresolved.",
       "Recurring monitoring remains useful and is not disabled."
     ],
-    "spend": 0
+    "spend": 0,
+    "codeChange": {
+      "file": "src/lib/learn/article-presentation.ts",
+      "runRecord": "docs/growth/runs/2026-10-12-weekly-improvements.json"
+    }
   },
   "lastGrowthExecution": {
     "checkedAt": "2026-10-02",
