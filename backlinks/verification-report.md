@@ -1,5 +1,5 @@
 # Backlink verification
-Generated 2026-10-11T13:25:46.268Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
+Generated 2026-10-12T16:00:44.620Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
 Rows distinguish fetched anchors, pending placement URLs and verification gaps. The dofollow label describes observed anchor attributes only, not indexing or ranking credit. Submission receipts remain authoritative for submission history. Unverified observations must not trigger resubmission.
 Ledger statuses: opportunity 8, submitted 13, discovered 0, live 0, live-nofollow 0, rejected 0.
 
