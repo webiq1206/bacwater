@@ -223,6 +223,28 @@ const STATIC_ENTRIES: LearnEntry[] = [
     source: "page",
   },
   {
+    id: "page-u-100-units-explained",
+    url: "/learn/u-100-units-explained",
+    title: "What U-100 means: converting mL to units",
+    excerpt:
+      "U-100 means 100 units per mL, so 1 unit is 0.01 mL. Worked volume conversions and three common unit mistakes.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["injection-supplies", "dosage"],
+    source: "page",
+  },
+  {
+    id: "page-mg-vs-mg-per-ml",
+    url: "/learn/mg-vs-mg-per-ml",
+    title: "mg vs mg/mL: amount is not concentration",
+    excerpt:
+      "A vial labeled 10 mg states an amount. Concentration is amount divided by final volume, so the same vial can be 5 or 2.5 mg/mL.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["dosage", "reconstitution-method"],
+    source: "page",
+  },
+  {
     id: "page-vial-labels",
     url: "/tools/vial-labels",
     title: "Free printable peptide vial labels",
