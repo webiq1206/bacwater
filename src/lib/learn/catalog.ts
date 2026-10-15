@@ -225,9 +225,9 @@ const STATIC_ENTRIES: LearnEntry[] = [
   {
     id: "page-u-100-units-explained",
     url: "/learn/u-100-units-explained",
-    title: "What U-100 means: converting mL to units",
+    title: "Convert mL to U-100 units: worked table",
     excerpt:
-      "U-100 means 100 units per mL, so 1 unit is 0.01 mL. Worked volume conversions and three common unit mistakes.",
+      "Multiply mL by 100 to get a U-100 reading; 1 unit is 0.01 mL. Worked conversions, the reverse formula and common unit mistakes.",
     contentType: "guide",
     peptideTags: [],
     topicTags: ["injection-supplies", "dosage"],
