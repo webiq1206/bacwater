@@ -75,7 +75,7 @@ See the [scale-reading example](/learn/how-to-read-an-insulin-syringe), [U-100 c
 
 ## First find mL
 
-Divide U-100 units by 100. For example, 25 units is 0.25 mL. This rule only applies to the U-100 scale.
+Divide U-100 units by 100. For example, 25 units is 0.25 mL. This rule only applies to the U-100 scale. For the reverse direction and a worked table, see [how to convert mL to U-100 units](/learn/u-100-units-explained).
 
 ## Then use the amount in each mL
 
