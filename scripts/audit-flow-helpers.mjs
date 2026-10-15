@@ -53,6 +53,9 @@ export async function completeAuditProduct(page, values = {}) {
     if(step==='amount-unit'&&values.amountUnit)option=values.amountUnit;
     if(step==='schedule')option=values.schedule||'One calculation. No schedule.';
     if(option) { await combo.click();await page.getByRole('option',{name:option,exact:true}).click(); }
+    // Single compounds now show the amount and its unit together. Select the
+    // fixture's unit through that visible control before entering the number.
+    if(step==='amount'&&values.single&&values.amountUnit)await selectAuditOption(page,area,'Amount unit',values.amountUnit);
     let value=values[step];
     const ingredient=step.match(/^ingredient-(\d+)$/);
     if(ingredient)value=values.ingredients?.[Number(ingredient[1])];
