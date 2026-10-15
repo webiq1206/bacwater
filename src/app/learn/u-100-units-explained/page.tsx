@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 // Every number below is an illustrative volume conversion. No compound,
 // amount to use or device recommendation is stated.
 const PATH = "/learn/u-100-units-explained";
-const title = "What U-100 Means: Converting mL to Units";
-const description = "U-100 means 100 units per mL. See how to convert a volume in mL to a U-100 scale reading, with worked examples and common unit mistakes.";
+const title = "Convert mL to Units on a U-100 Scale: Worked Table";
+const description = "How to convert mL to U-100 units: multiply mL by 100. Worked table for 0.10, 0.25 and 0.50 mL, the reverse formula and three common unit mistakes.";
 export const metadata = withSocialMetadata({ title, description, alternates: { canonical: PATH }, openGraph: { title, description, url: PATH, type: "article" } });
 const references = [
   { title: "SI prefixes", source: "NIST", url: "https://www.nist.gov/pml/owm/metric-si-prefixes", note: "Milli and micro are distinct decimal prefixes." },
@@ -22,11 +22,11 @@ const MISTAKES = [
   { heading: "Skipping the concentration step", body: "The order is: concentration (mg/mL) = vial amount ÷ final volume; volume (mL) = entered amount ÷ concentration; U-100 reading = mL × 100. Each step depends on the one before it." },
 ];
 export default function U100UnitsPage() {
-  const crumbs = [{ label: "Home", href: "/" }, { label: "Learning center", href: "/learn" }, { label: "U-100 units explained", href: PATH }];
+  const crumbs = [{ label: "Home", href: "/" }, { label: "Learning center", href: "/learn" }, { label: "mL to U-100 units", href: PATH }];
   return <article className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-16 pb-20">
     <WebPageJsonLd name={title} description={description} url={PATH} citations={references} breadcrumb={crumbs.map(c => ({ name: c.label, url: c.href }))}/><Breadcrumbs items={crumbs}/>
-    <p className="eyebrow">Unit reference</p><h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">What &ldquo;U-100&rdquo; means, with the math shown.</h1>
-    <p className="mt-5 text-lg leading-relaxed">U-100 is a scale marking: 100 units equals 1 mL, so 1 unit equals 0.01 mL. A volume of 0.25 mL reads as 25 units on a U-100 scale. That is all it means. It is not an amount to use, and it does not apply to devices marked on a different scale.</p>
+    <p className="eyebrow">Unit reference</p><h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">How to convert mL to U-100 units, with the math shown.</h1>
+    <p className="mt-5 text-lg leading-relaxed">U-100 is a scale marking: 100 units equals 1 mL, so 1 unit equals 0.01 mL. A volume of 0.25 mL reads as 25 units on a U-100 scale. For what the units themselves represent, and why they are not mass, read <Link className="underline" href="/learn/what-syringe-units-mean">what syringe units mean</Link>. It is not an amount to use, and it does not apply to devices marked on a different scale.</p>
     <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">The formula</h2><p className="rounded-xl border bg-muted p-5 font-medium">U-100 reading (units) = volume (mL) × 100</p><p className="leading-relaxed">Going the other way, volume (mL) = units ÷ 100.</p></section>
     <section className="mt-9"><h2 className="text-2xl font-serif">Worked examples</h2><p className="mt-2 text-sm text-muted-foreground">Illustrative volumes only, not product instructions.</p>
       <div className="mt-4 overflow-x-auto rounded-xl border border-border" role="region" aria-label="mL to U-100 examples" tabIndex={0}>
@@ -36,7 +36,7 @@ export default function U100UnitsPage() {
       </div>
     </section>
     <section className="mt-9"><h2 className="text-2xl font-serif">Three common mistakes</h2><ol className="mt-4 list-decimal space-y-4 pl-5">{MISTAKES.map(m => <li key={m.heading}><strong>{m.heading}.</strong> {m.body}</li>)}</ol></section>
-    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Related reading</h2><p>For the mass-to-concentration step, read <Link className="underline" href="/learn/mg-vs-mg-per-ml">mg vs mg/mL</Link>. The <Link className="underline" href="/learn/what-syringe-units-mean">syringe units guide</Link> and the <Link className="underline" href="/learn/glossary">glossary</Link> define the other terms. A correct conversion does not verify a device or a product; see <Link className="underline" href="/learn/what-you-cannot-know">what no calculation can verify</Link>.</p></section>
+    <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">Related reading</h2><p>For the mass-to-concentration step, read <Link className="underline" href="/learn/mg-vs-mg-per-ml">mg vs mg/mL</Link>. The <Link className="underline" href="/learn/glossary">glossary</Link> define the other terms. A correct conversion does not verify a device or a product; see <Link className="underline" href="/learn/what-you-cannot-know">what no calculation can verify</Link>.</p></section>
     <aside className="mt-8 rounded-xl border p-4 text-sm"><h2 className="font-semibold">Scope</h2><p className="mt-2">BACwater.ai does math on numbers you enter. It does not recommend compounds, quantities or use.</p></aside>
     <References references={references}/><Button asChild variant="brand" className="mt-8"><Link href="/tools/syringe-units">Check a conversion</Link></Button>
   </article>;

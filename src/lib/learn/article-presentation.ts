@@ -54,11 +54,12 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
     ]
   },
   "what-syringe-units-mean": {
-    "title": "U-100 Units, mL & Mass: What Each Means",
-    "description": "See how U-100 marks show liquid volume and why mg needs another number. Learn why product IU is a different unit.",
+    "title": "What Syringe Units Mean: U-100, mL and mg",
+    "description": "What syringe units mean: on a U-100 scale, units measure liquid volume, not mass. See why mg needs a concentration and why product IU differs.",
     "cta": "Convert U-100 units and mL",
     "href": "/tools/syringe-units",
     "related": [
+      "/learn/u-100-units-explained",
       "/learn/how-to-read-an-insulin-syringe",
       "/tools/dose",
       "/learn/glossary"

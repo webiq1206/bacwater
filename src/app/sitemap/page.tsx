@@ -64,7 +64,7 @@ const LABELS: Record<string, string> = {
   "/learn/where-to-buy-bacteriostatic-water": "Where to buy bacteriostatic water",
   "/learn/bac-water-for-peptides": "BAC water for peptides",
   "/learn/what-you-cannot-know": "What you cannot know",
-  "/learn/u-100-units-explained": "U-100 units explained",
+  "/learn/u-100-units-explained": "Convert mL to U-100 units",
   "/learn/mg-vs-mg-per-ml": "mg vs mg/mL",
   "/faq": "FAQ",
   "/about": "About",
