@@ -38,6 +38,8 @@ export const SEARCH_SNIPPETS: Record<string, Snippet> = {
   "/peptides/compare": { title: "BPC-157 vs TB-500: Labels and Evidence", description: "Compare BPC-157 and TB-500 identity, label units, linked references and calculation limits. Select other compounds to compare. No dosing recommendation." },
   "/sitemap": { title: "Site Map: Calculators, Compounds and Guides", description: "Find BACwater.ai calculators, compound references, BAC water guides and site policies in one organized directory." },
   "/learn": learnLanding({}, 0),
+  "/learn/u-100-units-explained": { title: "What U-100 Means: Converting mL to Units", description: "U-100 means 100 units per mL. See how to convert a volume in mL to a U-100 scale reading, with worked examples and common unit mistakes." },
+  "/learn/mg-vs-mg-per-ml": { title: "mg vs mg/mL: Amount Is Not Concentration", description: "A vial labeled 10 mg states an amount, not a concentration. Learn the difference and the one division that connects mg to mg/mL." },
   "/learn/what-you-cannot-know": { title: "Peptide Calculator Limits: What Math Cannot Verify", description: "Understand why a calculation cannot verify vial identity, sterility, compatibility or shelf life. Learn which questions require product-specific evidence." },
   "/about": { title: "About BACwater.ai: Free Calculation Tools", description: "Learn about BACwater.ai's free concentration calculators, unit converters, saved calculations and printable labels, including the limits of these tools." },
   "/contact": { title: "Contact BACwater.ai: Calculator and Account Help", description: "Report a calculator issue or ask about saved plans, account access, privacy or the website. Include the page and steps to reproduce the problem." },
