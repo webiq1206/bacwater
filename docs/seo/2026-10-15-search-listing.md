@@ -29,6 +29,7 @@ Search Console findings were supplied privately by the coordinating research own
 | S5 | `/tools/vial-labels` | Research owner identified a working listing. Current public copy promises a saved-calculation PDF and actual-size printing. | Preserve title and intent; this batch does not re-certify printing or PDF output. |
 | S6 | `/` and `/tools/bac-water` | Possible query overlap remains a hypothesis. Different useful workflows and content are present. | No consolidation, redirects, noindex, URL removal or homepage rewrite. Exact query/page evidence is still required. |
 | S7 | All 138 listed URLs | Public inventory and discovery-file checks found no metadata, canonical, status or orphan defect within the measured scope. | Preserve. Whole-site manual content, visual and functional acceptance is outside this small batch. |
+| S8 | Existing catalog and homepage browser gates | Unchanged baseline tests still assumed a separate single-compound amount-unit question and 50 carousel cards. The current UI combines amount/unit and presents BAC water separately. | Implemented and focused local checks passed. Retain all 50 destinations, exact attribution, cross-unit conversion and amount-above-total rejection; exact-commit CI is a separate merge gate. |
 
 ### Listing copy
 
@@ -44,15 +45,19 @@ Search Console findings were supplied privately by the coordinating research own
 - Before title: BAC Water Volume and Concentration Calculator
 - After title: BAC Water Calculator: Concentration & mL
 - Before description: See how BAC water volume changes concentration. Enter your vial amount and final volume to check the math in mg/mL and U-100 units. Instructions set the volume.
-- After description: Calculate mg/mL from vial amount and final liquid volume. Enter an amount to measure for mL and U-100 units. See formulas; no dose or dilution is chosen.
+- After description: Calculate mg/mL from vial amount and final liquid volume. Enter an amount to measure for mL and U-100 units. See formulas; not dosing or preparation advice.
 
-The existing metadata helper appends the brand once and keeps Open Graph, social preview and canonical metadata aligned. Calculator fields, arithmetic, input guards, headings, visible reference material, FAQs, saved calculations and analytics configuration are unchanged. No medicine, diluent, amount, frequency or human-use recommendation is added.
+The existing metadata helper appends the brand once and keeps Open Graph, social preview and canonical metadata aligned. Calculator fields, arithmetic, input guards, headings, visible reference material, FAQs, saved calculations and analytics configuration are unchanged. The existing optional math example remains an illustration rather than preparation advice. No medicine, diluent, amount, frequency or human-use recommendation is added.
 
 ## Verification and release
 
 Local verification passed: production build with the retained test suite; TypeScript; 165 metadata/image pairs; 130 built-server HTML/image checks; all 11 existing converter regression groups in Chromium; four additional mobile WebKit journey groups; and 32 engine/viewport/page layout checks across the two changed pages. Actual pixels of both generated previews and selected mobile/desktop pages were inspected. Built WebPage names and descriptions match the new listing catalog. Tests use synthetic values and a disposable localhost database; external browser requests are blocked. Physical-device, complete assistive-technology and live-production acceptance are not established by those checks.
 
 Verification receipts belong to the reviewed source and must distinguish local checks, exact-commit CI and actual publication. Keep precise results and source identities in the PR and local evidence. GitHub CI remains a separate gate. Passing these does not prove indexing or CTR improvement.
+
+The first CI attempt found two existing acceptance assumptions that did not match the preserved calculator/catalog UI. The helper had entered 600 as mg instead of selecting the intended mcg; the calculator correctly rejected an amount above the stated total. The shelf check counted only carousel cards and missed the separate BAC water feature. Those source and audit files were identical to the reconciled baseline before this batch. The repaired gate selects the visible unit, explicitly tests rejection of 600 mg and acceptance of 600 mcg, and verifies the separate water feature plus 49 unique cards against the complete independent 50-product manifest and exact affiliate destinations. No arithmetic, invalid-input guard or product coverage is removed.
+
+Focused local acceptance after those repairs passed all 11 catalog groups, 11 imported affiliate-directory groups, eight product-presentation groups and eight sitewide-design groups. The imported affiliate checks use the CI's localhost canonical build; production-canonical metadata checks use a separate build configuration. The independent reviewer confirmed the repairs retain coverage and identified a description overstatement, which was bounded to “not dosing or preparation advice” because the existing math-example control can illustrate a volume. Final source review found no remaining issues. The production-canonical build, retained tests, 165 metadata/image pairs and 130 server checks passed again after that copy correction.
 
 The coordinating parent owns publication. Do not open shared Chrome, retry its previous denied opening, invoke Replit AI, change credentials or bypass the current browser queue. Before publication, reconcile the exact repository, branch, commit, dirty work and Replit project; retain the production database backup; pass the configured read-only expected-schema check; and retain the rollback baseline. Import the reviewed code once through the supported flow, verify its identity and publish once only after those gates pass.
 
