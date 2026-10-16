@@ -5,8 +5,8 @@
  */
 
 function gcd(a: bigint, b: bigint): bigint {
-  let x = a < 0n ? -a : a;
-  let y = b < 0n ? -b : b;
+  let x = a < BigInt(0) ? -a : a;
+  let y = b < BigInt(0) ? -b : b;
   while (y) {
     const t = x % y;
     x = y;
@@ -20,8 +20,8 @@ export class Fraction {
   readonly d: bigint;
 
   constructor(n: bigint, d: bigint) {
-    if (d === 0n) throw new Error("zero denominator");
-    if (d < 0n) {
+    if (d === BigInt(0)) throw new Error("zero denominator");
+    if (d < BigInt(0)) {
       n = -n;
       d = -d;
     }
@@ -34,7 +34,7 @@ export class Fraction {
   static fromDecimal(text: string): Fraction {
     if (!/^\d+(\.\d+)?$/.test(text)) throw new Error(`not a decimal: ${text}`);
     const [whole, frac = ""] = text.split(".");
-    const den = 10n ** BigInt(frac.length);
+    const den = BigInt(10) ** BigInt(frac.length);
     return new Fraction(BigInt(whole + frac), den);
   }
 
@@ -51,8 +51,8 @@ export class Fraction {
   }
 }
 
-const HUNDRED = new Fraction(100n, 1n);
-const THOUSAND = new Fraction(1000n, 1n);
+const HUNDRED = new Fraction(BigInt(100), BigInt(1));
+const THOUSAND = new Fraction(BigInt(1000), BigInt(1));
 
 function groupInteger(value: bigint): string {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -63,18 +63,18 @@ export function formatTerminating(value: Fraction): string | null {
   let den = value.d;
   let twos = 0;
   let fives = 0;
-  while (den % 2n === 0n) {
-    den /= 2n;
+  while (den % BigInt(2) === BigInt(0)) {
+    den /= BigInt(2);
     twos += 1;
   }
-  while (den % 5n === 0n) {
-    den /= 5n;
+  while (den % BigInt(5) === BigInt(0)) {
+    den /= BigInt(5);
     fives += 1;
   }
-  if (den !== 1n) return null;
+  if (den !== BigInt(1)) return null;
   const digits = Math.max(twos, fives);
   if (digits === 0) return groupInteger(value.n);
-  const scale = twos > fives ? 5n ** BigInt(twos - fives) : 2n ** BigInt(fives - twos);
+  const scale = twos > fives ? BigInt(5) ** BigInt(twos - fives) : BigInt(2) ** BigInt(fives - twos);
   const scaled = (value.n * scale).toString().padStart(digits + 1, "0");
   const intPart = scaled.slice(0, scaled.length - digits).replace(/^0+(?=\d)/, "");
   const fracPart = scaled.slice(scaled.length - digits).replace(/0+$/, "");
@@ -88,7 +88,7 @@ function formatRepeating(value: Fraction): string {
   let rem = value.n % value.d;
   const seen = new Map<bigint, number>();
   const digits: string[] = [];
-  while (rem !== 0n) {
+  while (rem !== BigInt(0)) {
     if (seen.has(rem)) {
       const start = seen.get(rem)!;
       if (start !== 0 || digits.length - start !== 1) {
@@ -98,7 +98,7 @@ function formatRepeating(value: Fraction): string {
       return `${value.n}/${value.d} = ${groupInteger(intPart)}.${digit}${digit}${digit}…`;
     }
     seen.set(rem, digits.length);
-    rem *= 10n;
+    rem *= BigInt(10);
     digits.push((rem / value.d).toString());
     rem %= value.d;
   }
@@ -125,14 +125,14 @@ const ML_DECIMALS = ["0.3", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "10"] 
 export const ML_TO_UNITS_ROWS: MlRow[] = ML_DECIMALS.map((decimal) => {
   const ml = Fraction.fromDecimal(decimal);
   const units = ml.mul(HUNDRED);
-  if (units.d !== 1n) throw new Error(`non-integral units for ${decimal} mL`);
+  if (units.d !== BigInt(1)) throw new Error(`non-integral units for ${decimal} mL`);
   const shown = formatTerminating(ml);
   if (shown !== decimal) throw new Error(`decimal drift for ${decimal}: ${shown}`);
   return {
     volume: `${decimal} mL`,
     calculation: `${decimal} × 100`,
     units: `${groupInteger(units.n)} units`,
-    capacity: ml.eq(new Fraction(1n, 1n)) ? "exactly its capacity" : `${decimal} × its capacity`,
+    capacity: ml.eq(new Fraction(BigInt(1), BigInt(1))) ? "exactly its capacity" : `${decimal} × its capacity`,
     unitsExact: units.n,
     ml,
   };
@@ -145,7 +145,7 @@ function mlRow(decimal: string): MlRow {
 }
 
 export const REVERSE_LINES = (["300", "250", "500"] as const).map((unitsText) => {
-  const units = new Fraction(BigInt(unitsText), 1n);
+  const units = new Fraction(BigInt(unitsText), BigInt(1));
   const ml = units.div(HUNDRED);
   const shown = formatTerminating(ml);
   if (!shown) throw new Error(`reverse did not terminate for ${unitsText}`);
@@ -156,7 +156,7 @@ export const REVERSE_LINES = (["300", "250", "500"] as const).map((unitsText) =>
 
 const oneMlUnits = mlRow("1").unitsExact;
 const twoMlUnits = mlRow("2").unitsExact;
-if (twoMlUnits !== oneMlUnits * 2n) throw new Error("2 mL is not twice a 1 mL U-100 capacity");
+if (twoMlUnits !== oneMlUnits * BigInt(2)) throw new Error("2 mL is not twice a 1 mL U-100 capacity");
 
 const quarterMl = Fraction.fromDecimal("0.25");
 const twoMgPerMl = Fraction.fromDecimal("2");
@@ -195,7 +195,7 @@ export const ML_FAQS: { q: string; a: string }[] = [
   },
 ];
 
-const fiveUnits = new Fraction(5n, 1n).div(HUNDRED);
+const fiveUnits = new Fraction(BigInt(5), BigInt(1)).div(HUNDRED);
 const fiveUnitsMl = formatTerminating(fiveUnits);
 if (fiveUnitsMl !== "0.05") throw new Error("5 U-100 units is not 0.05 mL");
 
@@ -228,7 +228,7 @@ const enteredMcg = Fraction.fromDecimal("400");
 const enteredMg = enteredMcg.div(THOUSAND);
 const measuredMl = enteredMg.div(tenInTwo);
 const measuredUnits = measuredMl.mul(HUNDRED);
-if (measuredUnits.d !== 1n) throw new Error("methodology chain units are not integral");
+if (measuredUnits.d !== BigInt(1)) throw new Error("methodology chain units are not integral");
 
 export const CONCENTRATION_EXAMPLES = {
   same: [
