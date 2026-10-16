@@ -79,7 +79,7 @@ export default function BacWaterConcentrationTablePage() {
     </section>
     <section className="mt-9 space-y-3">
       <h2 className="text-2xl font-serif">Related reading</h2>
-      <p>The <Link className="underline" href="/learn/peptide-reconstitution-chart">peptide concentration chart</Link> has more worked rows and a printable worksheet. The <Link className="underline" href="/methodology#concentration">formula guide</Link> lists every formula and rounding limit.</p>
+      <p>The <Link className="underline" href="/learn/peptide-reconstitution-chart">peptide concentration chart</Link> has more worked rows and a printable worksheet. For a label percent such as 0.9% or 1.1%, see the <Link className="underline" href="/learn/bac-water-preservative-percent">preservative percent math</Link>. The <Link className="underline" href="/methodology#concentration">formula guide</Link> lists every formula and rounding limit.</p>
     </section>
     <aside className="mt-8 rounded-xl border p-4 text-sm"><h2 className="font-semibold">Scope</h2><p className="mt-2">Math only. BACwater.ai does math on numbers you enter. It does not recommend compounds, quantities, volumes or use.</p></aside>
     <References references={references} />

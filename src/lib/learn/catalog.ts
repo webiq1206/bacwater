@@ -256,6 +256,17 @@ const STATIC_ENTRIES: LearnEntry[] = [
     source: "page",
   },
   {
+    id: "page-bac-water-preservative-percent",
+    url: "/learn/bac-water-preservative-percent",
+    title: "BAC water preservative percent",
+    excerpt:
+      "0.9% weight-in-volume is 9 mg/mL and 1.1% is 11 mg/mL. Convert a label percent to mg/mL and to a total in the container. Math only.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["ingredients", "dosage"],
+    source: "page",
+  },
+  {
     id: "page-mg-vs-mg-per-ml",
     url: "/learn/mg-vs-mg-per-ml",
     title: "mg vs mg/mL: amount is not concentration",
