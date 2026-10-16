@@ -30,7 +30,7 @@ export function HeroCalculator() {
 
   function content() { return <div className={styles.panel}><GuidedPlan mode="beginner" presentation="hero" saveState={{saving,setSaving,savedPlan,setSavedPlan}}/></div>; }
   return <Dialog.Root open={open} onOpenChange={setOpen}>
-    <div className={styles.calculator} data-hero-calculator role="region" aria-label="Live BAC water calculator" onClick={event=>{
+    <div className={styles.calculator} data-hero-calculator data-clarity-mask="true" role="region" aria-label="Live BAC water calculator" onClick={event=>{
       const button=(event.target as Element).closest("button");
       if(button?.hasAttribute("data-guided-next")&&!button.disabled&&window.matchMedia("(max-width:780px)").matches)setOpen(true);
     }}>

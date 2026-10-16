@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { analyticsLocation, isPublicAnalyticsPath } from "../src/lib/analytics";
+import { PEPTIDES } from "../src/lib/calc/peptides";
+import { COMPARISONS } from "../src/lib/comparisons/content";
 import { isClarityUrlAllowed, clarityAllowedNow, CLARITY_CONSENT_KEY } from "../src/lib/clarity";
+import { SUPPLIER_PRODUCTS } from "../src/lib/partners/supplier-catalog";
 
 assert.equal(analyticsLocation('/products/bpc-157'), 'https://bacwater.ai/products/guide');
 assert.equal(analyticsLocation('/products/glp-1'), 'https://bacwater.ai/products/guide');
@@ -10,11 +13,17 @@ assert.equal(analyticsLocation('/plan/private-id'), null);
 assert.equal(analyticsLocation('/research-finder'), 'https://bacwater.ai/research-finder');
 assert.equal(isPublicAnalyticsPath('/products/bpc-157/private'), false);
 
-for (const path of ["/", "/tools/mg-to-mcg", "/learn/glossary", "/peptide-calculator", "/calculate/product/bpc-157"]) {
+for (const path of ["/", "/tools", "/learn", "/learn/glossary", "/learn/bac-water-shelf-life", "/learn/bac-water-for-peptides", "/contact", "/about", "/faq", "/methodology", "/privacy"]) {
   assert.equal(isClarityUrlAllowed(`https://bacwater.ai${path}`), true, path);
 }
-for (const path of ["/admin", "/plans", "/plan", "/plan/private-id", "/plan/private-id/pdf", "/auth/reset-password", "/search", "/contact", "/?email=a", "/tools?value=10", "/learn#private-note", "/embed"]) {
+for (const path of ["/admin", "/plans", "/plan", "/plan/private-id", "/plan/private-id/pdf", "/plan/new", "/auth/reset-password", "/search", "/?email=a", "/tools?value=10", "/learn#private-note", "/embed", "/peptide-calculator", "/tools/mg-to-mcg", "/tools/bac-water", "/tools/vial-labels", "/calculate/product/bpc-157", "/calculate/semaglutide", "/calculate/hcg", "/peptides", "/peptides/hcg", "/peptides/bpc-157", "/peptides/compare", "/products/bpc-157", "/products/glp-1", "/recommendations", "/learn/how-to-reconstitute-bpc-157", "/learn/how-to-reconstitute-semaglutide", "/learn/how-to-reconstitute-tirzepatide", "/learn/vs/sodium-chloride", "/learn/vs/sterile-water", "/learn/vs/acetic-acid", "/research-finder"]) {
   assert.equal(isClarityUrlAllowed(`https://bacwater.ai${path}`), false, path);
+}
+for (const slug of [...PEPTIDES.map(peptide => peptide.slug), ...SUPPLIER_PRODUCTS.map(product => product.id), ...COMPARISONS.map(topic => topic.slug)]) {
+  if (slug === "custom") continue;
+  for (const path of [`/peptides/${slug}`, `/products/${slug}`, `/calculate/${slug}`, `/learn/how-to-reconstitute-${slug}`, `/learn/vs/${slug}`]) {
+    assert.equal(isClarityUrlAllowed(`https://bacwater.ai${path}`), false, path);
+  }
 }
 assert.equal(isClarityUrlAllowed("https://example.com/"), false);
 assert.equal(isClarityUrlAllowed("http://localhost:3000/"), false);
@@ -35,6 +44,10 @@ assert.equal(clarityAllowedNow(), false, "Honor browser privacy control");
 Object.assign(navigator, { globalPrivacyControl: false });
 Object.assign(document, { referrer: "https://bacwater.ai/plan/private-id" });
 assert.equal(clarityAllowedNow(), false, "Private referrers excluded");
+Object.assign(document, { referrer: "https://bacwater.ai/peptides/hcg" });
+assert.equal(clarityAllowedNow(), false, "Compound referrers excluded");
+Object.assign(document, { referrer: "" });
+assert.equal(clarityAllowedNow(), true, "Allowed page resumes after a safe referrer");
 Object.assign(document, { referrer: "https://example.com/?email=private" });
 assert.equal(clarityAllowedNow(), false, "Query-string referrers excluded");
 console.log("PASS Clarity consent, public route boundaries, referrer exclusions and privacy controls.");

@@ -11,7 +11,7 @@ export function PlanNotesForm({ publicId, initial }: { publicId: string; initial
   const [value, setValue] = useState(initial);
   const [saving, setSaving] = useState(false);
   return (
-    <div>
+    <div data-clarity-mask="true">
       <Textarea
         rows={4}
         aria-label="Private plan notes"

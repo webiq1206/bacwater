@@ -251,7 +251,7 @@ export default async function LearnPage({
         </FilterRow>
 
         {/* Peptide + search: a GET form so the resulting URLs are real. */}
-        <form method="get" action="/learn" className="flex flex-col gap-3 pt-1 sm:flex-row lg:flex-col">
+        <form method="get" action="/learn" data-clarity-mask="true" className="flex flex-col gap-3 pt-1 sm:flex-row lg:flex-col">
           {f.type && <input type="hidden" name="type" value={f.type} />}
           {f.topic && <input type="hidden" name="topic" value={f.topic} />}
           <select

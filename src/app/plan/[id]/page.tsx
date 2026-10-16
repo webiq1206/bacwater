@@ -50,7 +50,7 @@ export default async function PublicPlanPage({ params }: Props) {
   const result = safeResultDisplay(JSON.parse(plan.data) as CalcResult);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-14 sm:pt-20 pb-24 sm:pb-32" data-clarity-mask="true">
       <RecordPlanView publicId={plan.publicId} name={displayName} canEdit={canEdit} />
       <div className="flex flex-wrap items-center justify-between gap-4 no-print">
         <div>
