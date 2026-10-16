@@ -257,6 +257,8 @@ If a separate amount is already given as 0.3 mg at 3 mg/mL, divide 0.3 by 3. The
 
 A chart with a product name and typical amount can still leave out the exact contents, liquid, instructions and device marks. This chart stays with the math so it does not pretend to answer those questions.
 
+A larger grid for 5, 10, 20, 30 and 50 mg in final volumes of 1 to 5 mL is on the [BAC water concentration table](/learn/bac-water-concentration-table). It uses the same division and does not choose a volume.
+
 Open the [calculator](/peptide-calculator), [mg/mcg converter](/tools/mg-to-mcg) or [formula guide](/methodology).`,
  "faq-general":`**Does BACwater.ai sell products or give medical care?** No. We explain research and check math. We link to a supplier and may earn a commission, but we have no product checkout.
 

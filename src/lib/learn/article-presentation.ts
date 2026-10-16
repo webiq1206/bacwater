@@ -159,6 +159,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
     "cta": "Check a calculation",
     "href": "/tools/bac-water",
     "related": [
+      "/learn/bac-water-concentration-table",
       "/learn/how-to-read-a-peptide-vial",
       "/learn/what-syringe-units-mean",
       "/methodology"

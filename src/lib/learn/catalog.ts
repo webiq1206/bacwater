@@ -234,6 +234,28 @@ const STATIC_ENTRIES: LearnEntry[] = [
     source: "page",
   },
   {
+    id: "page-ml-to-units-table",
+    url: "/learn/ml-to-units-table",
+    title: "mL to U-100 units: whole-mL table",
+    excerpt:
+      "On a U-100 scale, 1 mL is 100 units. Whole-mL equivalents from 0.3 to 10 mL, the reverse check, and why more than 1 mL is not one syringe reading.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["injection-supplies", "dosage"],
+    source: "page",
+  },
+  {
+    id: "page-bac-water-concentration-table",
+    url: "/learn/bac-water-concentration-table",
+    title: "BAC water concentration table",
+    excerpt:
+      "No single volume fits every vial. Exact mg/mL for 5, 10, 20, 30 and 50 mg in 1 to 5 mL. Math only; the product instructions set the volume.",
+    contentType: "guide",
+    peptideTags: [],
+    topicTags: ["dosage", "reconstitution-method"],
+    source: "page",
+  },
+  {
     id: "page-mg-vs-mg-per-ml",
     url: "/learn/mg-vs-mg-per-ml",
     title: "mg vs mg/mL: amount is not concentration",
