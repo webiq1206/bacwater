@@ -9,7 +9,7 @@ export function PasswordRecoveryForm({ reset = false }: { reset?: boolean }) {
  const tokenRead = useRef(false);
  useEffect(() => { if (reset && !tokenRead.current) { tokenRead.current = true; setToken(new URLSearchParams(location.hash.slice(1)).get("token") || ""); history.replaceState(history.state, "", location.pathname); } }, [reset]);
  if (done) return <div role="status"><p className="leading-relaxed">{reset ? "Your password has been changed. Sign in again on each device." : message}</p><Link href="/signin" className="mt-4 inline-flex min-h-11 items-center underline">Back to sign in</Link></div>;
- return <form className="space-y-4" aria-busy={pending} onSubmit={async e => {
+ return <form className="space-y-4" data-clarity-mask="true" aria-busy={pending} onSubmit={async e => {
   e.preventDefault(); if (pending) return; setPending(true); setError("");
   const form = new FormData(e.currentTarget); form.set("token", token);
   try { const result = reset ? await resetPassword(form) : await requestPasswordReset(form); if (result.ok) { setDone(true); if ("message" in result && typeof result.message === "string") setMessage(result.message); } else setError(result.error); }

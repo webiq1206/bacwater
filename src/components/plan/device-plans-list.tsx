@@ -27,7 +27,7 @@ export function DevicePlansList() {
   if (plans === null) return <div className="mt-8 h-24" />;
 
   return (
-    <div className="mt-8">
+    <div className="mt-8" data-clarity-mask="true">
       <div className="section-dark rounded-2xl p-4 sm:p-5 flex items-start gap-3 mb-6">
         <Sparkles className="h-4 w-4 mt-0.5 shrink-0" style={{ color: "var(--color-accent-guide)" }} />
         <p className="text-sm text-muted-foreground leading-relaxed">

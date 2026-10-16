@@ -25,7 +25,7 @@ export default async function PlansPage() {
   // account-backed workspace.
   if (!userId) {
     return (
-      <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pb-32 sm:pt-24">
+      <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pb-32 sm:pt-24" data-clarity-mask="true">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="eyebrow">Dashboard</div>
@@ -54,7 +54,7 @@ export default async function PlansPage() {
 
   if (plans.length === 0) {
     return (
-      <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pb-32 sm:pt-24">
+      <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pb-32 sm:pt-24" data-clarity-mask="true">
         <ClaimDevicePlans />
         <div className="eyebrow">Dashboard</div>
         <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight sm:text-4xl">
@@ -101,7 +101,7 @@ export default async function PlansPage() {
   });
 
   return (
-    <div className="mx-auto max-w-[110rem] px-3 pb-16 pt-10 sm:px-6 sm:pt-16">
+    <div className="mx-auto max-w-[110rem] px-3 pb-16 pt-10 sm:px-6 sm:pt-16" data-clarity-mask="true">
       <ClaimDevicePlans />
       <PlansWorkspace plans={summaries} />
     </div>

@@ -37,7 +37,7 @@ export function SignUpForm() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4" aria-busy={pending}>
+    <form onSubmit={submit} className="space-y-4" data-clarity-mask="true" aria-busy={pending}>
       {error && <p role="alert" className="rounded-lg border border-destructive p-3 text-sm text-destructive">{error}</p>}
       <div>
         <Label htmlFor="name">Your name</Label>

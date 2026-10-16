@@ -11,7 +11,7 @@ export function ContactForm() {
   const [pending, setPending] = useState(false), [sent, setSent] = useState(false), [error, setError] = useState(""), [reference, setReference] = useState("");
   const requestId = useRef(""); const locked = useRef(false);
   if (sent) return <div role="status" className="py-8"><h2 className="text-xl font-semibold">We received your message.</h2><p className="mt-2 text-sm">The BACwater.ai support team can now review it. If we reply, we will use the email address you provided.</p><p className="mt-3 break-all text-sm">Your reference: {reference}</p></div>;
-  return <form className="space-y-4" aria-busy={pending} onSubmit={async (e) => {
+  return <form className="space-y-4" data-clarity-mask="true" aria-busy={pending} onSubmit={async (e) => {
     e.preventDefault(); if (locked.current) return;
     locked.current = true; setPending(true); setError("");
     const fd = new FormData(e.currentTarget);

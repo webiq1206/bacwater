@@ -668,7 +668,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   // The guided view persists its clamped step. Do not let a temporary IU/water
   // context reset that step before the remembered mass calculation is restored.
   if((presentation === "hero" || mode === "beginner") && !contextRestored) return <p role="status">Restoring your calculation...</p>;
-  if (presentation === "hero" || mode === "beginner") return <div data-plan-builder="beginner" className={presentation === "hero" ? "flex min-h-0 flex-1 flex-col" : "bac-calc-card mx-auto max-w-3xl p-5 sm:p-7"}>
+  if (presentation === "hero" || mode === "beginner") return <div data-plan-builder="beginner" data-clarity-mask="true" className={presentation === "hero" ? "flex min-h-0 flex-1 flex-col" : "bac-calc-card mx-auto max-w-3xl p-5 sm:p-7"}>
     {presentation !== "hero" && <div className="mb-6"><ModeToggle mode={mode} onChange={setMode}/></div>}
     {!init && <SessionValuesNotice compact={presentation === "hero"}/>}
     <HeroPlanSteps step={questionStep} onStep={setQuestionStep} preview={preview} result={result} productChosen={PEPTIDES.some(p => p.slug === peptideSlug)}
@@ -1015,6 +1015,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
     // Below xl there is no room for it, and the WizardContext breadcrumb
     // already carries the answers so far.
     <div
+      data-clarity-mask="true"
       className={cn(
         "bac-focus-step mx-auto pb-24 sm:pb-0",
         isReview

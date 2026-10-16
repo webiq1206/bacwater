@@ -319,7 +319,7 @@ export function PlansWorkspace({ plans }: { plans: PlanSummary[] }) {
   const expiry = current ? expiryState(current.expirationDate) : null;
 
   return (
-    <div>
+    <div data-clarity-mask="true">
       <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="eyebrow">Dashboard</div>
