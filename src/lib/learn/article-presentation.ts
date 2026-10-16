@@ -8,6 +8,7 @@ export const ARTICLE_GUIDES: Record<string,ArticlePresentation> = {
     "cta": "Compare water products",
     "href": "/learn/vs/sterile-water",
     "related": [
+      "/learn/bac-water-preservative-percent",
       "/learn/vs/benzyl-alcohol",
       "/learn/bac-water-shelf-life",
       "/learn/bac-water-for-peptides",

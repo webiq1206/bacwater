@@ -68,6 +68,7 @@ const LABELS: Record<string, string> = {
   "/learn/ml-to-units-table": "mL to U-100 units table",
   "/learn/mg-vs-mg-per-ml": "mg vs mg/mL",
   "/learn/bac-water-concentration-table": "BAC water concentration table",
+  "/learn/bac-water-preservative-percent": "Preservative percent math",
   "/faq": "FAQ",
   "/about": "About",
   "/contact": "Contact",

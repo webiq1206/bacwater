@@ -7,7 +7,7 @@ export const PLAIN_ARTICLES:Readonly<Record<string,string>>={
 
 ## Read the exact label
 
-[Pfizer’s label](https://www.pfizermedical.com/bacteriostatic-water) lists water products with either 0.9% or 1.1% benzyl alcohol. Benzyl alcohol is the preservative. Check the container instead of assuming that all BAC water has the same amount.
+[Pfizer’s label](https://www.pfizermedical.com/bacteriostatic-water) lists water products with either 0.9% or 1.1% benzyl alcohol. Benzyl alcohol is the preservative. Check the container instead of assuming that all BAC water has the same amount. The [preservative percent math](/learn/bac-water-preservative-percent) converts those printed percents to mg/mL.
 
 ## What the math can tell you
 

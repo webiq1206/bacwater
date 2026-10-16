@@ -80,7 +80,7 @@ export default function MlToUnitsTablePage() {
     </section>
     <section className="mt-9 space-y-3">
       <h2 className="text-2xl font-serif">Related reading</h2>
-      <p>For readings under 1 mL, see <Link className="underline" href="/learn/u-100-units-explained">mL to U-100 units: worked table</Link>. The <Link className="underline" href="/methodology#scales">formula guide</Link> lists every formula and rounding limit. A correct conversion still can&apos;t verify a device or a product; see <Link className="underline" href="/learn/what-you-cannot-know">what no calculation can verify</Link>.</p>
+      <p>For readings under 1 mL, see <Link className="underline" href="/learn/u-100-units-explained">mL to U-100 units: worked table</Link>. A printed percent does not change this conversion; see the <Link className="underline" href="/learn/bac-water-preservative-percent">preservative percent math</Link>. The <Link className="underline" href="/methodology#scales">formula guide</Link> lists every formula and rounding limit. A correct conversion still can&apos;t verify a device or a product; see <Link className="underline" href="/learn/what-you-cannot-know">what no calculation can verify</Link>.</p>
     </section>
     <aside className="mt-8 rounded-xl border p-4 text-sm"><h2 className="font-semibold">Scope</h2><p className="mt-2">BACwater.ai does math on numbers you enter. It does not recommend compounds, quantities, devices or use.</p></aside>
     <References references={references} />

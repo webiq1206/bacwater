@@ -149,6 +149,8 @@ export default async function ComparisonPage({
 
       <p className="mt-4 text-sm"><a className="inline-flex min-h-11 items-center underline" href={`/learn/vs/${c.slug}/infographic.svg`} target="_blank" rel="noopener noreferrer">Open the printable comparison graphic</a></p>
       {c.slug === "saline" && <p className="mt-4"><Link className="underline" href="/learn/vs/sodium-chloride">Compare BAC water with bacteriostatic sodium chloride specifically</Link></p>}
+      {c.slug === "benzyl-alcohol" && <p className="mt-4"><Link className="underline" href="/learn/bac-water-preservative-percent">Convert a printed percent to mg/mL</Link></p>}
+      {c.slug === "sodium-chloride" && <p className="mt-4"><Link className="underline" href="/learn/bac-water-preservative-percent">Same percent, different substance: the mg/mL arithmetic</Link></p>}
       {["acetic-acid","reconstitution-solution"].includes(c.slug) && <aside className="mt-6 rounded-xl border bg-muted p-5"><h2 className="font-semibold">What the label must identify</h2><ul className="mt-3 list-disc space-y-2 pl-5"><li>The exact ingredients and their concentrations</li><li>The complete product name and intended use</li><li>Preservative status, container instructions and storage</li></ul><Link className="mt-3 inline-block underline" href="/learn/glossary#diluent">Look up diluent and formulation terms</Link></aside>}
 
       {/* Body sections */}

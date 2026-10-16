@@ -13,6 +13,7 @@ const labels: Record<string, string> = {
   "/learn": "Learning center", "/faq": "Common calculation and BAC water questions",
   "/learn/ml-to-units-table": "U-100 whole-mL units table",
   "/learn/bac-water-concentration-table": "BAC water concentration table",
+  "/learn/bac-water-preservative-percent": "BAC water preservative percent to mg/mL",
   "/methodology": "Calculator formulas, assumptions and reproducible checks",
   "/compare-calculators": "Choose the calculator for your task",
   "/recommendations": "Research product directory with affiliate disclosures",
