@@ -190,12 +190,6 @@ export default async function LearnPage({
         </div>
       )}
 
-      {activeCount === 0 && <nav className="mt-7 grid gap-3 sm:grid-cols-2" aria-label="Learn by task">{[
-        ["Read a label", "/learn/how-to-read-a-peptide-vial", "Identify total amount, concentration and volume."],
-        ["Check units", "/learn/what-syringe-units-mean", "Separate mg, mcg, mL and U-100 markings."],
-        ["Understand storage", "/learn/bac-water-shelf-life", "Find the instructions for the exact container."],
-        ["Compare water products", "/learn?type=comparison", "Understand ingredients and label terminology."],
-      ].map(([label,href,copy]) => <Link key={href} href={href} className="rounded-xl border bg-card p-5"><strong>{label}</strong><p className="mt-2 text-sm text-muted-foreground">{copy}</p></Link>)}</nav>}
       {activeCount === 0 && (
         <Link
           href="/learn/what-you-cannot-know"
