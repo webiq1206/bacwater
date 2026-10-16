@@ -11,6 +11,8 @@ const labels: Record<string, string> = {
   "/tools/supplies": "Portion and vial count calculator", "/tools/vial-labels": "Printable vial labels",
   "/peptides": "Compound reference directory", "/peptides/compare": "Compound references side by side",
   "/learn": "Learning center", "/faq": "Common calculation and BAC water questions",
+  "/learn/ml-to-units-table": "U-100 whole-mL units table",
+  "/learn/bac-water-concentration-table": "BAC water concentration table",
   "/methodology": "Calculator formulas, assumptions and reproducible checks",
   "/compare-calculators": "Choose the calculator for your task",
   "/recommendations": "Research product directory with affiliate disclosures",

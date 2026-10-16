@@ -70,7 +70,7 @@ export default function BacWaterCalculatorPage() {
     <CalculatorWorkspace title="BAC water calculator" description="Copy the amounts and final volume from your own instructions." help={<SupplyChecklist volumeMl={valid?volume:undefined} measurementMl={valid?measurementMl:undefined}/>} reference={<>
       <section className="mt-10 max-w-3xl space-y-3">
         <h2 className="text-2xl font-serif">How the volume changes concentration</h2>
-        <p>Concentration in mg/mL equals the total amount in mg divided by the final liquid volume in mL. The volume for an entered measurement equals that measurement in mg divided by the concentration.</p>
+        <p>BAC water is bacteriostatic water. Concentration in mg/mL equals the total amount in mg divided by the final liquid volume in mL. The volume for an entered measurement equals that measurement in mg divided by the concentration.</p>
         <p>For a mathematical example, 10 mg in a final 2 mL is 5 mg/mL. An entered 0.4 mg measurement corresponds to 0.08 mL, or 8 U-100 units. In a final 4 mL instead, the concentration would be 2.5 mg/mL and that same amount would correspond to 0.16 mL.</p>
         <p>These examples demonstrate arithmetic, not product preparation. Changing liquid volume may be incompatible with the product instructions or vial capacity. Read <Link href="/learn/what-you-cannot-know" className="underline">what a calculator cannot verify</Link>.</p>
       </section>
