@@ -372,6 +372,10 @@ export function ContactWorkspace({
                   rows={12}
                   className="mt-1 text-sm"
                 />
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Sent in the BACwater.ai email layout. Leave a blank line between paragraphs. Lines that start with
+                  &quot;- &quot; become a bulleted list. Web and email addresses become links.
+                </p>
                 <Button
                   onClick={sendReply}
                   disabled={pending}

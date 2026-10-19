@@ -9,6 +9,8 @@ import { safeResultDisplay } from "@/lib/calc/display";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { Resend } from "resend";
+import { senderAddress } from "@/lib/email/layout";
+import { contactReplyEmail, formatOrderTime, supplierOrderEmail } from "@/lib/email/templates";
 
 async function requireAdmin() {
   const session = await auth();
@@ -130,9 +132,9 @@ export async function draftVendorSubmission(orderPublicId: string, vendorId: str
     items: itemsBlock,
     ship_to: shipTo,
     customer_email: order.email,
-    placed_at: order.createdAt.toISOString(),
+    placed_at: formatOrderTime(order.createdAt),
   });
-  const subject = `Order ${order.publicId} - BACwater.ai`;
+  const subject = `BACwater.ai order ${order.publicId}`;
 
   await prisma.order.update({
     where: { id: order.id },
@@ -161,9 +163,10 @@ export async function sendVendorSubmission(submissionId: string, editedBody?: st
   if (!submission) throw new Error("Not found");
 
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM || "orders@bacwater.ai";
+  const from = senderAddress(process.env.RESEND_FROM, "orders@bacwater.ai");
   const subject = editedSubject ?? submission.subject;
   const body = editedBody ?? submission.body;
+  const message = supplierOrderEmail(subject, body);
 
   let sent = false;
   if (key) {
@@ -172,8 +175,9 @@ export async function sendVendorSubmission(submissionId: string, editedBody?: st
       const delivery = await resend.emails.send({
         from,
         to: submission.vendor.contactEmail,
-        subject,
-        text: body,
+        subject: message.subject,
+        html: message.html,
+        text: message.text,
       });
       if (delivery.error || !delivery.data?.id) throw new Error("Email provider did not accept this message.");
       sent = true;
@@ -335,14 +339,15 @@ export async function replyToContact(id: string, subject: string, body: string) 
     return { ok: false as const, error: "Subject and body are both required." };
 
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM || "hello@bacwater.ai";
+  const from = senderAddress(process.env.RESEND_FROM, "hello@bacwater.ai");
 
   let sent = false;
   let failure: string | undefined;
   if (key) {
     try {
       const resend = new Resend(key);
-      const delivery = await resend.emails.send({ from, to: message.email, subject, text: body });
+      const reply = contactReplyEmail(subject.trim(), body.trim());
+      const delivery = await resend.emails.send({ from, to: message.email, subject: reply.subject, html: reply.html, text: reply.text });
       if (delivery.error || !delivery.data?.id) throw new Error("Email provider did not accept this message.");
       sent = true;
     } catch (e) {

@@ -155,7 +155,7 @@ function re(original?: string | null): string {
   return /^re:/i.test(s) ? s : `Re: ${s}`;
 }
 
-const SIGNOFF = "\n\nBACwater.ai\nhttps://bacwater.ai";
+const SIGNOFF = "\n\nBest,\nThe BACwater.ai team";
 
 export const REPLY_TEMPLATES: ReplyTemplate[] = [
   {
@@ -168,9 +168,9 @@ export const REPLY_TEMPLATES: ReplyTemplate[] = [
 
 Thanks for writing in.
 
-The plan builder at https://bacwater.ai/plan will work this out end to end: enter the vial strength printed on your label, the amount you want to measure, and the syringe you have, and it returns the BAC water volume, the syringe reading, how many measures the vial yields, and a printable label. Every number is deterministic arithmetic, not an estimate.
+The calculator at https://bacwater.ai/plan works this out for you. Enter the amount printed on your vial and the amount you use each time. It tells you how much BAC water to add, where to fill your syringe, and how many doses the vial holds. You can also save or print the result.
 
-If the numbers it gives you don't match what you expected, reply with the vial strength and the amount you're aiming for and I'll walk through the math with you.${SIGNOFF}`,
+If the numbers don't match what you expected, reply with the amount on your vial and the amount you're aiming for, and I'll walk through the math with you.${SIGNOFF}`,
   },
   {
     id: "medical",
@@ -182,7 +182,7 @@ If the numbers it gives you don't match what you expected, reply with the vial s
 
 Thanks for writing in, and I'm sorry: this isn't something I can help with.
 
-BACwater.ai is a calculation tool. It works out reconstitution volumes and syringe readings from numbers you supply. It is not a medical service, and we don't advise on whether a compound is appropriate for anyone, what amount to use, or how it might affect you. Please take those questions to a qualified clinician.
+BACwater.ai is a calculator. It does the math for mixing BAC water and reading a syringe, using numbers you supply. It is not a medical service, and we don't advise on whether a product is right for anyone, what amount to use, or how it might affect you. Please take those questions to a qualified clinician.
 
 If you have a question about how the calculator itself works, I'm glad to answer that.${SIGNOFF}`,
   },
@@ -196,7 +196,7 @@ If you have a question about how the calculator itself works, I'm glad to answer
 
 Thanks for reaching out: your request is noted and I'm handling it now.
 
-For context on what exists: an account holds your email address and the reconstitution plans you chose to save. Plans saved without an account are held against a random link ID rather than a person. Nothing is sold or shared with advertisers.
+Here is what we hold: an account stores your email address and the plans you chose to save. Plans saved without an account are tied to a random link, not to a person. Nothing is sold or shared with advertisers.
 
 I'll confirm here once the deletion is complete.${SIGNOFF}`,
   },
@@ -217,7 +217,7 @@ So I can reproduce it, could you tell me:
 - what you expected versus what you saw
 - your browser and whether it was phone or desktop
 
-If a calculation looks wrong, the exact vial strength and amount you entered is usually enough for me to trace it.${SIGNOFF}`,
+If a calculation looks wrong, the amount on your vial and the amount you entered are usually enough for me to trace it.${SIGNOFF}`,
   },
   {
     id: "partnership",
@@ -229,7 +229,7 @@ If a calculation looks wrong, the exact vial strength and amount you entered is 
 
 Thanks for the note. We aren't taking on guest posts, link exchanges, or sponsorship placements at the moment, so I'll pass on this one.
 
-If you're working on something specific to peptide reconstitution accuracy, feel free to send the details and I'll take a look.${SIGNOFF}`,
+If you're working on something that helps people mix and measure accurately, feel free to send the details and I'll take a look.${SIGNOFF}`,
   },
   {
     id: "general",
@@ -241,7 +241,7 @@ If you're working on something specific to peptide reconstitution accuracy, feel
 
 Thanks for writing in: I've read your message.
 
-Could you tell me a little more about what you were trying to do? If it relates to a specific calculation, the vial strength on your label and the amount you're aiming to measure is usually all I need.${SIGNOFF}`,
+Could you tell me a little more about what you were trying to do? If it's about a calculation, the amount on your vial and the amount you use each time are usually all I need.${SIGNOFF}`,
   },
 ];
 

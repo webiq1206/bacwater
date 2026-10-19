@@ -7,6 +7,8 @@ import { prisma } from "@/lib/db";
 import { takeActionBudget } from "@/lib/security/action-budget";
 import { signupSchema } from "@/lib/security/registration";
 import { hashResetToken, newResetToken, RESET_TOKEN_PATTERN } from "@/lib/security/password-reset";
+import { senderAddress } from "@/lib/email/layout";
+import { passwordResetEmail } from "@/lib/email/templates";
 const neutral = { ok: true as const, message: "If this email has a password-based account, a reset link will arrive shortly. Check your spam folder. The link expires in 30 minutes." };
 export async function requestPasswordReset(form: FormData) {
  const email = z.string().trim().email().max(254).safeParse(form.get("email"));
@@ -25,7 +27,8 @@ export async function requestPasswordReset(form: FormData) {
    await prisma.verificationToken.create({ data: { identifier: `password-reset:${user.id}`, token: reset.hash, expires: reset.expires } });
    // Fixed trusted origin; fragments keep the token out of access logs and referrers.
    const url = `https://bacwater.ai/reset-password#token=${reset.token}`;
-   const sent = await new Resend(process.env.RESEND_API_KEY).emails.send({ from: process.env.RESEND_FROM!, to: address, subject: "Reset your BACwater.ai password", text: `A password reset was requested for your BACwater.ai account. Open this link within 30 minutes:\n\n${url}\n\nIf you did not request this, ignore this email. Your password has not changed.` });
+   const message = passwordResetEmail(url);
+   const sent = await new Resend(process.env.RESEND_API_KEY).emails.send({ from: senderAddress(process.env.RESEND_FROM, "hello@bacwater.ai"), to: address, subject: message.subject, html: message.html, text: message.text });
    if (sent.error) throw new Error("Reset email failed");
   } catch {
    if (savedHash) await prisma.verificationToken.deleteMany({ where: { token: savedHash } }).catch(() => {});
