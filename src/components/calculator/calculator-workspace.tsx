@@ -80,7 +80,7 @@ export function CalculatorWorkspace({ title, description, children, help, refere
           <summary onClick={event => { event.preventDefault(); setHelpOpen(open => !open); }} aria-label={helpOpen ? "Close calculator help" : "Open calculator help"}><HelpCircle size={19} aria-hidden="true"/><span>Help</span></summary>
           <div className={styles.helpBody} role="region" aria-label="Calculator help and supplies" tabIndex={0}>
             <div className={styles.helpHeading}><h2>Help &amp; supplies</h2><button type="button" onClick={closeHelp} aria-label="Return to calculation"><X size={21} aria-hidden="true"/></button></div>
-            <p>Use the numbers from your label and instructions. We check the math. We do not tell you what to take or what to mix.</p>
+            <p>Type the numbers from your vial label and your instructions. We do the math and tell you how much BAC water to add and where to fill your syringe. We never pick your dose.</p>
             {usesGuidedMassForm ? <CalculatorProductTools selectedId={session.productId || routeProduct?.id || null} showProductPicker={false}/> : <div className={styles.water}><p><strong>Looking for BAC water?</strong></p><SupplierWaterLink/><p>Check the product instructions first. A link is not advice to use it.</p></div>}
             {help}
             <p className={styles.helpLinks}><Link href="/methodology">How the math works</Link><Link href="/contact">Report a problem</Link><Link href="/privacy">Privacy</Link></p>

@@ -491,7 +491,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   const hydrated=init?true:session.ready;
 
   const dosePresets: { mcg: number; label: string; hint: string }[] = [];
-  const weeklyRangeHint = "Enter the amount for one measurement. A schedule is optional.";
+  const weeklyRangeHint = "Your dose: the amount you use one time, from your instructions. A schedule is optional.";
 
   const primaryName =
     peptideSlug === "custom"
@@ -556,7 +556,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
   const saveHint = editing
     ? "Updates this plan in place. Its link, PDF and vial labels keep working and will show the new numbers."
     : !hasValidInputs || result.errors.length > 0
-      ? "Enter the product, total in the vial, amount for each time, and final liquid volume before saving."
+      ? "Fill in the product, the vial amount, your dose and the BAC water before saving."
       : "Saves your calculation with a shareable link, downloadable PDF and printable labels.";
 
   async function handleSave() {
@@ -648,7 +648,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
     },
     { label: "Syringe", value: syringe.label },
     {
-      label: "Final liquid volume",
+      label: "BAC water",
       value: `${customBacMl} mL (entered)`,
     },
     {
@@ -867,9 +867,9 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
               total={6}
               label="BAC water"
               title="How much BAC water will you mix?"
-              hint="Enter the total mL after mixing. Include any liquid already in the vial."
+              hint="Type the mL of BAC water you add to the vial. If the vial already has liquid in it, type the total liquid after adding water."
             >
-              <Label htmlFor="advanced-final-volume">Final liquid volume</Label>
+              <Label htmlFor="advanced-final-volume">BAC water to add</Label>
               <div className="mt-2 flex items-center gap-2">
                 <Input id="advanced-final-volume" aria-label="Final liquid volume in mL" type="text" inputMode="decimal" maxLength={64} value={volumeRaw} onChange={e => setVolumeRaw(e.target.value)} className="flex-1" />
                 <span className="text-sm text-muted-foreground">mL</span>

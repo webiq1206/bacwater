@@ -19,11 +19,11 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   await openAuditOptional(scope,'Plan name:');await expect(scope.getByLabel('Plan name',{exact:true})).toHaveValue('BPC-157 · 12 mg');
   await scope.getByLabel('Plan name',{exact:true}).fill('My lab record');
   await goQuestion(scope,'amount');await expect(scope.getByRole('radio').first()).toBeVisible();
-  await selectAuditOption(p,scope,'Amount unit','mcg');await expect(scope.getByLabel('Amount to measure',{exact:true})).toHaveValue('300');
+  await selectAuditOption(p,scope,'Amount unit','mcg');await expect(scope.getByLabel('Amount each time',{exact:true})).toHaveValue('300');
   await scope.getByRole('radio',{name:'Weekly total',exact:true}).check();
   await expect(scope.getByLabel('Total amount for one week',{exact:true})).toHaveValue('');
   await scope.getByLabel('Total amount for one week',{exact:true}).fill('600');await expect(scope.getByRole('button',{name:'Next',exact:true})).toBeDisabled();
-  await selectAuditOption(p,scope,'How many times per week?','Twice a week');await nextQuestion(scope);await nextQuestion(scope);
+  await selectAuditOption(p,scope,'How many times per week?','Twice a week');await nextQuestion(scope);await nextQuestion(scope);await nextQuestion(scope);
   await expect(scope.locator('[data-live-result]')).toContainText('0.1 mL');await openAuditOptional(scope,'Plan name:');await expect(scope.getByLabel('Plan name',{exact:true})).toHaveValue('My lab record');
   await a11y(p);await p.screenshot({path:`${out}/${engine}-desktop-result.png`});
  }));

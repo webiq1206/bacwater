@@ -19,12 +19,17 @@ export async function selectAuditOption(page, scope, label, option) {
   await page.getByRole('listbox').waitFor({state:'hidden'});
   await expect(trigger).toBeFocused();
 }
-export async function nextQuestion(scope) { await scope.getByRole('button',{name:'Next',exact:true}).click(); }
+/** Advance one step and wait for the step to change, so two quick clicks never land on the same step. */
+export async function nextQuestion(scope) {
+  const root=scope.locator('[data-guided-step]').first(), before=await root.getAttribute('data-guided-step').catch(()=>null);
+  await scope.getByRole('button',{name:'Next',exact:true}).click();
+  if(before)await expect.poll(()=>root.getAttribute('data-guided-step').catch(()=>null),{timeout:5000}).not.toBe(before);
+}
 export async function goQuestion(scope, target) {
   for (let i=0;i<24;i++) {
     const root=scope.locator('[data-guided-step]'), current=await root.getAttribute('data-guided-step');
     if(current===target)return;
-    const order=['product','name','vial-unit','vial','second-product','second-name','second-unit','second-amount','volume','amount','device','review'];
+    const order=['product','name','vial-unit','vial','second-product','second-name','second-unit','second-amount','amount','volume','device','review'];
     if(order.indexOf(current)>order.indexOf(target))await scope.getByRole('button',{name:'Back',exact:true}).click();
     else await nextQuestion(scope);
   }
@@ -35,8 +40,8 @@ export async function completeAuditHero(page, scope, {vial='12', amount='0.3', v
   await nextQuestion(scope);
   if((page.viewportSize()?.width??1440)<=780)scope=page.locator('[data-hero-focus]');
   await scope.getByLabel('Amount in vial',{exact:true}).fill(vial);await nextQuestion(scope);
-  await scope.getByLabel('Total liquid after mixing',{exact:true}).fill(volume);await nextQuestion(scope);
-  await scope.getByLabel('Amount to measure',{exact:true}).fill(amount);
+  await scope.getByLabel('Amount each time',{exact:true}).fill(amount);await nextQuestion(scope);
+  await scope.getByLabel('BAC water to add',{exact:true}).fill(volume);
   if(review){await nextQuestion(scope);await nextQuestion(scope);}
 
 }

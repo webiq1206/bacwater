@@ -48,20 +48,19 @@ try {
   await page.goto(`${origin}/tools/bac-water`);
   await chooseAuditMassProduct(page);
   await step('BAC calculator starts with known-volume mode and no assumed answer', async () => {
-    await expect(page.getByRole('button', { name: 'Use a known volume' })).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('');
+    await expect(page.getByRole('button', { name: 'I know how much water' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByLabel('BAC water to add (mL)', { exact: true })).toHaveValue('');
     await expect(page.getByRole('button',{name:'See my result',exact:true})).toBeDisabled();
     await expect(page.locator('#bac-result')).not.toBeVisible();
   });
   await step('Known label values produce the expected concentration and measurement', async () => {
     await page.getByLabel('Total amount in the vial', { exact: true }).fill('10');
-    await openAuditOptional(page,'Optional: amount-to-volume calculation');
     const amount=page.getByLabel('Amount for one time', { exact: true });
     await amount.fill('');
     // A whole-string fill misses a controlled field discarding "0." while typing.
     await amount.pressSequentially('0.4');
     await expect(amount).toHaveValue('0.4');
-    await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('2');
+    await page.getByLabel('BAC water to add (mL)', { exact: true }).fill('2');
     await page.getByRole('button',{name:'See my result',exact:true}).click();
     await expect(page.locator('#bac-result')).toBeVisible();
     await expect(page.locator('#bac-result')).toContainText('5 mg/mL');
@@ -85,35 +84,35 @@ try {
   });
   await step('Changed volume recalculates and persisted inputs survive refresh', async () => {
     await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('4');
+    await page.getByLabel('BAC water to add (mL)', { exact: true }).fill('4');
     await page.getByRole('button',{name:'See my result',exact:true}).click();
     await expect(page.locator('#bac-result')).toContainText('2.5 mg/mL');
     await expect(page.locator('#bac-result')).toContainText('0.16 mL');
     await page.reload();
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('4');
+    await expect(page.getByLabel('BAC water to add (mL)', { exact: true })).toHaveValue('4');
     await page.getByRole('button',{name:'See my result',exact:true}).click();
     await expect(page.locator('#bac-result')).toContainText('16 U-100 units');
   });
   await step('An explicit math example does not replace the entered volume', async () => {
     await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByRole('button', { name: 'Show a math example' }).click();
+    await page.getByRole('button', { name: 'Suggest an amount for me' }).click();
     await page.getByRole('button',{name:'See my result',exact:true}).click();
-    await expect(page.getByRole('heading', { name: 'Illustrative result' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Result with suggested water' })).toBeVisible();
     await expect(page.locator('#bac-result')).toContainText('2.5 mL');
     await expect(page.locator('#bac-result')).toContainText('10 U-100 units');
     await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByRole('button', { name: 'Use a known volume' }).click();
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('4');
+    await page.getByRole('button', { name: 'I know how much water' }).click();
+    await expect(page.getByLabel('BAC water to add (mL)', { exact: true })).toHaveValue('4');
     await expect(page.locator('#bac-result')).toContainText('16 U-100 units');
   });
   await step('Invalid volume blocks the result and clear removes saved inputs', async () => {
-    await page.getByLabel('Final liquid volume in mL', { exact: true }).fill('-1');
+    await page.getByLabel('BAC water to add (mL)', { exact: true }).fill('-1');
     await expect(page.locator('#bac-input-error')).toHaveAttribute('role', 'alert');
     await expect(page.locator('#bac-input-error')).toContainText('greater than zero');
     await expect(page.locator('#bac-result')).not.toContainText('mg/mL');
     await page.getByRole('button', { name: 'Clear entered values' }).click();
     await expect(page.getByLabel('Total amount in the vial', { exact: true })).toHaveValue('');
-    await expect(page.getByLabel('Final liquid volume in mL', { exact: true })).toHaveValue('');
+    await expect(page.getByLabel('BAC water to add (mL)', { exact: true })).toHaveValue('');
     await page.reload();
     await expect(page.getByLabel('Amount for one time', { exact: true })).toHaveValue('');
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);

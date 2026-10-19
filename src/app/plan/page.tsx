@@ -30,7 +30,7 @@ export default function PlanPage() {
           { name: "Build My Plan", url: "/plan" },
         ]}
       />
-      <CalculatorWorkspace title="Build your calculation" description="Use your label and instructions. We show the math." backHref="/">
+      <CalculatorWorkspace title="Build your calculation" description="Four quick questions. We tell you how much BAC water to add and where to fill your syringe. Then save or print it." backHref="/">
         <PlanForm mode="beginner" />
       </CalculatorWorkspace>
     </div>

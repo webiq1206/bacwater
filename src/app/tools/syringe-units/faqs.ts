@@ -8,18 +8,18 @@
 export const SYRINGE_UNIT_FAQS = [
   {
     q: "How many units are in 1 mL on a U-100 syringe?",
-    a: "100 units. U-100 means 100 units per mL, so 1 mL = 100 units, 0.5 mL = 50 units and 0.1 mL = 10 units. The same ratio applies to a 0.3 mL, 0.5 mL or 1 mL U-100 syringe; only the capacity and the printed graduation spacing differ.",
+    a: "100 units. U-100 means 100 units in every mL. So 1 mL is 100 units, 0.5 mL is 50 units and 0.1 mL is 10 units. This is true for the small 0.3 mL, the 0.5 mL and the 1 mL insulin syringes. They only differ in how much they hold and how far apart the lines are.",
   },
   {
     q: "How many units is 2 mL of BAC water?",
-    a: "2 mL × 100 = 200 U-100 units. That is more than a 1 mL insulin syringe holds, so the arithmetic does not mean a single draw. Check the actual device capacity and the product instructions; the converter only shows the scale relationship.",
+    a: "2 mL × 100 = 200 units. A 1 mL insulin syringe only holds 100 units, so you cannot draw 2 mL in one go with it. To add 2 mL of BAC water to a vial, people usually use a bigger syringe or fill the insulin syringe twice.",
   },
   {
     q: "How many U-100 units are in 0.5 mL?",
-    a: "0.5 mL × 100 = 50 U-100 units. To check the reverse calculation, divide 50 by 100 to get 0.5 mL. The same ratio gives 25 units for 0.25 mL and 10 units for 0.1 mL.",
+    a: "0.5 mL × 100 = 50 units. Going back, 50 ÷ 100 = 0.5 mL. In the same way, 0.25 mL is 25 units and 0.1 mL is 10 units.",
   },
   {
     q: "Can you convert mg directly to syringe units?",
-    a: "No. Milligrams measure mass, while the U-100 scale corresponds to volume. You also need the concentration in mg/mL. Divide your stated amount by that concentration to get mL, then multiply mL by 100 for the U-100 scale equivalent. For example, 0.5 mg at 2 mg/mL is 0.25 mL, or 25 U-100 units. These are illustrative numbers, not a recommended amount or device.",
+    a: "Not directly. mg is powder, units is liquid. You first need to know how many mg are in each mL of your mixed vial. Then: dose ÷ mg per mL = mL, and mL × 100 = units. For example, 0.5 mg at 2 mg per mL is 0.25 mL, which is the 25 line. The BAC water calculator does all of this from your vial amount, your dose and the water you add.",
   },
 ] as const;

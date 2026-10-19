@@ -74,7 +74,7 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-6 rounded-xl bg-accent-guide-soft p-5 sm:p-6">
           <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
-            For one time, your entered amount equals
+            Each time, fill your syringe to
           </div>
           <div className="mt-1 result-hero">
             {syringeReadout.kind === "u100"
@@ -106,14 +106,14 @@ export function PlanResults({ result }: Props) {
 
         <div className="mt-5 grid grid-cols-2 gap-px bg-border rounded-xl overflow-hidden @lg:grid-cols-4">
           <Stat label="Vial" value={`${result.input.vialStrengthMg} mg`} source="user" />
-          <Stat label="Final volume" value={`${formatMl(result.usedBacMl)} mL`} source={bacSource} />
+          <Stat label="BAC water added" value={`${formatMl(result.usedBacMl)} mL`} source={bacSource} />
           <Stat
             label="Amount in each mL"
             value={`${formatConcentration(result.finalConcentrationMgPerMl)} mg/mL`}
             sub={`${result.finalConcentrationMcgPerMl.toLocaleString()} mcg/mL`}
             source="calculated"
           />
-          <Stat label="Equal measurements" value={`${result.dosesPerVial}`} source="calculated" />
+          <Stat label="Doses in this vial" value={`${result.dosesPerVial}`} source="calculated" />
         </div>
 
         {!syringeReadout.exceedsSyringe&&<div className="mt-6">
@@ -147,18 +147,13 @@ export function PlanResults({ result }: Props) {
         </div>
         <div className="text-[15px] leading-relaxed space-y-3">
           <p>
-            Your vial holds{" "}
-            <strong>
-              {result.input.vialStrengthMg} mg
-            </strong>{" "}
-            of {result.input.peptideName || "the product"}, with a final liquid volume of{" "}
-            <strong>{formatMl(result.usedBacMl)} mL</strong>. Those are the values you entered, not instructions to add that much water.
+            Add <strong>{formatMl(result.usedBacMl)} mL</strong> of BAC water to your{" "}
+            <strong>{result.input.vialStrengthMg} mg</strong> vial of {result.input.peptideName || "the product"}. Every 1 mL of the liquid then holds <strong>{formatConcentration(result.finalConcentrationMgPerMl)} mg</strong>. These are the numbers you entered; if your instructions say a different water amount, follow them.
           </p>
           <p>
-            Measuring{" "}
-            <strong>{result.syringeReadout.displayLabel}</strong> each time gives
-            you <strong>{doseLabel}</strong>. You&apos;ll get about{" "}
-            <strong>{result.dosesPerVial} measurements</strong> from the vial.
+            Each time, fill your syringe to{" "}
+            <strong>{result.syringeReadout.displayLabel}</strong>. That is your dose of <strong>{doseLabel}</strong>. This vial gives you about{" "}
+            <strong>{result.dosesPerVial} doses</strong>.
           </p>
           {result.secondary && (
             <p>
@@ -288,10 +283,10 @@ export function PlanResults({ result }: Props) {
             <AccordionContent>
               <ol className="space-y-3 text-sm">
                 {[
-                  ["Save your plan", "get a permanent link, PDF, and printable vial labels."],
-                  ["Gather your supplies", "the list above tells you exactly what to order."],
-                  ["Follow the instructions", "the step-by-step guide walks you through mixing."],
-                  ["Measure to the mark", "the syringe diagram shows exactly where to measure."],
+                  ["Save your plan", "get a link, a PDF and a label you can stick on the vial."],
+                  ["Add the BAC water", "the amount shown above, unless your instructions say otherwise."],
+                  ["Fill the syringe to the line", "the syringe picture shows where."],
+                  ["Write it on the vial", "so you never have to work it out again."],
                 ].map(([title, rest], i) => (
                   <li key={i} className="flex gap-3">
                     <span className="step-number step-number--filled shrink-0 mt-0.5 h-5 w-5 text-[9px]">

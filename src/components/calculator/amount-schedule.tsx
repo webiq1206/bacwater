@@ -33,14 +33,14 @@ export function AmountScheduleFields({value,onChange,compact=false,section="all"
     setUnitError("");if(!value)setMassUnit("amount",unit);else onChange?.({...value,amount:converted.kind==="value"?converted[unit]:"",amountUnit:unit});
   }}/>;
   return <div className={`${styles.root} ${compact ? styles.compact : ""}`} data-amount-schedule data-schedule-section={section}>
-    {section==="unit"&&<div className={styles.field}><label>Amount unit</label>{unitSelect}<p>Copy mg or mcg from your instructions. Changing units keeps the same amount.</p></div>}
+    {section==="unit"&&<div className={styles.field}><label>Amount unit</label>{unitSelect}<p>Pick the unit written in your instructions. Changing it keeps the same amount.</p></div>}
     {show("amount")&&<div className={styles.field}><label htmlFor={`${id}-amount`}>{amountLabel}{section!=="all"&&<span aria-hidden="true"> ({s.amountUnit})</span>}</label>
       <div className={styles.inputRow}><input id={`${id}-amount`} data-schedule-amount type="text" inputMode="decimal" autoComplete="off" maxLength={64} value={s.amount} onChange={e=>{s.patch({amount:e.target.value});setUnitError("");}} aria-describedby={`${id}-amount-help`} aria-invalid={Boolean(s.amount.trim())&&convertMassText(s.amount,s.amountUnit).kind!=="value"}/>
       {section==="all"&&<div className={styles.unit}>Unit{unitSelect}</div>}</div>
-      <p id={`${id}-amount-help`}>This is the amount for one measurement, not the total in the vial. If your number is a daily or weekly total, open the optional section below.</p>
+      <p id={`${id}-amount-help`}>Your dose: the amount you use one time, from your instructions. Not the total in the vial. If you only have a daily or weekly total, open the section below.</p>
     </div>}
     {unitError&&<p className={styles.error} role="alert">{unitError}</p>}
-    {section==="all"?<details className={styles.explanation} open={s.basis!=="each"||!!s.timesPerWeek||undefined}><summary>Add a schedule or split a total (optional)</summary><p>Only needed for daily or weekly totals. For a single measurement, leave this closed.</p>    {show("basis")&&<fieldset><legend>This amount is for</legend><div className={styles.basis}>
+    {section==="all"?<details className={styles.explanation} open={s.basis!=="each"||!!s.timesPerWeek||undefined}><summary>Add a schedule or split a total (optional)</summary><p>Only needed if your instructions give a daily or weekly total. For a single dose, leave this closed.</p>    {show("basis")&&<fieldset><legend>This amount is for</legend><div className={styles.basis}>
       {([["each","One time","The amount each time."],["day","Whole day","A total to split over one day."],["week","Whole week","A total to split over one week."]] as const).map(([basis,title,hint])=><label key={basis} className={styles.choice}><input type="radio" name={`${id}-basis`} checked={s.basis===basis} onChange={()=>{
         if(basis===s.basis)return;
         // An old per-time amount must never silently become a daily or weekly total.
