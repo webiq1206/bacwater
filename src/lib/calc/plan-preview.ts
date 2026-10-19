@@ -26,10 +26,10 @@ export function planPreviewState(p: PlanPreviewInput) {
   const hasProduct = p.hasProduct && input.peptideSlug !== "hcg";
   const amountSuffix = p.amount.basis === "week" ? "per week" : p.amount.basis === "day" ? "per day" : "each time";
   const entries: PreviewEntry[] = [
-    { field: "product", label: "Product", value: p.hasProduct ? input.peptideName || "Custom product" : "Choose a product", complete: hasProduct, issue: input.peptideSlug === "hcg" ? "hCG uses IU. Open the IU calculator instead." : undefined },
-    { field: "vial", label: "Amount in vial", value: p.vialText.trim() ? `${p.vialText.trim()} ${p.vialUnit}` : "Add the label amount", complete: hasVial, issue: p.vialText.trim() && !hasVial ? "Check the vial amount and unit. Enter a positive number within the supported range." : undefined },
-    { field: "amount", label: "Entered amount", value: p.amount.amount.trim() ? `${p.amount.amount.trim()} ${p.amount.amountUnit} ${amountSuffix}` : "Add the amount to measure", complete: hasAmount, issue: p.amount.amount.trim() && !hasAmount ? schedule.ready ? "Check the amount and unit. The weekly total exceeds this calculator's numeric range." : schedule.message : undefined },
-    { field: "volume", label: "Final liquid volume", value: p.volumeText.trim() ? `${p.volumeText.trim()} mL` : "Add the final volume", complete: hasVolume, issue: p.volumeText.trim() && !hasVolume ? "Enter a positive final liquid volume from your instructions." : undefined },
+    { field: "product", label: "Product", value: p.hasProduct ? input.peptideName || "Custom product" : "Choose a product", complete: hasProduct, issue: input.peptideSlug === "hcg" ? "hCG is measured in IU. Open the IU calculator instead." : undefined },
+    { field: "vial", label: "Amount in vial", value: p.vialText.trim() ? `${p.vialText.trim()} ${p.vialUnit}` : "Add the amount on the label", complete: hasVial, issue: p.vialText.trim() && !hasVial ? "Check the vial amount and its unit. Type a number bigger than zero." : undefined },
+    { field: "amount", label: "Amount each time", value: p.amount.amount.trim() ? `${p.amount.amount.trim()} ${p.amount.amountUnit} ${amountSuffix}` : "Add the amount you use each time", complete: hasAmount, issue: p.amount.amount.trim() && !hasAmount ? schedule.ready ? "Check the amount and unit. The weekly total is too large for this calculator." : schedule.message : undefined },
+    { field: "volume", label: "BAC water", value: p.volumeText.trim() ? `${p.volumeText.trim()} mL` : "Add the BAC water amount", complete: hasVolume, issue: p.volumeText.trim() && !hasVolume ? "Type the mL of BAC water as a number bigger than zero." : undefined },
   ];
   const completed = entries.filter(entry => entry.complete).length;
   const issues = entries.flatMap(entry => entry.issue ? [entry.issue] : []);

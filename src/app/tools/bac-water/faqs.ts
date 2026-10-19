@@ -2,24 +2,23 @@
  * Question-and-answer copy shared by the visible reference sections and the
  * FAQPage schema on /tools/bac-water. Search Console shows this page and the
  * homepage receiving "how much BAC water" queries, so the questions are worded
- * the way people ask them. Every answer keeps the site's boundary: the
- * product instructions set the volume; the calculator checks the arithmetic.
+ * the way people ask them and each answer starts with a direct, plain reply.
  */
 export const BAC_WATER_FAQS = [
   {
     q: "How do I know how much BAC water to add?",
-    a: "The instructions for the exact product, or the stated concentration of an existing solution, set the final volume. Vial strength alone cannot answer it: 10 mg in 1 mL is 10 mg/mL and the same 10 mg in 2 mL is 5 mg/mL. Enter the volume from your instructions and this calculator shows the resulting concentration so you can check the arithmetic.",
+    a: "First check the instructions that came with your product. If they say an amount, use that. If they do not, type your vial amount and your dose into the calculator and tap Suggest an amount for me. It picks a common amount, usually 1 to 3 mL, that makes your dose land on an easy line of an insulin syringe. Any amount works for the math. It only changes how far you fill the syringe.",
   },
   {
     q: "How much BAC water goes in a 5 mg or 10 mg vial?",
-    a: "There is no universal volume. As arithmetic only, 5 mg in 1 mL is 5 mg/mL, 5 mg in 2 mL is 2.5 mg/mL, and 10 mg in 2 mL is 5 mg/mL. Which volume applies to a real product comes from its instructions, vial capacity and compatibility, none of which a calculator can verify.",
+    a: "It depends on your dose. For many doses, 2 mL is a comfortable amount. As math only: 5 mg in 2 mL is 2.5 mg per mL, so a 250 mcg dose is the 10 line on an insulin syringe. 10 mg in 2 mL is 5 mg per mL, so the same 250 mcg dose is the 5 line. Type your own numbers to see your lines.",
   },
   {
     q: "Does adding more BAC water change the amount in the vial?",
-    a: "No. More liquid lowers the concentration, but the total mass stays the same before any losses. 6 mg in 2 mL is 3 mg/mL; the same 6 mg in 3 mL is 2 mg/mL. Each measured portion then needs a larger volume for the same mass.",
+    a: "No. The powder in the vial stays the same. More water only spreads it out, so each mL is weaker and you fill the syringe a little further for the same dose. 6 mg in 2 mL is 3 mg per mL. The same 6 mg in 3 mL is 2 mg per mL.",
   },
   {
-    q: "Is the final volume the same as the water added?",
-    a: "Not necessarily. The calculator uses the final solution volume. Dissolved material, losses and vial capacity are not inferred, so use the final volume stated in your instructions or measured for an existing solution.",
+    q: "Is the BAC water amount the same as the final liquid volume?",
+    a: "For a normal dry powder vial, yes, close enough for this math. The powder adds almost no volume. If your vial already has liquid in it, type the total liquid after you add the water instead.",
   },
 ] as const;

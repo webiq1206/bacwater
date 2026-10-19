@@ -49,23 +49,23 @@ const POPULAR = [
 const FAQS = [
   {
     q: "What is a peptide calculator?",
-    a: "A peptide calculator converts the labeled amount and final liquid volume into concentration. Enter the amount to measure from instructions you already have to find its mL and syringe-unit equivalent. It does not select a diluent, dose or treatment.",
+    a: "It turns three numbers into clear steps. You give it the amount on your vial, your dose, and the BAC water you add (or let it suggest the water). It tells you how strong each mL is, which line to fill the syringe to, and how many doses are in the vial. It does not choose your dose.",
   },
   {
     q: "How do you calculate peptide reconstitution?",
-    a: "Concentration equals the vial amount divided by the final liquid volume. The volume to measure equals the amount you want divided by that concentration. On a U-100 insulin syringe, that volume times 100 gives the units. This calculator shows every step so you can check it.",
+    a: "Vial amount divided by BAC water gives the strength in mg per mL. Your dose divided by that strength gives the mL to draw. mL times 100 gives the line on a U-100 insulin syringe. Example: 5 mg in 2 mL is 2.5 mg/mL, so a 250 mcg dose is 0.1 mL, the 10 line.",
   },
   {
     q: "How much bacteriostatic water should I add to a peptide vial?",
-    a: "Vial strength alone cannot answer that question. Use the volume and diluent in the exact product instructions. An arithmetic comparison can show how concentration changes, but it does not establish compatibility, vial capacity or a safe preparation.",
+    a: "Use the amount in your product instructions if they give one. If they do not, the calculator suggests an amount, usually 1 to 3 mL, that makes your dose land on an easy syringe line. Any amount works for the math. More water just means a longer draw for the same dose.",
   },
   {
     q: "How many syringe units is my measurement?",
-    a: "On a U-100 insulin syringe, 100 units equal 1 mL, so 0.1 mL is 10 units and 0.05 mL is 5 units. Enter your concentration and the amount you want, and the calculator shows the corresponding scale reading. Displayed values may be rounded; verify the actual device graduations.",
+    a: "On a U-100 insulin syringe, 100 units is 1 mL. So 0.1 mL is the 10 line and 0.05 mL is the 5 line. The calculator shows your line from your vial amount, your dose and your BAC water. Check the lines on your real syringe.",
   },
   {
     q: "Does this calculator tell me how much peptide to take?",
-    a: "No. It calculates concentration and measurement from the numbers you enter. It does not recommend an amount, a frequency, or whether a compound is safe or suitable for anyone. Those questions are not math, and this site does not answer them.",
+    a: "No. Your dose comes from your own instructions. The calculator only turns that dose into a syringe line. It never recommends an amount, how often, or whether a product is safe for anyone.",
   },
 ];
 
@@ -104,21 +104,21 @@ export default function PeptideCalculatorPage() {
         }}
       />
 
-      <CalculatorWorkspace title="Peptide calculator" description="Choose your product first. Its format determines the fields and units you need." backHref="/" help={<>
+      <CalculatorWorkspace title="Peptide calculator" description="Pick your product, type your vial amount and your dose. We tell you how much BAC water to add and where to fill your syringe." backHref="/" help={<>
       {/* How it works: answer-first teaching, targets long-tail + AI overviews. */}
       <section className="mt-16 max-w-3xl">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">
           How the peptide calculator works
         </h2>
         <p className="mt-4 text-foreground/90 leading-relaxed">
-          The calculator uses your numbers and shows these steps:
+          You answer four quick questions. The calculator does these steps:
         </p>
         <ol className="mt-5 space-y-4">
           {[
-            ["Concentration", "Vial amount divided by final liquid volume. An illustrative 5 mg in a final 2 mL is 2.5 mg/mL."],
-            ["Volume to measure", "The amount you want divided by the concentration. 250 mcg at 2.5 mg/mL is 0.1 mL."],
-            ["Syringe units", "On a U-100 insulin syringe, 100 units equal 1 mL, so 0.1 mL is 10 units."],
-            ["Measurements per vial", "The vial amount divided by the amount per measurement. This is a quantity estimate, not a safe storage period."],
+            ["How much BAC water", "If your instructions say an amount, use that. If not, we suggest one that puts your dose on an easy syringe line. Example: 2 mL for a 5 mg vial and a 250 mcg dose."],
+            ["How strong each mL is", "Vial amount divided by the water. 5 mg in 2 mL is 2.5 mg in every mL."],
+            ["Where to fill the syringe", "Your dose divided by the strength. 250 mcg at 2.5 mg/mL is 0.1 mL, which is the 10 line on an insulin syringe."],
+            ["How many doses in the vial", "Vial amount divided by your dose. 5 mg holds twenty 250 mcg doses. This is a count, not how long it stays good."],
           ].map(([t, b], i) => (
             <li key={i} className="flex gap-4">
               <span className="step-number step-number--filled text-[11px] shrink-0">{i + 1}</span>
@@ -130,9 +130,8 @@ export default function PeptideCalculatorPage() {
           ))}
         </ol>
         <Callout variant="note" className="mt-6" title="What this calculator does not decide">
-          It calculates concentration and measurement from the numbers you enter.
-          It does not recommend how much to use, how often, or whether a compound
-          is safe or right for anyone.{" "}
+          It does the math from your numbers. It never picks your dose, how often
+          you use it, or whether a product is right for anyone.{" "}
           <Link href="/learn/what-you-cannot-know" className="font-medium underline underline-offset-4">
             What no calculation can verify.
           </Link>

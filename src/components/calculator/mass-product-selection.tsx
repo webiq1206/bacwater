@@ -20,5 +20,5 @@ export function MassProductSelection() {
 }
 export function MassProductGate({children}: {children: React.ReactNode}) {
  const s = useCalculationSession();
- return <><MassProductSelection/>{isSelectedMassProduct(s) ? children : <p className="rounded-xl border bg-muted p-5 text-base leading-relaxed">Choose the exact product before entering numbers. IU products, blends, solutions and lab water open their own calculators.</p>}</>;
+ return <><MassProductSelection/>{isSelectedMassProduct(s) ? children : <p className="rounded-xl border bg-muted p-5 text-base leading-relaxed">Step 1: pick your product above. Find its name on the vial label. Then we will ask for your numbers. Some products, like hCG or blends, open their own calculator.</p>}</>;
 }
