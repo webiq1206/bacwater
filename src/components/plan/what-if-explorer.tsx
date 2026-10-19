@@ -72,7 +72,7 @@ export function WhatIfExplorer({
         </div>
 
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-px bg-border rounded-lg overflow-hidden">
-          <Cell label="Concentration" value={`${formatConcentration(concentration)}`} unit="mg/mL" />
+          <Cell label="Strength of the mix" value={`${formatConcentration(concentration)}`} unit="mg/mL" />
           <Cell label="Volume to measure" value={doseMl.toFixed(3)} unit="mL" />
           <Cell
             label="Syringe units"

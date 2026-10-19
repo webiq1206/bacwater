@@ -19,9 +19,20 @@ export function QuestionSteps({ questions, current, onStep, onClear, finalAction
     previous.current = question.id;
     if (!changed && !focusNext.current) return;
     focusNext.current = false;
-    root.current?.querySelector<HTMLElement>("[data-guided-heading]")?.focus({ preventScroll: true });
-    root.current?.querySelector<HTMLElement>("[data-step-scroll]")?.scrollTo({ top: 0, behavior: "instant" });
-    root.current?.closest<HTMLElement>("[data-calculator-scroll], [data-hero-scroll]")?.scrollTo({ top: 0, behavior: "instant" });
+    const rootElement = root.current;
+    if (!rootElement) return;
+    const heading = rootElement.querySelector<HTMLElement>("[data-guided-heading]");
+    rootElement.querySelector<HTMLElement>("[data-step-scroll]")?.scrollTo({ top: 0, behavior: "instant" });
+    // After Next or Back the person must see the new question at the top of
+    // the screen: the step counter, the question and its first field, never
+    // the page title above it and never the bottom of the previous step. The
+    // homepage card scrolls inside itself, so it is kept in view as a whole;
+    // every other calculator scrolls the step block to the top of its
+    // scrolling area (the area keeps spare room below so this always works).
+    const inlineCard = rootElement.closest<HTMLElement>("[data-hero-calculator]");
+    if (inlineCard) inlineCard.scrollIntoView({ block: "nearest", behavior: "instant" });
+    else rootElement.scrollIntoView({ block: "start", behavior: "instant" });
+    heading?.focus({ preventScroll: true });
   }, [question.id]);
   function move(id: string) { focusNext.current = true; onStep(id); }
   return <div ref={root} className={styles.guided} data-hero-guided data-guided-step={question.id}>

@@ -14,6 +14,7 @@ import { getCatalog, relatedContent } from "@/lib/learn/catalog";
 import { RelatedReadingPanel } from "@/components/learn/related-reading";
 import { References } from "@/components/common/references";
 import { ReviewedBy } from "@/components/common/reviewed-by";
+import { ShortAnswer } from "@/components/common/short-answer";
 import { guideReferences } from "@/lib/content/references";
 import { renderBody } from "@/lib/content/render";
 import { extractMetaDescription } from "@/lib/content/checks";
@@ -68,6 +69,7 @@ export default async function GuidePage({ params }: Props) {
   const refs = guideReferences(slug);
   const presentation = Object.hasOwn(ARTICLE_GUIDES, slug) ? ARTICLE_GUIDES[slug] : undefined;
   const display = presentArticle(guide.body);
+  const shortAnswer = guide.metaDescription || extractMetaDescription(guide.body);
 
   // Tag-driven related content: surface the most relevant peptides, guides,
   // comparisons, and FAQs for this article, not just the newest guides.
@@ -95,6 +97,7 @@ export default async function GuidePage({ params }: Props) {
         className="mt-3"
         updated={guide.updatedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
       />
+      {shortAnswer && <ShortAnswer>{shortAnswer}</ShortAnswer>}
       <article className="mt-4 prose prose-neutral max-w-none">
         {renderBody(display.opening)}
         <GuideFigure slug={slug}/>

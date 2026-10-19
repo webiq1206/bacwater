@@ -114,7 +114,7 @@ export function WizardPreview({
                 emphasis
               />
               <Row
-                label="Concentration"
+                label="Strength of the mix"
                 value={formatConcentration(result.finalConcentrationMgPerMl)}
               />
               <Row

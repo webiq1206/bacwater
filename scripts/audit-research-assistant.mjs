@@ -18,7 +18,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
    try{
     await page.goto(origin,{waitUntil:'networkidle'});
-    if(width>=1024)await expect(page.getByRole('navigation',{name:'Primary navigation'}).getByRole('link',{name:'Products',exact:true})).toBeVisible();
+    if(width>=1024)await expect(page.getByRole('navigation',{name:'Primary navigation'}).getByRole('link',{name:'Calculator',exact:true})).toBeVisible();
     const launch=page.getByRole('button',{name:'Open research assistant',exact:true});
     const calc=await page.locator('[data-hero-calculator]').boundingBox(),launchBox=await launch.boundingBox();
     assert.ok(calc&&calc.y>=0&&calc.y+calc.height<=height,JSON.stringify({calc,width,height}));
@@ -49,7 +49,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   });
   await check(`${engine}: direct page and menu entry`,async()=>{
    const context=await browser.newContext({viewport:{width:390,height:844}});await context.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);const page=await context.newPage();
-   try{await page.goto(origin,{waitUntil:'networkidle'});await page.getByRole('button',{name:'Open navigation'}).click();await expect(page.getByRole('navigation',{name:'Expanded mobile navigation'}).getByRole('link',{name:'Products',exact:true})).toHaveAttribute('href','/recommendations');await page.getByRole('navigation',{name:'Expanded mobile navigation'}).getByRole('button',{name:'Research assistant',exact:true}).click();await expect(page.locator('[data-research-panel]')).toBeVisible();await page.keyboard.press('Escape');await page.goto(origin+'/research-finder',{waitUntil:'networkidle'});const input=page.getByRole('textbox',{name:'Your research question'});await input.fill('Weight-loss research');await input.press('Enter');await expect(page.locator('[data-research-match]')).toHaveCount(3);const box=await input.boundingBox();assert.ok(box.y+box.height<=844);await page.setViewportSize({width:390,height:360});await expect.poll(()=>page.locator('[data-research-page]').evaluate(el=>Math.round(el.getBoundingClientRect().height))).toBe(360);await expect(input).toBeInViewport();}finally{await context.close();}
+   try{await page.goto(origin,{waitUntil:'networkidle'});await page.getByRole('button',{name:'Open navigation'}).click();await expect(page.getByRole('navigation',{name:'Expanded mobile navigation'}).getByRole('link',{name:'Learn',exact:true})).toHaveAttribute('href','/learn');await page.getByRole('button',{name:'Close navigation'}).click();await page.getByRole('button',{name:'Open research assistant',exact:true}).click();await expect(page.locator('[data-research-panel]')).toBeVisible();await page.keyboard.press('Escape');await page.goto(origin+'/research-finder',{waitUntil:'networkidle'});const input=page.getByRole('textbox',{name:'Your research question'});await input.fill('Weight-loss research');await input.press('Enter');await expect(page.locator('[data-research-match]')).toHaveCount(3);const box=await input.boundingBox();assert.ok(box.y+box.height<=844);await page.setViewportSize({width:390,height:360});await expect.poll(()=>page.locator('[data-research-page]').evaluate(el=>Math.round(el.getBoundingClientRect().height))).toBe(360);await expect(input).toBeInViewport();}finally{await context.close();}
   });
  }finally{await browser.close();}
 }

@@ -46,7 +46,7 @@ export function LivePlanPreview({ preview, result, expanded, onExpand, onEdit, c
         <dt>{entry.label}</dt><dd>{entry.value}{entry.complete && <Check size={13} aria-hidden="true" />}</dd>
       </div>)}<div><dt>Selected device</dt><dd>{scale.label}</dd></div></dl>
       {preview.concentrationText && <div className={styles.metrics}>
-        <div><span>Concentration</span><strong data-preview-concentration>{preview.concentrationText}</strong></div>
+        <div><span>Strength of the mix</span><strong data-preview-concentration>{preview.concentrationText}</strong></div>
         {preview.ready && <div><span>Equal measurements</span><strong data-preview-portions>{result.dosesPerVial} per vial</strong></div>}
       </div>}
       {preview.ready ? <>
@@ -57,7 +57,7 @@ export function LivePlanPreview({ preview, result, expanded, onExpand, onEdit, c
         <details className={styles.formula}><summary>How these numbers are calculated</summary><p>{formatNumeric(result.input.vialStrengthMg, 6)} mg ÷ {formatNumeric(result.usedBacMl, 6)} mL = {preview.concentrationText}.</p><p>{formatNumeric((result.schedule?.dosePerInjectionMcg || result.input.doseMcg) / 1000, 6)} mg ÷ {preview.concentrationText} = {formatDoseVolumeMl(result.doseVolumeMl)} per measurement.</p><p>Confirm the scale, capacity and graduation spacing on your actual device. Rounded displays are not instructions to round an amount.</p></details>
         {children && <details className={styles.full}><summary>View the full calculation</summary>{children}</details>}
       </> : <>
-        <div className={styles.next}><h3>{preview.issues.length ? "Check your entries" : "Still needed"}</h3><p>{preview.concentrationText ? "Concentration is ready. Complete the remaining fields to calculate the amount to measure." : "Your entries appear above as you type. No missing numbers are assumed."}</p>
+        <div className={styles.next}><h3>{preview.issues.length ? "Check your entries" : "Still needed"}</h3><p>{preview.concentrationText ? "The mix strength is ready. Complete the remaining fields to calculate the amount to measure." : "Your entries appear above as you type. No missing numbers are assumed."}</p>
           {preview.remaining.map(entry => <button type="button" key={entry.field} onClick={() => onEdit(entry.field)}>{entry.field === "product" ? "Choose a product" : entry.field === "amount" ? "Enter the amount to measure" : entry.field === "vial" ? "Enter vial amount" : "Enter final liquid volume"}<ArrowRight size={15} aria-hidden="true" /></button>)}
           {preview.secondaryPending && <button type="button" onClick={() => onEdit("blend")}>Complete blend details<ArrowRight size={15} aria-hidden="true" /></button>}
           {preview.issues.length > 0 && <ul>{preview.issues.map(issue => <li key={issue}>{issue}</li>)}</ul>}

@@ -2,7 +2,7 @@
 import { BAC_WATER_FAQS } from "./faqs";
 import { CalculationOutcome } from "@/components/calculator/calculation-events";
 import { MassProductGate } from "@/components/calculator/mass-product-selection";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CalculatorWorkspace, WorkspaceActions } from "@/components/calculator/calculator-workspace";
 
 import Link from "next/link";
@@ -11,9 +11,9 @@ import { SupplyChecklist } from "@/components/tools/supply-checklist";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/common/copy-button";
-import { CarriedOverNotice } from "@/components/tools/carried-over-notice";
 import { useVialContext, type MassUnit } from "@/lib/tools/vial-context";
 import { usePersistentState } from "@/lib/use-persistent-state";
+import { plainWarnings } from "@/lib/calc/plain-warnings";
 import { decimalError, positiveDecimal } from "@/lib/calc/number-text";
 import { suggestBacWaterMl, mlText, unitsText } from "@/lib/calc/bac-water-suggestion";
 
@@ -35,14 +35,15 @@ export default function BacWaterCalculatorPage() {
   function switchScreen(next:"inputs"|"result") {
     setScreen(next);
     requestAnimationFrame(()=>{
-      panels.current?.closest<HTMLElement>("[data-calculator-scroll]")?.scrollTo({top:0,behavior:"instant"});
-      const heading=panels.current?.querySelector<HTMLElement>(`[data-screen="${next}"] h2`);
+      // The next screen starts at the top of the scrolling area, so nobody
+      // lands on the bottom of the previous one and has to scroll up.
+      const screenPanel=panels.current?.querySelector<HTMLElement>(`[data-screen="${next}"]`);
+      screenPanel?.scrollIntoView({block:"start",behavior:"instant"});
+      const heading=screenPanel?.querySelector<HTMLElement>("h2");
       if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
     });
   }
-  const [savedMode, setMode] = usePersistentState<"known" | "example">("bacwater.tool.bacwater.mode.v2", "known");
   const [savedVolume, setVolume] = usePersistentState<string>("bacwater.tool.bacwater.volume.v2", "");
-  const mode = savedMode === "example" ? "example" : "known";
   const volumeText = typeof savedVolume === "string" ? savedVolume : "";
   const vialAmount = Number(vial.vialInput);
   const measurementAmount = Number(vial.doseInput);
@@ -50,7 +51,17 @@ export default function BacWaterCalculatorPage() {
   const measurementMg = vial.doseUnit === "mcg" ? measurementAmount / 1000 : measurementAmount;
   const amountsValid = [vialMg, measurementMg].every(n => Number.isFinite(n) && n > 0);
   const suggestion = amountsValid ? suggestBacWaterMl(vialMg, measurementMg * 1000) : null;
-  const volume = mode === "example" ? (suggestion?.ml ?? 0) : positiveDecimal(volumeText) ?? 0;
+  const volume = positiveDecimal(volumeText) ?? 0;
+  const usingSuggestion = suggestion !== null && volume === suggestion.ml;
+  // Fill the water once per vial-and-dose pair so the result is one tap away.
+  const autoFilled = useRef("");
+  useEffect(() => {
+    if (!suggestion) return;
+    const key = `${vialMg}|${measurementMg}`;
+    if (autoFilled.current === key) return;
+    autoFilled.current = key;
+    if (!volumeText.trim()) setVolume(String(suggestion.ml));
+  }, [suggestion, vialMg, measurementMg, volumeText, setVolume]);
   const concentration = Number.isFinite(vialMg) && vialMg > 0 && volume > 0 ? vialMg / volume : 0;
   const concentrationValid = [volume, concentration].every(n => Number.isFinite(n) && n > 0);
   const measurementMl = concentration > 0 ? measurementMg / concentration : 0;
@@ -58,15 +69,15 @@ export default function BacWaterCalculatorPage() {
   const valid = amountsValid && [volume, concentration, measurementMl, units].every(n => Number.isFinite(n) && n > 0);
   const dosesPerVial = valid ? Math.floor(vialMg / measurementMg + 1e-9) : 0;
   const invalidAmount = [vialAmount, measurementAmount].some(n => !Number.isFinite(n) || n < 0);
-  const invalidVolume = mode === "known" && volumeText.trim() !== "" && (!Number.isFinite(volume) || volume <= 0);
+  const invalidVolume = volumeText.trim() !== "" && (!Number.isFinite(volume) || volume <= 0);
   const outsideRange = vialMg > 0 && volume > 0 && (!concentrationValid || (measurementMg > 0 && !valid));
-  const error = decimalError(vial.vialText, "Total amount in the vial") || decimalError(vial.amountText, "Amount for one time") || (mode === "known" ? decimalError(volumeText, "BAC water") : "") || (invalidAmount ? "Type numbers bigger than zero and check the units." : invalidVolume ? "BAC water must be greater than zero." : outsideRange ? "These numbers are too big or too small for this calculator. Check the amounts and units." : mode === "example" && !amountsValid ? "To get a suggestion, fill in the vial amount and the amount for one time." : "");
+  const error = decimalError(vial.vialText, "Total amount in the vial") || decimalError(vial.amountText, "Amount for one time") || decimalError(volumeText, "BAC water") || (invalidAmount ? "Type numbers bigger than zero and check the units." : invalidVolume ? "BAC water must be greater than zero." : outsideRange ? "These numbers are too big or too small for this calculator. Check the amounts and units." : measurementMg > vialMg && amountsValid ? "Your amount for one time is bigger than the whole vial. Check the number and whether it is mg or mcg." : "");
   const canShowResult = concentrationValid && !error;
 
   function clear() {
     vial.clear();
     setVolume("");
-    setMode("known");
+    autoFilled.current = "";
   }
 
   return (
@@ -93,14 +104,13 @@ export default function BacWaterCalculatorPage() {
       <MassProductGate><CalculationOutcome ready={canShowResult}/><div ref={panels} data-active-screen={screen} className="bac-screen-panels grid items-start gap-6 lg:grid-cols-2">
         <section data-screen="inputs" className="min-w-0 space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-labelledby="volume-inputs-heading">
           <h2 id="volume-inputs-heading" className="text-xl font-semibold">Your numbers</h2>
-          <CarriedOverNotice visible={vial.carriedOver} onClear={clear} />
           <div>
             <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-foreground text-xs font-semibold text-background">1</span><label htmlFor="bac-vial-amount" className="block text-sm font-medium">Total amount in the vial</label></div>
             <div className="mt-2 flex gap-2">
               <Input id="bac-vial-amount" type="text" inputMode="decimal" maxLength={64} value={vial.vialText} onChange={e => vial.setVialText(e.target.value)} placeholder="Example: 10" className="min-w-0 flex-1" aria-describedby="bac-vial-help bac-input-error" aria-invalid={Boolean(decimalError(vial.vialText, "Total amount in the vial"))} />
               <UnitChoice value={vial.vialUnit} onChange={vial.setVialUnit} label="Vial amount unit" />
             </div>
-            <p id="bac-vial-help" className="mt-2 text-xs text-muted-foreground">Look at the vial label. Type the number next to mg. If it says 10 mg, type 10.</p>
+            <p id="bac-vial-help" className="mt-2 text-sm text-muted-foreground">Look at the vial label. Type the number next to mg. If it says 10 mg, type 10.</p>
           </div>
           <div>
             <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-foreground text-xs font-semibold text-background">2</span><label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount for one time</label></div>
@@ -108,23 +118,20 @@ export default function BacWaterCalculatorPage() {
               <Input id="bac-measured-amount" type="text" inputMode="decimal" maxLength={64} value={vial.amountText} onChange={e => vial.setAmountText(e.target.value)} placeholder="Example: 250" className="min-w-0 flex-1" aria-describedby="bac-measurement-help bac-input-error" aria-invalid={Boolean(decimalError(vial.amountText, "Amount for one time"))} />
               <UnitChoice value={vial.doseUnit} onChange={vial.setDoseUnit} label="Measurement amount unit" />
             </div>
-            <p id="bac-measurement-help" className="mt-2 text-xs text-muted-foreground">Your dose: how much you use one time, from your own instructions. It is not the vial total. Leave it blank if you only want the strength per mL.</p>
+            <p id="bac-measurement-help" className="mt-2 text-sm text-muted-foreground">Your dose: how much you use one time, from your own instructions. It is not the vial total. Leave it blank if you only want the strength per mL.</p>
           </div>
           <div className="border-t border-border pt-5">
-            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-foreground text-xs font-semibold text-background">3</span><p className="text-sm font-medium">BAC water</p></div>
-            <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="How to set the BAC water amount">
-              <Button type="button" variant={mode === "known" ? "brand" : "outline"} aria-pressed={mode === "known"} onClick={() => setMode("known")}>I know how much water</Button>
-              <Button type="button" variant={mode === "example" ? "brand" : "outline"} aria-pressed={mode === "example"} onClick={() => setMode("example")}>Suggest an amount for me</Button>
-            </div>
-            {mode === "known" ? <div className="mt-4"><label htmlFor="bac-final-volume" className="block text-sm font-medium">BAC water to add (mL)</label><Input id="bac-final-volume" type="text" inputMode="decimal" maxLength={64} value={volumeText} onChange={e => setVolume(e.target.value)} placeholder={suggestion ? `Example: ${mlText(suggestion.ml)}` : "Example: 2"} className="mt-2" aria-describedby="bac-volume-help bac-input-error" aria-invalid={invalidVolume} /><p id="bac-volume-help" className="mt-2 text-xs text-muted-foreground">Type the mL of BAC water from your instructions. If the vial already has liquid in it, type the total liquid after adding water.{suggestion ? ` Not sure? ${mlText(suggestion.ml)} mL would put your dose on the ${unitsText(suggestion.units)} line.` : ""}</p></div> : <div className="mt-4 rounded-lg bg-muted p-3 text-sm leading-relaxed">{suggestion ? <><p className="flex items-center gap-2 font-medium"><Sparkles size={16} aria-hidden="true"/>Suggested: {mlText(suggestion.ml)} mL of BAC water</p><p className="mt-1 text-muted-foreground">With {mlText(suggestion.ml)} mL, your dose lands on the {unitsText(suggestion.units)} line of an insulin syringe. That is an easy line to find. If your instructions give a different amount, use theirs.</p></> : <p>Fill in the vial amount and the amount for one time. Then we can suggest how much water to add.</p>}</div>}
+            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-foreground text-xs font-semibold text-background">3</span><label htmlFor="bac-final-volume" className="block text-sm font-medium">BAC water to add (mL)</label></div>
+            <Input id="bac-final-volume" type="text" inputMode="decimal" maxLength={64} value={volumeText} onChange={e => setVolume(e.target.value)} placeholder="Example: 2" className="mt-2" aria-describedby="bac-volume-help bac-input-error" aria-invalid={invalidVolume} />
+            {suggestion ? <div className="mt-3 rounded-lg bg-muted p-3 text-sm leading-relaxed" data-water-suggestion><p className="flex items-center gap-2 font-medium"><Sparkles size={16} aria-hidden="true"/>{usingSuggestion ? `Using our suggestion: ${mlText(suggestion.ml)} mL` : `Our suggestion: ${mlText(suggestion.ml)} mL`}</p><p id="bac-volume-help" className="mt-1 text-muted-foreground">Your dose then lands on the {unitsText(suggestion.units)} line of an insulin syringe. If your instructions give a different amount, type that instead.</p>{!usingSuggestion && <Button type="button" variant="outline" className="mt-2" onClick={() => setVolume(String(suggestion.ml))}>Use {mlText(suggestion.ml)} mL</Button>}</div> : <p id="bac-volume-help" className="mt-2 text-sm text-muted-foreground">Type the mL of BAC water from your instructions. Fill in steps 1 and 2 and we will suggest an amount.</p>}
           </div>
           <p id="bac-input-error" role={error ? "alert" : undefined} className="text-sm text-destructive">{error}</p>
           <Button type="button" variant="outline" onClick={clear}>Clear entered values</Button>
         </section>
 
         <section data-screen="result" className="section-dark min-w-0 rounded-2xl p-5 sm:p-7" aria-labelledby="volume-result-heading">
-          <h2 id="volume-result-heading" className="text-xl font-semibold">{mode === "example" ? "Result with suggested water" : "Your result"}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">{mode === "example" ? "Using our suggested amount of water. Your instructions come first if they say otherwise." : "Based only on the numbers you typed."}</p>
+          <h2 id="volume-result-heading" className="text-xl font-semibold">Your result</h2>
+          <p className="mt-2 text-sm text-muted-foreground">{usingSuggestion ? "Using our suggested amount of water. Your instructions come first if they say otherwise." : "Based only on the numbers you typed."}</p>
           <div className="mt-5" role="status" aria-live="polite" aria-atomic="true" id="bac-result">
             {canShowResult ? <ol className="space-y-4">
               <li className="flex gap-3"><span className="mt-0.5 inline-grid h-7 w-7 shrink-0 place-items-center rounded-full bg-background text-sm font-semibold text-foreground">1</span><div><p className="text-sm text-muted-foreground">Add this much BAC water to the vial</p><p className="mt-1 break-words text-3xl font-semibold">{display(volume)} mL</p></div></li>
@@ -132,13 +139,12 @@ export default function BacWaterCalculatorPage() {
               {valid && <li className="flex gap-3"><span className="mt-0.5 inline-grid h-7 w-7 shrink-0 place-items-center rounded-full bg-background text-sm font-semibold text-foreground">3</span><div><p className="text-sm text-muted-foreground">Each time, fill an insulin syringe to the</p><p className="mt-1 break-words text-3xl font-semibold">{display(units)} U-100 units line</p><p className="mt-1 break-words text-sm">That is {display(measurementMl)} mL for your {display(measurementMg)} mg dose. This vial gives you about {dosesPerVial} {dosesPerVial === 1 ? "dose" : "doses"}.</p></div></li>}
             </ol> : <p className="rounded-lg border border-border p-4 text-sm">{error || "Fill in the vial amount and the BAC water. Add the amount for one time to see where to fill your syringe."}</p>}
           </div>
-          {canShowResult && <CopyButton className="mt-3" value={`${precise(vialMg)} mg ÷ ${precise(volume)} mL = ${precise(concentration)} mg/mL`} label="Copy concentration" />}
+          {canShowResult && <CopyButton className="mt-3" value={`${precise(vialMg)} mg ÷ ${precise(volume)} mL = ${precise(concentration)} mg/mL`} label="Copy the strength" />}
           {canShowResult && valid && <>
             <CopyButton className="mt-3" value={`Add ${precise(volume)} mL of BAC water to the ${precise(vialMg)} mg vial = ${precise(concentration)} mg/mL. Each ${precise(measurementMg)} mg dose = ${precise(measurementMl)} mL = ${precise(units)} U-100 units. About ${dosesPerVial} doses per vial. Math only; follow your own instructions.`} label="Copy all steps" />
-            {measurementMg > vialMg && <p className="mt-3 rounded-lg border border-border p-3 text-sm">Your amount for one time is bigger than the whole vial. Check the numbers and the units (mg or mcg).</p>}
-            {measurementMl > 1 && <p className="mt-3 rounded-lg border border-border p-3 text-sm">This is more than a 1 mL insulin syringe holds. Check your numbers, or use less water so each mL is stronger.</p>}
+            {measurementMl > 1 && <p className="mt-3 rounded-lg border border-border p-3 text-sm">{plainWarnings(["exceeds the capacity of the selected syringe"])[0]}</p>}
           </>}
-          <p className="mt-5 text-xs leading-relaxed text-muted-foreground">U-100 means the syringe has 100 units in 1 mL. Check that your syringe says U-100 and look at its lines. Numbers are rounded for display. This does not tell you how long a mixed vial lasts.</p>
+          <p className="mt-5 text-sm leading-relaxed text-muted-foreground">U-100 means the syringe has 100 units in 1 mL. Check that your syringe says U-100 and look at its lines. Numbers are rounded for display. This does not tell you how long a mixed vial lasts.</p>
           <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="brand"><Link href="/plan">Save or print this</Link></Button></div>
         </section>
       </div>

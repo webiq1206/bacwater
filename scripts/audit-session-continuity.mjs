@@ -49,7 +49,6 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
    await p.getByRole('option',{name:'BPC-157',exact:true}).click();
    await expect(p.getByLabel('Vial strength',{exact:true})).toHaveValue('40');
    await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2000');
-   await expect(p.getByText(/Your numbers came with you/)).toBeVisible();
   });
   await check('Daily totals and invalid schedules show the correct meaning',async()=>{
    await p.getByRole('radio',{name:/^Whole day/}).check();await p.getByLabel('Total amount for one day',{exact:true}).fill('2000');

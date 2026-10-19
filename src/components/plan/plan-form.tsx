@@ -4,6 +4,7 @@ import { productDisplayName } from "@/lib/partners/supplier-catalog";
 
 import Link from "next/link";
 import { useCalculationSession, useSessionDraft, readCalculation, chooseCalculationProduct, resumeMassCalculation, type SharedCalculation } from "@/lib/session/calculation-session";
+import { restoreRememberedIfEmpty, forgetRemembered } from "@/lib/session/device-memory";
 import { amountSchedule } from "@/lib/calc/amount-schedule";
 import { AmountScheduleFields, SessionValuesNotice, isCustomSchedule } from "@/components/calculator/amount-schedule";
 function usePlanField<K extends keyof SharedCalculation>(key:K, initial:SharedCalculation[K], isolated:boolean) {
@@ -75,6 +76,8 @@ function usePlanDraft<T>(key:string, initial:T, isolated:boolean) {
   return isolated?[local,setLocal] as const:[shared,setShared] as const;
 }
 type Mode = "beginner" | "advanced";
+/** The name used when someone skips the product list and just types numbers. */
+const SKIPPED_PRODUCT_NAME = "My vial";
 type Unit = "mg" | "mcg";
 
 export interface PlanFormInitial {
@@ -339,7 +342,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
 
   const [contextRestored,setContextRestored]=useState(!!init);
   useEffect(()=>{
-    if(!init)resumeMassCalculation();
+    if(!init){resumeMassCalculation();restoreRememberedIfEmpty();}
     setContextRestored(true);
   },[init]);
 
@@ -672,7 +675,8 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
     {presentation !== "hero" && <div className="mb-6"><ModeToggle mode={mode} onChange={setMode}/></div>}
     {!init && <SessionValuesNotice compact={presentation === "hero"}/>}
     <HeroPlanSteps step={questionStep} onStep={setQuestionStep} preview={preview} result={result} productChosen={PEPTIDES.some(p => p.slug === peptideSlug)}
-      customName={peptideSlug === "custom" ? <Input aria-label="Custom peptide name" placeholder="Type the name on your label" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/> : undefined}
+      customName={peptideSlug === "custom" && customPeptideName !== SKIPPED_PRODUCT_NAME ? <Input aria-label="Custom peptide name" placeholder="Type the name on your label" maxLength={100} value={customPeptideName} onChange={e => setCustomPeptideName(e.target.value)}/> : undefined}
+      onSkipProduct={init ? undefined : () => { selectPeptide("custom"); setCustomPeptideName(SKIPPED_PRODUCT_NAME); }}
       product={<ProductPicker compact value={peptideSlug} onChange={selectPeptide} label="Product"/>}
       secondary={showBlend ? <p className="mt-3 text-sm">This draft includes {secondaryName}: {secondaryVialMg} mg. <Link className="underline" href="/plan/new">Edit blend details in the workspace</Link>, or <button type="button" className="underline min-h-11" onClick={() => setShowBlend(false)}>remove the second product</button>.</p> : undefined}
       secondaryQuestions={showBlend ? [
@@ -684,7 +688,7 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
       vialOptions={hasPeptide ? peptide.commonVialStrengthsMg.slice(0,3) : []} vial={vialRaw} unit={vialUnit} onVial={setVialRaw} onUnit={unit => { const c = convertMassText(vialRaw, vialUnit); if (vialRaw.trim() && (c.kind !== "value" || c[unit].length > 64)) return; setVialRaw(c.kind === "value" ? c[unit] : ""); setVialUnit(unit); }}
       amount={scheduleInput} onAmount={n=>{setAmountRaw(n.amount);setDoseUnit(n.amountUnit);setAmountBasis(n.basis);setScheduleCount(n.timesPerWeek);}} volume={volumeRaw} onVolume={setVolumeRaw} date={dateMixed} onDate={setDateMixed}
       device={syringeType} onDevice={setSyringeType} name={nameValue} onName={presentation === "hero" ? setHeroName : setPlanName} onSave={handleSave} saving={saving} saveLabel={saveLabel} customSchedule={customSchedule} onCustom={setCustomSchedule}
-      onClear={()=>{if(!init){session.clear();return;}setVialRaw("");setVialUnit("mg");setAmountRaw("");setDoseUnit("mg");setAmountBasis("each");setScheduleCount("");setVolumeRaw("");setDateMixed("");setShowBlend(false);setPlanName(null);}}/>
+      onClear={()=>{if(!init){session.clear();forgetRemembered();return;}setVialRaw("");setVialUnit("mg");setAmountRaw("");setDoseUnit("mg");setAmountBasis("each");setScheduleCount("");setVolumeRaw("");setDateMixed("");setShowBlend(false);setPlanName(null);}}/>
     {savedPlan && <PostSaveDialog publicId={savedPlan.publicId} ownedByUser={savedPlan.ownedByUser} open onOpenChange={open => { if (!open) setSavedPlan(null); }}/>}
   </div>;
   function editPreviewField(field: PreviewField) {

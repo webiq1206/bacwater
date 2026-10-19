@@ -1,4 +1,5 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
+import { ShortAnswer } from "@/components/common/short-answer";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
@@ -25,7 +26,7 @@ export default function BacWaterConcentrationTablePage() {
     <WebPageJsonLd name={title} description={description} url={PATH} citations={references} breadcrumb={crumbs.map(c => ({ name: c.label, url: c.href }))} />
     <Breadcrumbs items={crumbs} />
     <p className="eyebrow">Guide</p>
-    <h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">How much BAC water for a 5, 10, 20 or 30 mg vial? What each volume does to mg/mL.</h1>
+    <h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">How much BAC water for a 5, 10, 20 or 30 mg vial? What each volume does to mg/mL.</h1><ShortAnswer>{description}</ShortAnswer>
     <p className="mt-5 text-lg leading-relaxed">There is no single right amount. The final liquid volume comes from the instructions for the exact product, not from the vial size and not from this site. What arithmetic can show is the concentration (the amount in each mL) that a given final volume produces. The table below does that for common vial amounts.</p>
     <p className="mt-3 text-sm text-muted-foreground">Illustrative arithmetic and notation only, not product instructions.</p>
     <section className="mt-9 space-y-3">
