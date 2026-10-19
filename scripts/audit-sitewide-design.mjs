@@ -10,24 +10,21 @@ await c.route('**/*',r=>{if(new URL(r.request().url()).origin===origin)return r.
 await c.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);
 const p=await c.newPage();p.on('pageerror',e=>errors.push(String(e)));
 async function check(name,fn){try{await fn();results.push({name,status:'passed'});}catch(e){results.push({name,status:'failed',error:String(e)});throw e;}}
+const expected=['amino-h2o','glp-1','glp-2','glp-3','bpc-157','ghk-cu','tb-500'];
 const productNames=JSON.parse(await fs.readFile(new URL('./fixtures/partner-product-names.json',import.meta.url),'utf8'));
 const productUrl=id=>`https://www.aminoclub.com/us/products/${id}?utm_source=affiliate_marketing&code=WEBIQ`;
 try{
  await check('Homepage presents the calculator before supplier browsing',async()=>{await p.goto(origin);await expect(p.locator('#quick-calculator').getByRole('button',{name:'Open hero calculator full screen',exact:true})).toBeVisible();const pos=await p.evaluate(()=>document.querySelector('#quick-calculator').compareDocumentPosition(document.querySelector('[data-supplier-shelf]')));assert.ok(pos&4);await p.locator('#quick-calculator').getByRole('button',{name:'Open hero calculator full screen',exact:true}).click();await expect(p.locator('[data-hero-focus]')).toBeVisible();await expect(p.locator('[data-hero-focus]').getByRole('combobox',{name:'Product',exact:true})).toBeVisible();});
- await check('Homepage keeps one BAC water feature with exact attribution and a link to the full directory',async()=>{
+ await check('The BAC water feature and 49 carousel cards retain all 50 listings and exact affiliate attribution',async()=>{
    await p.goto(origin);const shelf=p.locator('[data-supplier-shelf]'),water=shelf.locator('[data-bac-water-feature]');
    await expect(shelf).toHaveCount(1);await expect(water).toHaveCount(1);await expect(water).toContainText('BAC Water');
    await expect(water.getByRole('link',{name:'View product details',exact:true})).toHaveAttribute('href','/products/amino-h2o');
-   const a=water.locator('a[target="_blank"]');await expect(a).toHaveAttribute('href',productUrl('amino-h2o'));await expect(a).toHaveAttribute('referrerpolicy','no-referrer');await expect(a).toHaveAttribute('rel',/sponsored/);
-   await expect(shelf.locator('[data-product]')).toHaveCount(0);await expect(shelf.getByRole('button',{name:'Next supplier products'})).toHaveCount(0);
-   await expect(shelf.getByRole('link',{name:'Browse all research products',exact:true})).toHaveAttribute('href','/recommendations');
+   const cardIds=await shelf.locator('[data-product]').evaluateAll(els=>els.map(e=>e.dataset.product));
+   assert.equal(cardIds.length,49);assert.ok(!cardIds.includes('amino-h2o'));
+   const ids=['amino-h2o',...cardIds];assert.equal(new Set(ids).size,50);assert.deepEqual([...ids].sort(),Object.keys(productNames).sort());assert.deepEqual(ids.slice(0,7),expected);
+   for(const slug of ids){const a=slug==='amino-h2o'?water.locator('a[target="_blank"]'):shelf.locator(`[data-product="${slug}"] a[target="_blank"]`);await expect(a).toHaveAttribute('href',productUrl(slug));await expect(a).toHaveAttribute('referrerpolicy','no-referrer');await expect(a).toHaveAttribute('rel',/sponsored/);}
  });
- await check('The directory retains all 50 listings with exact affiliate attribution',async()=>{
-   await p.goto(origin+'/recommendations');const directory=p.locator('[data-product-directory]');
-   const ids=await directory.locator('[data-product]').evaluateAll(els=>els.map(e=>e.dataset.product));
-   assert.equal(ids.length,50);assert.equal(new Set(ids).size,50);assert.deepEqual([...ids].sort(),Object.keys(productNames).sort());
-   for(const slug of ids){const a=directory.locator(`[data-product="${slug}"] a[target="_blank"]`);await expect(a).toHaveAttribute('href',productUrl(slug));await expect(a).toHaveAttribute('referrerpolicy','no-referrer');await expect(a).toHaveAttribute('rel',/sponsored/);}
- });
+ await check('Carousel arrows and keyboard move cards; BAC water stays outside track',async()=>{await p.goto(origin);const track=p.getByRole('region',{name:'Research products'}).getByLabel('Scrollable product cards');await p.getByRole('button',{name:'Next supplier products'}).click();await expect.poll(()=>track.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);await track.focus();await p.keyboard.press('End');await expect(p.getByRole('button',{name:'Next supplier products'})).toBeDisabled();await p.keyboard.press('Home');await expect(p.getByRole('button',{name:'Previous supplier products'})).toBeDisabled();assert.equal(await p.locator('[data-supplier-shelf] [data-bac-water-feature]').evaluate(el=>Boolean(el.closest('[aria-label="Scrollable product cards"]'))),false);});
  await check('Reference pages retain a compact directory path without repeated product cards',async()=>{for(const route of ['/tools','/peptides/bpc-157','/learn','/tools/vial-labels']){await p.goto(origin+route);await expect(p.locator('[data-supplier-shelf]')).toHaveCount(0);await expect(p.locator('[data-research-directory-link] a')).toHaveAttribute('href','/recommendations');await expect(p.locator('[data-research-directory-link]')).toContainText('commission');}});
  await check('BAC water link available on every calculator without a result or signup',async()=>{for(const route of ['bac-water','dose','supplies','reverse-bac','mg-to-mcg','syringe-units']){await p.goto(origin+'/tools/'+route);await expect(p.locator('[data-supplier-shelf]')).toHaveCount(0);await p.getByLabel('Open calculator help',{exact:true}).click();await expect(p.locator('[data-bac-water-link] a').first()).toBeVisible();}});
  await check('All seven widths preserve page width, logo and sitewide template style',async()=>{for(const width of [320,375,390,430,768,1024,1440]){await p.setViewportSize({width,height:900});for(const route of ['/','/peptide-calculator','/tools/bac-water','/learn','/peptides/hcg','/plans','/signin','/contact','/recommendations']){await p.goto(origin+route,{waitUntil:'networkidle'});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`${route} at ${width}`);if(await p.locator('[data-calculator-workspace]').count())await expect(p.getByRole('link',{name:'Choose a calculator',exact:true})).toBeVisible();else await expect(p.locator('header .bac-wordmark img')).toBeVisible();if([390,1440].includes(width))await p.screenshot({path:`${out}/${route==='/'?'home':route.slice(1).replaceAll('/','-')}-${width}.png`,fullPage:true});}}});
@@ -44,7 +41,7 @@ try{
        }).slice(0,20).map(el=>({tag:el.tagName,class:String(el.className),right:el.getBoundingClientRect().right})),
      }));
      assert.ok(layout.scrollWidth<=layout.viewport+1,`${route} at ${width}px, 200% text: ${JSON.stringify(layout)}`);
-     if(route==='/peptide-calculator'){await expect(p.locator('[data-supplier-shelf]')).toHaveCount(0);await p.getByLabel('Open calculator help',{exact:true}).click();}else if(route==='/recommendations')await expect(p.getByRole('navigation',{name:'Product pages'})).toBeVisible();else await expect(p.locator('[data-supplier-shelf]').getByRole('link',{name:'Browse all research products',exact:true})).toBeVisible();
+     if(route==='/peptide-calculator'){await expect(p.locator('[data-supplier-shelf]')).toHaveCount(0);await p.getByLabel('Open calculator help',{exact:true}).click();}else if(route==='/recommendations')await expect(p.getByRole('navigation',{name:'Product pages'})).toBeVisible();else await expect(p.getByRole('button',{name:'Next supplier products'})).toBeVisible();
      const privacy=p.getByRole('region',{name:'Analytics preferences'});
      await expect(privacy).toBeVisible();
      const header=p.locator('[data-calculator-workspace] > header');

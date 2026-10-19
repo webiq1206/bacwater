@@ -36,5 +36,6 @@
 }
 
 /* After Next, the step block scrolls to the top of this area. Spare room below keeps that possible even when the step is short. */
-.body:has([data-hero-guided]){padding-bottom:max(24px,50svh)}
-@media(max-width:767px){.body:has(:global(.bac-screen-panels)){padding-bottom:max(24px,50svh)}.body :global(.bac-screen-panels)>section{scroll-margin-top:12px}}
+/* The room is a spacer after the content, never padding on the scroll area: padding would also move the sticky Back / Save bar up the screen. */
+.content:has([data-hero-guided])::after{content:"";display:block;height:50svh}
+@media(max-width:767px){.content:has(:global(.bac-screen-panels))::after{content:"";display:block;height:50svh}.body :global(.bac-screen-panels)>section{scroll-margin-top:12px}}
