@@ -1,5 +1,6 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
+import { ShortAnswer } from "@/components/common/short-answer";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { References } from "@/components/common/references";
@@ -18,7 +19,7 @@ export default function MgVsMgPerMlPage() {
   const crumbs = [{ label: "Home", href: "/" }, { label: "Learning center", href: "/learn" }, { label: "mg vs mg/mL", href: PATH }];
   return <article className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-16 pb-20">
     <WebPageJsonLd name={title} description={description} url={PATH} citations={references} breadcrumb={crumbs.map(c => ({ name: c.label, url: c.href }))}/><Breadcrumbs items={crumbs}/>
-    <p className="eyebrow">Unit reference</p><h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">mg vs mg/mL: why the number on the vial isn&apos;t a concentration.</h1>
+    <p className="eyebrow">Unit reference</p><h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">mg vs mg/mL: why the number on the vial isn&apos;t a concentration.</h1><ShortAnswer>{description}</ShortAnswer>
     <p className="mt-5 text-lg leading-relaxed">A vial label like &ldquo;10 mg&rdquo; states how much material is in the vial. It does not state how much is in each mL. That depends on the final liquid volume.</p>
     <section className="mt-9 space-y-3"><h2 className="text-2xl font-serif">The one division</h2><p className="rounded-xl border bg-muted p-5 font-medium">concentration (mg/mL) = amount (mg) ÷ final volume (mL)</p>
       <ul className="list-disc space-y-2 pl-5"><li>10 mg in a final 2 mL = 5 mg/mL</li><li>10 mg in a final 4 mL = 2.5 mg/mL</li></ul>

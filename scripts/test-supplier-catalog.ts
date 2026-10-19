@@ -6,7 +6,7 @@ import { isCalculatorWorkspace } from "../src/lib/calculator-routes";
 const byId=(id:string)=>SUPPLIER_PRODUCTS.find(p=>p.id===id)!;
 const source=(path:string)=>fs.readFileSync(path,'utf8');
 assert.match(source('src/components/partners/supplier-recommendations.tsx'),/BacWaterFeature product=\{water\}/);
-assert.match(source('src/components/partners/supplier-recommendations.tsx'),/products\.filter\(p=>p\.id!=="amino-h2o"\)/);
+assert.match(source('src/components/partners/supplier-recommendations.tsx'),/Browse all research products/);
 assert.match(source('src/app/recommendations/page.tsx'),/BacWaterFeature/);
 assert.match(source('src/components/partners/bac-water-feature.tsx'),/ProductBuyLink product=\{product\} showProductName/);
 assert.match(source('src/components/partners/bac-water-feature.tsx'),/PurchaseDisclosure product=\{product\}/);

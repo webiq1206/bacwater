@@ -34,3 +34,7 @@
 .content :global(.text-center):has(> :global(.eyebrow) + h2 + p)>h2{font-size:24px;line-height:1.25;margin:0 0 8px}
 .content :global(.text-center):has(> :global(.eyebrow) + h2 + p)>p{font-size:13px;line-height:1.6;margin:0}
 }
+
+/* After Next, the step block scrolls to the top of this area. Spare room below keeps that possible even when the step is short. */
+.body:has([data-hero-guided]){padding-bottom:max(24px,50svh)}
+@media(max-width:767px){.body:has(:global(.bac-screen-panels)){padding-bottom:max(24px,50svh)}.body :global(.bac-screen-panels)>section{scroll-margin-top:12px}}

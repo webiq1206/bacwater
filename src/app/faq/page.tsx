@@ -5,6 +5,7 @@ import { readableContent } from "@/lib/content/plain-articles";
 import { safeJson } from "@/lib/seo/safe-json";
 import { inlineMarkdown, faqAnswerBody } from "@/lib/content/render";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { ShortAnswer } from "@/components/common/short-answer";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
@@ -37,7 +38,7 @@ export default async function FaqPage(){
   <script type="application/ld+json" dangerouslySetInnerHTML={{__html:safeJson(schema)}}/>
   <WebPageJsonLd name="BAC water frequently asked questions" description="Product-label context and the limits of the calculation tools." url="/faq"/>
   <Breadcrumbs items={[{label:"Home",href:"/"},{label:"FAQ",href:"/faq"}]}/>
-  <p className="eyebrow">Help and reference</p><h1 className="mt-2 text-3xl sm:text-5xl font-serif">Frequently asked questions</h1>
+  <p className="eyebrow">Help and reference</p><h1 className="mt-2 text-3xl sm:text-5xl font-serif">Frequently asked questions</h1><ShortAnswer>Most answers here come down to one thing: follow the instructions that came with your product. The calculator does the math for you, including how much BAC water to add and where to fill your syringe.</ShortAnswer>
   <p className="mt-4 leading-relaxed">Find the answer you need, then open the relevant guide or calculator. For a problem with the website, <Link href="/contact" className="underline">contact support</Link>. For a medication question, ask the dispensing professional.</p>
   <nav className="mt-6 flex flex-wrap gap-3" aria-label="FAQ topics">{groups.map(([id,label])=><a className="min-h-11 rounded-lg border px-4 py-3 text-sm" href={`#${id}`} key={id}>{label}</a>)}</nav>
   {groups.map(([id,label])=><section id={id} key={id} className="mt-9 scroll-mt-24"><h2 className="text-2xl font-serif">{label}</h2><Accordion type="single" collapsible className="mt-3">{all.filter(f=>group(f.q)===id).map(f=><AccordionItem key={f.q} value={f.q}><AccordionTrigger>{f.q}</AccordionTrigger><AccordionContent><p>{f.a}</p><p className="mt-3"><Link href={f.href} className="underline">{f.label}</Link></p></AccordionContent></AccordionItem>)}{extra.filter(f=>group(f.title)===id).map(f=><AccordionItem key={f.id} value={f.id}><AccordionTrigger>{f.title}</AccordionTrigger><AccordionContent><div className="space-y-3">{faqAnswerBody(f.title,f.body).split(/\n\n+/).map((paragraph,i)=><p key={i} dangerouslySetInnerHTML={{__html:inlineMarkdown(paragraph)}}/>)}</div></AccordionContent></AccordionItem>)}</Accordion></section>)}

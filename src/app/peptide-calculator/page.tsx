@@ -188,7 +188,7 @@ export default function PeptideCalculatorPage() {
           <Link href="/tools/bac-water" className="text-muted-foreground hover:text-foreground underline transition-colors">BAC water calculator</Link>
           <Link href="/tools/reverse-bac" className="text-muted-foreground hover:text-foreground underline transition-colors">Reverse BAC water calculator</Link>
           <Link href="/tools/syringe-units" className="text-muted-foreground hover:text-foreground underline transition-colors">Syringe unit converter</Link>
-          <Link href="/learn/how-peptide-reconstitution-works" className="text-muted-foreground hover:text-foreground underline transition-colors">How reconstitution works</Link>
+          <Link href="/learn/how-peptide-reconstitution-works" className="text-muted-foreground hover:text-foreground underline transition-colors">How mixing works</Link>
           <Link href="/learn/what-you-cannot-know" className="text-muted-foreground hover:text-foreground underline transition-colors">What you cannot know about your vial</Link>
         </div>
       </section>

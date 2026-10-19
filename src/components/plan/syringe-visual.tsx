@@ -76,7 +76,7 @@ export function SyringeVisual({
             className="text-xs uppercase tracking-wide font-semibold"
             style={{ color: "var(--color-accent-guide)" }}
           >
-            Calculated measurement
+            Fill your syringe to
           </div>
           <div className="text-lg font-bold mt-0.5" style={{ color: "var(--color-foreground)" }}>
             {readoutLabel}

@@ -1,4 +1,5 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
+import { ShortAnswer } from "@/components/common/short-answer";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
@@ -37,7 +38,7 @@ export default function MlToUnitsTablePage() {
     <FaqJsonLd items={ML_FAQS} />
     <Breadcrumbs items={crumbs} />
     <p className="eyebrow">Unit reference</p>
-    <h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">How many units is 1, 2, 3 or 5 mL? A U-100 table, with the math shown.</h1>
+    <h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">How many units is 1, 2, 3 or 5 mL? A U-100 table, with the math shown.</h1><ShortAnswer>{description}</ShortAnswer>
     <p className="mt-5 text-lg leading-relaxed">On a U-100 scale, 100 units equals 1 mL. So 1 mL reads as {ML_TO_UNITS_ROWS.find(row => row.volume === "1 mL")!.units}, 2 mL as {ML_TO_UNITS_ROWS.find(row => row.volume === "2 mL")!.units}, 3 mL as {ML_TO_UNITS_ROWS.find(row => row.volume === "3 mL")!.units} and 5 mL as {ML_TO_UNITS_ROWS.find(row => row.volume === "5 mL")!.units}. The rule is the same whatever the liquid is: BAC water, sterile water or anything else. U-100 measures volume, not what is dissolved in it. For readings under 1 mL, see <Link className="underline" href="/learn/u-100-units-explained">how to convert mL to U-100 units</Link>.</p>
     <section className="mt-9 space-y-3">
       <h2 className="text-2xl font-serif">The formula</h2>

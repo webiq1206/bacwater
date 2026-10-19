@@ -463,3 +463,5 @@ body{line-height:1.65}h1,h2,h3,h4{line-height:1.2;letter-spacing:-.035em}.font-s
  .responsive-comparison td { display:block; padding:8px; font-size:1rem; line-height:1.6; }
  .responsive-comparison td::before { content:attr(data-label); display:block; font-weight:600; margin-bottom:4px; }
 }
+/* The short answer box at the top of every guide, FAQ and reference page. */
+.bac-short-answer{margin-top:1.25rem;padding:1rem 1.25rem;border:1px solid #bdcf9d;border-left:5px solid #18382d;border-radius:14px;background:#edf3df;color:#18382d;font-size:1.0625rem;line-height:1.6}.bac-short-answer-title{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#46613d;margin:0 0 .35rem}.bac-short-answer p{margin:0}

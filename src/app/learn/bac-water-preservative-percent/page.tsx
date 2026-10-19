@@ -1,4 +1,5 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
+import { ShortAnswer } from "@/components/common/short-answer";
 import Link from "next/link";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { FaqJsonLd } from "@/components/common/faq-json-ld";
@@ -52,7 +53,7 @@ export default function BacWaterPreservativePercentPage() {
     <FaqJsonLd items={PERCENT_FAQS} />
     <Breadcrumbs items={crumbs} />
     <p className="eyebrow">Guide</p>
-    <h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">BAC water preservative percent: what 0.9% and 1.1% mean in mg/mL, with the math shown.</h1>
+    <h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">BAC water preservative percent: what 0.9% and 1.1% mean in mg/mL, with the math shown.</h1><ShortAnswer>{description}</ShortAnswer>
     <p className="mt-5 text-lg leading-relaxed">Bacteriostatic water labels state the preservative, benzyl alcohol, as a percent. One manufacturer&apos;s labeling lists <strong>{pointNine.percent} ({pointNine.mgPerMl})</strong> or <strong>{onePointOne.percent} ({onePointOne.mgPerMl})</strong>. The shortcut is: <strong>mg/mL = percent × 10</strong>. This page shows where the ×10 comes from, how to turn a label percent into a total per container, and what the percent does not tell you.</p>
     <p className="mt-3 text-sm text-muted-foreground">Illustrative arithmetic and notation only, not product instructions.</p>
     <section className="mt-9 space-y-3">

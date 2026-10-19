@@ -20,6 +20,11 @@ export async function selectAuditOption(page, scope, label, option) {
   await expect(trigger).toBeFocused();
 }
 /** Advance one step and wait for the step to change, so two quick clicks never land on the same step. */
+/** The daily/weekly total controls sit behind a disclosure on the dose step. */
+export async function openAuditSchedule(scope) {
+  const summary=scope.locator('summary').filter({hasText:'My instructions give a daily or weekly total'}).first();
+  if(!await summary.evaluate(node=>node.parentElement.hasAttribute('open')))await summary.click();
+}
 export async function nextQuestion(scope) {
   const root=scope.locator('[data-guided-step]').first(), before=await root.getAttribute('data-guided-step').catch(()=>null);
   await scope.getByRole('button',{name:'Next',exact:true}).click();
@@ -29,7 +34,7 @@ export async function goQuestion(scope, target) {
   for (let i=0;i<24;i++) {
     const root=scope.locator('[data-guided-step]'), current=await root.getAttribute('data-guided-step');
     if(current===target)return;
-    const order=['product','name','vial-unit','vial','second-product','second-name','second-unit','second-amount','amount','volume','device','review'];
+    const order=['product','name','vial-unit','vial','second-product','second-name','second-unit','second-amount','amount','volume','review'];
     if(order.indexOf(current)>order.indexOf(target))await scope.getByRole('button',{name:'Back',exact:true}).click();
     else await nextQuestion(scope);
   }
@@ -42,7 +47,7 @@ export async function completeAuditHero(page, scope, {vial='12', amount='0.3', v
   await scope.getByLabel('Amount in vial',{exact:true}).fill(vial);await nextQuestion(scope);
   await scope.getByLabel('Amount each time',{exact:true}).fill(amount);await nextQuestion(scope);
   await scope.getByLabel('BAC water to add',{exact:true}).fill(volume);
-  if(review){await nextQuestion(scope);await nextQuestion(scope);}
+  if(review)await nextQuestion(scope);
 
 }
 /** Walk each product format, including every named blend component, through real UI. */

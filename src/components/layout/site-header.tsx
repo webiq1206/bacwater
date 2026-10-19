@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useResearchAssistant } from "@/components/search/research-assistant-provider";
 import { SiteSearchButton } from "@/components/search/site-search";
 import { Wordmark } from "@/components/brand/wordmark";
 import { usePathname } from "next/navigation";
@@ -13,8 +12,6 @@ import styles from "./research-header.module.css";
 
 const NAV = [
   { href: "/peptide-calculator", label: "Calculator" },
-  { href: "/recommendations", label: "Products" },
-  { href: "/tools", label: "More tools" },
   { href: "/learn", label: "Learn" },
 ];
 const ITEM = "flex items-center gap-2.5 px-3.5 min-h-11 py-2.5 text-sm hover:bg-muted transition-colors";
@@ -47,7 +44,6 @@ function AccountMenu({ isAuthenticated }: { isAuthenticated: boolean }) {
 
 export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const pathname = usePathname();
-  const { openAssistant } = useResearchAssistant();
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -60,7 +56,6 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
           const active = pathname === n.href || (n.href !== "/" && pathname?.startsWith(`${n.href}/`)) || (n.href === "/recommendations" && pathname?.startsWith("/products/"));
           return <Link key={n.href} href={n.href} aria-current={active ? "page" : undefined} className={cn("px-3 py-1.5 text-sm transition-colors", active ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground")}>{n.label}</Link>;
         })}
-        <button type="button" aria-haspopup="dialog" className={styles.assistantLink} onClick={e=>openAssistant(e.currentTarget)}>Research assistant</button>
       </nav>
       <div className="flex items-center gap-2">
         <Link prefetch={false} href="/plans" className={styles.plansLink}>My plans</Link>
@@ -72,7 +67,6 @@ export function SiteHeader({ isAuthenticated = false }: { isAuthenticated?: bool
     {open ? <div id="mobile-navigation" className="lg:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-white">
       <nav aria-label="Expanded mobile navigation" className="mx-auto flex max-w-7xl flex-col p-3">
         {NAV.map((n) => <Link key={n.href} href={n.href} aria-current={pathname === n.href || pathname?.startsWith(`${n.href}/`) || (n.href === "/recommendations" && pathname?.startsWith("/products/")) ? "page" : undefined} onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">{n.label}</Link>)}
-        <button type="button" aria-haspopup="dialog" onClick={e=>{setOpen(false);openAssistant(e.currentTarget);}} className="px-4 py-3 text-left text-base font-medium text-foreground hover:bg-muted border-b border-border">Research assistant</button>
         <Link prefetch={false} href="/plans" onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">My Plans</Link>
         {isAuthenticated ? <button type="button" onClick={() => { setOpen(false); signOut({ callbackUrl: "/" }); }} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted text-left">Sign out</button> : <>
           <Link href="/signin" onClick={() => setOpen(false)} className="px-4 py-3 text-base font-medium text-foreground hover:bg-muted border-b border-border">Sign in</Link>

@@ -1,5 +1,6 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
+import { ShortAnswer } from "@/components/common/short-answer";
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
@@ -44,7 +45,7 @@ export default function ShelfLifePage() {
     <FaqJsonLd items={FAQS} />
     <Breadcrumbs items={crumbs} />
     <div className="eyebrow">Storage reference</div>
-    <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">How long does BAC water last?</h1>
+    <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">How long does BAC water last?</h1><ShortAnswer>{description}</ShortAnswer>
     <p className="mt-5 text-lg leading-relaxed">Unopened BAC water lasts until the expiry date printed by the manufacturer. Once a multi-dose vial is opened, CDC guidance is to date it and discard it within 28 days unless the manufacturer specifies another opened-vial period, and never beyond the printed expiry. A peptide mixed with that water follows its own product instructions, not the water&apos;s dates.</p>
     <p className="mt-3 text-xs text-muted-foreground">Sources checked September 29, 2026. General reference, not a medical review or product-specific instruction.</p>
 

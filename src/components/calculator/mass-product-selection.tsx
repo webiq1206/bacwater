@@ -14,7 +14,9 @@ export function MassProductSelection() {
   if (p && p.kind !== "single") { chooseCalculationProduct(p.id, p.kind, p.reference); router.push(productCalculatorPath(p.id)); return; }
   chooseCalculationProduct(p?.id || "", "single", p?.reference || (value.startsWith("product:") ? "custom" : value));
  }
+ const chosen = isSelectedMassProduct(s);
  return <div className="mb-4"><ProductPicker value={s.productId && !SUPPLIER_PRODUCTS.find(p => p.id === s.productId)?.reference ? `product:${s.productId}` : s.peptideSlug} onChange={select}/>
+ {!chosen && !(s.peptideSlug === "custom" && !s.productId) && <button type="button" className="mt-2 inline-flex min-h-11 items-center text-sm underline underline-offset-4" onClick={() => { chooseCalculationProduct("", "single", "custom"); s.patch({ customName: "My vial" }); }}>Not listed? Skip and type my numbers</button>}
  {s.peptideSlug === "custom" && !s.productId && <label className="mt-3 block text-sm">Product name from your label<input className="mt-2 min-h-11 w-full rounded-lg border bg-background p-3 text-base" value={s.customName} onChange={e => s.patch({ customName: e.target.value })} maxLength={100}/></label>}
  </div>;
 }

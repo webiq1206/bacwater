@@ -47,8 +47,7 @@ try {
   await page.screenshot({ path: `${out}/u100-mobile-320.png`, fullPage: true });
   await page.goto(`${origin}/tools/bac-water`);
   await chooseAuditMassProduct(page);
-  await step('BAC calculator starts with known-volume mode and no assumed answer', async () => {
-    await expect(page.getByRole('button', { name: 'I know how much water' })).toHaveAttribute('aria-pressed', 'true');
+  await step('BAC calculator starts empty with no assumed answer', async () => {
     await expect(page.getByLabel('BAC water to add (mL)', { exact: true })).toHaveValue('');
     await expect(page.getByRole('button',{name:'See my result',exact:true})).toBeDisabled();
     await expect(page.locator('#bac-result')).not.toBeVisible();
@@ -93,16 +92,16 @@ try {
     await page.getByRole('button',{name:'See my result',exact:true}).click();
     await expect(page.locator('#bac-result')).toContainText('16 U-100 units');
   });
-  await step('An explicit math example does not replace the entered volume', async () => {
+  await step('The suggested water amount is one tap away and lands the dose on a whole line', async () => {
     await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByRole('button', { name: 'Suggest an amount for me' }).click();
+    await expect(page.locator('[data-water-suggestion]')).toContainText('Our suggestion: 2.5 mL');
+    await page.getByRole('button', { name: 'Use 2.5 mL', exact: true }).click();
+    await expect(page.getByLabel('BAC water to add (mL)', { exact: true })).toHaveValue('2.5');
     await page.getByRole('button',{name:'See my result',exact:true}).click();
-    await expect(page.getByRole('heading', { name: 'Result with suggested water' })).toBeVisible();
     await expect(page.locator('#bac-result')).toContainText('2.5 mL');
     await expect(page.locator('#bac-result')).toContainText('10 U-100 units');
     await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
-    await page.getByRole('button', { name: 'I know how much water' }).click();
-    await expect(page.getByLabel('BAC water to add (mL)', { exact: true })).toHaveValue('4');
+    await page.getByLabel('BAC water to add (mL)', { exact: true }).fill('4');
     await expect(page.locator('#bac-result')).toContainText('16 U-100 units');
   });
   await step('Invalid volume blocks the result and clear removes saved inputs', async () => {

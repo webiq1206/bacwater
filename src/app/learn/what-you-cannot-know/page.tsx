@@ -1,5 +1,6 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
+import { ShortAnswer } from "@/components/common/short-answer";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { References } from "@/components/common/references";
@@ -22,7 +23,7 @@ const sections = [
 export default function LimitsPage() {
   return <article className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 sm:pt-16 pb-20">
     <WebPageJsonLd name={title} description={description} url="/learn/what-you-cannot-know" citations={references}/><Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Learning center", href: "/learn" }, { label: "Calculation limits", href: "/learn/what-you-cannot-know" }]}/>
-    <p className="eyebrow">Calculation limits</p><h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">What you cannot know about your vial from a calculation.</h1>
+    <p className="eyebrow">Calculation limits</p><h1 className="mt-2 text-4xl sm:text-5xl font-serif tracking-tight">What you cannot know about your vial from a calculation.</h1><ShortAnswer>{description}</ShortAnswer>
     <p className="mt-5 text-lg leading-relaxed">The tools check relationships between the numbers you enter. They cannot inspect your vial, validate its label or decide whether its contents are suitable. Correct arithmetic is one check, not product verification.</p>
     {sections.map(section=><section key={section.id} id={section.id} className="mt-9 scroll-mt-24 space-y-3"><h2 className="text-2xl font-serif">{section.heading}</h2><p className="leading-relaxed">{section.body}</p></section>)}
     <section className="mt-7 grid gap-4 sm:grid-cols-2" aria-label="Calculation scope"><div className="rounded-xl border bg-muted p-5"><h2 className="text-xl font-serif">Can calculate</h2><ul className="mt-3 list-disc space-y-2 pl-5"><li>Concentration from entered mass and volume</li><li>Conversions between matching units</li><li>Amounts, volumes and inventory from stated inputs</li></ul></div><div className="rounded-xl border p-5"><h2 className="text-xl font-serif">Cannot verify</h2><ul className="mt-3 list-disc space-y-2 pl-5"><li>Vial identity, purity or sterility</li><li>Compatibility or suitability</li><li>Storage stability or a safe discard date</li></ul></div></section>
