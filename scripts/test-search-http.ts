@@ -65,7 +65,7 @@ async function main() {
         // real unit, mass, ingredient and optional sample questions.
         assert.ok(html.includes("data-calculator-workspace"),path);
         assert.ok(html.includes("Restoring your calculation..."),path);
-        assert.ok(html.includes("Research math only"),path);
+        assert.ok(html.includes("Math help only"),path);
         assert.ok(!html.includes("data-product-result"),`No result before the saved context is restored: ${path}`);
       }
       if(path.startsWith("/products/")) {
