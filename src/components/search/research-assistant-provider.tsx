@@ -17,6 +17,17 @@ export function WorkspaceResearchButton(){
 export type ResearchTurn={id:number;question:string;answer:FinderReply};
 export type ResearchSession={turns:ResearchTurn[];context:FinderContext;question:string;sequence:number};
 export const emptyResearchSession=():ResearchSession=>({turns:[],context:{},question:"",sequence:0});
+/**
+ * Put focus back on the button that opened the assistant. The floating launcher
+ * is hidden while any dialog is open, and on a busy page the closed panel can
+ * still be in the page for a frame or two, so a single focus() can silently
+ * fail. Retry for a few frames until focus actually lands.
+ */
+function returnFocus(target:HTMLElement|null){
+ if(!target)return;
+ const attempt=(left:number)=>{target.focus({preventScroll:true});if(document.activeElement!==target&&left>0&&target.isConnected)requestAnimationFrame(()=>attempt(left-1));};
+ requestAnimationFrame(()=>attempt(30));
+}
 type AssistantContext={openAssistant:(trigger?:HTMLElement)=>void;closeAssistant:()=>void;activeQuickView:string|null;selectQuickView:(id:string|null)=>void;session:ResearchSession;setSession:Dispatch<SetStateAction<ResearchSession>>};
 const Context=createContext<AssistantContext|null>(null);
 export function useResearchAssistant(){const value=useContext(Context);if(!value)throw new Error("Research assistant provider is missing");return value;}
@@ -38,7 +49,7 @@ export function ResearchAssistantProvider({children}:{children:ReactNode}){
   {children}
   {!hidden&&!page&&!isCalculatorWorkspace(path)&&<button type="button" ref={launcher} className={styles.launcher} data-research-launcher data-raised={path!=="/"} aria-label="Open research assistant" aria-haspopup="dialog" aria-expanded={open} onClick={e=>openAssistant(e.currentTarget)}><MessageCircle size={20} aria-hidden="true"/><span>Ask a question</span></button>}
   <Dialog.Root open={open&&!hidden} onOpenChange={next=>{if(!next)selectQuickView(null);setOpen(next);}}>
-   <Dialog.Portal><Dialog.Overlay className={styles.overlay}/><Dialog.Content ref={panel} className={styles.chatPanel} data-research-panel onEscapeKeyDown={e=>{if(quickView.current!==null){e.preventDefault();selectQuickView(null);}}} onInteractOutside={e=>{if(quickView.current!==null)e.preventDefault();}} onOpenAutoFocus={e=>{e.preventDefault();title.current?.focus({preventScroll:true});}} onCloseAutoFocus={e=>{e.preventDefault();const target=trigger.current?.isConnected?trigger.current:launcher.current;requestAnimationFrame(()=>target?.focus({preventScroll:true}));}}>
+   <Dialog.Portal><Dialog.Overlay className={styles.overlay}/><Dialog.Content ref={panel} className={styles.chatPanel} data-research-panel onEscapeKeyDown={e=>{if(quickView.current!==null){e.preventDefault();selectQuickView(null);}}} onInteractOutside={e=>{if(quickView.current!==null)e.preventDefault();}} onOpenAutoFocus={e=>{e.preventDefault();title.current?.focus({preventScroll:true});}} onCloseAutoFocus={e=>{e.preventDefault();returnFocus(trigger.current?.isConnected?trigger.current:launcher.current);}}>
     <header className={styles.panelHeader}><div><Dialog.Title ref={title} tabIndex={-1}>Research assistant</Dialog.Title><Dialog.Description>Products, studies and calculators</Dialog.Description></div><Dialog.Close aria-label="Close research assistant"><X size={21} aria-hidden="true"/></Dialog.Close></header>
     <Finder/>
    </Dialog.Content></Dialog.Portal>

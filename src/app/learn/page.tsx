@@ -16,11 +16,23 @@ import {
   isContentType,
   isTopic,
 } from "@/lib/learn/taxonomy";
-import { PEPTIDES } from "@/lib/calc/peptides";
+import { PEPTIDES, type PeptideCategory } from "@/lib/calc/peptides";
 import { shortName } from "@/lib/peptides/page-data";
 import { learnLanding } from "@/lib/learn/landing";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bacwater.ai";
+
+/** Compound references grouped by research area, in plain words. */
+const COMPOUND_GROUPS: Array<{ label: string; categories: PeptideCategory[] }> = [
+  { label: "Metabolic research", categories: ["metabolic"] },
+  { label: "Tissue and repair research", categories: ["healing"] },
+  { label: "Growth hormone research", categories: ["growth"] },
+  { label: "Skin and pigmentation research", categories: ["cosmetic"] },
+  { label: "Brain research", categories: ["cognitive"] },
+  { label: "Reproductive research", categories: ["reproductive"] },
+  { label: "Aging and mitochondria research", categories: ["longevity"] },
+  { label: "Other", categories: ["other"] },
+];
 
 type SP = Record<string, string | string[] | undefined>;
 
@@ -225,78 +237,81 @@ export default async function LearnPage({
         untouched: this is layout only.
       */}
       <div className="mt-8 grid gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start">
-      <div className="space-y-5 border border-border bg-surface p-5 lg:sticky lg:top-24">
-        <FilterRow label="Type">
-          {CONTENT_TYPES.map((c) => (
-            <Chip
-              key={c.key}
-              href={hrefWith(f, { type: f.type === c.key ? undefined : c.key })}
-              active={f.type === c.key}
-            >
-              {c.label}
-            </Chip>
-          ))}
-        </FilterRow>
-
-        <FilterRow label="Topic">
-          {TOPICS.map((t) => (
-            <Chip
-              key={t.key}
-              href={hrefWith(f, { topic: f.topic === t.key ? undefined : t.key })}
-              active={f.topic === t.key}
-            >
-              {t.label}
-            </Chip>
-          ))}
-        </FilterRow>
-
-        {/* Peptide + search: a GET form so the resulting URLs are real. */}
-        <form method="get" action="/learn" data-clarity-mask="true" className="flex flex-col gap-3 pt-1 sm:flex-row lg:flex-col">
+      <aside className="rounded-2xl border border-border bg-surface p-5 lg:sticky lg:top-24" aria-label="Filter guides">
+        {/* Search + product: a GET form so the resulting URLs are real. */}
+        <form method="get" action="/learn" data-clarity-mask="true" className="space-y-3">
           {f.type && <input type="hidden" name="type" value={f.type} />}
           {f.topic && <input type="hidden" name="topic" value={f.topic} />}
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            <input
+              type="search"
+              name="q"
+              defaultValue={f.q ?? ""}
+              placeholder="Search guides"
+              className="h-11 w-full rounded-full border border-input bg-card pl-10 pr-4 text-sm"
+              aria-label="Search"
+            />
+          </div>
           <select
             name="peptide"
             defaultValue={f.peptide ?? ""}
-            className="h-11 border border-input bg-card px-3 text-sm sm:w-64 lg:w-full"
+            className="h-11 w-full rounded-full border border-input bg-card px-4 text-sm"
             aria-label="Filter by peptide"
           >
-            <option value="">All peptides</option>
+            <option value="">All products</option>
             {peptideOptions.map((p) => (
               <option key={p.slug} value={p.slug}>
                 {productDisplayName(p.slug, shortName(p.name))}
               </option>
             ))}
           </select>
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="search"
-              name="q"
-              defaultValue={f.q ?? ""}
-              placeholder="Search guides and FAQs"
-              className="h-11 w-full border border-input bg-card pl-9 pr-3 text-sm"
-              aria-label="Search"
-            />
-          </div>
-          <Button type="submit" variant="brand" className="h-11">
-            Filter
+          <Button type="submit" variant="brand" className="h-11 w-full rounded-full">
+            <Search className="h-4 w-4" aria-hidden="true" /> Search
           </Button>
         </form>
 
+        <div className="mt-6 space-y-5 border-t border-border pt-5">
+          <FilterGroup label="Type">
+            {/* The "Safety" type redirects to the Safety topic, so it is listed once, under Topic. */}
+            {CONTENT_TYPES.filter((c) => c.key !== "safety" || f.type === "safety").map((c) => (
+              <Chip
+                key={c.key}
+                href={hrefWith(f, { type: f.type === c.key ? undefined : c.key })}
+                active={f.type === c.key}
+              >
+                {c.label}
+              </Chip>
+            ))}
+          </FilterGroup>
+
+          <FilterGroup label="Topic">
+            {TOPICS.map((t) => (
+              <Chip
+                key={t.key}
+                href={hrefWith(f, { topic: f.topic === t.key ? undefined : t.key })}
+                active={f.topic === t.key}
+              >
+                {t.label}
+              </Chip>
+            ))}
+          </FilterGroup>
+        </div>
+
         {activeCount > 0 && (
-          <div className="flex items-center justify-between pt-1">
-            <div className="text-xs text-muted-foreground">
+          <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
+            <div className="text-sm text-muted-foreground">
               {results.length} result{results.length === 1 ? "" : "s"}
             </div>
             <Link
               href="/learn"
-              className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"
+              className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-foreground hover:underline"
             >
-              <X className="h-3.5 w-3.5" /> Clear filters
+              <X className="h-4 w-4" aria-hidden="true" /> Clear filters
             </Link>
           </div>
         )}
-      </div>
+      </aside>
 
       {/* Results */}
       <div>
@@ -306,7 +321,7 @@ export default async function LearnPage({
             <li key={e.id}>
               <Link
                 href={e.url}
-                className="group block border border-border hover:bg-muted transition-colors p-6 h-full"
+                className="group block h-full rounded-2xl border border-border bg-card p-6 transition-colors hover:bg-muted"
               >
                 <div className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
                   {CONTENT_TYPE_LABEL[e.contentType] ?? e.contentType}
@@ -330,7 +345,7 @@ export default async function LearnPage({
           ))}
         </ul>
       ) : (
-        <div className="border border-border bg-surface p-8 text-center">
+        <div className="rounded-2xl border border-border bg-surface p-8 text-center">
           <div className="font-medium text-foreground">No matches</div>
           <p className="mt-1 text-sm text-muted-foreground">
             Try fewer filters or a different search.{" "}
@@ -344,7 +359,39 @@ export default async function LearnPage({
 
       </div>
       </div>
-      {activeCount === 0 && <section className="mt-12" id="compound-references"><h2 className="text-2xl font-serif">Compound references</h2><p className="mt-2 text-muted-foreground">Product identity, evidence context and the appropriate calculator.</p><ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{results.filter(e => e.source === "peptide").map(e => <li key={e.id}><Link href={e.url} className="block min-h-11 rounded-xl border p-4 font-medium">{e.title}</Link></li>)}</ul></section>}
+      {activeCount === 0 && (
+        <section className="mt-12" id="compound-references" aria-labelledby="compound-references-title">
+          <h2 id="compound-references-title" className="text-2xl font-serif">Compound references</h2>
+          <p className="mt-2 text-muted-foreground">What each product is, what the research says, and the right calculator for it.</p>
+          <div className="mt-6 grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+            {COMPOUND_GROUPS.map((group) => {
+              const items = PEPTIDES.filter((p) => p.slug !== "custom" && group.categories.includes(p.category));
+              if (!items.length) return null;
+              return (
+                <div key={group.label}>
+                  <h3 className="text-xs font-semibold uppercase tracking-[.08em] text-muted-foreground">{group.label}</h3>
+                  <ul className="mt-3 divide-y divide-border rounded-2xl border border-border bg-card">
+                    {items.map((p) => (
+                      <li key={p.slug}>
+                        <Link href={`/peptides/${p.slug}`} className="group flex min-h-12 items-center justify-between gap-3 px-4 py-3 text-sm font-medium hover:bg-muted first:rounded-t-2xl last:rounded-b-2xl">
+                          <span>{p.slug === "glow-blend" ? "GLOW" : productDisplayName(p.slug, shortName(p.name))}<span className="sr-only"> compound reference</span></span>
+                          <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">
+            Not on the list?{" "}
+            <Link href="/peptides/custom" className="font-medium text-foreground underline underline-offset-4">Use the calculator for any product</Link>
+            {" "}or{" "}
+            <Link href="/peptides" className="font-medium text-foreground underline underline-offset-4">see all compounds</Link>.
+          </p>
+        </section>
+      )}
       <div className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
           <div className="font-medium text-foreground">Done reading?</div>
@@ -362,7 +409,7 @@ export default async function LearnPage({
   );
 }
 
-function FilterRow({
+function FilterGroup({
   label,
   children,
 }: {
@@ -370,11 +417,9 @@ function FilterRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-      <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium sm:w-16 shrink-0">
-        {label}
-      </div>
-      <div className="flex flex-wrap gap-2">{children}</div>
+    <div role="group" aria-label={label}>
+      <div className="text-xs font-semibold uppercase tracking-[.08em] text-muted-foreground">{label}</div>
+      <div className="mt-2.5 flex flex-wrap gap-2">{children}</div>
     </div>
   );
 }
@@ -391,19 +436,11 @@ function Chip({
   return (
     <Link
       href={href}
+      aria-current={active ? "true" : undefined}
       className={
         active
-          ? "px-3 py-1.5 text-sm border-2 font-medium"
-          : "px-3 py-1.5 text-sm border border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground transition-colors"
-      }
-      style={
-        active
-          ? {
-              borderColor: "var(--color-accent-guide)",
-              background: "var(--color-accent-guide-soft)",
-              color: "var(--color-accent-guide)",
-            }
-          : undefined
+          ? "inline-flex min-h-9 items-center rounded-full border border-foreground bg-foreground px-3.5 py-1.5 text-sm font-medium text-background"
+          : "inline-flex min-h-9 items-center rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-foreground transition-colors hover:border-foreground/40 hover:bg-muted"
       }
     >
       {children}
