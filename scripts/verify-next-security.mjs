@@ -2,11 +2,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createRequire} from 'node:module';
 
-// GHSA-vcvr-r3jv-pc5j (CVE-2026-94545), patched September 22, 2026.
+// Includes GHSA-2464-fhr4-w9xw and GHSA-p3m5-59mp-jv5r, reviewed October 22, 2026.
+// Preserve the prior September/October framework security fixes.
 // A clean npm audit alone is not a substitute for checking the patched version.
 // Re-review this exact pin and the font compatibility patch for future updates.
 // Also includes GHSA-cjq9-62q9-8jv4 and the October cache-disclosure fixes.
-const PATCHED_VERSION='16.3.8';
+const PATCHED_VERSION='16.4.2';
 const require=createRequire(import.meta.url);
 const manifest=JSON.parse(fs.readFileSync(new URL('../package.json',import.meta.url),'utf8'));
 const lock=JSON.parse(fs.readFileSync(new URL('../package-lock.json',import.meta.url),'utf8'));
