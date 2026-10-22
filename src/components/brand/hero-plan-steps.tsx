@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { Copy, Loader2, Save, Sparkles, Wand2 } from "lucide-react";
+import { useId, useState, type ReactNode } from "react";
+import { Copy, Loader2, Save, Wand2 } from "lucide-react";
 import { SYRINGES, findSyringe, type CalcResult, type SyringeType } from "@/lib/calc";
 import { decimalError, positiveDecimal } from "@/lib/calc/number-text";
 import { formatDose, formatDoseVolumeMl, formatNumeric, formatSyringeReading } from "@/lib/calc/format";
 import { amountSchedule, type AmountSchedule } from "@/lib/calc/amount-schedule";
-import { suggestBacWaterMl, mlText, unitsText } from "@/lib/calc/bac-water-suggestion";
+import { unitsText } from "@/lib/calc/bac-water-suggestion";
 import { plainWarnings } from "@/lib/calc/plain-warnings";
 import type { PlanPreviewState } from "@/lib/calc/plan-preview";
 import { trackUsage } from "@/lib/analytics";
@@ -45,7 +45,6 @@ const SYRINGE_HINTS: Record<SyringeType, string> = {
   "tuberculin-1ml": "Marked in mL, not units. The biggest number printed on it is 1.",
   "syringe-3ml": "A larger syringe marked in mL. The biggest number printed on it is 3.",
 };
-const whole = (n: number) => Math.abs(n - Math.round(n)) < 1e-9;
 
 /** Presentation only. PlanForm still owns validation, arithmetic and saving. */
 export function HeroPlanSteps(p: Props) {
@@ -53,7 +52,7 @@ export function HeroPlanSteps(p: Props) {
   const syringe = findSyringe(p.device);
   const ready = p.preview.ready;
   const vialError = decimalError(p.vial, "Amount in vial") || p.preview.entries[1].issue;
-  const volumeError = decimalError(p.volume, "BAC water") || p.preview.entries[3].issue;
+  const volumeError = decimalError(p.volume, "Final liquid volume") || p.preview.entries[3].issue;
   const readout = formatSyringeReading(p.result.syringeReadout), volume = formatDoseVolumeMl(p.result.doseVolumeMl);
   const formula = `${formatNumeric(p.result.input.vialStrengthMg, 4)} mg ÷ ${p.volume} mL = ${p.preview.concentrationText}`;
   const u100 = p.result.syringeReadout.kind === "u100";
@@ -61,53 +60,34 @@ export function HeroPlanSteps(p: Props) {
   const lineLabel = u100 ? unitsText(unitsNow) : formatNumeric(p.result.doseVolumeMl, 2);
   const doseEach = formatDose(p.result.schedule?.dosePerInjectionMcg ?? p.result.input.doseMcg);
 
-  // The water suggestion needs only the vial amount and the amount for one time.
+  // Check entered mass against total mass without choosing a volume.
   const vialMg = p.preview.entries[1].complete ? (positiveDecimal(p.vial) ?? 0) / (p.unit === "mcg" ? 1000 : 1) : 0;
   const schedule = amountSchedule(p.amount);
-  const suggestion = vialMg > 0 && schedule.ready ? suggestBacWaterMl(vialMg, schedule.eachMcg) : null;
-  const volumeNow = positiveDecimal(p.volume);
-  const usingSuggestion = suggestion !== null && volumeNow === suggestion.ml;
   // The classic mistake: a dose typed in mg that was really mcg.
   const doseTooBig = vialMg > 0 && schedule.ready && schedule.eachMcg / 1000 > vialMg;
   const likelyMcg = doseTooBig && p.amount.amountUnit === "mg" && schedule.eachMcg / 1000 / 1000 <= vialMg;
-  // A different water amount that puts the dose on a whole syringe line.
-  const betterWater = ready && u100 && suggestion && !usingSuggestion && whole(suggestion.units) && (!whole(unitsNow) || unitsNow < 4) ? suggestion : null;
-
-  // Fill the water field once per vial-and-dose pair so Next is already enabled.
-  const autoFilled = useRef("");
-  const { onVolume } = p;
-  useEffect(() => {
-    if (!suggestion) return;
-    const key = `${vialMg}|${schedule.eachMcg}`;
-    if (autoFilled.current === key) return;
-    autoFilled.current = key;
-    if (!p.volume.trim()) onVolume(String(suggestion.ml));
-  }, [suggestion, vialMg, schedule.eachMcg, p.volume, onVolume]);
-
   async function copy() {
     if (!ready) return;
-    const text = `${p.result.input.peptideName}\n1. Add ${p.volume} mL of BAC water to the ${formatNumeric(p.result.input.vialStrengthMg, 4)} mg vial.\n2. Each time, fill the syringe to the ${lineLabel} ${u100 ? "units" : "mL"} line (${volume}).\n3. About ${p.result.dosesPerVial} doses in the vial.\n${formula}\n${readout} on ${syringe.label}.${schedule.ready && schedule.scheduled ? `\n${schedule.count} times per week; ${formatDose(schedule.weeklyMcg)} total per week.` : ""}\n${plainWarnings(p.result.warnings).join("\n")}`;
+    const text = `${p.result.input.peptideName}\nEntered final volume: ${p.volume} mL.\n${formula}\nEntered mass ${doseEach} corresponds to ${volume}: ${readout} on ${syringe.label}.\n${p.result.dosesPerVial} whole equal portions, ignoring losses.\nResearch arithmetic only; not dosing or preparation advice. Not for human use.\n${plainWarnings(p.result.warnings).join("\n")}`;
     try { await navigator.clipboard.writeText(text); setNotice("Copied."); trackUsage("result_copied"); }
     catch { setNotice("Copy is unavailable. Select and copy the numbers shown here."); }
   }
 
   const questions: Question[] = [
-    {id:"product",label:"Product",title:"What is the name on your vial?",complete:p.productChosen,content:<div className={styles.startFields}>{p.product}{p.onSkipProduct&&<button type="button" className={styles.skipButton} onClick={()=>{p.onSkipProduct?.();p.onStep("vial");}}>Not listed? Skip and type my numbers</button>}<div className={styles.startGuide} data-hero-start-guide><p>Answer a few quick questions. <em>We do the math.</em></p><div className={styles.startOutputs}><div><strong>mL</strong><span>How much BAC water to add</span></div><div><strong>Line</strong><span>Where to fill your syringe</span></div><div><strong>Doses</strong><span>How many are in the vial</span></div></div><small>No account. Nothing is saved until you choose Save.</small></div></div>},
+    {id:"product",label:"Product",title:"What is the name on your vial?",complete:p.productChosen,content:<div className={styles.startFields}>{p.product}{p.onSkipProduct&&<button type="button" className={styles.skipButton} onClick={()=>{p.onSkipProduct?.();p.onStep("vial");}}>Not listed? Skip and type my numbers</button>}<div className={styles.startGuide} data-hero-start-guide><p>Answer a few quick questions. <em>We do the math.</em></p><div className={styles.startOutputs}><div><strong>mL</strong><span>Entered final volume</span></div><div><strong>Line</strong><span>Volume scale equivalent</span></div><div><strong>Portions</strong><span>How many are in the vial</span></div></div><small>No account. Nothing is saved until you choose Save.</small></div></div>},
     ...(p.customName?[{id:"name",label:"Name",title:"What is your product called?",complete:p.preview.entries[0].complete,content:<>{p.customName}<p className={styles.stepHint}>Type the name exactly as it appears on your label.</p></>}]:[]),
     {id:"vial",label:"Vial amount",title:"What amount is on the vial?",complete:p.preview.entries[1].complete,content:<><p className={styles.stepHint}>Find the number next to <strong>mg</strong> on the vial label. If it says 5 mg, type 5.</p><div className={styles.vialChoices}>{p.vialOptions.slice(0,3).map(mg=><button type="button" key={mg} onClick={()=>p.onVial(String(p.unit==="mg"?mg:mg*1000))}>{mg} mg</button>)}</div><label className={styles.stepLabel} htmlFor={`${id}-vial`}>Amount in vial</label><div className={styles.inputWrap}><input id={`${id}-vial`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" placeholder="Example: 5" value={p.vial} onChange={e=>p.onVial(e.target.value)} aria-invalid={!!vialError} aria-describedby={`${id}-vial-error`}/><BrandSelect label="Vial amount unit" value={p.unit} onChange={value=>p.onUnit(value as "mg"|"mcg")} options={[{value:"mg",label:"mg"},{value:"mcg",label:"mcg"}]}/></div><p id={`${id}-vial-error`} className={styles.error} role={vialError?"alert":undefined}>{vialError}</p><BeginnerHelp kind="vial"/></>},
     ...(p.secondaryQuestions||[]),
-    {id:"amount",label:"Your dose",title:"How much will you use each time?",complete:p.preview.entries[2].complete&&!doseTooBig,content:<><p className={styles.stepHint}>Your dose comes from your own instructions, not from the vial label.</p><GuidedAmountFields value={p.amount} onChange={p.onAmount}/>
-      {doseTooBig&&<div className={styles.fixCard} role="alert"><p><strong>That is more than the whole vial holds.</strong> {likelyMcg?`Most doses are written in mcg. Did you mean ${p.amount.amount} mcg?`:"Check the number and whether it should be mg or mcg."}</p>{likelyMcg&&<button type="button" onClick={()=>p.onAmount({...p.amount,amountUnit:"mcg"})}><Wand2 size={15} aria-hidden="true"/>Yes, use {p.amount.amount} mcg</button>}</div>}
+    {id:"amount",label:"Measurement",title:"What mass do you want to measure?",complete:p.preview.entries[2].complete&&!doseTooBig,content:<><p className={styles.stepHint}>Enter a mass for the calculation. The calculator does not choose an amount or schedule.</p><GuidedAmountFields value={p.amount} onChange={p.onAmount}/>
+      {doseTooBig&&<div className={styles.fixCard} role="alert"><p><strong>That is more than the whole vial holds.</strong> {likelyMcg?`Check the unit on your source. Did you mean ${p.amount.amount} mcg?`:"Check the number and whether it should be mg or mcg."}</p>{likelyMcg&&<button type="button" onClick={()=>p.onAmount({...p.amount,amountUnit:"mcg"})}><Wand2 size={15} aria-hidden="true"/>Yes, use {p.amount.amount} mcg</button>}</div>}
       <BeginnerHelp kind="amount"/><ExploreProductResearch/></>},
-    {id:"volume",label:"BAC water",title:"How much BAC water will you add?",complete:p.preview.entries[3].complete,content:<>
-      <p className={styles.stepHint}>BAC water is the liquid you mix with the powder. If your instructions give an amount, type that. Otherwise keep our suggestion.</p>
-      {suggestion&&<div className={styles.suggest} data-water-suggestion role="group" aria-label="Suggested BAC water"><div className={styles.suggestTop}><Sparkles size={16} aria-hidden="true"/><span>{usingSuggestion?"Using our suggestion":"Our suggestion"}</span></div><p className={styles.suggestValue}><strong>{mlText(suggestion.ml)}</strong> mL of BAC water</p><p className={styles.suggestWhy}>Your dose of {formatDose(schedule.eachMcg)} then lands on the <strong>{unitsText(suggestion.units)} line</strong> of an insulin syringe, and the vial gives about {suggestion.dosesPerVial} doses.</p>{!usingSuggestion&&<button type="button" className={styles.suggestButton} onClick={()=>p.onVolume(String(suggestion.ml))}>Use {mlText(suggestion.ml)} mL</button>}</div>}
-      <label className={styles.stepLabel} htmlFor={`${id}-volume`}>BAC water to add</label><div className={styles.inputWrap}><input id={`${id}-volume`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" placeholder="Example: 2" value={p.volume} onChange={e=>p.onVolume(e.target.value)} aria-invalid={!!volumeError} aria-describedby={`${id}-volume-error`}/><span>mL</span></div><p id={`${id}-volume-error`} className={styles.error} role={volumeError?"alert":undefined}>{volumeError}</p>
+    {id:"volume",label:"Final volume",title:"What is the final liquid volume?",complete:p.preview.entries[3].complete,content:<>
+      <p className={styles.stepHint}>Enter an independently specified final liquid volume. Added water may not equal final volume. No preparation volume is suggested. Recheck any restored value; an earlier version may have suggested it.</p>
+      <label className={styles.stepLabel} htmlFor={`${id}-volume`}>Final liquid volume</label><div className={styles.inputWrap}><input id={`${id}-volume`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" placeholder="Example: 2" value={p.volume} onChange={e=>p.onVolume(e.target.value)} aria-invalid={!!volumeError} aria-describedby={`${id}-volume-error`}/><span>mL</span></div><p id={`${id}-volume-error`} className={styles.error} role={volumeError?"alert":undefined}>{volumeError}</p>
       <BeginnerHelp kind="volume"/></>},
     {id:"review",label:"Result",title:"Here are your numbers",complete:ready,content:<>
-      {ready&&<div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Fill your syringe to</span><button type="button" onClick={copy} aria-label="Copy result"><Copy size={16} aria-hidden="true"/></button></div><p className={styles.value}><strong className={lineLabel.length>6?styles.longValue:undefined}>{lineLabel}</strong>{" "}<span>{u100?"units":"mL"}</span><span className={styles.readout}>{readout} on {u100?"U-100":"mL"} scale · {volume}</span></p></div>}
-      {ready&&<ol className={styles.todo} aria-label="What to do"><li><span>1</span><div><strong>Add {p.volume} mL of BAC water</strong> to your {formatNumeric(p.result.input.vialStrengthMg,4)} mg vial.</div></li><li><span>2</span><div><strong>Each time, fill the syringe to the {lineLabel} {u100?"units":"mL"} line.</strong> That is {doseEach}, or {volume}.{p.result.schedule&&p.result.schedule.injectionsPerWeek>1?` You said ${p.result.schedule.injectionsPerWeek} times per week.`:""}</div></li><li><span>3</span><div><strong>This vial gives you about {p.result.dosesPerVial} {p.result.dosesPerVial===1?"dose":"doses"}.</strong> Each 1 mL holds {p.preview.concentrationText}.</div></li></ol>}
-      {betterWater&&<div className={styles.fixCard}><p><strong>Want an easier line to read?</strong> Use {mlText(betterWater.ml)} mL of BAC water instead and your dose lands right on the {unitsText(betterWater.units)} line.</p><button type="button" onClick={()=>p.onVolume(String(betterWater.ml))}><Wand2 size={15} aria-hidden="true"/>Use {mlText(betterWater.ml)} mL</button></div>}
+      {ready&&<div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Calculated scale equivalent</span><button type="button" onClick={copy} aria-label="Copy result"><Copy size={16} aria-hidden="true"/></button></div><p className={styles.value}><strong className={lineLabel.length>6?styles.longValue:undefined}>{lineLabel}</strong>{" "}<span>{u100?"units":"mL"}</span><span className={styles.readout}>{readout} on {u100?"U-100":"mL"} scale · {volume}</span></p></div>}
+      {ready&&<ol className={styles.todo} aria-label="Calculation details"><li><span>1</span><div><strong>Entered final volume: {p.volume} mL.</strong> Total mass: {formatNumeric(p.result.input.vialStrengthMg,4)} mg.</div></li><li><span>2</span><div><strong>Entered mass: {doseEach}.</strong> Volume equivalent: {volume}. Scale equivalent: {lineLabel} {u100?"U-100 units":"mL"}.</div></li><li><span>3</span><div><strong>{p.result.dosesPerVial} whole equal portions, ignoring losses.</strong> Concentration: {p.preview.concentrationText}.</div></li></ol>}
       {ready&&!p.result.syringeReadout.exceedsSyringe&&<SyringeVisual compact fillPercent={p.result.syringeReadout.fillPercent} readoutLabel={readout} scale={syringe.scale} maxValue={syringe.maxVolumeMl*(syringe.scale==="u100"?100:1)} maxLabel={syringe.label}/>}
       {ready&&plainWarnings(p.result.warnings).length>0&&<ul className={styles.stepWarnings}>{plainWarnings(p.result.warnings).map(warning=><li key={warning}>{warning}</li>)}</ul>}
       <details className={styles.syringeChange}><summary>Using a {syringe.label}. Change</summary><BrandSelect label="Syringe size and scale" value={p.device} onChange={value=>p.onDevice(value as SyringeType)} options={SYRINGES.map(s=>({value:s.id,label:s.label}))}/><p className={styles.stepHint}>{SYRINGE_HINTS[p.device]} Look at the biggest number printed on your syringe.</p></details>
@@ -122,7 +102,7 @@ export function HeroPlanSteps(p: Props) {
       </details>
     </>},
   ];
-  return <QuestionSteps questions={questions} current={p.step} onStep={p.onStep} onClear={()=>{p.onClear();p.onCustom(false);setNotice("");autoFilled.current="";}} finalAction={<button type="button" className={styles.stepPrimary} disabled={!ready||p.saving} onClick={p.onSave}>{p.saving?<Loader2 size={17} className="animate-spin" aria-hidden="true"/>:<Save size={17} aria-hidden="true"/>}{p.saving?"Saving...":p.saveLabel}</button>}>
-    <p className={styles.stepNotice} role="status">{notice}</p><p className={styles.stepSafety}>Math help only. Follow your own instructions. <Link href="/disclaimer">Not for human use.</Link></p>
+  return <QuestionSteps questions={questions} current={p.step} onStep={p.onStep} onClear={()=>{p.onClear();p.onCustom(false);setNotice("");}} finalAction={<button type="button" className={styles.stepPrimary} disabled={!ready||p.saving} onClick={p.onSave}>{p.saving?<Loader2 size={17} className="animate-spin" aria-hidden="true"/>:<Save size={17} aria-hidden="true"/>}{p.saving?"Saving...":p.saveLabel}</button>}>
+    <p className={styles.stepNotice} role="status">{notice}</p><p className={styles.stepSafety}>Research arithmetic only. No dosing or preparation advice. <Link href="/disclaimer">Not for human use.</Link></p>
   </QuestionSteps>;
 }

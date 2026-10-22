@@ -39,7 +39,7 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
   });
   await check('Guided and all-at-once views inherit the same values and meaning',async()=>{
    await p.goto(origin+'/plan',{waitUntil:'networkidle'});await goQuestion(p,'vial');await expect(p.getByLabel('Amount in vial',{exact:true})).toHaveValue('40');
-   await goQuestion(p,'amount');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await goQuestion(p,'volume');await expect(p.getByLabel('BAC water to add',{exact:true})).toHaveValue('2');
+   await goQuestion(p,'amount');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await goQuestion(p,'volume');await expect(p.getByLabel('Final liquid volume',{exact:true})).toHaveValue('2');
    await p.getByRole('button',{name:'All at once',exact:true}).click();await expect(p.getByLabel('Final liquid volume in mL',{exact:true})).toHaveValue('2');await expect(p.getByLabel(/^Total amount for one week/)).toHaveValue('2');await p.reload({waitUntil:'networkidle'});await expect(p.getByRole('button',{name:'All at once',exact:true})).toHaveAttribute('aria-pressed','true');
   });
   await check('Unit conversion preserves mass and product switching preserves fields',async()=>{

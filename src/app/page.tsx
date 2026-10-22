@@ -5,8 +5,8 @@ import { SoftwareAppJsonLd } from "@/components/common/software-app-json-ld";
 import { HeroMathContext } from "@/components/brand/hero-math-context";
 import { ResearchHome } from "@/components/brand/research-home";
 import { SupplierRecommendations } from "@/components/partners/supplier-recommendations";
-const title = "BAC Water Calculator | Peptide Reconstitution | BACwater.ai";
-const description = "Free BAC water and peptide reconstitution calculator. Check concentration, mL and U-100 units from your own numbers. Live results, no signup.";
+import { SEARCH_SNIPPETS } from "@/lib/seo/search-appearance";
+const { title, description } = SEARCH_SNIPPETS["/"];
 export const metadata: Metadata = withSocialMetadata({
   title: { absolute: title }, description, alternates: { canonical: "/" },
   openGraph: { title, description, url: "/", type: "website", siteName: "BACwater.ai" },

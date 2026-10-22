@@ -40,7 +40,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - name: Prepare disposable database and test-only enabled build
         run: |
           mkdir -p audit-evidence
@@ -60,9 +59,8 @@ jobs:
           npx next start --hostname 127.0.0.1 --port 3000 > audit-evidence/server.log 2>&1 &
           for attempt in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/robots.txt && break || sleep 2; done
           node scripts/audit-consent.mjs
-      - uses: actions/upload-artifact@v4
+      - name: Record verification evidence in job logs
         if: always()
-        with:
-          name: consent-acceptance-${{ github.sha }}
-          path: audit-evidence/
-          retention-days: 14
+        env:
+          VERIFY_JOB_STATUS: ${{ job.status }}
+        run: node scripts/report-ci-evidence.mjs

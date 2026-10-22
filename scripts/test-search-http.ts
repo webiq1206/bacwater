@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { BAC_WATER_FAQS } from "../src/app/tools/bac-water/faqs";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import fs from "node:fs";
@@ -36,6 +37,15 @@ async function main() {
       if (["/tools/bac-water", "/tools/mg-to-mcg", "/tools/syringe-units"].includes(path)) {
         assert.ok(html.includes("data-calculator-reference"), `Reference content missing from server HTML: ${path}`);
         assert.ok(html.indexOf("data-calculator-reference") > html.indexOf("</details>"), `Reference must be outside the Help disclosure: ${path}`);
+      }
+      if (path === "/tools/bac-water") {
+        const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m => JSON.parse(m[1]));
+        const faq = schemas.find(s => s["@type"] === "FAQPage");
+        assert.deepEqual(faq.mainEntity.map((q: { name: string; acceptedAnswer: { text: string } }) => ({ q: q.name, a: q.acceptedAnswer.text })), [...BAC_WATER_FAQS]);
+        for (const item of BAC_WATER_FAQS) assert.ok(decode(html).includes(item.a), item.q);
+        assert.match(html, /bacteriostatic water calculator/);
+        assert.doesNotMatch(html, /We tell you how much BAC water to add/);
+        for (const href of ["/methodology#checks", "/learn/bac-water-concentration-table"]) assert.ok(html.includes(`href="${href}"`));
       }
       results.push({ path, status: response.status, title: expected.title, imageAlt: shareImage(path).alt });
     }

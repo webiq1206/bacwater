@@ -45,8 +45,8 @@ export async function completeAuditHero(page, scope, {vial='12', amount='0.3', v
   await nextQuestion(scope);
   if((page.viewportSize()?.width??1440)<=780)scope=page.locator('[data-hero-focus]');
   await scope.getByLabel('Amount in vial',{exact:true}).fill(vial);await nextQuestion(scope);
-  await scope.getByLabel('Amount each time',{exact:true}).fill(amount);await nextQuestion(scope);
-  await scope.getByLabel('BAC water to add',{exact:true}).fill(volume);
+  await scope.getByLabel('Amount per portion',{exact:true}).fill(amount);await nextQuestion(scope);
+  await scope.getByLabel('Final liquid volume',{exact:true}).fill(volume);
   if(review)await nextQuestion(scope);
 
 }

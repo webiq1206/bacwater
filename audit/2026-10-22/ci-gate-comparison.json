@@ -1,0 +1,51 @@
+[
+  {
+    "workflow": ".github/workflows/hero-acceptance.yml",
+    "preserved_run_steps": 4,
+    "new_focused_gate": true,
+    "runner": "ubuntu-latest",
+    "storage_writes": 0
+  },
+  {
+    "workflow": ".github/workflows/consent-acceptance.yml",
+    "preserved_run_steps": 2,
+    "new_focused_gate": false,
+    "runner": "ubuntu-latest",
+    "storage_writes": 0
+  },
+  {
+    "workflow": ".github/workflows/product-search.yml",
+    "preserved_run_steps": 5,
+    "new_focused_gate": false,
+    "runner": "ubuntu-latest",
+    "storage_writes": 0
+  },
+  {
+    "workflow": ".github/workflows/master-audit.yml",
+    "preserved_run_steps": 19,
+    "new_focused_gate": false,
+    "runner": "ubuntu-latest",
+    "storage_writes": 0
+  },
+  {
+    "workflow": ".github/workflows/product-purchase.yml",
+    "preserved_run_steps": 3,
+    "new_focused_gate": false,
+    "runner": "ubuntu-latest",
+    "storage_writes": 0
+  },
+  {
+    "workflow": ".github/workflows/ci.yml",
+    "preserved_run_steps": 8,
+    "new_focused_gate": false,
+    "runner": "ubuntu-latest",
+    "storage_writes": 0
+  },
+  {
+    "workflow": ".github/workflows/final-content.yml",
+    "preserved_run_steps": 6,
+    "new_focused_gate": false,
+    "runner": "ubuntu-latest",
+    "storage_writes": 0
+  }
+]

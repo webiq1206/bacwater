@@ -39,7 +39,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - name: Install the deployment lockfile
         run: npm ci
       - name: Generate client
@@ -60,3 +59,8 @@ jobs:
         run: npx next build --webpack
       - name: Verify rendered search metadata and branded icon endpoints
         run: npm run test:search-http
+      - name: Record verification evidence in job logs
+        if: always()
+        env:
+          VERIFY_JOB_STATUS: ${{ job.status }}
+        run: node scripts/report-ci-evidence.mjs

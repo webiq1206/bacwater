@@ -5,7 +5,7 @@ const labels: Record<string, string> = {
   "/": "BACwater.ai: concentration and measurement tools",
   "/peptide-calculator": "Peptide concentration calculator",
   "/plan": "Plan Builder", "/plan/new": "Guided Plan Builder",
-  "/tools": "All calculation tools", "/tools/bac-water": "BAC water volume calculator",
+  "/tools": "All calculation tools", "/tools/bac-water": "BAC water (bacteriostatic water) concentration calculator",
   "/tools/dose": "Amount to volume calculator", "/tools/reverse-bac": "Concentration to final volume calculator",
   "/tools/syringe-units": "U-100 syringe units and mL converter", "/tools/mg-to-mcg": "mg and mcg converter",
   "/tools/supplies": "Portion and vial count calculator", "/tools/vial-labels": "Printable vial labels",

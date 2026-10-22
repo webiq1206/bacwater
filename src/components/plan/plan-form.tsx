@@ -869,11 +869,11 @@ export function PlanForm({ mode: initialMode, initial, editing, presentation = "
             <StepBlock
               n={3}
               total={6}
-              label="BAC water"
-              title="How much BAC water will you mix?"
-              hint="Type the mL of BAC water you add to the vial. If the vial already has liquid in it, type the total liquid after adding water."
+              label="Final volume"
+              title="What is the final liquid volume?"
+              hint="Enter the independently specified final liquid volume. Added water may differ from final volume; this calculator does not choose it."
             >
-              <Label htmlFor="advanced-final-volume">BAC water to add</Label>
+              <Label htmlFor="advanced-final-volume">Final liquid volume</Label>
               <div className="mt-2 flex items-center gap-2">
                 <Input id="advanced-final-volume" aria-label="Final liquid volume in mL" type="text" inputMode="decimal" maxLength={64} value={volumeRaw} onChange={e => setVolumeRaw(e.target.value)} className="flex-1" />
                 <span className="text-sm text-muted-foreground">mL</span>

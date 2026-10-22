@@ -32,8 +32,11 @@ jobs:
           key: indexnow-live-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: indexnow-live-
       - name: Submit only after live content changes
-        run: node scripts/submit-indexnow.mjs
+        # Source pushes are not publications. Check every live prerequisite,
+        # but leave submission and durable deduplication to the existing release checks.
+        run: node scripts/submit-indexnow.mjs ${{ github.event_name == 'push' && '--dry-run' || '' }}
       - uses: actions/cache/save@v4
+        if: github.event_name != 'push'
         with:
           path: .indexnow-state
           key: indexnow-live-${{ github.run_id }}-${{ github.run_attempt }}

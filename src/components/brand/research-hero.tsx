@@ -8,9 +8,9 @@ export function ResearchHero() {
     <div className={styles.copy}>
       <p className={styles.eyebrow}>FOUR QUICK QUESTIONS. ONE CLEAR ANSWER.</p>
       <h1 id="home-title" className={styles.headline}>BAC water <em>calculator.</em></h1>
-      <p className={styles.description}>Tell us what is in your vial and how much you use each time. We tell you how much BAC water to add and where to fill your syringe.</p>
+      <p className={styles.description}>Enter a mass and final liquid volume to check concentration, mL and scale units. Research arithmetic only, with no dose or preparation volume selected.</p>
       <p className={styles.free}><span><Check size={15} aria-hidden="true"/>Free to use</span><span><Check size={15} aria-hidden="true"/>No account needed</span></p>
-      <Link href="/tools" className={styles.secondary}>More tools <ArrowRight size={18} aria-hidden="true"/></Link>
+      <Link href="/tools/bac-water" className={styles.secondary}>Open the BAC water calculator <ArrowRight size={18} aria-hidden="true"/></Link>
     </div>
     <div className={styles.scene}>
       <div className={styles.orbit} aria-hidden="true"/>

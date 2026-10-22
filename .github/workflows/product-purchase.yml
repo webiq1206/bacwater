@@ -39,7 +39,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - name: Prepare test build without production credentials
         run: |
           mkdir -p audit-evidence
@@ -53,10 +52,6 @@ jobs:
           npx prisma db push --skip-generate
           npx tsx prisma/seed.ts
           npm run build
-      - uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-1.63.0
       - name: Install test-only browser tools
         run: |
           npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
@@ -68,9 +63,8 @@ jobs:
           result=0
           node scripts/audit-product-purchase.mjs || result=1
           exit "$result"
-      - uses: actions/upload-artifact@v4
+      - name: Record verification evidence in job logs
         if: always()
-        with:
-          name: product-purchase-${{ github.sha }}
-          path: audit-evidence/
-          retention-days: 14
+        env:
+          VERIFY_JOB_STATUS: ${{ job.status }}
+        run: node scripts/report-ci-evidence.mjs

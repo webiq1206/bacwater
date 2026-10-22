@@ -40,7 +40,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - name: Install reviewed dependencies and inspect advisories
         run: |
           mkdir -p audit-evidence
@@ -73,10 +72,6 @@ jobs:
         run: set -o pipefail; npm run build 2>&1 | tee audit-evidence/build.log
       - name: Verify production type isolation and genuine error detection
         run: set -o pipefail; node scripts/audit-build-type-isolation.mjs verify 2>&1 | tee audit-evidence/build-type-isolation.log
-      - uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-1.63.0
       - name: Install pinned browser audit tools
         run: |
           npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
@@ -142,9 +137,8 @@ jobs:
       - name: Record original calculator demonstrations
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/record-calculator-demos.mjs
-      - uses: actions/upload-artifact@v4
+      - name: Record verification evidence in job logs
         if: always()
-        with:
-          name: browser-verification-${{ github.sha }}
-          path: audit-evidence/
-          retention-days: 14
+        env:
+          VERIFY_JOB_STATUS: ${{ job.status }}
+        run: node scripts/report-ci-evidence.mjs

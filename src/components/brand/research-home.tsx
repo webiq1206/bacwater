@@ -7,8 +7,8 @@ import styles from "./research-home.module.css";
 /* The home page is the calculator, then research products, three small tools and compound references. */
 const tools=[
  {id:"01",icon:Scale,title:"Change mg to mcg",example:<>mg <span>↔</span> mcg</>,text:"Two ways to write the same amount. 1 mg is 1,000 mcg.",href:"/tools/mg-to-mcg",label:"Open converter"},
- {id:"02",icon:Ruler,title:"Syringe units to mL",example:<>units <span>↔</span> mL</>,text:"On an insulin syringe, 100 units is 1 mL. Convert either way.",href:"/tools/syringe-units",label:"Open converter"},
- {id:"03",icon:FileText,title:"Print a vial label",example:<>save <span>→</span> print</>,text:"Stick your numbers on the vial so you never have to work them out again.",href:"/tools/vial-labels",label:"Make a label"}
+ {id:"02",icon:Ruler,title:"Syringe units to mL",example:<>units <span>↔</span> mL</>,text:"On a U-100 scale, 100 units is 1 mL. Convert either way.",href:"/tools/syringe-units",label:"Open converter"},
+ {id:"03",icon:FileText,title:"Print a vial label",example:<>save <span>→</span> print</>,text:"Save a reference label with your entered numbers and calculation limits.",href:"/tools/vial-labels",label:"Make a label"}
 ];
 export function ResearchHome({supplier}:{supplier?:ReactNode}){return <div className={styles.home}>
  <div className={styles.heroGround}><ResearchHero/><div className={styles.benefitRail}><p><Calculator size={16} aria-hidden="true"/>Four quick questions.</p><p><FileText size={16} aria-hidden="true"/>Save or print the answer.</p><p><LockKeyhole size={16} aria-hidden="true"/>No account needed.</p></div></div>
