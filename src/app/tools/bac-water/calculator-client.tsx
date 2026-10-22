@@ -2,7 +2,7 @@
 import { BAC_WATER_FAQS } from "./faqs";
 import { CalculationOutcome } from "@/components/calculator/calculation-events";
 import { MassProductGate } from "@/components/calculator/mass-product-selection";
-import { useState, useRef } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { CalculatorWorkspace, WorkspaceActions } from "@/components/calculator/calculator-workspace";
 
 import Link from "next/link";
@@ -30,17 +30,22 @@ export default function BacWaterCalculatorPage() {
   const vial = useVialContext();
   const [screen,setScreen] = useState<"inputs"|"result">("inputs");
   const panels=useRef<HTMLDivElement>(null);
+  const previousScreen=useRef(screen);
   function switchScreen(next:"inputs"|"result") {
     setScreen(next);
-    requestAnimationFrame(()=>{
+  }
+  useLayoutEffect(()=>{
+      if(previousScreen.current===screen)return;
+      previousScreen.current=screen;
       // The next screen starts at the top of the scrolling area, so nobody
       // lands on the bottom of the previous one and has to scroll up.
-      const screenPanel=panels.current?.querySelector<HTMLElement>(`[data-screen="${next}"]`);
+      // Set focus with the committed screen, before a subsequent input action.
+      // A deferred frame can otherwise steal focus halfway through clearing a field.
+      const screenPanel=panels.current?.querySelector<HTMLElement>(`[data-screen="${screen}"]`);
       screenPanel?.scrollIntoView({block:"start",behavior:"instant"});
       const heading=screenPanel?.querySelector<HTMLElement>("h2");
       if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
-    });
-  }
+  },[screen]);
   const [savedVolume, setVolume] = usePersistentState<string>("bacwater.tool.bacwater.volume.v2", "");
   const volumeText = typeof savedVolume === "string" ? savedVolume : "";
   const vialAmount = Number(vial.vialInput);

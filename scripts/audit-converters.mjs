@@ -8,6 +8,17 @@ const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 320, height: 844 } });
 await context.route('**/*', r => new URL(r.request().url()).origin === origin ? r.continue() : r.abort());
 await context.addCookies([{ name: 'bacwater_age_ok', value: '1', url: origin }]);
+// Model a queued animation frame during a fast edit/clear interaction.
+// Screen focus must settle before the next user action, not in that later frame.
+await context.addInitScript(() => {
+  const frame = window.requestAnimationFrame.bind(window);
+  window.__converterFrames = [];
+  window.__holdConverterFrames = false;
+  window.requestAnimationFrame = callback => frame(time => {
+    if (window.__holdConverterFrames) window.__converterFrames.push(() => callback(time));
+    else callback(time);
+  });
+});
 const page = await context.newPage();
 const results = [], errors = [];
 page.on('pageerror', e => errors.push(String(e)));
@@ -93,8 +104,12 @@ try {
     await expect(page.locator('#bac-result')).toContainText('16 U-100 scale units');
   });
   await step('Unknown final volume stays empty and blocks results without suggesting preparation', async () => {
+    await page.evaluate(() => { window.__holdConverterFrames = true; });
     await page.getByRole('button',{name:'Edit numbers',exact:true}).click();
+    await expect(page.locator('#volume-inputs-heading')).toBeFocused();
     await page.getByLabel('Final liquid volume (mL)', { exact: true }).fill('');
+    await page.evaluate(() => { window.__holdConverterFrames = false; window.__converterFrames.splice(0).forEach(callback => callback()); });
+    await expect(page.getByLabel('Final liquid volume (mL)', { exact: true })).toBeFocused();
     await expect(page.locator('[data-water-suggestion]')).toHaveCount(0);
     await expect(page.getByLabel('Final liquid volume (mL)', { exact: true })).toHaveValue('');
     await expect(page.getByRole('button',{name:'See my result',exact:true})).toBeDisabled();
