@@ -8,7 +8,7 @@ export function ResearchHero() {
     <div className={styles.copy}>
       <p className={styles.eyebrow}>FOUR QUICK QUESTIONS. ONE CLEAR ANSWER.</p>
       <h1 id="home-title" className={styles.headline}>BAC water <em>calculator.</em></h1>
-      <p className={styles.description}>Enter a mass and final liquid volume to check concentration, mL and scale units. Research arithmetic only, with no dose or preparation volume selected.</p>
+      <p className={styles.description}>Check concentration, mL and scale units from your mass and final volume. Research arithmetic only. No dosing or preparation advice.</p>
       <p className={styles.free}><span><Check size={15} aria-hidden="true"/>Free to use</span><span><Check size={15} aria-hidden="true"/>No account needed</span></p>
       <Link href="/tools/bac-water" className={styles.secondary}>Open the BAC water calculator <ArrowRight size={18} aria-hidden="true"/></Link>
     </div>
