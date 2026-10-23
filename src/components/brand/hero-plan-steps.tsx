@@ -59,6 +59,9 @@ export function HeroPlanSteps(p: Props) {
   const unitsNow = p.result.syringeUnits;
   const lineLabel = u100 ? unitsText(unitsNow) : formatNumeric(p.result.doseVolumeMl, 2);
   const doseEach = formatDose(p.result.schedule?.dosePerInjectionMcg ?? p.result.input.doseMcg);
+  const capacityMismatch = ready && p.result.syringeReadout.exceedsSyringe
+    ? `Selected scale cannot represent this volume. ${volume} exceeds the selected ${formatNumeric(syringe.maxVolumeMl, 2)} mL capacity${u100 ? ` (${formatNumeric(syringe.maxVolumeMl * 100, 2)} U-100 units)` : ""}. The equivalent below is arithmetic, not a mark on this scale.`
+    : "";
 
   // Check entered mass against total mass without choosing a volume.
   const vialMg = p.preview.entries[1].complete ? (positiveDecimal(p.vial) ?? 0) / (p.unit === "mcg" ? 1000 : 1) : 0;
@@ -68,7 +71,7 @@ export function HeroPlanSteps(p: Props) {
   const likelyMcg = doseTooBig && p.amount.amountUnit === "mg" && schedule.eachMcg / 1000 / 1000 <= vialMg;
   async function copy() {
     if (!ready) return;
-    const text = `${p.result.input.peptideName}\nEntered final volume: ${p.volume} mL.\n${formula}\nEntered mass ${doseEach} corresponds to ${volume}: ${readout} on ${syringe.label}.\n${p.result.dosesPerVial} whole equal portions, ignoring losses.\nResearch arithmetic only; not dosing or preparation advice. Not for human use.\n${plainWarnings(p.result.warnings).join("\n")}`;
+    const text = `${p.result.input.peptideName}\n${capacityMismatch ? `${capacityMismatch}\n` : ""}Entered final volume: ${p.volume} mL.\n${formula}\nEntered mass ${doseEach} corresponds to ${volume}: ${readout} on ${syringe.label}.\n${p.result.dosesPerVial} whole equal portions, ignoring losses.\nResearch arithmetic only; not dosing or preparation advice. Not for human use.\n${plainWarnings(p.result.warnings).join("\n")}`;
     try { await navigator.clipboard.writeText(text); setNotice("Copied."); trackUsage("result_copied"); }
     catch { setNotice("Copy is unavailable. Select and copy the numbers shown here."); }
   }
@@ -86,7 +89,7 @@ export function HeroPlanSteps(p: Props) {
       <label className={styles.stepLabel} htmlFor={`${id}-volume`}>Final liquid volume</label><div className={styles.inputWrap}><input id={`${id}-volume`} type="text" inputMode="decimal" maxLength={64} autoComplete="off" placeholder="Example: 2" value={p.volume} onChange={e=>p.onVolume(e.target.value)} aria-invalid={!!volumeError} aria-describedby={`${id}-volume-error`}/><span>mL</span></div><p id={`${id}-volume-error`} className={styles.error} role={volumeError?"alert":undefined}>{volumeError}</p>
       <BeginnerHelp kind="volume"/></>},
     {id:"review",label:"Result",title:"Here are your numbers",complete:ready,content:<>
-      {ready&&<div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Calculated scale equivalent</span><button type="button" onClick={copy} aria-label="Copy result"><Copy size={16} aria-hidden="true"/></button></div><p className={styles.value}><strong className={lineLabel.length>6?styles.longValue:undefined}>{lineLabel}</strong>{" "}<span>{u100?"units":"mL"}</span><span className={styles.readout}>{readout} on {u100?"U-100":"mL"} scale · {volume}</span></p></div>}
+      {ready&&<div className={styles.result} data-live-result role="status" aria-live="polite" aria-atomic="true"><div className={styles.resultTop}><span>Calculated scale equivalent</span><button type="button" onClick={copy} aria-label="Copy result"><Copy size={16} aria-hidden="true"/></button></div>{capacityMismatch&&<p className={styles.stepWarnings} data-capacity-mismatch role="alert"><strong>{capacityMismatch}</strong></p>}<p className={styles.value}><strong className={lineLabel.length>6?styles.longValue:undefined}>{lineLabel}</strong>{" "}<span>{u100?"units":"mL"}</span><span className={styles.readout}>{readout} on {u100?"U-100":"mL"} scale · {volume}</span></p></div>}
       {ready&&<ol className={styles.todo} aria-label="Calculation details"><li><span>1</span><div><strong>Entered final volume: {p.volume} mL.</strong> Total mass: {formatNumeric(p.result.input.vialStrengthMg,4)} mg.</div></li><li><span>2</span><div><strong>Entered mass: {doseEach}.</strong> Volume equivalent: {volume}. Scale equivalent: {lineLabel} {u100?"U-100 units":"mL"}.</div></li><li><span>3</span><div><strong>{p.result.dosesPerVial} whole equal portions, ignoring losses.</strong> Concentration: {p.preview.concentrationText}.</div></li></ol>}
       {ready&&!p.result.syringeReadout.exceedsSyringe&&<SyringeVisual compact fillPercent={p.result.syringeReadout.fillPercent} readoutLabel={readout} scale={syringe.scale} maxValue={syringe.maxVolumeMl*(syringe.scale==="u100"?100:1)} maxLabel={syringe.label}/>}
       {ready&&plainWarnings(p.result.warnings).length>0&&<ul className={styles.stepWarnings}>{plainWarnings(p.result.warnings).map(warning=><li key={warning}>{warning}</li>)}</ul>}

@@ -87,7 +87,9 @@ jobs:
         run: node scripts/audit-publication-browser.mjs
       - name: Verify converters
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
-        run: node scripts/audit-converters.mjs
+        run: |
+          node scripts/audit-converters.mjs
+          node scripts/audit-capacity-presentation.mjs
       - name: Verify calculator controls and research assistant do not overlap
         if: ${{ !cancelled() && steps.server.outcome == 'success' }}
         run: node scripts/audit-workspace-research.mjs

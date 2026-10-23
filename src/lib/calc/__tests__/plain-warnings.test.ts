@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { calculate } from "@/lib/calc";
+import { calculate, SYRINGES } from "@/lib/calc";
 import { plainWarning, plainWarnings } from "@/lib/calc/plain-warnings";
 
 let count = 0;
@@ -29,4 +29,20 @@ test("unknown warnings pass through and duplicates collapse", () => {
   assert.equal(plainWarning("Something new."), "Something new.");
   assert.deepEqual(plainWarnings(["Something new.", "Something new."]), ["Something new."]);
 });
+
+
+// Device capacity is a presentation constraint, never a reason to alter arithmetic.
+test("below, at and above every scale capacity preserve arithmetic and neutral warnings", () => {
+  for (const device of SYRINGES) for (const factor of [0.99, 1, 1.01]) {
+    const volume = device.maxVolumeMl * factor;
+    const result = calculate({ vialStrengthMg: 10, doseMcg: 10000, bacWaterMl: volume, syringeType: device.id });
+    assert.ok(Math.abs(result.doseVolumeMl - volume) < 1e-10);
+    assert.ok(Math.abs(result.syringeUnits - volume * 100) < 1e-8);
+    assert.equal(result.syringeReadout.exceedsSyringe, factor > 1);
+    const warnings = plainWarnings(result.warnings).join(" ");
+    assert.doesNotMatch(warnings, /use less water|add more water|more water makes|different amount of water|use a bigger|fill.*syringe/i);
+    if (factor > 1) assert.match(warnings, /exceeds the selected scale capacity/);
+  }
+});
+
 console.log(`${count} plain warning checks passed.`);
