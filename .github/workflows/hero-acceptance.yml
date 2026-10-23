@@ -54,6 +54,7 @@ jobs:
           npm run build
       - name: Install test-only browser tools
         run: |
+          sudo python3 scripts/ci-apt-mirror.py
           npm install --no-save --package-lock=false @playwright/test@1.63.0 axe-core@4.13.0
           npx playwright install --with-deps chromium webkit
       - name: Verify full-height hero and dedicated calculator navigation
