@@ -43,7 +43,7 @@ for(const slug of ["__proto__","constructor","private-record"]){assert.equal(sea
 const sentence="This corrects the earlier statement that a more dilute vial would automatically be used up twice as fast.";
 const display=presentArticle(`A direct answer.\n\nA current explanation. ${sentence}`);
 assert.equal(display.opening,"A direct answer.");assert.deepEqual(display.corrections,[sentence]);assert.ok(!display.body.includes(sentence));assert.ok(display.body.includes("A current explanation."));
-for(const comparison of COMPARISONS){const svg=comparisonSvg(comparison);assert.doesNotMatch(svg,/\.\.\./);assert.ok(comparisonDims(comparison).height>300);for(const row of comparison.table)assert.ok(svg.includes(row.dimension.replace(/&/g,"&amp;")),comparison.slug);}
+for(const comparison of COMPARISONS){const svg=comparisonSvg(comparison);assert.doesNotMatch(svg,/\.\.\./);assert.ok(comparisonDims(comparison).height>300);const visible=svg.replace(/<[^>]+>/g,"").replace(/&amp;/g,"&");for(const row of comparison.table)assert.ok(visible.includes(row.dimension),comparison.slug);}
 console.log("PASS audit changes: 50 product formats and catalog records, required selection, validation, token randomness/expiry, password limits, 14 article cards, correction retention and seven complete chart exports.");
 
 // Static product calculator URLs are reduced to one public category. Account,

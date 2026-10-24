@@ -93,7 +93,7 @@ export default async function ComparisonPage({
       />
       <ArticleJsonLd
         title={c.title}
-        body={[c.verdict, ...c.body.map((s) => `${s.h2}\n\n${s.p}`)].join("\n\n")}
+        body={[c.verdict, c.follow, c.tableLead && `${c.tableLead.h2}\n\n${c.tableLead.p}`, ...c.body.map((s) => `${s.h2}\n\n${s.p}`)].filter(Boolean).join("\n\n")}
         url={`${SITE_URL}/learn/vs/${c.slug}`}
         updatedAt={new Date("2026-09-21")}
         citations={refs}
@@ -119,11 +119,15 @@ export default async function ComparisonPage({
         {c.title}
       </h1>
 
-      {/* Direct verdict */}
-      <p className="mt-5 text-lg leading-relaxed text-foreground/90">
-        {c.verdict}
-      </p>
-      <ReviewedBy className="mt-2" />
+      {/* Direct verdict. Acetic acid uses the proof-safe paste, including emphasis. */}
+      {c.slug === "acetic-acid" ? <>
+        <p className="mt-5 text-lg leading-relaxed text-foreground/90">Searches for <strong>acetic acid peptides</strong>, <strong>acetic acid water vs bac water</strong>, or <strong>acetic acid peptide</strong> usually need a label check — not a universal solvent rule. A solution labeled with acetic acid is <em>not</em> automatically equivalent to BAC water (bacteriostatic water). Acid concentration, other ingredients, grade, and intended use must be identified before compatibility can be considered.</p>
+        <p className="mt-4 text-lg leading-relaxed text-foreground/90">Published by <Link href="/editorial-policy" className="underline">BACwater.ai</Link>. General reference, not a medical review. Consult the cited product-specific sources. This page does not select a solvent from a compound name.</p>
+      </> : <p className="mt-5 text-lg leading-relaxed text-foreground/90">{c.verdict}</p>}
+      {c.slug !== "acetic-acid" && c.follow && <p className="mt-4 text-lg leading-relaxed text-foreground/90">{c.follow}</p>}
+      {c.slug !== "acetic-acid" && <ReviewedBy className="mt-2" />}
+
+      {c.tableLead && <section className="mt-8 space-y-3"><h2 className="text-2xl font-serif font-medium tracking-tight">{c.tableLead.h2}</h2>{c.slug === "acetic-acid" ? <p className="text-foreground/90 leading-relaxed"><strong>BAC water</strong> (bacteriostatic water) is typically discussed as water with a named preservative system on the finished-product label. An <strong>acetic acid solution</strong> is identified by its acetic acid concentration and whatever else that specific product lists. Shared words on a search query do not make the products interchangeable.</p> : <p className="text-foreground/90 leading-relaxed">{c.tableLead.p}</p>}</section>}
 
       {/* Comparison table */}
       <div className="mt-8 overflow-x-auto border border-border" role="region" aria-label="Scrollable data table" tabIndex={0}>
@@ -203,6 +207,8 @@ export default async function ComparisonPage({
 
       {c.slug === "sterile-water" && <aside className="mt-8 rounded-xl border p-4 text-sm"><h2 className="font-semibold">Correction note</h2><p className="mt-2">The earlier statement on this site that BAC water can always replace sterile water was incorrect. The exact product instructions determine the vehicle.</p></aside>}
       <References references={refs} />
+
+      {c.slug === "acetic-acid" && <section className="mt-12"><h2 className="text-2xl font-serif font-medium tracking-tight">Check the arithmetic after the label decides the vehicle</h2><p className="mt-3 text-foreground/90 leading-relaxed">Once your product instructions specify the liquid and final volume, use the calculators for concentration and mL math only:</p><ul className="mt-3 list-disc space-y-2 pl-5"><li><Link className="underline" href="/tools/bac-water">BAC water calculator (concentration &amp; mL)</Link></li><li><Link className="underline" href="/peptide-calculator">Peptide reconstitution calculator</Link></li><li><Link className="underline" href="/tools/dose">mg and mcg to mL calculator</Link></li><li><Link className="underline" href="/">Homepage BAC water calculator</Link></li><li><Link className="underline" href="/learn">All BAC water &amp; reconstitution guides</Link></li><li><Link className="underline" href="/learn/vs/sterile-water">BAC water vs sterile water</Link> (related comparison)</li></ul></section>}
 
       {/* CTA */}
       <section className="mt-12 section-dark rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">

@@ -23,7 +23,7 @@ export function WorkspaceActions({ children }: { children: ReactNode }) {
 }
 /** A page, not a modal: ordinary Back/Forward and deep links remain intact. */
 export function CalculatorWorkspace({ title, description, children, help, reference, backHref = "/tools" }: {
-  title: string; description: string; children: ReactNode; help?: ReactNode; reference?: ReactNode; backHref?: string;
+  title: string; description: ReactNode; children: ReactNode; help?: ReactNode; reference?: ReactNode; backHref?: string;
 }) {
   const [actionsRoot, setActionsRoot] = useState<HTMLDivElement | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -91,7 +91,7 @@ export function CalculatorWorkspace({ title, description, children, help, refere
       </header>
       <div className={styles.body} data-calculator-scroll tabIndex={0} role="region" aria-label="Calculation workspace">
         <div className={styles.content}>
-          <div className={styles.heading}><h1>{title}</h1><p>{description}</p><UnitHelp/></div>
+          <div className={styles.heading}><h1>{title}</h1>{typeof description === "string" ? <p>{description}</p> : description}<UnitHelp/></div>
           {!hasOwnProductPicker && <CalculatorProductTools selectedId={routeProduct?.id||(session.kind==="single"?session.productId:null)}/>}
           <CalculationEvents/>{children}
           <WorkspaceResearchButton/>
