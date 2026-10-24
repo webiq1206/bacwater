@@ -349,7 +349,7 @@ export async function getCatalog(strict = false): Promise<LearnEntry[]> {
   const comparisonEntries: LearnEntry[] = COMPARISONS.map((c) => ({
     id: `vs-${c.slug}`,
     url: `/learn/vs/${c.slug}`,
-    title: c.title,
+    title: c.listingTitle ?? c.title,
     excerpt: c.metaDescription,
     contentType: "comparison" as const,
     peptideTags: [],

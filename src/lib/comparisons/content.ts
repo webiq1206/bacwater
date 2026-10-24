@@ -21,6 +21,12 @@ export interface ComparisonTopic {
   metaDescription: string;
   /** 40-60 word direct verdict that opens the page. */
   verdict: string;
+  /** Optional second opening paragraph under the verdict. */
+  follow?: string;
+  /** Optional heading and paragraph placed directly above the comparison table. */
+  tableLead?: { h2: string; p: string };
+  /** Learn-hub card title when it must stay distinct from the page H1. */
+  listingTitle?: string;
   table: ComparisonRow[];
   body: { h2: string; p: string }[];
   faqs: { q: string; a: string }[];
@@ -276,10 +282,16 @@ export const COMPARISONS: ComparisonTopic[] = [
   {
     "slug": "acetic-acid",
     "otherName": "Acetic acid solution",
-    "title": "BAC Water vs Acetic Acid Solution: Check the Formulation",
-    "metaTitle": "BAC Water vs Acetic Acid Solution: Label Checks",
-    "metaDescription": "An acetic acid concentration does not identify a complete reconstitution product. Confirm the specified solvent, grade, additives and intended use.",
-    "verdict": "A solution labeled with acetic acid is not automatically equivalent to BAC water. Its acid concentration, other ingredients and intended use need to be identified before compatibility can be considered.",
+    "title": "Acetic Acid vs BAC Water for Peptides",
+    "listingTitle": "BAC Water vs Acetic Acid Solution: Check the Formulation",
+    "metaTitle": "Acetic Acid vs BAC Water for Peptides: Label Checks",
+    "metaDescription": "Acetic acid water vs bac water for peptides: a solution labeled with acetic acid is not automatically equivalent to bacteriostatic water. Compare ingredients, concentrations, and intended use on the label.",
+    "verdict": "Searches for acetic acid peptides, acetic acid water vs bac water, or acetic acid peptide usually need a label check — not a universal solvent rule. A solution labeled with acetic acid is not automatically equivalent to BAC water (bacteriostatic water). Acid concentration, other ingredients, grade, and intended use must be identified before compatibility can be considered.",
+    "follow": "Published by BACwater.ai. General reference, not a medical review. Consult the cited product-specific sources. This page does not select a solvent from a compound name.",
+    "tableLead": {
+      "h2": "Acetic acid water vs BAC water — what differs on the label",
+      "p": "BAC water (bacteriostatic water) is typically discussed as water with a named preservative system on the finished-product label. An acetic acid solution is identified by its acetic acid concentration and whatever else that specific product lists. Shared words on a search query do not make the products interchangeable."
+    },
     "table": [
       {
         "dimension": "Named ingredient",
@@ -292,15 +304,20 @@ export const COMPARISONS: ComparisonTopic[] = [
         "other": "Read actual label"
       },
       {
-        "dimension": "Compatibility",
+        "dimension": "Compatibility with a peptide or other compound",
         "bac": "Product-specific",
         "other": "Product-specific"
+      },
+      {
+        "dimension": "Intended use / grade",
+        "bac": "Read actual label",
+        "other": "Read actual label"
       }
     ],
     "body": [
       {
         "h2": "Avoid a universal solvent rule.",
-        "p": "This site does not select a solvent from a compound name. The product or validated laboratory method must specify the vehicle and conditions. An acidity description is not a substitute for that information."
+        "p": "This site does not select a solvent from a compound name — including peptide names. The product or validated laboratory method must specify the vehicle and conditions. An acidity description is not a substitute for that information."
       },
       {
         "h2": "Keep consumer and product instructions separate.",
