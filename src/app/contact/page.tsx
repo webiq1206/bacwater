@@ -1,8 +1,9 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
-import { ContactForm } from "@/components/common/contact-form";
+import { LeadRequest } from "@/components/common/lead-request";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 
 export const metadata = withSocialMetadata({
   alternates: { canonical: "/contact" },
@@ -19,7 +20,7 @@ export const metadata = withSocialMetadata({
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-8 sm:pt-10 pb-24 sm:pb-32">
+    <div className="mx-auto max-w-xl px-4 sm:px-6 pt-4 sm:pt-10 pb-10 sm:pb-32">
       <WebPageJsonLd
         name="Contact BACwater.ai"
         description="Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website."
@@ -29,16 +30,20 @@ export default function ContactPage() {
           { name: "Contact", url: "/contact" },
         ]}
       />
-      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact", href: "/contact" }]} />
-      <div className="eyebrow">Contact</div>
-      <h1 className="mt-2 text-4xl sm:text-5xl font-serif font-medium tracking-tight">
+      <h1 className="mt-1 text-3xl sm:text-5xl font-serif font-medium tracking-tight">
         Get in touch
       </h1>
-      <p className="mt-3 text-muted-foreground leading-relaxed">
-        Questions about a calculation, a saved plan or this website?
-        Send the support team a note. We do not sell products or provide medical advice.
+      <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
+        Send a request in one step. Chat if you would rather ask here.
+        We do not sell products or provide medical advice.
       </p>
-      <div className="mt-6 border border-border p-4">
+      <div className="mt-2">
+        <LeadRequest variant="contact" />
+      </div>
+      <div className="mt-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact", href: "/contact" }]} />
+      </div>
+      <div className="mt-4 border border-border p-4">
         <p className="text-sm text-muted-foreground leading-relaxed">
           For quick answers, check our{" "}
           <Link href="/faq" className="font-medium text-foreground underline">FAQ</Link>{" "}
@@ -46,14 +51,13 @@ export default function ContactPage() {
           <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
         </p>
       </div>
-      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">Use this form for website support or a correction. Include the public page and steps to reproduce a calculator issue. We cannot promise a response time. For orders, shipping or product questions, contact the supplier directly.</p>
+      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+        Use this form for website support or a correction. For orders, shipping, or product questions, contact the supplier directly.
+      </p>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
         Prefer email?{" "}
-        <a href="mailto:hello@bacwater.ai" className="font-medium text-foreground underline">hello@bacwater.ai</a>.
+        <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="font-medium text-foreground underline">{PUBLIC_SUPPORT_EMAIL}</a>.
       </p>
-      <div className="mt-6 rounded-xl border border-border p-4 sm:p-6">
-        <ContactForm />
-      </div>
     </div>
   );
 }

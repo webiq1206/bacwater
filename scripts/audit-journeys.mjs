@@ -96,11 +96,11 @@ try {
   });
   await step('Contact record is actually saved once and retry is idempotent',async()=>{
     const p=await stranger.newPage();await p.goto(`${origin}/contact`);
-    await p.getByLabel('Name',{exact:true}).fill(prefix);await p.getByLabel('Email',{exact:true}).fill(email);
-    await p.getByLabel('Message',{exact:true}).fill(`${prefix} controlled contact fixture`);
+    await p.getByLabel('Name',{exact:true}).fill(prefix);await p.getByLabel('Phone',{exact:true}).fill('2025550148');await p.getByLabel('Email',{exact:true}).fill(email);
+    await p.getByLabel('Note',{exact:true}).fill(`${prefix} controlled contact fixture`);
     const request=p.waitForRequest((r)=>r.method()==='POST'&&Boolean(r.headers()['next-action']));
-    await p.getByRole('button',{name:'Send message',exact:true}).click();const actual=await request;
-    await expect(p.getByRole('heading',{name:'We received your message.'})).toBeVisible();
+    await p.getByRole('button',{name:'Send request',exact:true}).click();const actual=await request;
+    await expect(p.getByRole('heading',{name:'We received your request.'})).toBeVisible();
     const rows=await prisma.contactMessage.findMany({where:{email}});assert.equal(rows.length,1);contactIds.push(rows[0].id);
     const h=actual.headers();await stranger.request.post(actual.url(),{headers:{'Next-Action':h['next-action'],'Content-Type':h['content-type'],Origin:origin},data:actual.postData()});
     assert.equal(await prisma.contactMessage.count({where:{email}}),1);await p.close();

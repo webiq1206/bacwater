@@ -55,6 +55,8 @@ export default async function AdminContactPage() {
     email: m.email,
     subject: m.subject,
     message: m.message,
+    phone: m.phone,
+    attachmentName: m.attachmentName,
     handled: m.handled,
     handledAt: m.handledAt?.toISOString() ?? null,
     handledByEmail: m.handledByEmail,

@@ -23,10 +23,10 @@ const ITEMS = [
   { href: "/plans", label: "Account", icon: User, match: (p: string) => p.startsWith("/plans") },
 ];
 
-/** The wizard and admin have their own navigation and action placement. */
+/** The wizard, admin, home, and contact keep their primary actions clear of this bar. */
 export function MobileBottomNav() {
   const pathname = usePathname() || "/";
-  const hidden = /^\/products\/[^/]+$/.test(pathname) || pathname === "/research-finder" || pathname === "/" || pathname === "/plan" || pathname === "/plan/new" || pathname.startsWith("/plan/") || pathname.startsWith("/admin");
+  const hidden = /^\/products\/[^/]+$/.test(pathname) || pathname === "/research-finder" || pathname === "/" || pathname === "/contact" || pathname === "/plan" || pathname === "/plan/new" || pathname.startsWith("/plan/") || pathname.startsWith("/admin");
 
   useEffect(() => {
     let mounted = true, pointerActive = false, frame = 0;

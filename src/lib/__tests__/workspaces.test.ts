@@ -12,6 +12,8 @@ import {
 } from "@/lib/contact-triage";
 import { contentChecks, extractMetaDescription } from "@/lib/content/checks";
 import { vialMgOf, doseMcgOf } from "@/lib/tools/vial-context";
+import { parseVisitorPhone, telHref, validateAttachment } from "@/lib/contact-request";
+import { publicPhone } from "@/lib/site-contact";
 import { defaultPlanName, isGeneratedPlanName } from "@/lib/plan-name";
 
 let failures = 0;
@@ -209,6 +211,20 @@ check(unitMismatch === 0, "shared vial/dose conversions match the per-tool origi
 check(doseMcgOf({ doseInput: 0.3, doseUnit: "mg" }) === 300, "0.3 mg converts to exactly 300 mcg");
 check(doseMcgOf({ doseInput: 250, doseUnit: "mcg" }) === 250, "mcg input passes through untouched");
 check(vialMgOf({ vialInput: 5, vialUnit: "mg" }) === 5, "mg vial input passes through untouched");
+
+check(parseVisitorPhone("  +1 (415) 555-0134 ") === "+1 (415) 555-0134", "a visitor phone keeps readable formatting");
+check(parseVisitorPhone("12345") === null, "a short visitor phone is rejected");
+check(parseVisitorPhone("call me maybe") === null, "letters are not a phone number");
+check(telHref("+1 (415) 555-0134") === "tel:+14155550134", "tel link keeps digits only");
+check(telHref("not a phone") === null, "a tel link is not built from text");
+check(publicPhone("") === null && publicPhone("office") === null && publicPhone("+1 415 555 0199") === "+1 415 555 0199", "Call stays hidden unless a real public number is configured");
+const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0]);
+const pngOk = validateAttachment({ name: "label.png", bytes: png });
+check(pngOk.ok && pngOk.type === "image/png", "a PNG attachment is accepted from its bytes");
+const spoof = validateAttachment({ name: "label.png", bytes: new Uint8Array([0x3c, 0x73, 0x76, 0x67]) });
+check(!spoof.ok, "a renamed file is rejected when the bytes do not match");
+const note = validateAttachment({ name: "note.txt", bytes: new TextEncoder().encode("Batch photo is attached.") });
+check(note.ok && note.type === "text/plain", "a plain text note can be attached");
 
 if (failures > 0) {
   console.error(`\n${failures} workspace assertion(s) failed.`);
