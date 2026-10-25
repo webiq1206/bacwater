@@ -40,14 +40,15 @@ export function ResearchAssistantProvider({children}:{children:ReactNode}){
  const selectQuickView=useCallback((id:string|null)=>{quickView.current=id;setActiveQuickView(id);},[]);
  const panel=useRef<HTMLDivElement>(null),title=useRef<HTMLHeadingElement>(null),launcher=useRef<HTMLButtonElement>(null),trigger=useRef<HTMLElement|null>(null);
  const path=usePathname()||"/",previousPath=useRef(path);
- const hidden=path.startsWith("/admin")||path.startsWith("/embed")||/\/(pdf|print|labels)$/.test(path);
- const page=path==="/research-finder";
+  const hidden=path.startsWith("/admin")||path.startsWith("/embed")||/\/(pdf|print|labels)$/.test(path);
+  const page=path==="/research-finder";
+  // Home and contact already lead with an in-page Chat control. A second floating button covers Send request.
  useSearchViewport(open,panel);
  useEffect(()=>{if(previousPath.current!==path){setOpen(false);selectQuickView(null);previousPath.current=path;}},[path,selectQuickView]);
  function openAssistant(from?:HTMLElement){trigger.current=from||null;setOpen(true);}
  return <Context.Provider value={{openAssistant,closeAssistant:()=>{selectQuickView(null);setOpen(false);},activeQuickView,selectQuickView,session,setSession}}>
   {children}
-  {!hidden&&!page&&!isCalculatorWorkspace(path)&&<button type="button" ref={launcher} className={styles.launcher} data-research-launcher data-raised={path!=="/"} aria-label="Open research assistant" aria-haspopup="dialog" aria-expanded={open} onClick={e=>openAssistant(e.currentTarget)}><MessageCircle size={20} aria-hidden="true"/><span>Ask a question</span></button>}
+  {!hidden&&!page&&!isCalculatorWorkspace(path)&&path!=="/"&&path!=="/contact"&&<button type="button" ref={launcher} className={styles.launcher} data-research-launcher data-raised={path!=="/"} aria-label="Open research assistant" aria-haspopup="dialog" aria-expanded={open} onClick={e=>openAssistant(e.currentTarget)}><MessageCircle size={20} aria-hidden="true"/><span>Ask a question</span></button>}
   <Dialog.Root open={open&&!hidden} onOpenChange={next=>{if(!next)selectQuickView(null);setOpen(next);}}>
    <Dialog.Portal><Dialog.Overlay className={styles.overlay}/><Dialog.Content ref={panel} className={styles.chatPanel} data-research-panel onEscapeKeyDown={e=>{if(quickView.current!==null){e.preventDefault();selectQuickView(null);}}} onInteractOutside={e=>{if(quickView.current!==null)e.preventDefault();}} onOpenAutoFocus={e=>{e.preventDefault();title.current?.focus({preventScroll:true});}} onCloseAutoFocus={e=>{e.preventDefault();returnFocus(trigger.current?.isConnected?trigger.current:launcher.current);}}>
     <header className={styles.panelHeader}><div><Dialog.Title ref={title} tabIndex={-1}>Research assistant</Dialog.Title><Dialog.Description>Products, studies and calculators</Dialog.Description></div><Dialog.Close aria-label="Close research assistant"><X size={21} aria-hidden="true"/></Dialog.Close></header>

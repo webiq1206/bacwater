@@ -18,6 +18,10 @@ const WWW_HOST_PATTERN = `www\\.${APEX_HOST.replace(/\./g, "\\.")}`;
 
 const nextConfig = (phase: string): NextConfig => ({
   env: { BACWATER_BUILD_COMMIT: buildCommit },
+  experimental: {
+    // The one-step request can include an optional file up to 2 MB.
+    serverActions: { bodySizeLimit: "3mb" },
+  },
   typescript: {
     ignoreBuildErrors: false,
     // A Replit publish can contain stale .next/dev types from the workspace.

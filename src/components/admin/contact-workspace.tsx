@@ -34,6 +34,7 @@ import {
   REPLY_TEMPLATES,
   TOPIC_LABELS,
 } from "@/lib/contact-triage";
+import { telHref } from "@/lib/contact-request";
 import {
   deleteContactMessage,
   replyToContact,
@@ -47,6 +48,8 @@ export interface ContactRecord {
   email: string;
   subject: string | null;
   message: string;
+  phone: string | null;
+  attachmentName: string | null;
   handled: boolean;
   handledAt: string | null;
   handledByEmail: string | null;
@@ -490,6 +493,8 @@ export function ContactWorkspace({
                 minute: "2-digit",
               })}
             </div>
+            {current.phone ? <p className="mt-2 text-sm">Phone: {telHref(current.phone) ? <a className="underline" href={telHref(current.phone)!}>{current.phone}</a> : current.phone}</p> : null}
+            {current.attachmentName ? <p className="mt-2 text-sm"><a className="underline" href={`/admin/contact/${current.id}/file`}>Download {current.attachmentName}</a></p> : null}
             {current.handledAt ? (
               <div className="mt-1 text-xs text-emerald-700">
                 Closed {formatDate(current.handledAt)}

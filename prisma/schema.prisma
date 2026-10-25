@@ -275,8 +275,21 @@ model ContactMessage {
   replySubject   String?
   replyBody      String?
 
+  // Lead fields from the one-step request. Nullable so older support rows stay valid.
+  phone          String?
+  attachmentName String?
+  attachmentType String?
+  attachment     ContactAttachment?
+
   @@index([handled])
   @@index([email])
+}
+
+// File bytes live off the inbox query so a 500-row triage load does not pull them.
+model ContactAttachment {
+  messageId String         @id
+  message   ContactMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  data      Bytes
 }
 
 // Short-lived counters for optional authenticated AI topic routing, never message content.

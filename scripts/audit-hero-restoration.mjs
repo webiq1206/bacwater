@@ -23,17 +23,26 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   finally{closing=true;await c.close();}
  }
  try{
-  await check(`${engine}: full, balanced hero and usable calculator above the fold at eight widths`,async()=>{
+  await check(`${engine}: one-step request leads, and the step by step calculator stays usable below it`,async()=>{
    const layoutFailures=[];
    for(const [width,height] of [[320,568],[375,667],[390,844],[430,932],[768,1024],[1024,768],[1440,900],[1920,1080]])try{await journey(width,height,async p=>{
+    const lead=p.locator('[data-lead-request]');
+    const name=await lead.getByLabel('Name',{exact:true}).boundingBox();
+    const chat=await lead.getByRole('button',{name:'Chat',exact:true}).boundingBox();
+    assert.ok(name&&name.y>=0&&name.y+name.height<=height,JSON.stringify({width,height,name,issue:'Name should be on the first screen'}));
+    assert.ok(chat&&chat.y>=0&&chat.y+chat.height<=height&&chat.y<=name.y,JSON.stringify({width,height,chat,name,issue:'Chat should lead the request form'}));
+    await expect(lead.getByRole('link',{name:'Call',exact:true})).toHaveCount(0);
+    await expect(lead.getByLabel('Phone',{exact:true})).toBeVisible();
+    await expect(lead.getByLabel('Email',{exact:true})).toBeVisible();
+    await expect(lead.getByLabel('Note',{exact:true})).toBeVisible();
+    await expect(lead.getByLabel('Attach a file (optional)',{exact:true})).toBeVisible();
     const hero=p.locator('[data-home-hero]');await expect(hero).toHaveAttribute('data-hero-design','editorial-live');
-    const h=await hero.boundingBox(),next=await p.locator('#toolkit').boundingBox(),cta=await hero.locator('[data-hero-calculator]').boundingBox();
+    const leadBox=await lead.boundingBox(),h=await hero.boundingBox(),next=await p.locator('#toolkit').boundingBox();
+    assert.ok(leadBox&&h&&leadBox.y<h.y,'Step by step calculator stays below the request');
     assert.ok(h&&h.y+h.height>=height-1,JSON.stringify({width,height,h}));assert.ok(next&&next.y>=height-1);
-    assert.ok(cta&&cta.y>=0&&cta.y+cta.height<=height,JSON.stringify({width,height,cta}));
-    if(width>=1440)assert.ok(cta.width>=640&&cta.height>=550,JSON.stringify({width,height,cta}));
-    if(width<=780)assert.ok(height-(cta.y+cta.height)<=130,JSON.stringify({width,height,cta,issue:'Unused lower hero space'}));
     const body=await hero.locator('[data-step-scroll]').evaluate(el=>({available:el.clientHeight,content:el.scrollHeight}));
     assert.ok(body.content<=body.available+2,JSON.stringify({width,height,body,issue:'Initial step should not need an inner scroll'}));
+    if(width>=1440){const cta=await hero.locator('[data-hero-calculator]').boundingBox();assert.ok(cta&&cta.width>=640&&cta.height>=550,JSON.stringify({width,height,cta}));}
     assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     await expect(p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]').getByRole('combobox',{name:'Product',exact:true})).toBeVisible();
     await expect(p.locator('[data-hero-calculator]:has([data-hero-guided]), [data-hero-focus]').getByLabel('Amount in vial',{exact:true})).toHaveCount(0);
