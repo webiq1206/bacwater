@@ -20,11 +20,23 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await page.goto(origin,{waitUntil:'networkidle'});
     if(width>=1024)await expect(page.getByRole('navigation',{name:'Primary navigation'}).getByRole('link',{name:'Products',exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:'Open research assistant',exact:true})).toHaveCount(0);
-    const chat=page.locator('[data-lead-request]').getByRole('button',{name:'Chat',exact:true});
-    const chatBox=await chat.boundingBox();
-    assert.ok(chatBox&&chatBox.y>=0&&chatBox.y+chatBox.height<=height,JSON.stringify({chatBox,width,height}));
+    await expect(page.locator('[data-lead-request]')).toHaveCount(0);
+    const product=page.locator('[data-hero-calculator]').getByRole('combobox',{name:'Product',exact:true});
+    const productBox=await product.boundingBox();
+    assert.ok(productBox&&productBox.y>=0&&productBox.y+productBox.height<=height,JSON.stringify({productBox,width,height}));
     const before=await page.evaluate(()=>scrollY);
-    await chat.click();const panel=page.locator('[data-research-panel]'),input=panel.getByRole('textbox',{name:'Your research question'});
+    async function openAssistant(){
+      if(width>=1024){
+        const button=page.getByRole('navigation',{name:'Primary navigation'}).getByRole('button',{name:'Research assistant',exact:true});
+        await button.click();
+        return button;
+      }
+      await page.getByRole('button',{name:'Open navigation'}).click();
+      await page.getByRole('navigation',{name:'Expanded mobile navigation'}).getByRole('button',{name:'Research assistant',exact:true}).click();
+      return null;
+    }
+    const trigger=await openAssistant();
+    const panel=page.locator('[data-research-panel]'),input=panel.getByRole('textbox',{name:'Your research question'});
     await expect(panel.getByRole('heading',{name:'Research assistant',exact:true})).toBeFocused();
     async function contained(){for(const selector of ['[data-research-panel]','[data-research-panel] textarea','[data-research-panel] button[aria-label="Send research question"]','[data-research-panel] button[aria-label="Close research assistant"]']){const box=await page.locator(selector).boundingBox();assert.ok(box&&box.x>=0&&box.y>=0&&box.x+box.width<=width+1&&box.y+box.height<=(page.viewportSize()?.height||height)+1,JSON.stringify({selector,box,width,height}));}assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);}
     await contained();await expect(panel.getByRole('button',{name:/^What products are studied for /})).toHaveCount(6);if([390,1440].includes(width))await page.screenshot({path:`${out}/${engine}-${width}-suggestions.png`});await panel.getByRole('button',{name:'What products are studied for weight loss?',exact:true}).click();await expect(panel.locator('[data-research-match]')).toHaveCount(3);await panel.getByRole('button',{name:'New chat'}).click();await input.fill('what could help with weight loss');await input.press('Enter');
@@ -37,8 +49,8 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await input.fill('Explain weight-loss research');await input.press('Enter');await expect(panel.locator('section[aria-labelledby]').last().locator('[data-research-match]')).toHaveCount(3);
     await input.fill('Can I use the calculator?');await input.press('Enter');await expect(panel.locator('section[aria-labelledby]').last().getByRole('link',{name:'Product-first calculator'})).toHaveAttribute('href','/peptide-calculator');
     await input.fill('draft stays');await input.press('Shift+Enter');await expect(input).toHaveValue('draft stays\n');
-    await panel.getByRole('button',{name:'Close research assistant'}).click();await expect(chat).toBeFocused();assert.equal(await page.evaluate(()=>scrollY),before);
-    await chat.click();await expect(input).toHaveValue('draft stays\n');
+    await panel.getByRole('button',{name:'Close research assistant'}).click();await expect(panel).toHaveCount(0);if(trigger)await expect(trigger).toBeFocused();assert.equal(await page.evaluate(()=>scrollY),before);
+    await openAssistant();await expect(input).toHaveValue('draft stays\n');
     // Resize models a reduced viewport; physical iOS/Android keyboards still need a device pass.
     if(width<=780){await page.setViewportSize({width,height:360});await expect.poll(()=>panel.evaluate(el=>Math.round(el.getBoundingClientRect().height))).toBe(348);await contained();await input.fill('cell movement');await input.press('Enter');await contained();await page.setViewportSize({width,height});}
     await panel.getByRole('link',{name:'Browse products',exact:true}).click();await expect(page).toHaveURL(origin+'/recommendations');await expect(panel).toHaveCount(0);await page.getByRole('button',{name:'Open research assistant',exact:true}).click();await expect(panel.locator('[data-research-match]')).not.toHaveCount(0);
@@ -47,7 +59,7 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
     await panel.getByRole('button',{name:'New chat'}).click();await expect(panel.locator('[data-research-match]')).toHaveCount(0);await expect(input).toHaveValue('');assert.deepEqual(errors,[]);
    }finally{await context.close();}
   });
-  await check(`${engine}: homepage and contact Chat open the assistant`,async()=>{
+  await check(`${engine}: homepage and contact open the assistant without a lead form`,async()=>{
    const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
    await context.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());
    await context.addCookies([{name:'bacwater_age_ok',value:'1',url:origin}]);
@@ -55,15 +67,17 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
    try{
     for(const path of ['/','/contact']){
      await page.goto(origin+path,{waitUntil:'networkidle'});
-     const chat=page.locator('[data-lead-request]').getByRole('button',{name:'Chat',exact:true});
-     await expect(chat).toBeVisible();
-     await chat.click();
+     await expect(page.locator('[data-lead-request]')).toHaveCount(0);
+     await expect(page.locator('input[type="file"]')).toHaveCount(0);
+     await expect(page.getByRole('button',{name:'Send request'})).toHaveCount(0);
+     await page.getByRole('button',{name:'Open navigation'}).click();
+     await page.getByRole('navigation',{name:'Expanded mobile navigation'}).getByRole('button',{name:'Research assistant',exact:true}).click();
      const panel=page.locator('[data-research-panel]');
      await expect(panel.getByRole('heading',{name:'Research assistant',exact:true})).toBeVisible();
      await expect(panel.getByRole('textbox',{name:'Your research question'})).toBeVisible();
+     await expect(panel.locator('input[type="file"]')).toHaveCount(0);
      await panel.getByRole('button',{name:'Close research assistant'}).click();
      await expect(panel).toHaveCount(0);
-     await expect(chat).toBeFocused();
     }
    }finally{await context.close();}
   });

@@ -19,9 +19,11 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 
-const TITLE = "Peptide Calculator: Reconstitution, BAC Water & Syringe Units";
+const TITLE = "Peptide Calculator | BAC Water Reconstitution | BACwater.ai";
 const DESCRIPTION =
-  "Free peptide calculator for concentration, mL and U-100 units. Enter your label values and final liquid volume. Save a plan or print a vial label.";
+  "Peptide calculator for reconstitution math. Turn vial mass, BAC water, and your target into mg/mL and syringe units. Free. No dose advice.";
+const SUBHEAD =
+  "Use this peptide calculator to check reconstitution math from your vial label and the final volume in your instructions. See concentration, mL, and U-100 units. Research arithmetic only. Not dosing advice.";
 
 export const metadata: Metadata = withSocialMetadata({
   title: TITLE,
@@ -82,8 +84,8 @@ export default function PeptideCalculatorPage() {
         ]}
       />
       <SoftwareAppJsonLd
-        name="Peptide Calculator"
-        description="Free concentration and measurement calculator using your stated vial amount, final volume and amount to measure. Includes printable labels and optional saved plans."
+        name="Peptide reconstitution calculator"
+        description={DESCRIPTION}
         url="/peptide-calculator"
       />
       <FaqJsonLd items={FAQS} />
@@ -104,7 +106,7 @@ export default function PeptideCalculatorPage() {
         }}
       />
 
-      <CalculatorWorkspace title="Peptide calculator" description="Pick your product, type your vial amount and your dose. We tell you how much BAC water to add and where to fill your syringe." backHref="/" help={<>
+      <CalculatorWorkspace title="Peptide reconstitution calculator" description={SUBHEAD} backHref="/" help={<>
       {/* How it works: answer-first teaching, targets long-tail + AI overviews. */}
       <section className="mt-16 max-w-3xl">
         <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight">

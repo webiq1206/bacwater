@@ -1,17 +1,18 @@
 import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
-import { LeadRequest } from "@/components/common/lead-request";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 
+const description = "Email hello@bacwater.ai about a calculator issue, a saved plan, account access, privacy, or the website.";
+
 export const metadata = withSocialMetadata({
   alternates: { canonical: "/contact" },
   title: "Contact Us",
-  description: "Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website.",
+  description,
   openGraph: {
     title: "Contact Us",
-    description: "Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website.",
+    description,
     url: "/contact",
     type: "website",
     siteName: "BACwater.ai",
@@ -20,43 +21,45 @@ export const metadata = withSocialMetadata({
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto max-w-xl px-4 sm:px-6 pt-4 sm:pt-10 pb-10 sm:pb-32">
+    <div className="mx-auto max-w-xl px-4 sm:px-6 pb-16 sm:pb-28">
       <WebPageJsonLd
         name="Contact BACwater.ai"
-        description="Report a calculator issue or ask about saved plans, privacy or the BACwater.ai website."
+        description={description}
         url="/contact"
         breadcrumb={[
           { name: "Home", url: "/" },
           { name: "Contact", url: "/contact" },
         ]}
       />
-      <h1 className="mt-1 text-3xl sm:text-5xl font-serif font-medium tracking-tight">
-        Get in touch
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact", href: "/contact" }]} />
+      <p className="eyebrow mt-6">Support</p>
+      <h1 className="mt-2 text-3xl sm:text-5xl font-serif font-medium tracking-tight">
+        Contact
       </h1>
-      <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
-        Send a request in one step. Chat if you would rather ask here.
-        We do not sell products or provide medical advice.
+      <p className="mt-4 text-base text-muted-foreground leading-relaxed">
+        BACwater.ai is a free calculator for concentration, volume, and syringe-scale math. Email us about the website, a saved plan, or a privacy request. We do not sell products or provide medical advice.
       </p>
-      <div className="mt-2">
-        <LeadRequest variant="contact" />
-      </div>
-      <div className="mt-8">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact", href: "/contact" }]} />
-      </div>
-      <div className="mt-4 border border-border p-4">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          For quick answers, check our{" "}
-          <Link href="/faq" className="font-medium text-foreground underline">FAQ</Link>{" "}
-          or browse the{" "}
-          <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
+      <div className="mt-6 border border-border bg-card p-5 sm:p-6">
+        <p className="text-sm text-muted-foreground">Email</p>
+        <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="mt-1 inline-flex min-h-11 items-center text-lg font-medium text-foreground underline underline-offset-4">
+          {PUBLIC_SUPPORT_EMAIL}
+        </a>
+        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+          Include the page and what you expected. Leave out passwords, health records, and payment details.
         </p>
       </div>
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <Link href="/" className="inline-flex min-h-11 items-center justify-center border border-foreground bg-foreground px-4 text-sm font-medium text-background">
+          Open the calculator
+        </Link>
+        <Link href="/faq" className="inline-flex min-h-11 items-center justify-center border border-border px-4 text-sm font-medium">
+          Read the FAQ
+        </Link>
+      </div>
       <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-        Use this form for website support or a correction. For orders, shipping, or product questions, contact the supplier directly.
-      </p>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Prefer email?{" "}
-        <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="font-medium text-foreground underline">{PUBLIC_SUPPORT_EMAIL}</a>.
+        For a longer explanation of the math, browse the{" "}
+        <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
+        For orders, shipping, or product questions, contact the supplier directly.
       </p>
     </div>
   );

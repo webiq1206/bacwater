@@ -94,16 +94,21 @@ try {
       await fs.writeFile(`${out}/${name}.pdf`,bytes);await viewer.close();
     }
   });
-  await step('Contact record is actually saved once and retry is idempotent',async()=>{
-    const p=await stranger.newPage();await p.goto(`${origin}/contact`);
-    await p.getByLabel('Name',{exact:true}).fill(prefix);await p.getByLabel('Phone',{exact:true}).fill('2025550148');await p.getByLabel('Email',{exact:true}).fill(email);
-    await p.getByLabel('Note',{exact:true}).fill(`${prefix} controlled contact fixture`);
-    const request=p.waitForRequest((r)=>r.method()==='POST'&&Boolean(r.headers()['next-action']));
-    await p.getByRole('button',{name:'Send request',exact:true}).click();const actual=await request;
-    await expect(p.getByRole('heading',{name:'We received your request.'})).toBeVisible();
-    const rows=await prisma.contactMessage.findMany({where:{email}});assert.equal(rows.length,1);contactIds.push(rows[0].id);
-    const h=actual.headers();await stranger.request.post(actual.url(),{headers:{'Next-Action':h['next-action'],'Content-Type':h['content-type'],Origin:origin},data:actual.postData()});
-    assert.equal(await prisma.contactMessage.count({where:{email}}),1);await p.close();
+  await step('Public home and contact pages do not offer a lead form',async()=>{
+    const p=await stranger.newPage();
+    for(const path of ['/','/contact']){
+      await p.goto(`${origin}${path}`);
+      const html=await p.content();
+      assert.equal(html.includes('data-lead-request'),false,path);
+      assert.equal(html.includes('Ask in one step'),false,path);
+      await expect(p.locator('[data-lead-request]')).toHaveCount(0);
+      await expect(p.locator('input[type="file"]')).toHaveCount(0);
+      await expect(p.getByRole('button',{name:'Send request'})).toHaveCount(0);
+      await expect(p.getByLabel('Name',{exact:true})).toHaveCount(0);
+      await expect(p.getByLabel('Phone',{exact:true})).toHaveCount(0);
+    }
+    assert.equal(await prisma.contactMessage.count({where:{email}}),0);
+    await p.close();
   });
   await step('Signup creates an ordinary user, and guest plans are claimed by their creator',async()=>{
     await page.goto(`${origin}/signup`);await page.getByLabel('Your name').fill(prefix);await page.getByLabel('Email',{exact:true}).fill(email);

@@ -42,7 +42,7 @@ export function ResearchAssistantProvider({children}:{children:ReactNode}){
  const path=usePathname()||"/",previousPath=useRef(path);
   const hidden=path.startsWith("/admin")||path.startsWith("/embed")||/\/(pdf|print|labels)$/.test(path);
   const page=path==="/research-finder";
-  // Home and contact already lead with an in-page Chat control. A second floating button covers Send request.
+  // Home is the calculator. Contact is email only. A floating button would cover those pages.
  useSearchViewport(open,panel);
  useEffect(()=>{if(previousPath.current!==path){setOpen(false);selectQuickView(null);previousPath.current=path;}},[path,selectQuickView]);
  function openAssistant(from?:HTMLElement){trigger.current=from||null;setOpen(true);}

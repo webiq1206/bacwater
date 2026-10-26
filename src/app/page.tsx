@@ -4,7 +4,6 @@ import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
 import { SoftwareAppJsonLd } from "@/components/common/software-app-json-ld";
 import { HeroMathContext } from "@/components/brand/hero-math-context";
 import { ResearchHome } from "@/components/brand/research-home";
-import { LeadRequest } from "@/components/common/lead-request";
 import { SupplierRecommendations } from "@/components/partners/supplier-recommendations";
 import { SEARCH_SNIPPETS } from "@/lib/seo/search-appearance";
 const { title, description } = SEARCH_SNIPPETS["/"];
@@ -16,7 +15,6 @@ export const metadata: Metadata = withSocialMetadata({
 export default function HomePage() { return <>
   <WebPageJsonLd name="BAC Water Calculator" description={description} url="/" />
   <SoftwareAppJsonLd name="BAC Water Calculator" description="Free peptide reconstitution math: concentration, entered-amount volume and U-100 scale conversion. No dose or mixing instructions are selected." url="/" />
-  <LeadRequest />
   <ResearchHome supplier={<SupplierRecommendations/>} />
   <HeroMathContext />
 </>; }
