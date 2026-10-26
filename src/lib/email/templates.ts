@@ -27,7 +27,7 @@ export function contactReplyEmail(subject: string, body: string): RenderedEmail 
     subject,
     preheader: preview.length > 110 ? `${preview.slice(0, 107).trimEnd()}...` : preview,
     blocks,
-    reason: "You're getting this because you sent us a message through bacwater.ai/contact. Reply to this email to continue the conversation.",
+    reason: "You're getting this because the BACwater.ai support team wrote to you. Reply to this email to continue the conversation.",
   });
 }
 

@@ -23,22 +23,21 @@ for(const [engine,driver] of [['chromium',chromium],['webkit',webkit]]){
   finally{closing=true;await c.close();}
  }
  try{
-  await check(`${engine}: one-step request leads, and the step by step calculator stays usable below it`,async()=>{
+  await check(`${engine}: calculator leads the first screen, with no public lead form`,async()=>{
    const layoutFailures=[];
    for(const [width,height] of [[320,568],[375,667],[390,844],[430,932],[768,1024],[1024,768],[1440,900],[1920,1080]])try{await journey(width,height,async p=>{
-    const lead=p.locator('[data-lead-request]');
-    const name=await lead.getByLabel('Name',{exact:true}).boundingBox();
-    const chat=await lead.getByRole('button',{name:'Chat',exact:true}).boundingBox();
-    assert.ok(name&&name.y>=0&&name.y+name.height<=height,JSON.stringify({width,height,name,issue:'Name should be on the first screen'}));
-    assert.ok(chat&&chat.y>=0&&chat.y+chat.height<=height&&chat.y<=name.y,JSON.stringify({width,height,chat,name,issue:'Chat should lead the request form'}));
-    await expect(lead.getByRole('link',{name:'Call',exact:true})).toHaveCount(0);
-    await expect(lead.getByLabel('Phone',{exact:true})).toBeVisible();
-    await expect(lead.getByLabel('Email',{exact:true})).toBeVisible();
-    await expect(lead.getByLabel('Note',{exact:true})).toBeVisible();
-    await expect(lead.getByLabel('Attach a file (optional)',{exact:true})).toBeVisible();
+    await expect(p.locator('[data-lead-request]')).toHaveCount(0);
+    await expect(p.locator('input[type="file"]')).toHaveCount(0);
+    await expect(p.getByRole('button',{name:'Send request'})).toHaveCount(0);
+    await expect(p.getByLabel('Name',{exact:true})).toHaveCount(0);
+    await expect(p.getByLabel('Phone',{exact:true})).toHaveCount(0);
+    await expect(p.getByLabel('Email',{exact:true})).toHaveCount(0);
+    await expect(p.getByLabel('Note',{exact:true})).toHaveCount(0);
+    await expect(p.getByLabel('Attach a file (optional)',{exact:true})).toHaveCount(0);
     const hero=p.locator('[data-home-hero]');await expect(hero).toHaveAttribute('data-hero-design','editorial-live');
-    const leadBox=await lead.boundingBox(),h=await hero.boundingBox(),next=await p.locator('#toolkit').boundingBox();
-    assert.ok(leadBox&&h&&leadBox.y<h.y,'Step by step calculator stays below the request');
+    const h=await hero.boundingBox(),product=await hero.getByRole('combobox',{name:'Product',exact:true}).boundingBox(),next=await p.locator('#toolkit').boundingBox();
+    assert.ok(h&&h.y>40&&h.y<120,'Calculator hero starts under the header');
+    assert.ok(product&&product.y>=0&&product.y+product.height<=height,JSON.stringify({width,height,product,issue:'Product step should be on the first screen'}));
     assert.ok(h&&h.y+h.height>=height-1,JSON.stringify({width,height,h}));assert.ok(next&&next.y>=height-1);
     const body=await hero.locator('[data-step-scroll]').evaluate(el=>({available:el.clientHeight,content:el.scrollHeight}));
     assert.ok(body.content<=body.available+2,JSON.stringify({width,height,body,issue:'Initial step should not need an inner scroll'}));

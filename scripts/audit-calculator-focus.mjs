@@ -25,19 +25,19 @@ async function fit(p){
 }
 async function accessibility(p){await p.evaluate(axe);const found=await p.evaluate(async()=>{const r=await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}});return r.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}));});assert.deepEqual(found,[]);}
 try{
- await check('Opening scene leads with Chat and the one-step request',async()=>{
+ await check('Opening scene is the calculator, with no public lead form',async()=>{
   for(const [width,height]of [[320,568],[390,844],[430,932],[768,1024],[1024,768],[1440,900]]){
    await page.setViewportSize({width,height});await page.goto(origin,{waitUntil:'networkidle'});
-   const lead=page.locator('[data-lead-request]');
-   const name=await lead.getByLabel('Name',{exact:true}).boundingBox();
-   const chat=await lead.getByRole('button',{name:'Chat',exact:true}).boundingBox();
-   assert.ok(name&&name.y>=0&&name.y+name.height<=height,JSON.stringify({width,height,name}));
-   assert.ok(chat&&chat.y>=0&&chat.y+chat.height<=height,JSON.stringify({width,height,chat}));
-   await expect(lead.getByLabel('Phone',{exact:true})).toBeVisible();
-   await expect(lead.getByLabel('Note',{exact:true})).toBeVisible();
+   await expect(page.locator('[data-lead-request]')).toHaveCount(0);
+   await expect(page.locator('input[type="file"]')).toHaveCount(0);
+   await expect(page.getByRole('button',{name:'Send request'})).toHaveCount(0);
+   await expect(page.getByLabel('Name',{exact:true})).toHaveCount(0);
+   await expect(page.getByLabel('Phone',{exact:true})).toHaveCount(0);
    const hero=page.locator('[data-home-hero]');
-   const leadBox=await lead.boundingBox(),h=await hero.boundingBox();
-   assert.ok(leadBox&&h&&leadBox.y<h.y&&h.y+h.height>=height-1,JSON.stringify({width,height,leadBox,h}));
+   const h=await hero.boundingBox();
+   const product=await hero.getByRole('combobox',{name:'Product',exact:true}).boundingBox();
+   assert.ok(h&&h.y>40&&h.y<120&&h.y+h.height>=height-1,JSON.stringify({width,height,h}));
+   assert.ok(product&&product.y>=0&&product.y+product.height<=height,JSON.stringify({width,height,product}));
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
    await expect(page.getByRole('navigation',{name:'Mobile primary navigation',exact:true})).toHaveCount(0);
    if([390,1440].includes(width))await page.screenshot({path:`${out}/home-${width}.png`,fullPage:false});

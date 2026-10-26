@@ -23,7 +23,7 @@ const ITEMS = [
   { href: "/plans", label: "Account", icon: User, match: (p: string) => p.startsWith("/plans") },
 ];
 
-/** The wizard, admin, home, and contact keep their primary actions clear of this bar. */
+/** The wizard, admin, and calculator-first home stay clear of this bar. Contact is a short email page. */
 export function MobileBottomNav() {
   const pathname = usePathname() || "/";
   const hidden = /^\/products\/[^/]+$/.test(pathname) || pathname === "/research-finder" || pathname === "/" || pathname === "/contact" || pathname === "/plan" || pathname === "/plan/new" || pathname.startsWith("/plan/") || pathname.startsWith("/admin");

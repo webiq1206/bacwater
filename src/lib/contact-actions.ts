@@ -16,8 +16,8 @@ const schema = z.object({
 const INVALID = "Check your name, phone, email, and note. Keep the note under 4,000 characters.";
 
 /**
- * Saves a finished one-step request.
- * A visitor who leaves the form unfinished never calls this, and staff are not emailed.
+ * Saves a support message for the admin inbox.
+ * The public site does not render a request form. Existing rows stay in ContactMessage.
  */
 export async function submitContactAction(formData: FormData) {
   const parsed = schema.safeParse(Object.fromEntries(["requestId", "name", "email", "phone", "message", "website"].map((key) => [key, formData.get(key) ?? ""])));
