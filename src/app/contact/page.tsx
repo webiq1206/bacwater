@@ -2,6 +2,7 @@ import { withSocialMetadata } from "@/lib/seo/social-metadata";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { WebPageJsonLd } from "@/components/common/webpage-json-ld";
+import { ResearchChatButton } from "@/components/search/research-chat-button";
 import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 
 const description = "Email hello@bacwater.ai about a calculator issue, a saved plan, account access, privacy, or the website.";
@@ -48,7 +49,8 @@ export default function ContactPage() {
           Include the page and what you expected. Leave out passwords, health records, and payment details.
         </p>
       </div>
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <ResearchChatButton />
         <Link href="/" className="inline-flex min-h-11 items-center justify-center border border-foreground bg-foreground px-4 text-sm font-medium text-background">
           Open the calculator
         </Link>
@@ -59,7 +61,7 @@ export default function ContactPage() {
       <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
         For a longer explanation of the math, browse the{" "}
         <Link href="/learn" className="font-medium text-foreground underline">learning center</Link>.
-        For orders, shipping, or product questions, contact the supplier directly.
+        Chat opens the research assistant for products and studies. It does not collect a name, phone, email, or file. For orders, shipping, or product questions, contact the supplier directly.
       </p>
     </div>
   );
