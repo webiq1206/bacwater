@@ -439,7 +439,7 @@ function Chip({
       aria-current={active ? "true" : undefined}
       className={
         active
-          ? "inline-flex min-h-9 items-center rounded-full border border-foreground bg-foreground px-3.5 py-1.5 text-sm font-medium text-background"
+          ? "inline-flex min-h-9 items-center rounded-full border border-charcoal bg-charcoal px-3.5 py-1.5 text-sm font-medium text-background"
           : "inline-flex min-h-9 items-center rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-foreground transition-colors hover:border-foreground/40 hover:bg-muted"
       }
     >
