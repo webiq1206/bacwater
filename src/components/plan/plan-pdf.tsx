@@ -46,7 +46,7 @@ const SRC_LABEL: Record<Provenance, string> = {
 };
 
 const C = {
-  ink: "#2c302f", // charcoal, primary text + hero number
+  ink: "#383837", // charcoal, primary text + hero number
   teal: "#5d6561", // sage, accent (eyebrow, table header, syringe marker)
   tealSoft: "#cfd4cf", // sage hairline
   tealBg: "#eef0ec", // light sage tint

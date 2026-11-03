@@ -1,5 +1,5 @@
-.buy{display:flex;align-items:center;justify-content:center;gap:10px;min-width:0;min-height:48px;padding:12px 16px;border:1px solid #183c30;border-radius:11px;background:#183c30;color:#fffef9;font-family:var(--font-montserrat),Arial,sans-serif;font-size:13px;font-weight:600;line-height:1.45;text-align:center;text-decoration:none;overflow-wrap:anywhere;transition:background .15s}
-.buy:hover{background:#2c5140}.buy svg{flex-shrink:0}.buy:focus-visible{outline:3px solid #587c40;outline-offset:3px}
+.buy{display:flex;align-items:center;justify-content:center;gap:10px;min-width:0;min-height:48px;padding:12px 16px;border:1px solid var(--color-charcoal);border-radius:11px;background:var(--color-charcoal);color:#fffef9;font-family:var(--font-montserrat),Arial,sans-serif;font-size:13px;font-weight:600;line-height:1.45;text-align:center;text-decoration:none;overflow-wrap:anywhere;transition:background .15s}
+.buy:hover{background:color-mix(in srgb, var(--color-charcoal) 88%, white)}.buy svg{flex-shrink:0}.buy:focus-visible{outline:3px solid #587c40;outline-offset:3px}
 .disclosure{font-size:11px;line-height:1.6;color:#4b6251;margin:0}
 .cardPurchase{position:sticky;bottom:64px;z-index:2;padding:10px 0 0;margin-top:auto;background:#fffef9;border-top:1px solid #dce3d3;box-shadow:0 -8px 12px #fffef9}.cardPurchase .disclosure{margin-bottom:6px}.cardPurchase .buy{width:100%}
 .dock{display:none}
