@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T14:55:14.412Z",
+  "checkedAt": "2026-11-06T14:33:18.782Z",
   "host": "bacwater.ai",
   "results": [
     {
@@ -163,13 +163,13 @@
       "domain": "nouploadtools.com",
       "placementUrl": "https://nouploadtools.com/directory?cat=calculators-data",
       "destinationPath": "/",
-      "outcome": "fetch-blocked",
-      "httpStatus": 403,
+      "outcome": "unreachable",
+      "httpStatus": null,
       "rel": [],
       "dofollow": false,
       "anchorText": null,
       "pageNofollow": false,
-      "detail": "The page returned HTTP 403. Fetch did not establish public visibility or removal. Preserve the record and retry verification later."
+      "detail": "Could not read the page (TypeError: fetch failed). Nothing is concluded from this; the record is unchanged."
     },
     {
       "id": "directory-launchpedia-product",

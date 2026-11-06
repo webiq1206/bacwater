@@ -1,5 +1,5 @@
 # Backlink verification
-Generated 2026-11-05T14:55:14.411Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
+Generated 2026-11-06T14:33:18.781Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
 Rows distinguish fetched anchors, pending placement URLs and verification gaps. The dofollow label describes observed anchor attributes only, not indexing or ranking credit. Submission receipts remain authoritative for submission history. Unverified observations must not trigger resubmission.
 Ledger statuses: opportunity 8, submitted 13, discovered 0, live 0, live-nofollow 0, rejected 0.
 
@@ -25,7 +25,7 @@ The fetch or raw HTML is insufficient to establish visibility or removal. Reconc
 
 | Domain | Placement | Reason |
 | --- | --- | --- |
-| nouploadtools.com | [link](https://nouploadtools.com/directory?cat=calculators-data) | The page returned HTTP 403. Fetch did not establish public visibility or removal. Preserve the record and retry verification later. |
+| nouploadtools.com | [link](https://nouploadtools.com/directory?cat=calculators-data) | Could not read the page (TypeError: fetch failed). Nothing is concluded from this; the record is unchanged. |
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630484217/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630484240/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630484241/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
