@@ -98,7 +98,7 @@ export default function BacWaterCalculatorPage() {
         <section data-screen="inputs" className="min-w-0 space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-labelledby="volume-inputs-heading">
           <h2 id="volume-inputs-heading" className="text-xl font-semibold">Your numbers</h2>
           <div>
-            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-foreground text-xs font-semibold text-background">1</span><label htmlFor="bac-vial-amount" className="block text-sm font-medium">Total amount in the vial</label></div>
+            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-charcoal text-xs font-semibold text-background">1</span><label htmlFor="bac-vial-amount" className="block text-sm font-medium">Total amount in the vial</label></div>
             <div className="mt-2 flex gap-2">
               <Input id="bac-vial-amount" type="text" inputMode="decimal" maxLength={64} value={vial.vialText} onChange={e => vial.setVialText(e.target.value)} placeholder="Example: 10" className="min-w-0 flex-1" aria-describedby="bac-vial-help bac-input-error" aria-invalid={Boolean(decimalError(vial.vialText, "Total amount in the vial"))} />
               <UnitChoice value={vial.vialUnit} onChange={vial.setVialUnit} label="Vial amount unit" />
@@ -106,7 +106,7 @@ export default function BacWaterCalculatorPage() {
             <p id="bac-vial-help" className="mt-2 text-sm text-muted-foreground">Look at the vial label. Type the number next to mg. If it says 10 mg, type 10.</p>
           </div>
           <div>
-            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-foreground text-xs font-semibold text-background">2</span><label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount to measure</label></div>
+            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-charcoal text-xs font-semibold text-background">2</span><label htmlFor="bac-measured-amount" className="block text-sm font-medium">Amount to measure</label></div>
             <div className="mt-2 flex gap-2">
               <Input id="bac-measured-amount" type="text" inputMode="decimal" maxLength={64} value={vial.amountText} onChange={e => vial.setAmountText(e.target.value)} placeholder="Example: 250" className="min-w-0 flex-1" aria-describedby="bac-measurement-help bac-input-error" aria-invalid={Boolean(decimalError(vial.amountText, "Amount to measure"))} />
               <UnitChoice value={vial.doseUnit} onChange={vial.setDoseUnit} label="Measurement amount unit" />
@@ -114,7 +114,7 @@ export default function BacWaterCalculatorPage() {
             <p id="bac-measurement-help" className="mt-2 text-sm text-muted-foreground">Enter a mass for a research calculation, not a dose recommendation. Leave this blank to calculate concentration only.</p>
           </div>
           <div className="border-t border-border pt-5">
-            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-foreground text-xs font-semibold text-background">3</span><label htmlFor="bac-final-volume" className="block text-sm font-medium">Final liquid volume (mL)</label></div>
+            <div className="flex items-center"><span aria-hidden="true" className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-charcoal text-xs font-semibold text-background">3</span><label htmlFor="bac-final-volume" className="block text-sm font-medium">Final liquid volume (mL)</label></div>
             <Input id="bac-final-volume" type="text" inputMode="decimal" maxLength={64} value={volumeText} onChange={e => setVolume(e.target.value)} placeholder="Example: 2" className="mt-2" aria-describedby="bac-volume-help bac-input-error" aria-invalid={invalidVolume} />
             <p id="bac-volume-help" className="mt-2 text-sm text-muted-foreground">Enter the stated final liquid volume, not an assumed amount of water to add. Recheck any restored value; an earlier version may have suggested it. This calculator cannot select a diluent or preparation volume.</p>
           </div>

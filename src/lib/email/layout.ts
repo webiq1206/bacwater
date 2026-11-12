@@ -13,6 +13,8 @@ export const EMAIL_BRAND = {
   tagline: "Math help for mixing BAC water. Not medical advice.",
   colors: {
     ink: "#18382d",
+    /** Button fill. Brand charcoal, separate from the forest ink used for type. */
+    charcoal: "#383837",
     page: "#f7f8f2",
     card: "#ffffff",
     muted: "#506451",
@@ -114,8 +116,8 @@ function blockHtml(block: EmailBlock): string {
         .map(item => `<li style="margin:0 0 6px">${inlineHtml(item)}</li>`)
         .join("")}</ul>`;
     case "button":
-      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 24px"><tr><td align="center" bgcolor="${c.ink}" style="border-radius:999px">
-<a href="${escapeHtml(block.href)}" target="_blank" style="display:inline-block;padding:14px 28px;font-family:${f.sans};font-size:16px;font-weight:600;line-height:1.2;color:#ffffff;text-decoration:none;border-radius:999px;background:${c.ink}">${escapeHtml(block.label)}</a>
+      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 24px"><tr><td align="center" bgcolor="${c.charcoal}" style="border-radius:999px">
+<a href="${escapeHtml(block.href)}" target="_blank" style="display:inline-block;padding:14px 28px;font-family:${f.sans};font-size:16px;font-weight:600;line-height:1.2;color:#ffffff;text-decoration:none;border-radius:999px;background:${c.charcoal}">${escapeHtml(block.label)}</a>
 </td></tr></table>`;
     case "link":
       return `<p style="margin:0 0 16px;font-family:${f.sans};font-size:14px;line-height:1.6;color:${c.muted}">${escapeHtml(block.label)}<br><a href="${escapeHtml(block.href)}" style="${LINK_STYLE};word-break:break-all">${escapeHtml(block.href)}</a></p>`;
