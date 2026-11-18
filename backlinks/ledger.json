@@ -1,7 +1,7 @@
 {
   "site": "https://bacwater.ai",
   "host": "bacwater.ai",
-  "updated": "2026-11-17",
+  "updated": "2026-11-18",
   "placements": [
     {
       "id": "embed-first-host",
@@ -140,7 +140,7 @@
       "domain": "nouploadtools.com",
       "placementUrl": "https://nouploadtools.com/directory?cat=calculators-data",
       "destinationPath": "/",
-      "status": "submitted",
+      "status": "rejected",
       "method": "Free directory submission recorded in docs/growth/opportunities.json.",
       "relevance": "Free directory includes Data & Calculators and accepts tools whose core functions work without login. Current repository confirms the mass converter calculates in a client component.",
       "nextStep": "Check published listing weekly for presence, accurate description and functioning redirect. Monitor actual referrals when measurement supports them. No resubmission.",

@@ -1,7 +1,7 @@
 # Backlink verification
-Generated 2026-11-17T16:25:36.438Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
+Generated 2026-11-18T15:56:07.018Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
 Rows distinguish fetched anchors, pending placement URLs and verification gaps. The dofollow label describes observed anchor attributes only, not indexing or ranking credit. Submission receipts remain authoritative for submission history. Unverified observations must not trigger resubmission.
-Ledger statuses: opportunity 8, submitted 13, discovered 0, live 0, live-nofollow 0, rejected 0.
+Ledger statuses: opportunity 8, submitted 12, discovered 0, live 0, live-nofollow 0, rejected 1.
 
 ## Published and verified dofollow
 _None._
@@ -18,6 +18,7 @@ _None._
 | www.finderslist.com | Not available | submitted | No placement URL is recorded. Preserve the recorded status and original submission receipt; do not resubmit from this observation. |
 | thefreetoolsdirectory.com | Not available | submitted | No placement URL is recorded. Preserve the recorded status and original submission receipt; do not resubmit from this observation. |
 | public.tools | Not available | submitted | No placement URL is recorded. Preserve the recorded status and original submission receipt; do not resubmit from this observation. |
+| nouploadtools.com | [link](https://nouploadtools.com/directory?cat=calculators-data) | rejected | The page returned HTTP 404. The recorded URL is unavailable; this does not undo a confirmed submission. |
 | launchpedia.co | Not available | submitted | No placement URL is recorded. Preserve the recorded status and original submission receipt; do not resubmit from this observation. |
 
 ## Could not verify
@@ -25,7 +26,6 @@ The fetch or raw HTML is insufficient to establish visibility or removal. Reconc
 
 | Domain | Placement | Reason |
 | --- | --- | --- |
-| nouploadtools.com | [link](https://nouploadtools.com/directory?cat=calculators-data) | Could not read the page (TypeError: fetch failed). Nothing is concluded from this; the record is unchanged. |
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630484217/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630484240/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630484241/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
