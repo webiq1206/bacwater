@@ -74,6 +74,20 @@
       "url": "https://www.pinterest.com/pin/1120129738630648558/",
       "boardId": "1120129807261632904",
       "verification": "GET_PIN returned matching board, title, description, alt text, destination and 1000x1500 image. Board read-back returned exactly four pins including the new guide, no pagination cursor."
+    },
+    {
+      "id": "decimal-notation-010-ml",
+      "channel": "pinterest",
+      "status": "published_verified",
+      "title": "0.1 mL and 0.10 mL mean the same volume",
+      "description": "A trailing zero does not change a decimal value: 0.1 mL = 0.10 mL. On a U-100 scale, 0.10 mL × 100 = 10 scale units; reverse-check: 10 ÷ 100 = 0.10 mL. Verify the actual device ratio, capacity, and printed graduation spacing. Research arithmetic only, not medical guidance. Published by WEB IQ for BACwater.ai. The site includes disclosed affiliate links.",
+      "asset": "https://i.pinimg.com/1200x/b4/b5/4c/b4b54c49dac94e3541e4410ef9d23bef.jpg",
+      "destination": "https://bacwater.ai/tools/syringe-units?utm_source=pinterest&utm_medium=organic_social&utm_campaign=decimal_notation&utm_content=010_ml_trailing_zero",
+      "altText": "BACwater.ai decimal notation guide showing that 0.1 mL and 0.10 mL are the same volume. It multiplies 0.10 mL by 100 to get 10 U-100 scale units and reverse-checks 10 divided by 100 to return 0.10 mL, with a warning to verify printed graduations.",
+      "publishedAt": "2026-11-20T01:05:27Z",
+      "url": "https://www.pinterest.com/pin/1120129738633341488/",
+      "boardId": "1120129807261632904",
+      "verification": "GET_PIN returned the matching owner, board, title, description, alt text, destination and 1000x1500 image. Complete board read-back returned 14 pins including this guide, with no pagination cursor."
     }
   ]
 }

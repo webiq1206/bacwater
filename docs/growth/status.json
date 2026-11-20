@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-12",
+  "updatedAt": "2026-11-19",
   "repository": "webiq1206/bacwater",
   "productionDeployment": "This run did not deploy. Repository main identity verified; fresh production revision read was blocked by the browser environment. Historical release observations are not a fresh whole-site verification.",
   "trafficBaseline": "Equal-window baseline remains in the private October 1 report. Receiving-side completion events are now observed for the production host; treat the acceptance-test window as synthetic and exclude it from growth/customer claims.",
-  "externalPostsPublished": 7,
+  "externalPostsPublished": 17,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
   "spend": 0,
@@ -171,17 +171,14 @@
     }
   },
   "lastGrowthExecution": {
-    "checkedAt": "2026-10-02",
-    "localDate": "2026-10-02",
-    "record": "docs/growth/runs/2026-10-02-daily-growth.json",
+    "checkedAt": "2026-11-19",
+    "localDate": "2026-11-19",
     "completed": [
-      "Full current specification read; current ledgers reconciled.",
-      "Reddit, YouTube and Facebook comments checked; no responses required.",
-      "Facebook and Instagram actor/object reads newly verified.",
-      "NoUploadTools listing reverified; original directory submission receipts preserved.",
-      "Backlink verifier false-negative classifications repaired and local regression suite passed.",
-      "Google and Bing sitemap processing read-back reconciled; no repeated submission."
+      "Published one distinct decimal-notation guide to the dedicated BACwater Pinterest board.",
+      "Read the Pin back by ID and in the complete 14-item board inventory with no pagination cursor.",
+      "Reverified the NoUploadTools public listing without resubmission."
     ],
+    "publishedUrl": "https://www.pinterest.com/pin/1120129738633341488/",
     "spend": 0
   },
   "directorySummary": {
@@ -224,11 +221,12 @@
     "replacedDeletedVideo": "wIHXYAaqOEg"
   },
   "weeklyContentExecution": {
-    "startedAt": "2026-10-01T14:21:18Z",
-    "finishedAt": "2026-10-01T14:27:44Z",
+    "startedAt": "2026-11-20T00:59:59Z",
+    "finishedAt": "2026-11-20T01:07:00Z",
     "status": "completed",
-    "evidence": "docs/growth/runs/2026-10-01-weekly-content.json",
-    "publishedUrl": "https://www.pinterest.com/pin/1120129738630648558/",
+    "publishedUrl": "https://www.pinterest.com/pin/1120129738633341488/",
+    "publicationId": "1120129738633341488",
+    "verification": "Pinterest GET_PIN and complete 14-item board inventory matched the authorized board, owner, title, destination, alt text and image.",
     "spend": 0
   },
   "completionTrackingRepair": {
