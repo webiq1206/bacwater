@@ -1,5 +1,5 @@
 # Backlink verification
-Generated 2026-11-20T15:43:28.473Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
+Generated 2026-11-21T14:54:07.439Z from `backlinks/ledger.json`. Destination site: https://bacwater.ai.
 Rows distinguish fetched anchors, pending placement URLs and verification gaps. The dofollow label describes observed anchor attributes only, not indexing or ranking credit. Submission receipts remain authoritative for submission history. Unverified observations must not trigger resubmission.
 Ledger statuses: opportunity 8, submitted 12, discovered 0, live 0, live-nofollow 0, rejected 1.
 
@@ -31,7 +31,7 @@ The fetch or raw HTML is insufficient to establish visibility or removal. Reconc
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630484241/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
 | reddit.com | [link](https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wset55/bacwaterai_mg_to_mcg_a_quick_conversion_reference/) | The page returned HTTP 403. Fetch did not establish public visibility or removal. Preserve the record and retry verification later. |
 | reddit.com | [link](https://www.reddit.com/r/u_Zealousideal_Tax8675/comments/1wulj4n/bacwaterai_u100_units_and_ml_a_scale_conversion/) | The page returned HTTP 403. Fetch did not establish public visibility or removal. Preserve the record and retry verification later. |
-| youtube.com | [link](https://www.youtube.com/watch?v=bnvpPzm6-EY) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
+| youtube.com | [link](https://www.youtube.com/watch?v=bnvpPzm6-EY) | The page returned HTTP 429. Fetch did not establish public visibility or removal. Preserve the record and retry verification later. |
 | pinterest.com | [link](https://www.pinterest.com/pin/1120129738630648558/) | Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change. |
 
 ## Opportunities, nothing submitted

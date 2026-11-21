@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-20T15:43:28.473Z",
+  "checkedAt": "2026-11-21T14:54:07.440Z",
   "host": "bacwater.ai",
   "results": [
     {
@@ -254,13 +254,13 @@
       "domain": "youtube.com",
       "placementUrl": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
       "destinationPath": "/tools/mg-to-mcg",
-      "outcome": "render-unverified",
-      "httpStatus": 200,
+      "outcome": "fetch-blocked",
+      "httpStatus": 429,
       "rel": [],
       "dofollow": false,
       "anchorText": null,
       "pageNofollow": false,
-      "detail": "Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change."
+      "detail": "The page returned HTTP 429. Fetch did not establish public visibility or removal. Preserve the record and retry verification later."
     },
     {
       "id": "pinterest-same-mass-final-volume",
