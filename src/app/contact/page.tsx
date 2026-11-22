@@ -51,7 +51,7 @@ export default function ContactPage() {
       </div>
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
         <ResearchChatButton />
-        <Link href="/" className="inline-flex min-h-11 items-center justify-center border border-foreground bg-foreground px-4 text-sm font-medium text-background">
+        <Link href="/" className="inline-flex min-h-11 items-center justify-center border border-charcoal bg-charcoal px-4 text-sm font-medium text-background">
           Open the calculator
         </Link>
         <Link href="/faq" className="inline-flex min-h-11 items-center justify-center border border-border px-4 text-sm font-medium">

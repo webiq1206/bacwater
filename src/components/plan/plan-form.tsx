@@ -1441,7 +1441,7 @@ function StepBar({ step, total }: { step: number; total: number }) {
             key={i}
             className={cn(
               "h-1.5 flex-1 transition-all",
-              i <= step ? "bg-foreground" : "bg-muted"
+              i <= step ? "bg-charcoal" : "bg-muted"
             )}
           />
         ))}

@@ -110,7 +110,7 @@ export function AgeGate({ initialVerified }: { initialVerified: boolean }) {
             type="button"
             ref={declinedButton}
             onClick={confirm}
-            className="min-h-12 min-w-[8.5rem] flex-1 rounded-xl bg-foreground px-3 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity sm:flex-none sm:px-6"
+            className="min-h-12 min-w-[8.5rem] flex-1 rounded-xl bg-charcoal px-3 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity sm:flex-none sm:px-6"
           >
             Yes, I am 21 or older
           </button>
