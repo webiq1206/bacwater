@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-26T17:15:46.798Z",
+  "checkedAt": "2026-11-27T16:57:10.452Z",
   "host": "bacwater.ai",
   "results": [
     {
@@ -163,13 +163,13 @@
       "domain": "nouploadtools.com",
       "placementUrl": "https://nouploadtools.com/directory?cat=calculators-data",
       "destinationPath": "/",
-      "outcome": "unreachable",
-      "httpStatus": null,
+      "outcome": "page-missing",
+      "httpStatus": 404,
       "rel": [],
       "dofollow": false,
       "anchorText": null,
       "pageNofollow": false,
-      "detail": "Could not read the page (TypeError: fetch failed). Nothing is concluded from this; the record is unchanged."
+      "detail": "The page returned HTTP 404. The recorded URL is unavailable; this does not undo a confirmed submission."
     },
     {
       "id": "directory-launchpedia-product",
@@ -254,13 +254,13 @@
       "domain": "youtube.com",
       "placementUrl": "https://www.youtube.com/watch?v=bnvpPzm6-EY",
       "destinationPath": "/tools/mg-to-mcg",
-      "outcome": "render-unverified",
-      "httpStatus": 200,
+      "outcome": "fetch-blocked",
+      "httpStatus": 429,
       "rel": [],
       "dofollow": false,
       "anchorText": null,
       "pageNofollow": false,
-      "detail": "Raw HTML (HTTP 200) contains no direct anchor to bacwater.ai. Client rendering or an outbound redirect may be involved. Reconcile rendered evidence and receipts before any status change."
+      "detail": "The page returned HTTP 429. Fetch did not establish public visibility or removal. Preserve the record and retry verification later."
     },
     {
       "id": "pinterest-same-mass-final-volume",
