@@ -88,6 +88,20 @@
       "url": "https://www.pinterest.com/pin/1120129738633341488/",
       "boardId": "1120129807261632904",
       "verification": "GET_PIN returned the matching owner, board, title, description, alt text, destination and 1000x1500 image. Complete board read-back returned 14 pins including this guide, with no pagination cursor."
+    },
+    {
+      "id": "mg-to-ml-needs-concentration-3mg",
+      "channel": "pinterest",
+      "status": "published_verified",
+      "title": "Why 3 mg has no single mL answer",
+      "description": "Mass does not convert to volume without concentration. Example arithmetic: 3 mg ÷ 6 mg/mL = 0.5 mL, while 3 mg ÷ 3 mg/mL = 1 mL. Same mass, different concentration, different volume. Keep units visible and use the exact stated concentration. Research arithmetic only, not medical guidance. Published by WEB IQ for BACwater.ai. The site includes disclosed affiliate links.",
+      "asset": "https://i.pinimg.com/1200x/77/6f/13/776f1352a20d88aefd54ba9973952de5.jpg",
+      "destination": "https://bacwater.ai/methodology?utm_source=pinterest&utm_medium=organic_social&utm_campaign=mg_to_ml_missing_concentration&utm_content=3mg_example",
+      "altText": "BACwater.ai guide showing that 3 mg has no single mL answer without concentration. It compares 3 mg divided by 6 mg per mL, which equals 0.5 mL, with 3 mg divided by 3 mg per mL, which equals 1 mL.",
+      "publishedAt": "2026-11-27T01:08:09Z",
+      "url": "https://www.pinterest.com/pin/1120129738633724078/",
+      "boardId": "1120129807261632904",
+      "verification": "GET_PIN returned the matching owner, board, title, description, alt text, destination and 1000x1500 image. Complete board read-back returned 15 pins including this guide, with no pagination cursor."
     }
   ]
 }

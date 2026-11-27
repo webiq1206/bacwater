@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-11-19",
+  "updatedAt": "2026-11-26",
   "repository": "webiq1206/bacwater",
   "productionDeployment": "This run did not deploy. Repository main identity verified; fresh production revision read was blocked by the browser environment. Historical release observations are not a fresh whole-site verification.",
   "trafficBaseline": "Equal-window baseline remains in the private October 1 report. Receiving-side completion events are now observed for the production host; treat the acceptance-test window as synthetic and exclude it from growth/customer claims.",
-  "externalPostsPublished": 17,
+  "externalPostsPublished": 18,
   "newAccountsCreated": 0,
   "partnerPlacements": 0,
   "spend": 0,
@@ -171,14 +171,14 @@
     }
   },
   "lastGrowthExecution": {
-    "checkedAt": "2026-11-19",
-    "localDate": "2026-11-19",
+    "checkedAt": "2026-11-26",
+    "localDate": "2026-11-26",
     "completed": [
-      "Published one distinct decimal-notation guide to the dedicated BACwater Pinterest board.",
-      "Read the Pin back by ID and in the complete 14-item board inventory with no pagination cursor.",
-      "Reverified the NoUploadTools public listing without resubmission."
+      "Published one distinct mass-to-volume guide to the dedicated BACwater Pinterest board.",
+      "Read the Pin back by ID and in the complete 15-item board inventory with no pagination cursor.",
+      "Reverified account standing and preserved pending directory submissions without resubmission."
     ],
-    "publishedUrl": "https://www.pinterest.com/pin/1120129738633341488/",
+    "publishedUrl": "https://www.pinterest.com/pin/1120129738633724078/",
     "spend": 0
   },
   "directorySummary": {
@@ -221,12 +221,12 @@
     "replacedDeletedVideo": "wIHXYAaqOEg"
   },
   "weeklyContentExecution": {
-    "startedAt": "2026-11-20T00:59:59Z",
-    "finishedAt": "2026-11-20T01:07:00Z",
+    "startedAt": "2026-11-27T01:03:22Z",
+    "finishedAt": "2026-11-27T01:09:51Z",
     "status": "completed",
-    "publishedUrl": "https://www.pinterest.com/pin/1120129738633341488/",
-    "publicationId": "1120129738633341488",
-    "verification": "Pinterest GET_PIN and complete 14-item board inventory matched the authorized board, owner, title, destination, alt text and image.",
+    "publishedUrl": "https://www.pinterest.com/pin/1120129738633724078/",
+    "publicationId": "1120129738633724078",
+    "verification": "Pinterest GET_PIN and complete 15-item board inventory matched the authorized board, owner, title, destination, alt text and image.",
     "spend": 0
   },
   "completionTrackingRepair": {

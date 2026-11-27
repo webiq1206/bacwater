@@ -1,11 +1,12 @@
 {
-  "updatedAt": "2026-11-19",
+  "updatedAt": "2026-11-26",
   "spend": 0,
   "sharedAccountPolicy": "Preserve WEB IQ branding and other client content. Publish only BACwater-labeled content to BACwater categories.",
   "pinterest": {
     "boardId": "1120129807261632904",
     "username": "webiqco",
     "verifiedPins": [
+      "1120129738633724078",
       "1120129738633341488",
       "1120129738632974012",
       "1120129738632599995",
@@ -21,15 +22,15 @@
       "1120129738630484240",
       "1120129738630484217"
     ],
-    "verification": "All 14 pins read back from the dedicated BACwater board, with no pagination cursor. Comment read support is unavailable; no comment-monitoring claim.",
-    "lastVerifiedAt": "2026-11-19",
+    "verification": "All 15 pins read back from the dedicated BACwater board, with no pagination cursor. Comment read support is unavailable; no comment-monitoring claim.",
+    "lastVerifiedAt": "2026-11-26",
     "latestPublication": {
-      "id": "1120129738633341488",
-      "url": "https://www.pinterest.com/pin/1120129738633341488/",
-      "publishedAt": "2026-11-20T01:05:27Z",
-      "verifiedAt": "2026-11-20T01:06:00Z",
-      "title": "0.1 mL and 0.10 mL mean the same volume",
-      "destination": "https://bacwater.ai/tools/syringe-units?utm_source=pinterest&utm_medium=organic_social&utm_campaign=decimal_notation&utm_content=010_ml_trailing_zero"
+      "id": "1120129738633724078",
+      "url": "https://www.pinterest.com/pin/1120129738633724078/",
+      "publishedAt": "2026-11-27T01:08:09Z",
+      "verifiedAt": "2026-11-27T01:08:32Z",
+      "title": "Why 3 mg has no single mL answer",
+      "destination": "https://bacwater.ai/methodology?utm_source=pinterest&utm_medium=organic_social&utm_campaign=mg_to_ml_missing_concentration&utm_content=3mg_example"
     }
   },
   "reddit": {
